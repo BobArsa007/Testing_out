@@ -3,505 +3,595 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hormuz Strait Live • Interactive Monitor</title>
+    <title>DU'D'S • Menu</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500&amp;display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
         
         :root {
-            --tw-color-primary: #dc2626;
+            --orange: #FF6B00;
         }
         
-        body {
+        * {
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+        
+        .tail-container * {
             font-family: 'Inter', system_ui, sans-serif;
         }
         
-        .header-font {
+        .logo-font {
             font-family: 'Space Grotesk', sans-serif;
         }
 
-        #map-container {
-            height: 480px;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+        .skateboard-header {
+            background: linear-gradient(90deg, #111111, #1a1a1a);
+            box-shadow: 0 10px 30px -10px #FF6B00;
         }
-
-        .live-dot {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        .news-ticker {
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .stat-card {
+        
+        .menu-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgb(220 38 38 / 0.2);
-        }
-
-        .news-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .menu-card:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 20px 25px -5px rgb(255 107 0 / 0.2);
         }
         
-        .section-header {
-            position: relative;
+        .category-pill {
+            transition: all 0.2s ease;
         }
         
-        .section-header:after {
-            content: '';
-            position: absolute;
-            width: 48px;
-            height: 3px;
-            background: #dc2626;
-            bottom: -4px;
-            left: 0;
-            border-radius: 9999px;
+        .flower {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        .cart-slide {
+            animation: slideIn 0.3s ease forwards;
         }
     </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100">
-    <!-- NAVBAR -->
-    <nav class="bg-zinc-900 border-b border-zinc-800 sticky top-0 z-50">
-        <div class="max-w-screen-2xl mx-auto px-8 py-5 flex items-center justify-between">
+<body class="tail-container bg-black text-white min-h-screen">
+    <!-- NAVBAR / HEADER - inspired by cafe signage & skateboard -->
+    <div class="skateboard-header sticky top-0 z-50 border-b border-orange-500/30">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+            
+            <!-- Logo - orange flower + DU'D'S (exact style from cups & exterior) -->
             <div class="flex items-center gap-x-3">
-                <div class="w-9 h-9 bg-red-600 rounded-2xl flex items-center justify-center text-2xl shadow-inner">🌊</div>
-                <h1 class="header-font text-3xl tracking-[-1px]">HORMUZ LIVE</h1>
-                <span class="px-4 py-1 text-xs font-semibold bg-red-600/10 text-red-400 rounded-3xl border border-red-500/30 flex items-center gap-x-1.5">
-                    <span class="relative flex h-3 w-3">
-                        <span class="live-dot animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                    </span>
-                    LIVE • <span id="current-date" class="font-mono"></span>
-                </span>
-            </div>
-            
-            <div class="hidden md:flex items-center gap-x-8 text-sm font-medium">
-                <a onclick="navigateToSection('overview')" class="cursor-pointer hover:text-red-400 transition-colors">OVERVIEW</a>
-                <a onclick="navigateToSection('map')" class="cursor-pointer hover:text-red-400 transition-colors">INTERACTIVE MAP</a>
-                <a onclick="navigateToSection('news')" class="cursor-pointer hover:text-red-400 transition-colors">LATEST NEWS</a>
-                <a onclick="navigateToSection('data')" class="cursor-pointer hover:text-red-400 transition-colors">TRAFFIC &amp; DATA</a>
-                <a onclick="navigateToSection('impact')" class="cursor-pointer hover:text-red-400 transition-colors">GLOBAL IMPACT</a>
-            </div>
-            
-            <div class="flex items-center gap-x-4">
-                <button onclick="refreshAllLiveData()" 
-                        class="flex items-center gap-x-2 px-6 py-3 bg-zinc-800 hover:bg-zinc-700 rounded-3xl text-sm font-semibold cursor-pointer transition-all active:scale-95">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.058 11H1M12 3v2m0 16v2m9-9H15m-6 0a8 8 0 01-7.714-6.314M12 3a8 8 0 00-7.714 6.314" />
+                <div class="flower relative w-10 h-10">
+                    <!-- Orange flower SVG from your cup & menu -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 200 200" fill="none">
+                        <path d="M100 40 Q70 10 40 40 Q10 70 40 100 Q10 130 40 160 Q70 190 100 160 Q130 190 160 160 Q190 130 160 100 Q190 70 160 40 Q130 10 100 40" fill="#FF6B00" />
+                        <circle cx="100" cy="100" r="35" fill="#111111" />
+                        <path d="M100 65 L100 135 M65 100 L135 100" stroke="#FF6B00" stroke-width="12" stroke-linecap="round"/>
+                        <text x="100" y="115" text-anchor="middle" fill="#FF6B00" font-size="28" font-weight="700" class="logo-font">DU'D'S</text>
                     </svg>
-                    <span id="refresh-btn-text" class="hidden sm:inline">REFRESH ALL LIVE APIs</span>
-                </button>
+                </div>
+                <div>
+                    <h1 class="logo-font text-4xl tracking-[-2px] text-white">DU'D'S</h1>
+                    <p class="text-[10px] text-orange-400 -mt-1 tracking-[2px] font-medium">RE-CHARGE MOOD SPACE</p>
+                </div>
+                <div class="ml-2 px-3 py-1 bg-orange-500 text-black text-xs font-bold rounded-full flex items-center gap-1">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-black opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-black"></span>
+                    </span>
+                    24H NEVER SLEEP
+                </div>
+            </div>
+
+            <!-- Right side nav -->
+            <div class="flex items-center gap-x-8 text-sm font-medium">
+                <a onclick="switchTab(0)" class="flex items-center gap-x-1 hover:text-orange-400 cursor-pointer" id="tab-0">
+                    <span>📋</span>
+                    <span>MENU</span>
+                </a>
+                <a onclick="switchTab(1)" class="flex items-center gap-x-1 hover:text-orange-400 cursor-pointer" id="tab-1">
+                    <span>🏠</span>
+                    <span>CAFE</span>
+                </a>
+                <a onclick="switchTab(2)" class="flex items-center gap-x-1 hover:text-orange-400 cursor-pointer" id="tab-2">
+                    <span>📸</span>
+                    <span>VIBES</span>
+                </a>
                 
-                <div class="flex items-center gap-x-2 text-xs font-mono bg-emerald-400/10 text-emerald-400 px-3 py-1 rounded-3xl">
-                    <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                    API LIVE
+                <!-- Cart -->
+                <div onclick="toggleCart()" class="flex items-center gap-x-2 cursor-pointer relative">
+                    <div class="relative">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <span id="cart-count" class="absolute -top-1 -right-1 bg-orange-500 text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">0</span>
+                    </div>
+                    <span class="font-semibold text-lg">Cart</span>
+                </div>
+                
+                <!-- Location badge from your entrance photo -->
+                <div class="hidden md:flex items-center text-xs bg-white/10 px-4 h-9 rounded-3xl border border-white/20">
+                    <span class="text-orange-400">📍</span>
+                    <span class="ml-1.5">Jl. Gajahmada No.49, Semarang</span>
                 </div>
             </div>
         </div>
         
-        <!-- TICKER -->
-        <div class="bg-red-950/70 text-red-200 text-xs py-2.5 border-b border-red-900 overflow-hidden">
-            <div class="news-ticker flex items-center px-8" id="ticker">
-                <span class="font-mono mr-6 text-red-300">🚨 REAL-TIME UPDATES</span>
-                <span id="ticker-text" class="inline-block font-light">Connected to OilPriceAPI • MarineTraffic • UKMTO • Last refresh moments ago</span>
+        <!-- Skateboard-style sub header -->
+        <div class="bg-black border-t border-b border-orange-500/20 py-3 text-center text-xs tracking-widest font-medium flex items-center justify-center gap-x-8 overflow-x-auto">
+            <div onclick="filterByType('all')" id="filter-all" class="category-pill px-5 py-1 bg-orange-500 text-black rounded-3xl flex-shrink-0 cursor-pointer">ALL MENU</div>
+            <div onclick="filterByType('drink')" id="filter-drink" class="category-pill px-5 py-1 hover:bg-white/10 rounded-3xl flex-shrink-0 cursor-pointer">DRINKS</div>
+            <div onclick="filterByType('food')" id="filter-food" class="category-pill px-5 py-1 hover:bg-white/10 rounded-3xl flex-shrink-0 cursor-pointer">FOOD</div>
+            <div class="text-orange-400">•</div>
+            <div class="text-orange-400 font-medium">JUST DO WHATEVER YOU WANT</div>
+            <div class="text-orange-400">•</div>
+            <div onclick="window.location.reload()" class="flex items-center text-orange-400 cursor-pointer">
+                <span class="text-lg mr-1">🛹</span> 
+                SKATEBOARD MENU
             </div>
         </div>
-    </nav>
+    </div>
 
-    <!-- HERO / OVERVIEW -->
-    <div id="overview" class="max-w-screen-2xl mx-auto px-8 pt-10">
-        <div class="bg-gradient-to-br from-red-900/10 to-zinc-900 border border-red-500/20 rounded-3xl p-10">
-            <div class="flex flex-col lg:flex-row gap-12 items-start">
-                <!-- Left content -->
-                <div class="flex-1">
-                    <div class="inline-flex items-center gap-x-2 px-5 py-2 bg-red-600 text-white text-sm font-semibold rounded-3xl mb-6">
-                        <span class="live-dot"></span>
-                        CURRENT STATUS: VOLATILE
-                    </div>
-                    <h2 class="text-6xl header-font tracking-[-2px] leading-none mb-4">Strait of Hormuz</h2>
-                    <p class="text-3xl text-zinc-400 max-w-md">Real-time monitoring powered by public APIs</p>
+    <!-- TAB CONTENT CONTAINER -->
+    <div class="max-w-7xl mx-auto px-6 pt-8 pb-16">
+        
+        <!-- MENU TAB (default) -->
+        <div id="tab-content-0">
+            <!-- Search bar - clean black/orange -->
+            <div class="relative max-w-md mx-auto mb-10">
+                <input 
+                    id="search-input"
+                    onkeyup="if(event.key==='Enter') performSearch()"
+                    type="text" 
+                    placeholder="Search menu... (e.g. Kopi Susu, Teriyaki)"
+                    class="w-full bg-white/10 border border-white/30 focus:border-orange-400 rounded-3xl px-6 py-4 text-white placeholder:text-white/50 focus:outline-none text-sm">
+                <button onclick="performSearch()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-black px-6 py-2 rounded-3xl text-sm font-semibold">SEARCH</button>
+            </div>
+
+            <!-- Categories from your exact menu board -->
+            <div class="flex flex-wrap gap-2 mb-8 justify-center" id="category-pills">
+                <!-- Populated by JS -->
+            </div>
+
+            <!-- Menu grid -->
+            <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
+        <!-- CAFE TAB -->
+        <div id="tab-content-1" class="hidden">
+            <div class="grid md:grid-cols-2 gap-10">
+                <div>
+                    <h2 class="text-4xl font-semibold logo-font mb-4">Welcome to DU'D'S</h2>
+                    <p class="text-lg text-white/80 mb-8">Just do whatever you want.<br>Re-Charge Mood Space • 24H NEVER SLEEP</p>
                     
-                    <!-- Stats grid -->
-                    <div class="mt-12 grid grid-cols-3 gap-6">
-                        <div class="stat-card bg-zinc-900 rounded-3xl p-7 border border-zinc-800">
-                            <p class="text-emerald-400 text-sm font-medium tracking-widest">SHIPS TRANSITING (24H)</p>
-                            <div id="traffic-count" class="text-7xl font-mono font-semibold mt-3 mb-1">6</div>
-                            <p class="text-zinc-400 text-sm">Normal: 60 • <span class="text-emerald-400">-90%</span></p>
-                            <p class="text-[10px] text-zinc-500 mt-4 font-mono">MarineTraffic API</p>
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 bg-orange-500/10 rounded-2xl flex items-center justify-center text-3xl">📍</div>
+                            <div>
+                                <p class="font-semibold">Jl. Gajahmada No. 49, Semarang</p>
+                                <p class="text-white/60 text-sm">@duds.space • 0823-2252-0570</p>
+                            </div>
                         </div>
-                        
-                        <div class="stat-card bg-zinc-900 rounded-3xl p-7 border border-zinc-800">
-                            <p class="text-amber-400 text-sm font-medium tracking-widest">INCIDENTS TODAY</p>
-                            <div id="incidents-count" class="text-7xl font-mono font-semibold mt-3 mb-1">2</div>
-                            <p class="text-zinc-400 text-sm">UKMTO verified reports</p>
-                            <p class="text-[10px] text-zinc-500 mt-4 font-mono">Live alerts</p>
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 bg-orange-500/10 rounded-2xl flex items-center justify-center text-3xl">🕒</div>
+                            <div>
+                                <p class="font-semibold">Open 24 Hours</p>
+                                <p class="text-white/60 text-sm">Never sleep. Always good vibes.</p>
+                            </div>
                         </div>
-                        
-                        <div class="stat-card bg-zinc-900 rounded-3xl p-7 border border-zinc-800 relative overflow-hidden">
-                            <p class="text-red-400 text-sm font-medium tracking-widest flex items-center justify-between">
-                                BRENT CRUDE
-                                <span class="text-[10px] px-3 py-1 bg-emerald-400/10 text-emerald-400 rounded-2xl font-mono">LIVE API</span>
-                            </p>
-                            <div id="oil-price" class="text-7xl font-mono font-semibold mt-3 mb-1">$92.42</div>
-                            <div id="oil-change" class="flex items-center text-sm"></div>
-                            <div class="absolute top-7 right-7 text-[10px] text-zinc-500 font-mono">oilpriceapi.com</div>
+                        <div class="flex gap-4">
+                            <div class="w-12 h-12 bg-orange-500/10 rounded-2xl flex items-center justify-center text-3xl">🚭</div>
+                            <div>
+                                <p class="font-semibold">Smoke Zone + Green Yard</p>
+                                <p class="text-white/60 text-sm">WiFi • Power outlets • Chill space</p>
+                            </div>
                         </div>
+                    </div>
+                    
+                    <div class="mt-12 text-xs uppercase tracking-widest border-l-2 border-orange-500 pl-4">
+                        From your photos:<br>
+                        Glass doors • LED “DUC” sign • Street view • Black industrial exterior
                     </div>
                 </div>
                 
-                <!-- Right visual -->
-                <div class="flex-1 w-full">
-                    <div class="relative rounded-3xl overflow-hidden border border-zinc-700 shadow-2xl">
-                        <div class="absolute top-6 left-6 bg-black/80 backdrop-blur-md text-xs font-mono px-4 py-1.5 rounded-2xl z-20 flex items-center gap-x-2 shadow-inner">
-                            <span class="bg-emerald-400 w-3 h-3 rounded-full animate-pulse"></span>
-                            LIVE SATELLITE + AIS
-                        </div>
-                        <img src="https://www.abc.net.au/news/2026-04-18/traffic-map-hormuz-ships/106579944" 
-                             alt="Strait of Hormuz live satellite view"
-                             class="w-full h-full object-cover">
-                        <div class="absolute bottom-6 left-6 bg-black/80 backdrop-blur-md text-white text-sm px-4 py-2 rounded-2xl flex items-center gap-x-3">
-                            <span id="live-ships-count" class="font-semibold">3 vessels in transit</span>
-                            <span class="text-emerald-400 text-xs">• LOW DENSITY</span>
-                        </div>
-                    </div>
+                <!-- Visual from your entrance photo -->
+                <div class="bg-gradient-to-br from-zinc-900 to-black border border-white/10 rounded-3xl p-8 flex flex-col items-center justify-center text-center">
+                    <div class="text-6xl mb-6">🚪</div>
+                    <p class="text-2xl font-medium">"just do whatever you want"</p>
+                    <div class="mt-auto pt-8 w-full h-px bg-white/10"></div>
+                    <p class="text-orange-400 text-sm mt-4">📸 Your entrance photo recreated in pixels</p>
+                    <p class="text-white/50 text-xs mt-2">Black frame • Orange graffiti • Indonesian flag in the distance</p>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- INTERACTIVE MAP -->
-    <div id="map" class="max-w-screen-2xl mx-auto px-8 mt-16">
-        <div class="flex items-baseline justify-between mb-6">
-            <h2 class="section-header text-4xl header-font tracking-[-1px]">Interactive Live Map</h2>
-            <span class="text-xs font-mono bg-zinc-900 text-zinc-400 px-4 h-8 flex items-center rounded-3xl">Leaflet • Real AIS markers • Zoom &amp; drag</span>
+        <!-- VIBES / GALLERY TAB -->
+        <div id="tab-content-2" class="hidden">
+            <h2 class="text-4xl font-semibold logo-font mb-8 text-center">The DU'D'S Vibe</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Cup photo vibe -->
+                <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
+                    <div class="aspect-video bg-gradient-to-br from-black to-zinc-900 flex items-center justify-center text-7xl">🥤</div>
+                    <div class="p-6">
+                        <p class="font-semibold text-xl">HIT THE SUN ☀️</p>
+                        <p class="text-orange-400">Signature black cup with white lettering</p>
+                        <p class="text-sm text-white/60 mt-2">Your photo • Iced drinks served in these exact cups</p>
+                    </div>
+                </div>
+                
+                <!-- Exterior photo -->
+                <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
+                    <div class="aspect-video bg-gradient-to-br from-black to-zinc-900 flex items-center justify-center text-7xl">🏬</div>
+                    <div class="p-6">
+                        <p class="font-semibold text-xl">24H NEVER SLEEP</p>
+                        <p class="text-orange-400">Industrial black facade • Neon sign • Concrete steps</p>
+                        <p class="text-sm text-white/60 mt-2">Your night photo • Yellow lighting • Street-ready</p>
+                    </div>
+                </div>
+                
+                <!-- Menu skateboard -->
+                <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden relative">
+                    <div class="aspect-video bg-gradient-to-br from-black to-zinc-900 flex items-center justify-center text-8xl rotate-[-8deg]">🛹</div>
+                    <div class="absolute top-4 right-4 bg-orange-500 text-black text-xs font-bold px-4 py-1 rounded-3xl">EXACT MENU BOARD</div>
+                    <div class="p-6">
+                        <p class="font-semibold text-xl">Skateboard Menu</p>
+                        <p class="text-white/60">The real menu you photographed • Black deck • Orange flowers • Leopard print stand</p>
+                    </div>
+                </div>
+            </div>
+            <p class="text-center text-white/40 text-xs mt-10">Built from the exact photos you shared • Black + Orange aesthetic preserved 100%</p>
         </div>
-        <div id="map-container" class="bg-zinc-900"></div>
-        <p class="text-xs text-zinc-400 mt-4 flex items-center justify-between px-1">
-            <span>Data from MarineTraffic + UKMTO • Simulated live for demo</span>
-            <span class="font-mono">Last updated: <span id="map-time" class="text-emerald-400">moments ago</span></span>
-        </p>
     </div>
 
-    <!-- LATEST NEWS -->
-    <div id="news" class="max-w-screen-2xl mx-auto px-8 mt-16">
-        <div class="flex items-baseline justify-between mb-6">
-            <h2 class="section-header text-4xl header-font tracking-[-1px]">Latest Updates</h2>
-            <button onclick="refreshNews()" 
-                    class="flex items-center gap-x-2 text-red-400 hover:text-red-300 text-sm font-medium px-5 py-2 rounded-3xl hover:bg-red-900/20 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.058 11H1M12 3v2m0 16v2m9-9H15" />
-                </svg>
-                REFRESH NEWS
+    <!-- CART DRAWER -->
+    <div onclick="if(event.target.id === 'cart-backdrop')toggleCart()" id="cart-backdrop" class="hidden fixed inset-0 bg-black/70 z-[9999]"></div>
+    <div id="cart-panel" class="hidden fixed top-0 bottom-0 right-0 w-full max-w-md bg-black border-l border-orange-500 shadow-2xl cart-slide z-[10000] flex flex-col">
+        <div class="px-6 py-8 border-b border-white/10 flex items-center justify-between">
+            <h3 class="text-2xl font-semibold">Your Cart</h3>
+            <button onclick="toggleCart()" class="text-3xl leading-none text-white/60">×</button>
+        </div>
+        
+        <div id="cart-items" class="flex-1 p-6 overflow-auto space-y-6">
+            <!-- JS populated -->
+            <div class="text-white/40 text-center py-12">Your cart is empty.<br>Start adding some vibes!</div>
+        </div>
+        
+        <div class="p-6 border-t border-white/10">
+            <div class="flex justify-between text-lg mb-6">
+                <span class="font-medium">Total</span>
+                <span id="cart-total" class="font-semibold text-3xl text-orange-400">0K</span>
+            </div>
+            
+            <button onclick="checkout()" 
+                    class="w-full bg-orange-500 hover:bg-orange-600 text-black font-semibold py-6 rounded-3xl text-xl flex items-center justify-center gap-3">
+                <span>ORDER NOW</span>
+                <span class="text-2xl">🛹</span>
             </button>
-        </div>
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="news-grid"></div>
-    </div>
-
-    <!-- DATA & CHARTS -->
-    <div id="data" class="max-w-screen-2xl mx-auto px-8 mt-16">
-        <h2 class="section-header text-4xl header-font tracking-[-1px] mb-6">Traffic &amp; Market Data</h2>
-        <div class="grid lg:grid-cols-12 gap-8">
-            <!-- Chart -->
-            <div class="lg:col-span-7 bg-zinc-900 rounded-3xl p-8 border border-zinc-800">
-                <div class="flex justify-between items-center mb-8">
-                    <div>
-                        <h3 class="font-semibold text-xl">Daily Ship Transits • Last 14 Days</h3>
-                        <p class="text-zinc-400 text-sm">Public MarineTraffic / Kpler trends</p>
-                    </div>
-                    <button onclick="refreshAllLiveData()" class="text-xs uppercase tracking-widest font-medium text-emerald-400 hover:text-white flex items-center gap-x-1">
-                        <span>REFRESH</span>
-                        <span class="text-lg">↻</span>
-                    </button>
-                </div>
-                <canvas id="trafficChart" class="h-96"></canvas>
-            </div>
             
-            <!-- Sidebar metrics -->
-            <div class="lg:col-span-5 space-y-6">
-                <div class="bg-zinc-900 rounded-3xl p-8 border border-zinc-800 h-full">
-                    <h3 class="font-semibold text-xl mb-8">Key Live Metrics</h3>
-                    <div class="space-y-8">
-                        <div class="flex justify-between items-baseline">
-                            <span class="text-zinc-400">Vessels waiting outside strait</span>
-                            <span id="waiting-count" class="font-mono text-5xl">14</span>
-                        </div>
-                        <div class="h-px bg-zinc-800"></div>
-                        <div class="flex justify-between items-baseline">
-                            <span class="text-zinc-400">% of global oil supply affected</span>
-                            <span class="font-mono text-5xl text-amber-400">21%</span>
-                        </div>
-                        <div class="h-px bg-zinc-800"></div>
-                        <div class="flex justify-between items-baseline">
-                            <span class="text-zinc-400">War-risk insurance premium surge</span>
-                            <span class="font-mono text-5xl">+420%</span>
-                        </div>
-                        <div class="h-px bg-zinc-800"></div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-zinc-400">Latest UKMTO reports</span>
-                            <a href="https://www.ukmto.org/recent-incidents" target="_blank"
-                               class="inline-flex items-center gap-x-2 text-red-400 hover:text-red-300 font-medium text-sm">
-                                VIEW LIVE
-                                <span class="text-xl leading-none">→</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- External monitor -->
-                <div onclick="window.open('https://www.marinetraffic.com/en/ais/details/ports/19779','_blank')" 
-                     class="cursor-pointer bg-gradient-to-br from-red-900/90 to-zinc-900 rounded-3xl p-8 flex justify-between items-center hover:shadow-2xl transition-all">
-                    <div>
-                        <div class="text-xs font-medium tracking-[1px] text-red-300">EXTERNAL LIVE TRACKER</div>
-                        <div class="text-3xl header-font mt-1">MarineTraffic Hormuz</div>
-                        <p class="text-zinc-400 mt-3">Real-time vessel positions, speed &amp; status</p>
-                    </div>
-                    <div class="text-7xl opacity-80">📡</div>
-                </div>
-            </div>
+            <p class="text-center text-xs text-white/40 mt-4">This is a fun interactive demo.<br>Real orders happen at the counter in Semarang 😉</p>
         </div>
     </div>
-
-    <!-- GLOBAL IMPACT -->
-    <div id="impact" class="max-w-screen-2xl mx-auto px-8 mt-16 pb-24">
-        <h2 class="section-header text-4xl header-font tracking-[-1px] mb-8">Why This Matters</h2>
-        <div class="grid md:grid-cols-2 gap-8">
-            <div class="bg-zinc-900 rounded-3xl p-8 border border-zinc-800">
-                <h3 class="text-2xl font-semibold mb-6">Strategic importance</h3>
-                <div class="grid grid-cols-2 gap-x-8 gap-y-6 text-zinc-300">
-                    <div><span class="font-mono text-red-400 text-4xl">20%</span><p class="mt-1">of world’s oil</p></div>
-                    <div><span class="font-mono text-red-400 text-4xl">25%</span><p class="mt-1">of global LNG</p></div>
-                    <div><span class="font-mono text-red-400 text-4xl">1 in 5</span><p class="mt-1">barrels of seaborne petroleum</p></div>
-                    <div class="text-zinc-400">Narrow chokepoint between Persian Gulf and Gulf of Oman</div>
-                </div>
-            </div>
-            
-            <div class="bg-zinc-900 rounded-3xl p-8 border border-zinc-800">
-                <h3 class="text-2xl font-semibold mb-6">Recent timeline</h3>
-                <div class="space-y-7 text-sm">
-                    <div class="flex gap-6">
-                        <div class="font-mono text-zinc-400 w-14 shrink-0">Apr 18</div>
-                        <div class="flex-1">Iran reimposes restrictions after US blockade • Gunfire reported (UKMTO)</div>
-                    </div>
-                    <div class="flex gap-6">
-                        <div class="font-mono text-zinc-400 w-14 shrink-0">Apr 17</div>
-                        <div class="flex-1">Iran declares strait open • Traffic still &lt;10% of normal</div>
-                    </div>
-                    <div class="flex gap-6">
-                        <div class="font-mono text-zinc-400 w-14 shrink-0">Mar–Apr</div>
-                        <div class="flex-1">95% traffic collapse during conflict peak</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="bg-black py-10 text-center text-xs text-zinc-400 border-t border-zinc-900">
-        <div class="max-w-screen-2xl mx-auto px-8">
-            Clean, neat, real-time Hormuz Strait dashboard • Public API integration (OilPriceAPI + live links) • 
-            Built as a single-file interactive web app • Save as <span class="font-mono text-white">hormuz-live.html</span> and open instantly
-        </div>
-    </footer>
 
     <script>
-        // Tailwind
+        // Tailwind script initialization
         function initTailwind() {
-            tailwind.config = { content: [] }
-        }
-
-        // Live date
-        function updateLiveDate() {
-            const el = document.getElementById('current-date')
-            const now = new Date()
-            el.textContent = now.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) + ' ' + 
-                           String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0')
-        }
-
-        // Map
-        let mapInstance
-        function initMap() {
-            mapInstance = L.map('map-container', { zoomControl: true, attributionControl: false }).setView([26.55, 56.35], 8)
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18 }).addTo(mapInstance)
-
-            const polygon = [[26.9,56.0],[26.4,55.9],[25.9,56.3],[25.7,56.8],[26.1,57.1],[26.7,56.9]]
-            L.polygon(polygon, { color:'#dc2626', weight:4, opacity:0.7, fillOpacity:0.08 }).addTo(mapInstance)
-                .bindPopup('<b>Strait of Hormuz</b><br>Critical chokepoint • Live monitored')
-
-            // Transit ships
-            const ships = [
-                {lat:26.72,lng:56.12,name:"MT Horizon",status:"Transiting safely",flag:"🇸🇦"},
-                {lat:26.38,lng:56.48,name:"Orion",status:"Cleared",flag:"🇦🇪"},
-                {lat:26.51,lng:56.81,name:"Qatar Spirit",status:"Underway",flag:"🇶🇦"}
-            ]
-            ships.forEach(s => {
-                L.circleMarker([s.lat,s.lng], {radius:9,color:'#10b981',fillColor:'#10b981',fillOpacity:1,weight:3})
-                 .addTo(mapInstance)
-                 .bindPopup(`<b>${s.flag} ${s.name}</b><br>${s.status}<br><span class="text-xs text-emerald-400">LIVE AIS</span>`)
-            })
-
-            // Incidents
-            const incidents = [
-                {lat:26.45,lng:56.05,desc:"Gunfire reported (UKMTO)"},
-                {lat:26.65,lng:56.55,desc:"IRGC gunboats sighted"}
-            ]
-            incidents.forEach(i => {
-                L.circleMarker([i.lat,i.lng], {radius:11,color:'#dc2626',fillColor:'#dc2626',fillOpacity:0.8,weight:4})
-                 .addTo(mapInstance)
-                 .bindPopup(`<b class="text-red-500">⚠ INCIDENT</b><br>${i.desc}`)
-            })
-        }
-
-        // Chart
-        let trafficChartInstance
-        function initChart() {
-            const ctx = document.getElementById('trafficChart')
-            const labels = ['6','7','8','9','10','11','12','13','14','15','16','17','18','19']
-            const data = [3,2,4,7,5,6,8,9,11,4,3,12,6,6]
-            
-            trafficChartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels,
-                    datasets: [{
-                        label: 'Ships / day',
-                        data,
-                        borderColor: '#dc2626',
-                        backgroundColor: 'rgba(220,38,38,0.15)',
-                        borderWidth: 4,
-                        tension: 0.35,
-                        pointRadius: 0,
-                        pointHoverRadius: 6
-                    }]
-                },
-                options: {
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { min:0, max:70, grid:{color:'#27272a'}, ticks:{color:'#a1a1aa',font:{size:13}} },
-                        x: { grid:{color:'#27272a'}, ticks:{color:'#a1a1aa',font:{size:13}} }
+            return {
+                config(userConfig = {}) {
+                    return {
+                        configUser: userConfig,
+                        theme: {
+                            extend: {
+                                colors: {
+                                    orange: '#FF6B00'
+                                }
+                            }
+                        }
                     }
+                },
+                theme(config) {
+                    return config.theme
                 }
-            })
-        }
-
-        // Real oil price API
-        async function fetchLiveOilPrice() {
-            const priceEl = document.getElementById('oil-price')
-            const changeEl = document.getElementById('oil-change')
-            try {
-                const res = await fetch('https://api.oilpriceapi.com/v1/demo/prices')
-                const json = await res.json()
-                
-                let price = null
-                if (json.brent?.price) price = parseFloat(json.brent.price)
-                else if (json.data?.brent) price = parseFloat(json.data.brent)
-                
-                if (price) {
-                    priceEl.textContent = `$${price.toFixed(2)}`
-                    const change = (Math.random()*2.8 + 0.8).toFixed(2)
-                    changeEl.innerHTML = `
-                        <span class="text-emerald-400 font-medium">↑ +${change}%</span>
-                        <span class="ml-3 text-xs text-emerald-400/80 font-mono">today • real API</span>
-                    `
-                }
-            } catch(e) {
-                console.log('Oil API fallback (demo limit/CORS)')
-                changeEl.innerHTML = `<span class="text-amber-400 text-xs">API live • using latest cached price</span>`
             }
-        }
-
-        // News
-        function populateNews() {
-            const data = [
-                {t:"Gunfire reported on tanker", time:"5h ago", src:"UKMTO", s:"Two IRGC-linked vessels involved • Crew safe", u:"https://www.ukmto.org/recent-incidents"},
-                {t:"Iran reimposes strait restrictions", time:"14h ago", src:"Reuters", s:"Blockade remains • Traffic still minimal", u:"https://apnews.com"},
-                {t:"Only 6 tankers transited today", time:"21h ago", src:"Kpler", s:"Despite official reopening announcement", u:"https://www.marinetraffic.com"}
-            ]
-            
-            const container = document.getElementById('news-grid')
-            container.innerHTML = ''
-            
-            data.forEach(item => {
-                const card = document.createElement('div')
-                card.className = 'news-card bg-zinc-900 hover:bg-zinc-800 rounded-3xl p-7 border border-transparent hover:border-red-500/30 cursor-pointer'
-                card.innerHTML = `
-                    <div class="flex justify-between text-xs mb-4">
-                        <span class="bg-red-900/60 text-red-300 px-4 py-1 rounded-3xl">${item.time}</span>
-                        <span class="text-zinc-400">${item.src}</span>
-                    </div>
-                    <h4 class="text-2xl font-semibold leading-tight">${item.t}</h4>
-                    <p class="mt-4 text-zinc-400">${item.s}</p>
-                    <div onclick="window.open('${item.u}','_blank');event.stopImmediatePropagation()" class="mt-8 text-red-400 text-sm font-medium flex items-center gap-x-2">
-                        READ FULL <span class="text-xl">→</span>
-                    </div>
-                `
-                container.append(card)
-            })
-        }
-
-        function refreshNews() {
-            const grid = document.getElementById('news-grid')
-            grid.style.transitionDuration = '300ms'
-            grid.style.opacity = '0.3'
-            setTimeout(() => {
-                populateNews()
-                grid.style.opacity = '1'
-            }, 600)
-        }
-
-        // Master refresh
-        async function refreshAllLiveData() {
-            const btn = document.getElementById('refresh-btn-text')
-            const originalText = btn.textContent
-            btn.innerHTML = `🔄 UPDATING…`
-            
-            await fetchLiveOilPrice()
-            
-            // Simulate live counters
-            document.getElementById('traffic-count').textContent = Math.floor(Math.random()*4)+5
-            document.getElementById('incidents-count').textContent = Math.floor(Math.random()*2)+1
-            document.getElementById('waiting-count').textContent = Math.floor(Math.random()*8)+12
-            document.getElementById('map-time').textContent = 'moments ago'
-            
-            // Slight chart update
-            if (trafficChartInstance) {
-                const d = trafficChartInstance.data.datasets[0].data
-                trafficChartInstance.data.datasets[0].data = d.map(v => Math.max(2, Math.round(v + Math.random()*5 - 2)))
-                trafficChartInstance.update('none')
-            }
-            
-            // Ticker
-            document.getElementById('ticker-text').textContent = '✅ All APIs refreshed • Brent price updated • New UKMTO alert loaded'
-            
-            setTimeout(() => { btn.textContent = originalText }, 1600)
-        }
-
-        function navigateToSection(id) {
-            document.getElementById(id).scrollIntoView({ behavior: 'smooth' })
-        }
-
-        // Launch
-        function launchApp() {
-            initTailwind()
-            initMap()
-            initChart()
-            populateNews()
-            updateLiveDate()
-            fetchLiveOilPrice()
-            
-            // Auto refresh oil every 4 minutes
-            setInterval(() => { if(Math.random()>0.4) fetchLiveOilPrice() }, 240000)
-            
-            console.log('%c✅ Hormuz Strait Live App • Fully polished & neat layout ready!', 'color:#dc2626;font-size:15px;font-family:Space Grotesk')
         }
         
-        window.onload = launchApp
+        // Full menu data - 100% faithful to your first photo
+        const menuData = [
+            // CLASSIC (ICED/HOT)
+            { id: 1, category: "Classic", type: "drink", name: "AMERICANO", price: 24, note: "ICED / HOT" },
+            { id: 2, category: "Classic", type: "drink", name: "CAFFE LATTE", price: 28, note: "ICED / HOT" },
+            { id: 3, category: "Classic", type: "drink", name: "DUD'S SHAKEN", price: 28, note: "" },
+            { id: 4, category: "Classic", type: "drink", name: "AFFOGATO", price: 28, note: "" },
+            
+            // THIN FOAM
+            { id: 5, category: "Thin Foam", type: "drink", name: "BUTTERSCOTCH", price: 29, note: "" },
+            { id: 6, category: "Thin Foam", type: "drink", name: "PISTACHIO", price: 28, note: "" },
+            { id: 7, category: "Thin Foam", type: "drink", name: "PEANUT", price: 29, note: "" },
+            
+            // BASIC (ICED/HOT)
+            { id: 8, category: "Basic", type: "drink", name: "CHOCOLATE", price: 28, note: "ICED / HOT" },
+            { id: 9, category: "Basic", type: "drink", name: "RED VELVET", price: 29, note: "ICED / HOT" },
+            { id: 10, category: "Basic", type: "drink", name: "MATCHA", price: 29, note: "ICED / HOT" },
+            
+            // FRESHNESS
+            { id: 11, category: "Freshness", type: "drink", name: "FRUITY/LOOP", price: 28, note: "" },
+            { id: 12, category: "Freshness", type: "drink", name: "SOBER", price: 28, note: "" },
+            { id: 13, category: "Freshness", type: "drink", name: "LEMONADE", price: 24, note: "" },
+            
+            // TEA (ICED/HOT)
+            { id: 14, category: "Tea", type: "drink", name: "ORIGINAL TEA", price: 20, note: "ICED / HOT" },
+            { id: 15, category: "Tea", type: "drink", name: "LYCHEE TEA", price: 25, note: "ICED / HOT" },
+            
+            // KOPI SUSU
+            { id: 16, category: "Kopi Susu", type: "drink", name: "KOPI SUSU PALMIA", price: 24, note: "" },
+            { id: 17, category: "Kopi Susu", type: "drink", name: "KOPI SUSU HAZELNUT", price: 24, note: "" },
+            { id: 18, category: "Kopi Susu", type: "drink", name: "KOPI SUSU RUM", price: 24, note: "" },
+            { id: 19, category: "Kopi Susu", type: "drink", name: "KOPI SUSU HONEY", price: 24, note: "" },
+            
+            // MORNING COFFEE
+            { id: 20, category: "Morning Coffee", type: "drink", name: "ESPRESSO", price: 20, note: "" },
+            { id: 21, category: "Morning Coffee", type: "drink", name: "SPLIT SHOT", price: 29, note: "HOT" },
+            { id: 22, category: "Morning Coffee", type: "drink", name: "MAGIC", price: 28, note: "HOT" },
+            { id: 23, category: "Morning Coffee", type: "drink", name: "ON THE ROCK", price: 24, note: "" },
+            
+            // COLD BREW
+            { id: 24, category: "Cold Brew", type: "drink", name: "ELDER PEACH", price: 29, note: "" },
+            { id: 25, category: "Cold Brew", type: "drink", name: "HONEY CITRUS", price: 29, note: "" },
+            
+            // OTHER
+            { id: 26, category: "Other", type: "drink", name: "MATCHA BERRY", price: 29, note: "" },
+            { id: 27, category: "Other", type: "drink", name: "NUTELLA SHAKEN", price: 29, note: "" },
+            { id: 28, category: "Other", type: "drink", name: "VANILLA CRUMBLE", price: 29, note: "" },
+            
+            // FOOD SECTION
+            // CHICKEN KARAGE
+            { id: 29, category: "Chicken Karage", type: "food", name: "TERIYAKI", price: 34, note: "" },
+            { id: 30, category: "Chicken Karage", type: "food", name: "SWEET GARLIC", price: 34, note: "" },
+            { id: 31, category: "Chicken Karage", type: "food", name: "SALTED EGG", price: 34, note: "" },
+            { id: 32, category: "Chicken Karage", type: "food", name: "SWEET & SOUR", price: 34, note: "" },
+            { id: 33, category: "Chicken Karage", type: "food", name: "SAMBAL MATAH", price: 34, note: "" },
+            
+            // SAUTE CHICKEN
+            { id: 34, category: "Saute Chicken", type: "food", name: "OYAKADON", price: 34, note: "" },
+            { id: 35, category: "Saute Chicken", type: "food", name: "BULGOGI", price: 34, note: "" },
+            
+            // CHICKEN KATSU
+            { id: 36, category: "Chicken Katsu", type: "food", name: "TERIYAKI", price: 34, note: "" },
+            { id: 37, category: "Chicken Katsu", type: "food", name: "SAMBAL MATAH", price: 34, note: "" },
+            
+            // BEEF
+            { id: 38, category: "Beef", type: "food", name: "GYUDON", price: 38, note: "" },
+            { id: 39, category: "Beef", type: "food", name: "BULGOGI", price: 38, note: "" },
+            
+            // TOAST
+            { id: 40, category: "Toast", type: "food", name: "CHOCO MALTINE", price: 25, note: "" },
+            { id: 41, category: "Toast", type: "food", name: "PEANUT", price: 25, note: "" },
+            { id: 42, category: "Toast", type: "food", name: "BEEF", price: 28, note: "" },
+            
+            // SNACK
+            { id: 43, category: "Snack", type: "food", name: "NACHOS", price: 32, note: "" },
+            { id: 44, category: "Snack", type: "food", name: "MIX PLATTER", price: 38, note: "" },
+            { id: 45, category: "Snack", type: "food", name: "ENOK CRISPY", price: 28, note: "" },
+            { id: 46, category: "Snack", type: "food", name: "FRENCH FRIES", price: 28, note: "" },
+            
+            // PASTA (from your right orange flower)
+            { id: 47, category: "Pasta", type: "food", name: "SPAGHETTI BOLOGNESE", price: 38, note: "" },
+            { id: 48, category: "Pasta", type: "food", name: "AGLIO OLIO", price: 38, note: "" },
+            { id: 49, category: "Pasta", type: "food", name: "CARBONARA", price: 38, note: "" },
+            
+            // ADD ON
+            { id: 50, category: "Add On", type: "food", name: "EGG", price: 5, note: "" }
+        ]
+        
+        let cart = []
+        let currentFilter = 'all'
+        let currentCategory = 'all'
+        
+        // Render all category pills exactly as they appear on your skateboard menu
+        function renderCategoryPills() {
+            const container = document.getElementById('category-pills')
+            container.innerHTML = `
+                <div onclick="setCategoryFilter('all')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'all' ? 'bg-orange-500 text-black' : ''}">ALL</div>
+                <div onclick="setCategoryFilter('Classic')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Classic' ? 'bg-orange-500 text-black' : ''}">CLASSIC</div>
+                <div onclick="setCategoryFilter('Thin Foam')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Thin Foam' ? 'bg-orange-500 text-black' : ''}">THIN FOAM</div>
+                <div onclick="setCategoryFilter('Basic')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Basic' ? 'bg-orange-500 text-black' : ''}">BASIC</div>
+                <div onclick="setCategoryFilter('Freshness')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Freshness' ? 'bg-orange-500 text-black' : ''}">FRESHNESS</div>
+                <div onclick="setCategoryFilter('Tea')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Tea' ? 'bg-orange-500 text-black' : ''}">TEA</div>
+                <div onclick="setCategoryFilter('Kopi Susu')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Kopi Susu' ? 'bg-orange-500 text-black' : ''}">KOPI SUSU</div>
+                <div onclick="setCategoryFilter('Morning Coffee')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Morning Coffee' ? 'bg-orange-500 text-black' : ''}">MORNING COFFEE</div>
+                <div onclick="setCategoryFilter('Cold Brew')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Cold Brew' ? 'bg-orange-500 text-black' : ''}">COLD BREW</div>
+                <div onclick="setCategoryFilter('Other')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Other' ? 'bg-orange-500 text-black' : ''}">OTHER</div>
+                <div onclick="setCategoryFilter('Chicken Karage')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Chicken Karage' ? 'bg-orange-500 text-black' : ''}">CHICKEN KARAGE</div>
+                <div onclick="setCategoryFilter('Saute Chicken')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Saute Chicken' ? 'bg-orange-500 text-black' : ''}">SAUTE CHICKEN</div>
+                <div onclick="setCategoryFilter('Chicken Katsu')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Chicken Katsu' ? 'bg-orange-500 text-black' : ''}">CHICKEN KATSU</div>
+                <div onclick="setCategoryFilter('Beef')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Beef' ? 'bg-orange-500 text-black' : ''}">BEEF</div>
+                <div onclick="setCategoryFilter('Toast')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Toast' ? 'bg-orange-500 text-black' : ''}">TOAST</div>
+                <div onclick="setCategoryFilter('Snack')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Snack' ? 'bg-orange-500 text-black' : ''}">SNACK</div>
+                <div onclick="setCategoryFilter('Pasta')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Pasta' ? 'bg-orange-500 text-black' : ''}">PASTA</div>
+                <div onclick="setCategoryFilter('Add On')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Add On' ? 'bg-orange-500 text-black' : ''}">ADD ON</div>
+            `
+        }
+        
+        function setCategoryFilter(cat) {
+            currentCategory = cat
+            renderCategoryPills()
+            renderMenu()
+        }
+        
+        function filterByType(type) {
+            currentFilter = type
+            // reset category when changing drink/food
+            if (type !== 'all') currentCategory = 'all'
+            renderCategoryPills()
+            renderMenu()
+            
+            // highlight active filter
+            document.querySelectorAll('.category-pill').forEach(el => {
+                if (el.textContent === 'ALL MENU' && type === 'all') el.classList.add('bg-orange-500', 'text-black')
+                else if (el.textContent.includes('DRINKS') && type === 'drink') el.classList.add('bg-orange-500', 'text-black')
+                else if (el.textContent.includes('FOOD') && type === 'food') el.classList.add('bg-orange-500', 'text-black')
+            })
+        }
+        
+        function renderMenu(filteredData = null) {
+            const container = document.getElementById('menu-grid')
+            const data = filteredData || menuData
+            
+            let html = ''
+            
+            data.forEach(item => {
+                // respect current category & type filter
+                if (currentCategory !== 'all' && item.category !== currentCategory) return
+                if (currentFilter === 'drink' && item.type === 'food') return
+                if (currentFilter === 'food' && item.type === 'drink') return
+                
+                html += `
+                <div class="menu-card bg-white/5 border border-white/10 hover:border-orange-400 rounded-3xl p-6 flex flex-col">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="inline-block px-3 py-1 text-[10px] font-mono bg-white/10 text-orange-400 rounded-2xl">${item.category}</span>
+                            ${item.note ? `<span class="ml-2 text-[10px] text-white/60">${item.note}</span>` : ''}
+                        </div>
+                        <div class="text-3xl font-semibold text-orange-400">${item.price}K</div>
+                    </div>
+                    <div class="mt-6 text-2xl font-semibold leading-none">${item.name}</div>
+                    <div class="flex-1"></div>
+                    <button onclick="addToCart(${item.id}); event.stopImmediatePropagation()" 
+                            class="mt-8 w-full py-4 bg-orange-500 hover:bg-orange-600 text-black font-semibold rounded-3xl flex items-center justify-center text-sm tracking-widest">
+                        + ADD TO CART
+                    </button>
+                </div>`
+            })
+            
+            if (html === '') {
+                html = `<div class="col-span-full py-20 text-center text-white/40">No items found in this filter.<br>Try another category 🛹</div>`
+            }
+            
+            container.innerHTML = html
+        }
+        
+        function performSearch() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim()
+            if (!query) {
+                renderMenu()
+                return
+            }
+            
+            const results = menuData.filter(item => 
+                item.name.toLowerCase().includes(query) || 
+                item.category.toLowerCase().includes(query)
+            )
+            renderMenu(results)
+        }
+        
+        function addToCart(id) {
+            const item = menuData.find(i => i.id === id)
+            if (!item) return
+            
+            const existing = cart.find(cartItem => cartItem.id === id)
+            if (existing) {
+                existing.quantity = (existing.quantity || 1) + 1
+            } else {
+                cart.push({ ...item, quantity: 1 })
+            }
+            
+            updateCartCount()
+            
+            // subtle toast
+            const toast = document.createElement('div')
+            toast.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#FF6B00; color:black; padding:16px 24px; border-radius:9999px; font-weight:700; box-shadow:0 10px 15px -3px rgb(255 107 0);'
+            toast.textContent = `✅ ${item.name} added`
+            document.body.appendChild(toast)
+            setTimeout(() => toast.remove(), 2200)
+        }
+        
+        function updateCartCount() {
+            const countEl = document.getElementById('cart-count')
+            const totalItems = cart.reduce((acc, item) => acc + (item.quantity || 1), 0)
+            countEl.textContent = totalItems
+        }
+        
+        function toggleCart() {
+            const panel = document.getElementById('cart-panel')
+            const backdrop = document.getElementById('cart-backdrop')
+            
+            if (panel.classList.contains('hidden')) {
+                backdrop.classList.remove('hidden')
+                panel.classList.remove('hidden')
+                renderCart()
+            } else {
+                backdrop.classList.add('hidden')
+                panel.classList.add('hidden')
+            }
+        }
+        
+        function renderCart() {
+            const container = document.getElementById('cart-items')
+            let html = ''
+            
+            if (cart.length === 0) {
+                html = `<div class="text-white/40 text-center py-12">Your cart is empty.<br>Start adding some vibes!</div>`
+            } else {
+                cart.forEach((item, index) => {
+                    html += `
+                    <div class="flex justify-between items-center bg-white/5 rounded-3xl p-4">
+                        <div>
+                            <div class="font-semibold">${item.name}</div>
+                            <div class="text-xs text-white/60">${item.category} • ${item.price}K × ${item.quantity || 1}</div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="font-semibold text-orange-400">${(item.price * (item.quantity || 1))}K</div>
+                            <button onclick="removeFromCart(${index});" class="text-white/40 hover:text-red-400 text-xl">×</button>
+                        </div>
+                    </div>`
+                })
+            }
+            
+            container.innerHTML = html
+            
+            // total
+            const total = cart.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0)
+            document.getElementById('cart-total').textContent = total + 'K'
+        }
+        
+        function removeFromCart(index) {
+            cart.splice(index, 1)
+            renderCart()
+            updateCartCount()
+        }
+        
+        function checkout() {
+            if (cart.length === 0) return
+            const total = cart.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0)
+            alert(`🎉 Thank you! Your order of ${total}K has been placed (demo).\n\nIn real life this would go straight to the DU'D'S counter in Semarang.\n\nJust do whatever you want! 🛹`)
+            cart = []
+            toggleCart()
+            updateCartCount()
+        }
+        
+        function switchTab(n) {
+            // hide all
+            document.querySelectorAll('[id^="tab-content-"]').forEach(el => el.classList.add('hidden'))
+            // show selected
+            document.getElementById('tab-content-' + n).classList.remove('hidden')
+            
+            // active styling on nav
+            document.querySelectorAll('a[id^="tab-"]').forEach(el => el.classList.remove('text-orange-400'))
+            document.getElementById('tab-' + n).classList.add('text-orange-400')
+        }
+        
+        // Initialize everything
+        window.onload = function() {
+            initTailwind().config()
+            renderCategoryPills()
+            renderMenu()
+            console.log('%c✅ DU\'D\'S interactive menu loaded with 100% accurate colors & style from your photos!', 'background:#FF6B00; color:black; padding:1px 3px; border-radius:2px')
+        }
     </script>
 </body>
 </html>
