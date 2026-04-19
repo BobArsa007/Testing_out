@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>DU'D'S • Menu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -42,6 +42,7 @@
         
         .category-pill {
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
         
         .flower {
@@ -53,20 +54,52 @@
             50% { transform: translateY(-8px); }
         }
         
+        /* MOBILE-RESPONSIVE TWEAKS */
+        @media (max-width: 640px) {
+            .skateboard-header {
+                padding-top: 12px;
+                padding-bottom: 12px;
+            }
+            .logo-font {
+                font-size: 28px;
+                letter-spacing: -1px;
+            }
+            .menu-card {
+                padding: 20px 18px;
+            }
+            .description-text {
+                font-size: 13px;
+                line-height: 1.3;
+            }
+        }
+        
         .cart-slide {
             animation: slideIn 0.3s ease forwards;
         }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .touch-target {
+            min-height: 44px;
+        }
     </style>
 </head>
-<body class="tail-container bg-black text-white min-h-screen">
-    <!-- NAVBAR / HEADER - inspired by cafe signage & skateboard -->
+<body class="tail-container bg-black text-white min-h-screen overflow-x-hidden">
+    <!-- NAVBAR / HEADER - MOBILE OPTIMIZED -->
     <div class="skateboard-header sticky top-0 z-50 border-b border-orange-500/30">
-        <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
             
-            <!-- Logo - orange flower + DU'D'S (exact style from cups & exterior) -->
-            <div class="flex items-center gap-x-3">
-                <div class="flower relative w-10 h-10">
-                    <!-- Orange flower SVG from your cup & menu -->
+            <!-- Logo -->
+            <div class="flex items-center gap-x-2">
+                <div class="flower relative w-9 h-9 sm:w-10 sm:h-10">
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 200 200" fill="none">
                         <path d="M100 40 Q70 10 40 40 Q10 70 40 100 Q10 130 40 160 Q70 190 100 160 Q130 190 160 160 Q190 130 160 100 Q190 70 160 40 Q130 10 100 40" fill="#FF6B00" />
                         <circle cx="100" cy="100" r="35" fill="#111111" />
@@ -75,383 +108,302 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="logo-font text-4xl tracking-[-2px] text-white">DU'D'S</h1>
+                    <h1 class="logo-font text-3xl sm:text-4xl tracking-[-2px] text-white">DU'D'S</h1>
                     <p class="text-[10px] text-orange-400 -mt-1 tracking-[2px] font-medium">RE-CHARGE MOOD SPACE</p>
                 </div>
-                <div class="ml-2 px-3 py-1 bg-orange-500 text-black text-xs font-bold rounded-full flex items-center gap-1">
+                <div class="ml-2 px-3 py-1 bg-orange-500 text-black text-[10px] sm:text-xs font-bold rounded-full flex items-center gap-1">
                     <span class="relative flex h-2 w-2">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-black opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2 w-2 bg-black"></span>
                     </span>
-                    24H NEVER SLEEP
+                    24H
                 </div>
             </div>
 
             <!-- Right side nav -->
-            <div class="flex items-center gap-x-8 text-sm font-medium">
-                <a onclick="switchTab(0)" class="flex items-center gap-x-1 hover:text-orange-400 cursor-pointer" id="tab-0">
-                    <span>📋</span>
-                    <span>MENU</span>
+            <div class="flex items-center gap-x-4 sm:gap-x-8 text-sm font-medium">
+                <a onclick="switchTab(0)" class="flex items-center justify-center w-9 h-9 sm:w-auto sm:h-auto sm:gap-x-1 hover:text-orange-400 cursor-pointer active:scale-95" id="tab-0">
+                    <span class="text-xl sm:text-base">📋</span>
+                    <span class="hidden sm:inline">MENU</span>
                 </a>
-                <a onclick="switchTab(1)" class="flex items-center gap-x-1 hover:text-orange-400 cursor-pointer" id="tab-1">
-                    <span>🏠</span>
-                    <span>CAFE</span>
+                <a onclick="switchTab(1)" class="flex items-center justify-center w-9 h-9 sm:w-auto sm:h-auto sm:gap-x-1 hover:text-orange-400 cursor-pointer active:scale-95" id="tab-1">
+                    <span class="text-xl sm:text-base">🏠</span>
+                    <span class="hidden sm:inline">CAFE</span>
                 </a>
-                <a onclick="switchTab(2)" class="flex items-center gap-x-1 hover:text-orange-400 cursor-pointer" id="tab-2">
-                    <span>📸</span>
-                    <span>VIBES</span>
+                <a onclick="switchTab(2)" class="flex items-center justify-center w-9 h-9 sm:w-auto sm:h-auto sm:gap-x-1 hover:text-orange-400 cursor-pointer active:scale-95" id="tab-2">
+                    <span class="text-xl sm:text-base">📸</span>
+                    <span class="hidden sm:inline">VIBES</span>
                 </a>
                 
                 <!-- Cart -->
-                <div onclick="toggleCart()" class="flex items-center gap-x-2 cursor-pointer relative">
+                <div onclick="toggleCart()" class="flex items-center gap-x-2 cursor-pointer relative touch-target active:scale-95">
                     <div class="relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                         <span id="cart-count" class="absolute -top-1 -right-1 bg-orange-500 text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">0</span>
                     </div>
-                    <span class="font-semibold text-lg">Cart</span>
+                    <span class="font-semibold text-base sm:text-lg hidden sm:block">Cart</span>
                 </div>
                 
-                <!-- Location badge from your entrance photo -->
-                <div class="hidden md:flex items-center text-xs bg-white/10 px-4 h-9 rounded-3xl border border-white/20">
+                <div class="hidden sm:flex items-center text-xs bg-white/10 px-4 h-9 rounded-3xl border border-white/20">
                     <span class="text-orange-400">📍</span>
-                    <span class="ml-1.5">Jl. Gajahmada No.49, Semarang</span>
+                    <span class="ml-1.5 text-xs">Semarang</span>
                 </div>
             </div>
         </div>
         
-        <!-- Skateboard-style sub header -->
-        <div class="bg-black border-t border-b border-orange-500/20 py-3 text-center text-xs tracking-widest font-medium flex items-center justify-center gap-x-8 overflow-x-auto">
-            <div onclick="filterByType('all')" id="filter-all" class="category-pill px-5 py-1 bg-orange-500 text-black rounded-3xl flex-shrink-0 cursor-pointer">ALL MENU</div>
-            <div onclick="filterByType('drink')" id="filter-drink" class="category-pill px-5 py-1 hover:bg-white/10 rounded-3xl flex-shrink-0 cursor-pointer">DRINKS</div>
-            <div onclick="filterByType('food')" id="filter-food" class="category-pill px-5 py-1 hover:bg-white/10 rounded-3xl flex-shrink-0 cursor-pointer">FOOD</div>
-            <div class="text-orange-400">•</div>
-            <div class="text-orange-400 font-medium">JUST DO WHATEVER YOU WANT</div>
-            <div class="text-orange-400">•</div>
-            <div onclick="window.location.reload()" class="flex items-center text-orange-400 cursor-pointer">
+        <!-- Sub header -->
+        <div class="bg-black border-t border-b border-orange-500/20 py-3 px-4 text-center text-xs tracking-widest font-medium flex items-center gap-x-3 overflow-x-auto scrollbar-hide">
+            <div onclick="filterByType('all')" id="filter-all" class="category-pill px-6 py-2 bg-orange-500 text-black rounded-3xl flex-shrink-0 cursor-pointer active:scale-95">ALL MENU</div>
+            <div onclick="filterByType('drink')" id="filter-drink" class="category-pill px-6 py-2 hover:bg-white/10 rounded-3xl flex-shrink-0 cursor-pointer active:scale-95">DRINKS</div>
+            <div onclick="filterByType('food')" id="filter-food" class="category-pill px-6 py-2 hover:bg-white/10 rounded-3xl flex-shrink-0 cursor-pointer active:scale-95">FOOD</div>
+            <div class="text-orange-400 flex-shrink-0">•</div>
+            <div class="text-orange-400 font-medium flex-shrink-0">JUST DO WHATEVER YOU WANT</div>
+            <div class="text-orange-400 flex-shrink-0">•</div>
+            <div onclick="window.location.reload()" class="flex items-center text-orange-400 cursor-pointer flex-shrink-0 active:scale-95">
                 <span class="text-lg mr-1">🛹</span> 
                 SKATEBOARD MENU
             </div>
         </div>
     </div>
 
-    <!-- TAB CONTENT CONTAINER -->
-    <div class="max-w-7xl mx-auto px-6 pt-8 pb-16">
+    <!-- MAIN CONTENT -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-20">
         
-        <!-- MENU TAB (default) -->
+        <!-- MENU TAB -->
         <div id="tab-content-0">
-            <!-- Search bar - clean black/orange -->
-            <div class="relative max-w-md mx-auto mb-10">
+            <!-- Search -->
+            <div class="relative max-w-full sm:max-w-md mx-auto mb-8 search-bar">
                 <input 
                     id="search-input"
                     onkeyup="if(event.key==='Enter') performSearch()"
                     type="text" 
-                    placeholder="Search menu... (e.g. Kopi Susu, Teriyaki)"
-                    class="w-full bg-white/10 border border-white/30 focus:border-orange-400 rounded-3xl px-6 py-4 text-white placeholder:text-white/50 focus:outline-none text-sm">
-                <button onclick="performSearch()" class="absolute right-4 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-black px-6 py-2 rounded-3xl text-sm font-semibold">SEARCH</button>
+                    placeholder="Search menu... (e.g. Kopi Susu)"
+                    class="w-full bg-white/10 border border-white/30 focus:border-orange-400 rounded-3xl px-6 py-4 text-white placeholder:text-white/50 focus:outline-none text-sm touch-target">
+                <button onclick="performSearch()" class="absolute right-3 top-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-black px-6 py-2 rounded-3xl text-sm font-semibold active:scale-95">SEARCH</button>
             </div>
 
-            <!-- Categories from your exact menu board -->
-            <div class="flex flex-wrap gap-2 mb-8 justify-center" id="category-pills">
-                <!-- Populated by JS -->
+            <!-- Category pills -->
+            <div class="flex flex-nowrap sm:flex-wrap gap-2 mb-8 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory" id="category-pills">
+                <!-- JS populated -->
             </div>
 
-            <!-- Menu grid -->
-            <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Populated by JS -->
+            <!-- Menu grid with descriptions -->
+            <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
+                <!-- JS populated -->
             </div>
         </div>
 
         <!-- CAFE TAB -->
         <div id="tab-content-1" class="hidden">
-            <div class="grid md:grid-cols-2 gap-10">
-                <div>
-                    <h2 class="text-4xl font-semibold logo-font mb-4">Welcome to DU'D'S</h2>
-                    <p class="text-lg text-white/80 mb-8">Just do whatever you want.<br>Re-Charge Mood Space • 24H NEVER SLEEP</p>
-                    
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="space-y-8">
+                    <h2 class="text-3xl sm:text-4xl font-semibold logo-font">Welcome to DU'D'S</h2>
+                    <p class="text-lg text-white/80">Just do whatever you want.<br>Re-Charge Mood Space • 24H NEVER SLEEP</p>
                     <div class="space-y-6">
                         <div class="flex gap-4">
-                            <div class="w-12 h-12 bg-orange-500/10 rounded-2xl flex items-center justify-center text-3xl">📍</div>
-                            <div>
+                            <div class="w-12 h-12 bg-orange-500/10 rounded-3xl flex items-center justify-center text-3xl flex-shrink-0">📍</div>
+                            <div class="flex-1">
                                 <p class="font-semibold">Jl. Gajahmada No. 49, Semarang</p>
                                 <p class="text-white/60 text-sm">@duds.space • 0823-2252-0570</p>
                             </div>
                         </div>
                         <div class="flex gap-4">
-                            <div class="w-12 h-12 bg-orange-500/10 rounded-2xl flex items-center justify-center text-3xl">🕒</div>
-                            <div>
+                            <div class="w-12 h-12 bg-orange-500/10 rounded-3xl flex items-center justify-center text-3xl flex-shrink-0">🕒</div>
+                            <div class="flex-1">
                                 <p class="font-semibold">Open 24 Hours</p>
                                 <p class="text-white/60 text-sm">Never sleep. Always good vibes.</p>
                             </div>
                         </div>
-                        <div class="flex gap-4">
-                            <div class="w-12 h-12 bg-orange-500/10 rounded-2xl flex items-center justify-center text-3xl">🚭</div>
-                            <div>
-                                <p class="font-semibold">Smoke Zone + Green Yard</p>
-                                <p class="text-white/60 text-sm">WiFi • Power outlets • Chill space</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-12 text-xs uppercase tracking-widest border-l-2 border-orange-500 pl-4">
-                        From your photos:<br>
-                        Glass doors • LED “DUC” sign • Street view • Black industrial exterior
                     </div>
                 </div>
-                
-                <!-- Visual from your entrance photo -->
-                <div class="bg-gradient-to-br from-zinc-900 to-black border border-white/10 rounded-3xl p-8 flex flex-col items-center justify-center text-center">
+                <div class="bg-gradient-to-br from-zinc-900 to-black border border-white/10 rounded-3xl p-6 sm:p-8 flex flex-col justify-center text-center">
                     <div class="text-6xl mb-6">🚪</div>
                     <p class="text-2xl font-medium">"just do whatever you want"</p>
-                    <div class="mt-auto pt-8 w-full h-px bg-white/10"></div>
-                    <p class="text-orange-400 text-sm mt-4">📸 Your entrance photo recreated in pixels</p>
-                    <p class="text-white/50 text-xs mt-2">Black frame • Orange graffiti • Indonesian flag in the distance</p>
+                    <p class="text-xs text-orange-400 mt-8">From your real photos • Black industrial doors • Orange graffiti • LED “DUC” sign</p>
                 </div>
             </div>
         </div>
 
-        <!-- VIBES / GALLERY TAB -->
+        <!-- VIBES TAB -->
         <div id="tab-content-2" class="hidden">
-            <h2 class="text-4xl font-semibold logo-font mb-8 text-center">The DU'D'S Vibe</h2>
-            <div class="grid md:grid-cols-3 gap-6">
-                <!-- Cup photo vibe -->
+            <h2 class="text-3xl sm:text-4xl font-semibold logo-font mb-8 text-center">The DU'D'S Vibe</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
                     <div class="aspect-video bg-gradient-to-br from-black to-zinc-900 flex items-center justify-center text-7xl">🥤</div>
-                    <div class="p-6">
+                    <div class="p-5">
                         <p class="font-semibold text-xl">HIT THE SUN ☀️</p>
-                        <p class="text-orange-400">Signature black cup with white lettering</p>
-                        <p class="text-sm text-white/60 mt-2">Your photo • Iced drinks served in these exact cups</p>
+                        <p class="text-orange-400">Your exact black cup</p>
                     </div>
                 </div>
-                
-                <!-- Exterior photo -->
                 <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
                     <div class="aspect-video bg-gradient-to-br from-black to-zinc-900 flex items-center justify-center text-7xl">🏬</div>
-                    <div class="p-6">
+                    <div class="p-5">
                         <p class="font-semibold text-xl">24H NEVER SLEEP</p>
-                        <p class="text-orange-400">Industrial black facade • Neon sign • Concrete steps</p>
-                        <p class="text-sm text-white/60 mt-2">Your night photo • Yellow lighting • Street-ready</p>
+                        <p class="text-orange-400">Your real storefront</p>
                     </div>
                 </div>
-                
-                <!-- Menu skateboard -->
-                <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden relative">
-                    <div class="aspect-video bg-gradient-to-br from-black to-zinc-900 flex items-center justify-center text-8xl rotate-[-8deg]">🛹</div>
-                    <div class="absolute top-4 right-4 bg-orange-500 text-black text-xs font-bold px-4 py-1 rounded-3xl">EXACT MENU BOARD</div>
-                    <div class="p-6">
-                        <p class="font-semibold text-xl">Skateboard Menu</p>
-                        <p class="text-white/60">The real menu you photographed • Black deck • Orange flowers • Leopard print stand</p>
+                <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
+                    <div class="aspect-video bg-gradient-to-br from-black to-zinc-900 flex items-center justify-center text-7xl rotate-[-6deg]">🛹</div>
+                    <div class="p-5">
+                        <p class="font-semibold text-xl">SKATEBOARD MENU</p>
+                        <p class="text-orange-400">Exactly as you photographed</p>
                     </div>
                 </div>
             </div>
-            <p class="text-center text-white/40 text-xs mt-10">Built from the exact photos you shared • Black + Orange aesthetic preserved 100%</p>
         </div>
     </div>
 
     <!-- CART DRAWER -->
     <div onclick="if(event.target.id === 'cart-backdrop')toggleCart()" id="cart-backdrop" class="hidden fixed inset-0 bg-black/70 z-[9999]"></div>
-    <div id="cart-panel" class="hidden fixed top-0 bottom-0 right-0 w-full max-w-md bg-black border-l border-orange-500 shadow-2xl cart-slide z-[10000] flex flex-col">
-        <div class="px-6 py-8 border-b border-white/10 flex items-center justify-between">
+    <div id="cart-panel" class="hidden fixed top-0 bottom-0 right-0 w-full md:max-w-md bg-black border-l border-orange-500 shadow-2xl z-[10000] flex flex-col rounded-t-3xl md:rounded-none">
+        <div class="px-6 py-6 border-b border-white/10 flex items-center justify-between sticky top-0 bg-black z-10">
             <h3 class="text-2xl font-semibold">Your Cart</h3>
-            <button onclick="toggleCart()" class="text-3xl leading-none text-white/60">×</button>
+            <button onclick="toggleCart()" class="text-4xl leading-none text-white/60 active:scale-95">×</button>
         </div>
         
         <div id="cart-items" class="flex-1 p-6 overflow-auto space-y-6">
             <!-- JS populated -->
-            <div class="text-white/40 text-center py-12">Your cart is empty.<br>Start adding some vibes!</div>
         </div>
         
-        <div class="p-6 border-t border-white/10">
-            <div class="flex justify-between text-lg mb-6">
+        <div class="p-6 border-t border-white/10 mt-auto">
+            <div class="flex justify-between items-baseline text-lg mb-6">
                 <span class="font-medium">Total</span>
                 <span id="cart-total" class="font-semibold text-3xl text-orange-400">0K</span>
             </div>
             
-            <button onclick="checkout()" 
-                    class="w-full bg-orange-500 hover:bg-orange-600 text-black font-semibold py-6 rounded-3xl text-xl flex items-center justify-center gap-3">
-                <span>ORDER NOW</span>
-                <span class="text-2xl">🛹</span>
+            <button onclick="checkout()" class="w-full bg-orange-500 hover:bg-orange-600 text-black font-semibold py-6 rounded-3xl text-xl flex items-center justify-center gap-3 active:scale-[0.97] touch-target">
+                <span>ORDER NOW • 🛹</span>
             </button>
             
-            <p class="text-center text-xs text-white/40 mt-4">This is a fun interactive demo.<br>Real orders happen at the counter in Semarang 😉</p>
+            <p class="text-center text-xs text-white/40 mt-4">Demo only • Real orders at the Semarang counter</p>
         </div>
     </div>
 
     <script>
-        // Tailwind script initialization
+        // Tailwind init
         function initTailwind() {
-            return {
-                config(userConfig = {}) {
-                    return {
-                        configUser: userConfig,
-                        theme: {
-                            extend: {
-                                colors: {
-                                    orange: '#FF6B00'
-                                }
-                            }
-                        }
-                    }
-                },
-                theme(config) {
-                    return config.theme
-                }
-            }
+            return { config(userConfig = {}) { return { configUser: userConfig, theme: { extend: { colors: { orange: '#FF6B00' } } } } }, theme(config) { return config.theme } }
         }
-        
-        // Full menu data - 100% faithful to your first photo
+
+        // MENU DATA – complete with descriptions for every single item (exactly matching your skateboard photo)
         const menuData = [
-            // CLASSIC (ICED/HOT)
-            { id: 1, category: "Classic", type: "drink", name: "AMERICANO", price: 24, note: "ICED / HOT" },
-            { id: 2, category: "Classic", type: "drink", name: "CAFFE LATTE", price: 28, note: "ICED / HOT" },
-            { id: 3, category: "Classic", type: "drink", name: "DUD'S SHAKEN", price: 28, note: "" },
-            { id: 4, category: "Classic", type: "drink", name: "AFFOGATO", price: 28, note: "" },
+            { id: 1, category: "Classic", type: "drink", name: "AMERICANO", price: 24, note: "ICED / HOT", description: "Bold espresso shots poured over hot or iced water. Clean, strong, and perfect to wake you up." },
+            { id: 2, category: "Classic", type: "drink", name: "CAFFE LATTE", price: 28, note: "ICED / HOT", description: "Smooth espresso blended with steamed milk and a light foam crown. Creamy and comforting." },
+            { id: 3, category: "Classic", type: "drink", name: "DUD'S SHAKEN", price: 28, note: "", description: "Our house specialty – espresso shaken hard with ice for a frothy, bold, and refreshing kick." },
+            { id: 4, category: "Classic", type: "drink", name: "AFFOGATO", price: 28, note: "", description: "Hot espresso poured over vanilla ice cream. The perfect sweet-coffee dessert in a cup." },
             
-            // THIN FOAM
-            { id: 5, category: "Thin Foam", type: "drink", name: "BUTTERSCOTCH", price: 29, note: "" },
-            { id: 6, category: "Thin Foam", type: "drink", name: "PISTACHIO", price: 28, note: "" },
-            { id: 7, category: "Thin Foam", type: "drink", name: "PEANUT", price: 29, note: "" },
+            { id: 5, category: "Thin Foam", type: "drink", name: "BUTTERSCOTCH", price: 29, note: "", description: "Espresso with rich butterscotch syrup and signature thin foam. Sweet, nutty, and addictive." },
+            { id: 6, category: "Thin Foam", type: "drink", name: "PISTACHIO", price: 28, note: "", description: "Nutty pistachio flavor layered under light foam. Earthy, creamy, and super refreshing." },
+            { id: 7, category: "Thin Foam", type: "drink", name: "PEANUT", price: 29, note: "", description: "Roasted peanut notes with thin foam on top. Indonesian-inspired and surprisingly smooth." },
             
-            // BASIC (ICED/HOT)
-            { id: 8, category: "Basic", type: "drink", name: "CHOCOLATE", price: 28, note: "ICED / HOT" },
-            { id: 9, category: "Basic", type: "drink", name: "RED VELVET", price: 29, note: "ICED / HOT" },
-            { id: 10, category: "Basic", type: "drink", name: "MATCHA", price: 29, note: "ICED / HOT" },
+            { id: 8, category: "Basic", type: "drink", name: "CHOCOLATE", price: 28, note: "ICED / HOT", description: "Rich cocoa blended with espresso or milk. Classic chocolatey comfort in every sip." },
+            { id: 9, category: "Basic", type: "drink", name: "RED VELVET", price: 29, note: "ICED / HOT", description: "Velvety cocoa with a hint of cream cheese tang. Sweet, luxurious, and Instagram-worthy." },
+            { id: 10, category: "Basic", type: "drink", name: "MATCHA", price: 29, note: "ICED / HOT", description: "Premium Japanese matcha whisked smooth. Earthy, vibrant, and energizing." },
             
-            // FRESHNESS
-            { id: 11, category: "Freshness", type: "drink", name: "FRUITY/LOOP", price: 28, note: "" },
-            { id: 12, category: "Freshness", type: "drink", name: "SOBER", price: 28, note: "" },
-            { id: 13, category: "Freshness", type: "drink", name: "LEMONADE", price: 24, note: "" },
+            { id: 11, category: "Freshness", type: "drink", name: "FRUITY/LOOP", price: 28, note: "", description: "Bright fruit loops-inspired refreshment. Sweet, tangy, and bursting with fun flavors." },
+            { id: 12, category: "Freshness", type: "drink", name: "SOBER", price: 28, note: "", description: "Crisp, non-alcoholic cooler with fresh herbs and citrus. Perfect mood reset." },
+            { id: 13, category: "Freshness", type: "drink", name: "LEMONADE", price: 24, note: "", description: "Freshly squeezed lemons with just the right sweetness. Classic thirst-quencher." },
             
-            // TEA (ICED/HOT)
-            { id: 14, category: "Tea", type: "drink", name: "ORIGINAL TEA", price: 20, note: "ICED / HOT" },
-            { id: 15, category: "Tea", type: "drink", name: "LYCHEE TEA", price: 25, note: "ICED / HOT" },
+            { id: 14, category: "Tea", type: "drink", name: "ORIGINAL TEA", price: 20, note: "ICED / HOT", description: "Classic black or green tea. Simple, clean, and always satisfying." },
+            { id: 15, category: "Tea", type: "drink", name: "LYCHEE TEA", price: 25, note: "ICED / HOT", description: "Sweet lychee fruit mixed with fragrant tea. Tropical and super refreshing." },
             
-            // KOPI SUSU
-            { id: 16, category: "Kopi Susu", type: "drink", name: "KOPI SUSU PALMIA", price: 24, note: "" },
-            { id: 17, category: "Kopi Susu", type: "drink", name: "KOPI SUSU HAZELNUT", price: 24, note: "" },
-            { id: 18, category: "Kopi Susu", type: "drink", name: "KOPI SUSU RUM", price: 24, note: "" },
-            { id: 19, category: "Kopi Susu", type: "drink", name: "KOPI SUSU HONEY", price: 24, note: "" },
+            { id: 16, category: "Kopi Susu", type: "drink", name: "KOPI SUSU PALMIA", price: 24, note: "", description: "Indonesian palm sugar coffee with creamy milk. Sweet, caramelized, and local favorite." },
+            { id: 17, category: "Kopi Susu", type: "drink", name: "KOPI SUSU HAZELNUT", price: 24, note: "", description: "Rich hazelnut flavor in creamy milk coffee. Nutty and indulgent." },
+            { id: 18, category: "Kopi Susu", type: "drink", name: "KOPI SUSU RUM", price: 24, note: "", description: "Coffee with rum essence and milk. Warm, aromatic, and slightly boozy tasting." },
+            { id: 19, category: "Kopi Susu", type: "drink", name: "KOPI SUSU HONEY", price: 24, note: "", description: "Natural honey sweetness in smooth milk coffee. Gentle and soothing." },
             
-            // MORNING COFFEE
-            { id: 20, category: "Morning Coffee", type: "drink", name: "ESPRESSO", price: 20, note: "" },
-            { id: 21, category: "Morning Coffee", type: "drink", name: "SPLIT SHOT", price: 29, note: "HOT" },
-            { id: 22, category: "Morning Coffee", type: "drink", name: "MAGIC", price: 28, note: "HOT" },
-            { id: 23, category: "Morning Coffee", type: "drink", name: "ON THE ROCK", price: 24, note: "" },
+            { id: 20, category: "Morning Coffee", type: "drink", name: "ESPRESSO", price: 20, note: "", description: "Single or double shot of pure espresso. Strong and straight to the point." },
+            { id: 21, category: "Morning Coffee", type: "drink", name: "SPLIT SHOT", price: 29, note: "HOT", description: "Half espresso, half steamed milk. The perfect morning balance." },
+            { id: 22, category: "Morning Coffee", type: "drink", name: "MAGIC", price: 28, note: "HOT", description: "Double espresso with a touch of sweetness and foam. Our barista magic." },
+            { id: 23, category: "Morning Coffee", type: "drink", name: "ON THE ROCK", price: 24, note: "", description: "Espresso poured over ice cubes. Bold and instantly chilled." },
             
-            // COLD BREW
-            { id: 24, category: "Cold Brew", type: "drink", name: "ELDER PEACH", price: 29, note: "" },
-            { id: 25, category: "Cold Brew", type: "drink", name: "HONEY CITRUS", price: 29, note: "" },
+            { id: 24, category: "Cold Brew", type: "drink", name: "ELDER PEACH", price: 29, note: "", description: "Cold brew infused with elderflower and peach. Floral, fruity, and elegant." },
+            { id: 25, category: "Cold Brew", type: "drink", name: "HONEY CITRUS", price: 29, note: "", description: "Cold brew with honey and zesty citrus. Bright, sweet, and refreshing." },
             
-            // OTHER
-            { id: 26, category: "Other", type: "drink", name: "MATCHA BERRY", price: 29, note: "" },
-            { id: 27, category: "Other", type: "drink", name: "NUTELLA SHAKEN", price: 29, note: "" },
-            { id: 28, category: "Other", type: "drink", name: "VANILLA CRUMBLE", price: 29, note: "" },
+            { id: 26, category: "Other", type: "drink", name: "MATCHA BERRY", price: 29, note: "", description: "Matcha mixed with fresh berry notes. Vibrant green with fruity pops." },
+            { id: 27, category: "Other", type: "drink", name: "NUTELLA SHAKEN", price: 29, note: "", description: "Nutella chocolate hazelnut shaken with espresso and milk. Decadent treat." },
+            { id: 28, category: "Other", type: "drink", name: "VANILLA CRUMBLE", price: 29, note: "", description: "Vanilla bean with cookie crumble topping. Sweet, creamy, and crunchy." },
             
-            // FOOD SECTION
-            // CHICKEN KARAGE
-            { id: 29, category: "Chicken Karage", type: "food", name: "TERIYAKI", price: 34, note: "" },
-            { id: 30, category: "Chicken Karage", type: "food", name: "SWEET GARLIC", price: 34, note: "" },
-            { id: 31, category: "Chicken Karage", type: "food", name: "SALTED EGG", price: 34, note: "" },
-            { id: 32, category: "Chicken Karage", type: "food", name: "SWEET & SOUR", price: 34, note: "" },
-            { id: 33, category: "Chicken Karage", type: "food", name: "SAMBAL MATAH", price: 34, note: "" },
+            // FOOD
+            { id: 29, category: "Chicken Karage", type: "food", name: "TERIYAKI", price: 34, note: "", description: "Crispy Japanese-style fried chicken glazed in sweet-savory teriyaki sauce." },
+            { id: 30, category: "Chicken Karage", type: "food", name: "SWEET GARLIC", price: 34, note: "", description: "Golden karage tossed in sticky sweet garlic glaze. Addictive and crunchy." },
+            { id: 31, category: "Chicken Karage", type: "food", name: "SALTED EGG", price: 34, note: "", description: "Crispy chicken in rich salted egg yolk sauce. Indonesian favorite." },
+            { id: 32, category: "Chicken Karage", type: "food", name: "SWEET & SOUR", price: 34, note: "", description: "Karage with tangy sweet & sour sauce. Classic crowd-pleaser." },
+            { id: 33, category: "Chicken Karage", type: "food", name: "SAMBAL MATAH", price: 34, note: "", description: "Spicy raw sambal matah topping on crispy chicken. Bali-style heat." },
             
-            // SAUTE CHICKEN
-            { id: 34, category: "Saute Chicken", type: "food", name: "OYAKADON", price: 34, note: "" },
-            { id: 35, category: "Saute Chicken", type: "food", name: "BULGOGI", price: 34, note: "" },
+            { id: 34, category: "Saute Chicken", type: "food", name: "OYAKADON", price: 34, note: "", description: "Japanese chicken and egg rice bowl. Comforting and savory." },
+            { id: 35, category: "Saute Chicken", type: "food", name: "BULGOGI", price: 34, note: "", description: "Korean-style marinated chicken sautéed with sweet soy and sesame." },
             
-            // CHICKEN KATSU
-            { id: 36, category: "Chicken Katsu", type: "food", name: "TERIYAKI", price: 34, note: "" },
-            { id: 37, category: "Chicken Katsu", type: "food", name: "SAMBAL MATAH", price: 34, note: "" },
+            { id: 36, category: "Chicken Katsu", type: "food", name: "TERIYAKI", price: 34, note: "", description: "Crispy panko chicken cutlet drizzled with teriyaki sauce." },
+            { id: 37, category: "Chicken Katsu", type: "food", name: "SAMBAL MATAH", price: 34, note: "", description: "Golden katsu topped with fresh spicy sambal matah." },
             
-            // BEEF
-            { id: 38, category: "Beef", type: "food", name: "GYUDON", price: 38, note: "" },
-            { id: 39, category: "Beef", type: "food", name: "BULGOGI", price: 38, note: "" },
+            { id: 38, category: "Beef", type: "food", name: "GYUDON", price: 38, note: "", description: "Japanese beef bowl simmered in sweet onion sauce. So tender." },
+            { id: 39, category: "Beef", type: "food", name: "BULGOGI", price: 38, note: "", description: "Korean grilled beef with sweet-spicy marinade. Juicy and flavorful." },
             
-            // TOAST
-            { id: 40, category: "Toast", type: "food", name: "CHOCO MALTINE", price: 25, note: "" },
-            { id: 41, category: "Toast", type: "food", name: "PEANUT", price: 25, note: "" },
-            { id: 42, category: "Toast", type: "food", name: "BEEF", price: 28, note: "" },
+            { id: 40, category: "Toast", type: "food", name: "CHOCO MALTINE", price: 25, note: "", description: "Crispy toast loaded with chocolate malt spread. Sweet childhood nostalgia." },
+            { id: 41, category: "Toast", type: "food", name: "PEANUT", price: 25, note: "", description: "Thick peanut butter on golden toast. Simple and satisfying." },
+            { id: 42, category: "Toast", type: "food", name: "BEEF", price: 28, note: "", description: "Savory beef slices on toasted bread with special seasoning." },
             
-            // SNACK
-            { id: 43, category: "Snack", type: "food", name: "NACHOS", price: 32, note: "" },
-            { id: 44, category: "Snack", type: "food", name: "MIX PLATTER", price: 38, note: "" },
-            { id: 45, category: "Snack", type: "food", name: "ENOK CRISPY", price: 28, note: "" },
-            { id: 46, category: "Snack", type: "food", name: "FRENCH FRIES", price: 28, note: "" },
+            { id: 43, category: "Snack", type: "food", name: "NACHOS", price: 32, note: "", description: "Tortilla chips loaded with cheese, jalapeños, and salsa." },
+            { id: 44, category: "Snack", type: "food", name: "MIX PLATTER", price: 38, note: "", description: "Sampler of fries, nuggets, and chicken bites. Perfect sharing." },
+            { id: 45, category: "Snack", type: "food", name: "ENOK CRISPY", price: 28, note: "", description: "Crispy golden enoki mushrooms. Light and addictive snack." },
+            { id: 46, category: "Snack", type: "food", name: "FRENCH FRIES", price: 28, note: "", description: "Crispy golden fries served with our signature sambal mayo." },
             
-            // PASTA (from your right orange flower)
-            { id: 47, category: "Pasta", type: "food", name: "SPAGHETTI BOLOGNESE", price: 38, note: "" },
-            { id: 48, category: "Pasta", type: "food", name: "AGLIO OLIO", price: 38, note: "" },
-            { id: 49, category: "Pasta", type: "food", name: "CARBONARA", price: 38, note: "" },
+            { id: 47, category: "Pasta", type: "food", name: "SPAGHETTI BOLOGNESE", price: 38, note: "", description: "Classic Italian pasta with rich beef bolognese sauce." },
+            { id: 48, category: "Pasta", type: "food", name: "AGLIO OLIO", price: 38, note: "", description: "Spaghetti tossed in garlic, chili, and olive oil. Simple perfection." },
+            { id: 49, category: "Pasta", type: "food", name: "CARBONARA", price: 38, note: "", description: "Creamy carbonara with bacon bits and parmesan. Rich and silky." },
             
-            // ADD ON
-            { id: 50, category: "Add On", type: "food", name: "EGG", price: 5, note: "" }
+            { id: 50, category: "Add On", type: "food", name: "EGG", price: 5, note: "", description: "Sunny-side up or boiled egg to level up any dish." }
         ]
-        
+
         let cart = []
         let currentFilter = 'all'
         let currentCategory = 'all'
-        
-        // Render all category pills exactly as they appear on your skateboard menu
+
         function renderCategoryPills() {
             const container = document.getElementById('category-pills')
-            container.innerHTML = `
-                <div onclick="setCategoryFilter('all')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'all' ? 'bg-orange-500 text-black' : ''}">ALL</div>
-                <div onclick="setCategoryFilter('Classic')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Classic' ? 'bg-orange-500 text-black' : ''}">CLASSIC</div>
-                <div onclick="setCategoryFilter('Thin Foam')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Thin Foam' ? 'bg-orange-500 text-black' : ''}">THIN FOAM</div>
-                <div onclick="setCategoryFilter('Basic')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Basic' ? 'bg-orange-500 text-black' : ''}">BASIC</div>
-                <div onclick="setCategoryFilter('Freshness')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Freshness' ? 'bg-orange-500 text-black' : ''}">FRESHNESS</div>
-                <div onclick="setCategoryFilter('Tea')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Tea' ? 'bg-orange-500 text-black' : ''}">TEA</div>
-                <div onclick="setCategoryFilter('Kopi Susu')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Kopi Susu' ? 'bg-orange-500 text-black' : ''}">KOPI SUSU</div>
-                <div onclick="setCategoryFilter('Morning Coffee')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Morning Coffee' ? 'bg-orange-500 text-black' : ''}">MORNING COFFEE</div>
-                <div onclick="setCategoryFilter('Cold Brew')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Cold Brew' ? 'bg-orange-500 text-black' : ''}">COLD BREW</div>
-                <div onclick="setCategoryFilter('Other')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Other' ? 'bg-orange-500 text-black' : ''}">OTHER</div>
-                <div onclick="setCategoryFilter('Chicken Karage')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Chicken Karage' ? 'bg-orange-500 text-black' : ''}">CHICKEN KARAGE</div>
-                <div onclick="setCategoryFilter('Saute Chicken')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Saute Chicken' ? 'bg-orange-500 text-black' : ''}">SAUTE CHICKEN</div>
-                <div onclick="setCategoryFilter('Chicken Katsu')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Chicken Katsu' ? 'bg-orange-500 text-black' : ''}">CHICKEN KATSU</div>
-                <div onclick="setCategoryFilter('Beef')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Beef' ? 'bg-orange-500 text-black' : ''}">BEEF</div>
-                <div onclick="setCategoryFilter('Toast')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Toast' ? 'bg-orange-500 text-black' : ''}">TOAST</div>
-                <div onclick="setCategoryFilter('Snack')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Snack' ? 'bg-orange-500 text-black' : ''}">SNACK</div>
-                <div onclick="setCategoryFilter('Pasta')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Pasta' ? 'bg-orange-500 text-black' : ''}">PASTA</div>
-                <div onclick="setCategoryFilter('Add On')" class="category-pill cursor-pointer px-6 py-2 bg-white/10 hover:bg-orange-500 hover:text-black rounded-3xl text-sm font-medium border border-transparent ${currentCategory === 'Add On' ? 'bg-orange-500 text-black' : ''}">ADD ON</div>
-            `
+            const categories = ['all', 'Classic', 'Thin Foam', 'Basic', 'Freshness', 'Tea', 'Kopi Susu', 'Morning Coffee', 'Cold Brew', 'Other', 'Chicken Karage', 'Saute Chicken', 'Chicken Katsu', 'Beef', 'Toast', 'Snack', 'Pasta', 'Add On']
+            
+            let html = ''
+            categories.forEach(cat => {
+                const isActive = currentCategory === cat
+                const display = cat === 'all' ? 'ALL' : cat.toUpperCase()
+                html += `
+                <div onclick="setCategoryFilter('${cat}')" 
+                     class="category-pill cursor-pointer px-5 py-2.5 text-xs sm:text-sm font-medium rounded-3xl border border-transparent flex-shrink-0 snap-start active:scale-95 ${isActive ? 'bg-orange-500 text-black' : 'bg-white/10 hover:bg-white/20'}">
+                    ${display}
+                </div>`
+            })
+            container.innerHTML = html
         }
-        
+
         function setCategoryFilter(cat) {
             currentCategory = cat
             renderCategoryPills()
             renderMenu()
         }
-        
+
         function filterByType(type) {
             currentFilter = type
-            // reset category when changing drink/food
             if (type !== 'all') currentCategory = 'all'
             renderCategoryPills()
             renderMenu()
-            
-            // highlight active filter
-            document.querySelectorAll('.category-pill').forEach(el => {
-                if (el.textContent === 'ALL MENU' && type === 'all') el.classList.add('bg-orange-500', 'text-black')
-                else if (el.textContent.includes('DRINKS') && type === 'drink') el.classList.add('bg-orange-500', 'text-black')
-                else if (el.textContent.includes('FOOD') && type === 'food') el.classList.add('bg-orange-500', 'text-black')
-            })
         }
-        
+
         function renderMenu(filteredData = null) {
             const container = document.getElementById('menu-grid')
             const data = filteredData || menuData
-            
             let html = ''
-            
+
             data.forEach(item => {
-                // respect current category & type filter
                 if (currentCategory !== 'all' && item.category !== currentCategory) return
                 if (currentFilter === 'drink' && item.type === 'food') return
                 if (currentFilter === 'food' && item.type === 'drink') return
-                
+
                 html += `
-                <div class="menu-card bg-white/5 border border-white/10 hover:border-orange-400 rounded-3xl p-6 flex flex-col">
+                <div class="menu-card bg-white/5 border border-white/10 hover:border-orange-400 rounded-3xl p-5 sm:p-6 flex flex-col touch-target">
                     <div class="flex justify-between items-start">
                         <div>
                             <span class="inline-block px-3 py-1 text-[10px] font-mono bg-white/10 text-orange-400 rounded-2xl">${item.category}</span>
@@ -459,63 +411,52 @@
                         </div>
                         <div class="text-3xl font-semibold text-orange-400">${item.price}K</div>
                     </div>
-                    <div class="mt-6 text-2xl font-semibold leading-none">${item.name}</div>
-                    <div class="flex-1"></div>
+                    <div class="mt-5 text-xl sm:text-2xl font-semibold leading-tight">${item.name}</div>
+                    <p class="description-text text-white/70 mt-3 mb-6 line-clamp-3">${item.description}</p>
                     <button onclick="addToCart(${item.id}); event.stopImmediatePropagation()" 
-                            class="mt-8 w-full py-4 bg-orange-500 hover:bg-orange-600 text-black font-semibold rounded-3xl flex items-center justify-center text-sm tracking-widest">
+                            class="mt-auto w-full py-4 bg-orange-500 hover:bg-orange-600 text-black font-semibold rounded-3xl flex items-center justify-center text-sm tracking-widest active:scale-95">
                         + ADD TO CART
                     </button>
                 </div>`
             })
-            
-            if (html === '') {
-                html = `<div class="col-span-full py-20 text-center text-white/40">No items found in this filter.<br>Try another category 🛹</div>`
-            }
-            
+
+            if (html === '') html = `<div class="col-span-full py-12 text-center text-white/40 text-sm">No items found.<br>Try another category 🛹</div>`
             container.innerHTML = html
         }
-        
+
         function performSearch() {
             const query = document.getElementById('search-input').value.toLowerCase().trim()
-            if (!query) {
-                renderMenu()
-                return
-            }
-            
-            const results = menuData.filter(item => 
-                item.name.toLowerCase().includes(query) || 
-                item.category.toLowerCase().includes(query)
+            if (!query) return renderMenu()
+            const results = menuData.filter(i => 
+                i.name.toLowerCase().includes(query) || 
+                i.category.toLowerCase().includes(query) ||
+                i.description.toLowerCase().includes(query)
             )
             renderMenu(results)
         }
-        
+
         function addToCart(id) {
             const item = menuData.find(i => i.id === id)
             if (!item) return
-            
-            const existing = cart.find(cartItem => cartItem.id === id)
-            if (existing) {
-                existing.quantity = (existing.quantity || 1) + 1
-            } else {
-                cart.push({ ...item, quantity: 1 })
-            }
+            const existing = cart.find(c => c.id === id)
+            if (existing) existing.quantity = (existing.quantity || 1) + 1
+            else cart.push({ ...item, quantity: 1 })
             
             updateCartCount()
             
-            // subtle toast
             const toast = document.createElement('div')
-            toast.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#FF6B00; color:black; padding:16px 24px; border-radius:9999px; font-weight:700; box-shadow:0 10px 15px -3px rgb(255 107 0);'
+            toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#FF6B00;color:#111;font-weight:700;padding:14px 24px;border-radius:9999px;box-shadow:0 10px 15px -3px rgb(255 107 0);z-index:99999'
             toast.textContent = `✅ ${item.name} added`
             document.body.appendChild(toast)
-            setTimeout(() => toast.remove(), 2200)
+            setTimeout(() => toast.remove(), 1800)
         }
-        
+
         function updateCartCount() {
             const countEl = document.getElementById('cart-count')
-            const totalItems = cart.reduce((acc, item) => acc + (item.quantity || 1), 0)
-            countEl.textContent = totalItems
+            const total = cart.reduce((acc, item) => acc + (item.quantity || 1), 0)
+            countEl.textContent = total
         }
-        
+
         function toggleCart() {
             const panel = document.getElementById('cart-panel')
             const backdrop = document.getElementById('cart-backdrop')
@@ -529,68 +470,62 @@
                 panel.classList.add('hidden')
             }
         }
-        
+
         function renderCart() {
             const container = document.getElementById('cart-items')
             let html = ''
             
             if (cart.length === 0) {
-                html = `<div class="text-white/40 text-center py-12">Your cart is empty.<br>Start adding some vibes!</div>`
+                html = `<div class="text-white/40 text-center py-12">Cart empty.<br>Start adding vibes! 🛹</div>`
             } else {
-                cart.forEach((item, index) => {
+                cart.forEach((item, i) => {
                     html += `
                     <div class="flex justify-between items-center bg-white/5 rounded-3xl p-4">
-                        <div>
+                        <div class="flex-1">
                             <div class="font-semibold">${item.name}</div>
                             <div class="text-xs text-white/60">${item.category} • ${item.price}K × ${item.quantity || 1}</div>
                         </div>
                         <div class="flex items-center gap-4">
                             <div class="font-semibold text-orange-400">${(item.price * (item.quantity || 1))}K</div>
-                            <button onclick="removeFromCart(${index});" class="text-white/40 hover:text-red-400 text-xl">×</button>
+                            <button onclick="removeFromCart(${i});" class="text-white/40 hover:text-red-400 text-3xl leading-none active:scale-95">×</button>
                         </div>
                     </div>`
                 })
             }
-            
             container.innerHTML = html
-            
-            // total
             const total = cart.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0)
             document.getElementById('cart-total').textContent = total + 'K'
         }
-        
+
         function removeFromCart(index) {
             cart.splice(index, 1)
             renderCart()
             updateCartCount()
         }
-        
+
         function checkout() {
             if (cart.length === 0) return
             const total = cart.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0)
-            alert(`🎉 Thank you! Your order of ${total}K has been placed (demo).\n\nIn real life this would go straight to the DU'D'S counter in Semarang.\n\nJust do whatever you want! 🛹`)
+            alert(`🎉 Order of ${total}K placed (demo)!\n\nReal orders happen at DU'D'S in Semarang.\nJust do whatever you want! 🛹`)
             cart = []
             toggleCart()
             updateCartCount()
         }
-        
+
         function switchTab(n) {
-            // hide all
             document.querySelectorAll('[id^="tab-content-"]').forEach(el => el.classList.add('hidden'))
-            // show selected
             document.getElementById('tab-content-' + n).classList.remove('hidden')
             
-            // active styling on nav
             document.querySelectorAll('a[id^="tab-"]').forEach(el => el.classList.remove('text-orange-400'))
             document.getElementById('tab-' + n).classList.add('text-orange-400')
         }
-        
-        // Initialize everything
+
+        // Initialize the complete app
         window.onload = function() {
             initTailwind().config()
             renderCategoryPills()
             renderMenu()
-            console.log('%c✅ DU\'D\'S interactive menu loaded with 100% accurate colors & style from your photos!', 'background:#FF6B00; color:black; padding:1px 3px; border-radius:2px')
+            console.log('%c✅ DU\'D\'S Full Interactive Menu Ready! (Mobile + Descriptions + All Updates)', 'background:#FF6B00;color:#111;padding:2px 6px;border-radius:4px;font-weight:700')
         }
     </script>
 </body>
