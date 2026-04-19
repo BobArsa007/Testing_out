@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DU'D'S • Menu</title>
+    <title>DUDS • Menu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
@@ -104,11 +104,11 @@
                         <path d="M100 40 Q70 10 40 40 Q10 70 40 100 Q10 130 40 160 Q70 190 100 160 Q130 190 160 160 Q190 130 160 100 Q190 70 160 40 Q130 10 100 40" fill="#FF6B00" />
                         <circle cx="100" cy="100" r="35" fill="#111111" />
                         <path d="M100 65 L100 135 M65 100 L135 100" stroke="#FF6B00" stroke-width="12" stroke-linecap="round"/>
-                        <text x="100" y="115" text-anchor="middle" fill="#FF6B00" font-size="28" font-weight="700" class="logo-font">DU'D'S</text>
+                        <text x="100" y="115" text-anchor="middle" fill="#FF6B00" font-size="28" font-weight="700" class="logo-font">DUDS</text>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="logo-font text-3xl sm:text-4xl tracking-[-2px] text-white">DU'D'S</h1>
+                    <h1 class="logo-font text-3xl sm:text-4xl tracking-[-2px] text-white">DUDS</h1>
                     <p class="text-[10px] text-orange-400 -mt-1 tracking-[2px] font-medium">RE-CHARGE MOOD SPACE</p>
                 </div>
                 <div class="ml-2 px-3 py-1 bg-orange-500 text-black text-[10px] sm:text-xs font-bold rounded-full flex items-center gap-1">
@@ -199,7 +199,7 @@
         <div id="tab-content-1" class="hidden">
             <div class="grid md:grid-cols-2 gap-8">
                 <div class="space-y-8">
-                    <h2 class="text-3xl sm:text-4xl font-semibold logo-font">Welcome to DU'D'S</h2>
+                    <h2 class="text-3xl sm:text-4xl font-semibold logo-font">Welcome to DUDS</h2>
                     <p class="text-lg text-white/80">Just do whatever you want.<br>Re-Charge Mood Space • 24H NEVER SLEEP</p>
                     <div class="space-y-6">
                         <div class="flex gap-4">
@@ -228,7 +228,7 @@
 
         <!-- VIBES TAB -->
         <div id="tab-content-2" class="hidden">
-            <h2 class="text-3xl sm:text-4xl font-semibold logo-font mb-8 text-center">The DU'D'S Vibe</h2>
+            <h2 class="text-3xl sm:text-4xl font-semibold logo-font mb-8 text-center">The DUDS Vibe</h2>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <div class="bg-white/5 border border-white/10 rounded-3xl overflow-hidden">
                     <div class="aspect-video bg-gradient-to-br from-black to-zinc-900 flex items-center justify-center text-7xl">🥤</div>
@@ -506,7 +506,7 @@
         function checkout() {
             if (cart.length === 0) return
             const total = cart.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0)
-            alert(`🎉 Order of ${total}K placed (demo)!\n\nReal orders happen at DU'D'S in Semarang.\nJust do whatever you want! 🛹`)
+            alert(`🎉 Order of ${total}K placed (demo)!\n\nReal orders happen at DUDS in Semarang.\nJust do whatever you want! 🛹`)
             cart = []
             toggleCart()
             updateCartCount()
