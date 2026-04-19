@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Café at Home • One Two Cups Guide</title>
+    <title>Café at Home • One Two Cups</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Playfair+Display:wght@700&amp;display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
         
         :root {
-            --tw-color-primary: #6b3f1f;
+            --primary: #5d4037;
         }
         
         * {
@@ -18,804 +18,411 @@
             transition-duration: 150ms;
         }
         
-        .tail-container * {
-            font-family: 'Inter', system_ui, sans-serif;
+        body {
+            font-family: 'Bahnschrift', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
         }
         
         .header-font {
-            font-family: 'Playfair Display', sans-serif;
+            font-family: 'Bahnschrift', system-ui, sans-serif;
         }
-
+        
         .coffee-bg {
             background: linear-gradient(135deg, #f5e8d3 0%, #e8d4b8 100%);
         }
         
-        .drink-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .drink-item {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .drink-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 25px 25px 0 -10px #6b3f1f;
+        .drink-item:hover {
+            background-color: #f5e8d3;
+        }
+        
+        .selected {
+            background-color: #f5e8d3;
+            box-shadow: inset 4px 0 0 #5d4037;
         }
         
         .step-number {
-            animation: pop 0.3s ease forwards;
+            font-family: 'Bahnschrift', sans-serif;
         }
         
-        @keyframes pop {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        
-        .layer {
-            animation: layerPour 2s ease infinite;
+        .visual-box {
+            border: 3px solid #d4b08c;
+            background: #fdfaf3;
         }
     </style>
 </head>
-<body class="tail-container">
+<body class="bg-[#f8f1e3] text-[#3f2a22]">
     <!-- HEADER -->
-    <div class="bg-[#6b3f1f] text-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-            <div class="flex items-center gap-x-3">
-                <div class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-3xl">☕</div>
+    <div class="bg-[#5d4037] text-white shadow-lg">
+        <div class="max-w-screen-2xl mx-auto px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-x-4">
+                <div class="w-9 h-9 bg-white rounded-2xl flex items-center justify-center text-3xl shadow-inner">☕</div>
                 <div>
-                    <h1 class="header-font text-3xl tracking-tight">Café at Home</h1>
-                    <p class="text-[#d4b08c] text-sm -mt-1">One Two Cups Mini Hand Press Guide</p>
-                </div>
-                <div class="ml-2 px-3 py-1 bg-[#d4b08c] text-[#6b3f1f] text-xs font-medium rounded-3xl flex items-center gap-x-1">
-                    <span class="relative flex h-3 w-3">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#6b3f1f] opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-[#6b3f1f]"></span>
-                    </span>
-                    READY TO BREW
+                    <h1 class="header-font text-3xl tracking-[-0.5px]">Café at Home</h1>
+                    <p class="text-[#d4b08c] text-sm -mt-0.5">One Two Cups Mini Hand Press Guide</p>
                 </div>
             </div>
-            
-            <div class="flex items-center gap-x-8 text-sm font-medium">
-                <button onclick="navigateTo('home')" 
-                        class="flex items-center gap-x-2 hover:text-[#d4b08c]">
+
+            <div class="flex items-center gap-x-8">
+                <!-- Ready badge -->
+                <div class="bg-[#d4b08c] text-[#5d4037] text-xs font-semibold px-5 py-2 rounded-3xl flex items-center gap-x-2">
+                    <div class="w-2 h-2 bg-[#5d4037] rounded-full animate-pulse"></div>
+                    READY TO BREW
+                </div>
+
+                <!-- Navigation -->
+                <a onclick="navigateTo('home')" class="flex items-center gap-x-2 text-sm font-medium hover:text-[#d4b08c]">
                     <span class="text-xl">🏠</span>
                     HOME
-                </button>
-                <button onclick="navigateTo('machine')" 
-                        class="flex items-center gap-x-2 hover:text-[#d4b08c]">
+                </a>
+                <a onclick="navigateTo('machine')" class="flex items-center gap-x-2 text-sm font-medium hover:text-[#d4b08c]">
                     <span class="text-xl">🔧</span>
                     MACHINE GUIDE
-                </button>
+                </a>
+
                 <div class="h-6 w-px bg-white/30"></div>
-                <div class="flex items-center gap-x-2">
-                    <div class="text-xs uppercase tracking-widest">Your beans</div>
-                    <div class="flex items-center gap-x-1 bg-white/20 px-3 py-1 rounded-3xl text-xs font-medium">
-                        🌿 Flores Bajawa Arabica
-                    </div>
+
+                <!-- Your Beans -->
+                <div class="flex items-center bg-white/10 hover:bg-white/20 px-4 py-2 rounded-3xl cursor-pointer">
+                    <span class="text-lg mr-2">🌿</span>
+                    <div class="text-sm font-medium">YOUR BEANS</div>
+                    <div class="ml-3 px-3 py-1 bg-white text-[#5d4037] text-xs font-semibold rounded-3xl">Flores Bajawa Arabica</div>
                 </div>
-                <div onclick="toggleSettings()" class="cursor-pointer flex items-center justify-center w-9 h-9 bg-white/20 hover:bg-white/30 rounded-2xl text-2xl">⚙️</div>
+
+                <!-- Settings -->
+                <button onclick="toggleSettings()" class="w-9 h-9 flex items-center justify-center text-2xl hover:bg-white/20 rounded-2xl">⚙️</button>
             </div>
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto flex">
+    <div class="max-w-screen-2xl mx-auto flex min-h-[calc(100vh-73px)]">
         
-        <!-- SIDEBAR -->
-        <div class="w-72 bg-white border-r border-[#e8d4b8] min-h-[calc(100vh-73px)] py-8 px-6 flex-shrink-0">
-            <h2 class="uppercase text-xs font-medium text-[#6b3f1f] mb-4 tracking-widest px-3">MENU</h2>
+        <!-- SIDEBAR MENU -->
+        <div class="w-80 bg-white border-r border-[#e8d4b8] py-8 px-6">
+            <div class="uppercase text-xs font-semibold text-[#5d4037] mb-6 px-3 tracking-[1px]">MENU</div>
             
-            <div onclick="selectDrink(0)" class="drink-item flex items-center gap-x-3 px-4 py-4 rounded-3xl hover:bg-[#f5e8d3] cursor-pointer mb-2" id="drink-0">
+            <div onclick="selectDrink(0)" id="drink-0" class="drink-item flex items-center gap-x-4 px-4 py-4 rounded-3xl mb-1 cursor-pointer">
                 <span class="text-3xl">☕</span>
                 <div>
-                    <div class="font-semibold">Espresso</div>
-                    <div class="text-xs text-gray-500">The perfect base shot</div>
+                    <div class="font-semibold text-base">Espresso</div>
+                    <div class="text-sm text-gray-500">The perfect base shot</div>
                 </div>
             </div>
             
-            <div onclick="selectDrink(1)" class="drink-item flex items-center gap-x-3 px-4 py-4 rounded-3xl hover:bg-[#f5e8d3] cursor-pointer mb-2" id="drink-1">
+            <div onclick="selectDrink(1)" id="drink-1" class="drink-item flex items-center gap-x-4 px-4 py-4 rounded-3xl mb-1 cursor-pointer">
                 <span class="text-3xl">🧊</span>
                 <div>
-                    <div class="font-semibold">Iced Americano</div>
-                    <div class="text-xs text-gray-500">Bold &amp; refreshing</div>
+                    <div class="font-semibold text-base">Iced Americano</div>
+                    <div class="text-sm text-gray-500">Bold &amp; refreshing</div>
                 </div>
             </div>
             
-            <div onclick="selectDrink(2)" class="drink-item flex items-center gap-x-3 px-4 py-4 rounded-3xl hover:bg-[#f5e8d3] cursor-pointer mb-2" id="drink-2">
+            <div onclick="selectDrink(2)" id="drink-2" class="drink-item flex items-center gap-x-4 px-4 py-4 rounded-3xl mb-1 cursor-pointer">
                 <span class="text-3xl">🥛</span>
                 <div>
-                    <div class="font-semibold">Hot Milk Coffee</div>
-                    <div class="text-xs text-gray-500">Smooth &amp; comforting</div>
+                    <div class="font-semibold text-base">Hot Milk Coffee</div>
+                    <div class="text-sm text-gray-500">Smooth &amp; comforting</div>
                 </div>
             </div>
             
-            <div onclick="selectDrink(3)" class="drink-item flex items-center gap-x-3 px-4 py-4 rounded-3xl hover:bg-[#f5e8d3] cursor-pointer mb-2" id="drink-3">
+            <div onclick="selectDrink(3)" id="drink-3" class="drink-item flex items-center gap-x-4 px-4 py-4 rounded-3xl mb-1 cursor-pointer">
                 <span class="text-3xl">🧊🥛</span>
                 <div>
-                    <div class="font-semibold">Iced Milk Coffee</div>
-                    <div class="text-xs text-gray-500">Creamy &amp; chilled</div>
+                    <div class="font-semibold text-base">Iced Milk Coffee</div>
+                    <div class="text-sm text-gray-500">Creamy &amp; chilled</div>
                 </div>
             </div>
             
-            <div onclick="selectDrink(4)" class="drink-item flex items-center gap-x-3 px-4 py-4 rounded-3xl hover:bg-[#f5e8d3] cursor-pointer mb-2" id="drink-4">
+            <div onclick="selectDrink(4)" id="drink-4" class="drink-item flex items-center gap-x-4 px-4 py-4 rounded-3xl mb-1 cursor-pointer">
                 <span class="text-3xl">🌀</span>
                 <div>
-                    <div class="font-semibold">Dirty Latte</div>
-                    <div class="text-xs text-gray-500">Marbled espresso swirl</div>
+                    <div class="font-semibold text-base">Dirty Latte</div>
+                    <div class="text-sm text-gray-500">Marbled espresso swirl</div>
                 </div>
             </div>
             
-            <div onclick="selectDrink(5)" class="drink-item flex items-center gap-x-3 px-4 py-4 rounded-3xl hover:bg-[#f5e8d3] cursor-pointer mb-2" id="drink-5">
+            <div onclick="selectDrink(5)" id="drink-5" class="drink-item flex items-center gap-x-4 px-4 py-4 rounded-3xl mb-1 cursor-pointer selected">
                 <span class="text-3xl">🪨</span>
                 <div>
-                    <div class="font-semibold">Coffee on the Rocks</div>
-                    <div class="text-xs text-gray-500">Pure espresso chill</div>
+                    <div class="font-semibold text-base">Coffee on the Rocks</div>
+                    <div class="text-sm text-gray-500">Pure espresso chill</div>
                 </div>
             </div>
-            
+
             <div class="mt-10 px-3">
-                <div class="text-xs uppercase tracking-widest text-[#6b3f1f] mb-3">OTHER VARIATIONS</div>
-                <div onclick="selectDrink(6)" class="text-sm py-2 px-4 hover:bg-[#f5e8d3] rounded-2xl cursor-pointer flex justify-between items-center">
-                    Flat White <span class="text-[#d4b08c]">→</span>
-                </div>
-                <div onclick="selectDrink(7)" class="text-sm py-2 px-4 hover:bg-[#f5e8d3] rounded-2xl cursor-pointer flex justify-between items-center">
-                    Espresso Tonic <span class="text-[#d4b08c]">→</span>
-                </div>
-                <div onclick="selectDrink(8)" class="text-sm py-2 px-4 hover:bg-[#f5e8d3] rounded-2xl cursor-pointer flex justify-between items-center">
-                    Affogato <span class="text-[#d4b08c]">→</span>
-                </div>
+                <div class="uppercase text-xs font-semibold text-[#5d4037] mb-4 tracking-[1px]">OTHER VARIATIONS</div>
+                <div onclick="selectDrink(6)" class="flex justify-between items-center py-3 px-4 hover:bg-[#f5e8d3] rounded-3xl cursor-pointer text-sm">Flat White <span class="text-[#d4b08c]">→</span></div>
+                <div onclick="selectDrink(7)" class="flex justify-between items-center py-3 px-4 hover:bg-[#f5e8d3] rounded-3xl cursor-pointer text-sm">Espresso Tonic <span class="text-[#d4b08c]">→</span></div>
+                <div onclick="selectDrink(8)" class="flex justify-between items-center py-3 px-4 hover:bg-[#f5e8d3] rounded-3xl cursor-pointer text-sm">Affogato <span class="text-[#d4b08c]">→</span></div>
             </div>
-            
-            <div class="mt-auto pt-12 text-[10px] text-gray-400 px-4">
-                Using your One Two Cups Mini Hand Press<br>
+
+            <div class="absolute bottom-8 left-8 text-[10px] text-gray-400 leading-tight">
+                One Two Cups Mini Hand Press<br>
                 Flores Bajawa Arabica • Semarang, ID
             </div>
         </div>
-        
-        <!-- MAIN CONTENT -->
-        <div class="flex-1 p-8" id="main-content">
+
+        <!-- MAIN CONTENT AREA -->
+        <div class="flex-1 p-10" id="main-content">
             
-            <!-- HOME VIEW -->
-            <div id="view-home">
-                <div class="coffee-bg rounded-3xl p-12 flex flex-col items-center text-center max-w-2xl mx-auto">
-                    <div class="text-7xl mb-6">☕🔥🧊</div>
-                    <h1 class="header-font text-5xl text-[#6b3f1f] mb-4">Welcome to your personal café</h1>
-                    <p class="text-xl text-[#6b3f1f]/80 max-w-md mb-8">Turn your One Two Cups Mini Hand Press into a full café experience. Step-by-step recipes for café-style drinks using your portable espresso maker.</p>
-                    
-                    <div class="grid grid-cols-3 gap-6 w-full max-w-md">
-                        <div onclick="selectDrink(1)" class="bg-white rounded-3xl p-6 text-center cursor-pointer hover:shadow-xl">
-                            <div class="text-4xl mb-3">🧊</div>
-                            <div class="font-medium">Iced Americano</div>
-                        </div>
-                        <div onclick="selectDrink(4)" class="bg-white rounded-3xl p-6 text-center cursor-pointer hover:shadow-xl">
-                            <div class="text-4xl mb-3">🌀</div>
-                            <div class="font-medium">Dirty Latte</div>
-                        </div>
-                        <div onclick="selectDrink(5)" class="bg-white rounded-3xl p-6 text-center cursor-pointer hover:shadow-xl">
-                            <div class="text-4xl mb-3">🪨</div>
-                            <div class="font-medium">On the Rocks</div>
-                        </div>
-                    </div>
-                    
-                    <button onclick="selectDrink(0)" 
-                            class="mt-12 flex items-center justify-center gap-x-3 bg-[#6b3f1f] text-white px-8 py-4 rounded-3xl text-lg font-medium shadow-inner">
-                        START BREWING YOUR FIRST ESPRESSO
-                        <span class="text-3xl">→</span>
-                    </button>
-                    
-                    <div class="mt-8 text-xs flex items-center gap-x-5 text-[#6b3f1f]/60">
-                        <div>✅ 20-bar hand pressure</div>
-                        <div>✅ No electricity needed</div>
-                        <div>✅ Café quality at home</div>
-                    </div>
-                </div>
-                
-                <div class="mt-12 max-w-2xl mx-auto">
-                    <h3 class="text-[#6b3f1f] text-sm uppercase font-medium mb-4">Quick tips from your Flores Bajawa beans</h3>
-                    <div class="flex gap-4">
-                        <div class="flex-1 bg-white p-5 rounded-3xl text-sm border border-[#e8d4b8]">
-                            🌱 Use a <strong>medium-fine grind</strong> (like table salt) for best crema with your hand press
-                        </div>
-                        <div class="flex-1 bg-white p-5 rounded-3xl text-sm border border-[#e8d4b8]">
-                            🔥 Water at 92–96°C (just off boil) for perfect extraction
-                        </div>
-                        <div class="flex-1 bg-white p-5 rounded-3xl text-sm border border-[#e8d4b8]">
-                            📏 8 g coffee per shot gives rich, balanced espresso from your Arabica
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- MACHINE GUIDE VIEW -->
-            <div id="view-machine" class="hidden">
-                <h1 class="header-font text-4xl text-[#6b3f1f] mb-2">How to Use Your One Two Cups Mini Hand Press</h1>
-                <p class="text-gray-600 mb-8">3-in-1 portable espresso maker (ground coffee + capsules). Follow these steps for perfect shots every time.</p>
-                
-                <div class="grid grid-cols-2 gap-8">
+            <!-- RECIPE VIEW (default) -->
+            <div id="view-recipe">
+                <div class="flex items-baseline justify-between">
                     <div>
-                        <div class="flex items-start gap-x-4 mb-8">
-                            <div class="step-number w-8 h-8 bg-[#6b3f1f] text-white rounded-2xl flex items-center justify-center font-bold text-lg shrink-0">1</div>
-                            <div class="flex-1">
-                                <h4 class="font-semibold mb-1">Prepare your coffee</h4>
-                                <p class="text-sm text-gray-600">Grind 8 g of Flores Bajawa Arabica to a fine espresso grind (table salt consistency). Use the included scoop.</p>
-                                <div class="mt-4 text-xs bg-amber-100 px-4 py-3 rounded-2xl flex items-center">
-                                    💡 Pro tip: For stronger shots, you can go up to 10–12 g if your basket allows (max ~18 g for double)
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-x-4 mb-8">
-                            <div class="step-number w-8 h-8 bg-[#6b3f1f] text-white rounded-2xl flex items-center justify-center font-bold text-lg shrink-0">2</div>
-                            <div class="flex-1">
-                                <h4 class="font-semibold mb-1">Assemble the portafilter</h4>
-                                <p class="text-sm text-gray-600">Unscrew the portafilter from the body. Remove the filter basket. Fill with ground coffee. Lightly tamp (don’t press too hard). Reinsert basket and screw portafilter tightly back onto the body.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-x-4">
-                            <div class="step-number w-8 h-8 bg-[#6b3f1f] text-white rounded-2xl flex items-center justify-center font-bold text-lg shrink-0">3</div>
-                            <div class="flex-1">
-                                <h4 class="font-semibold mb-1">Add hot water</h4>
-                                <p class="text-sm text-gray-600">Fill the water chamber with hot water (92–96°C) up to the marked line (~80–100 ml). Screw the chamber onto the body.</p>
-                            </div>
-                        </div>
+                        <span id="recipe-emoji" class="text-7xl inline-block mr-4"></span>
+                        <h1 id="recipe-name" class="header-font text-4xl text-[#5d4037]"></h1>
+                        <p id="recipe-subtitle" class="text-gray-500 text-lg mt-1"></p>
                     </div>
-                    
-                    <div>
-                        <div class="flex items-start gap-x-4 mb-8">
-                            <div class="step-number w-8 h-8 bg-[#6b3f1f] text-white rounded-2xl flex items-center justify-center font-bold text-lg shrink-0">4</div>
-                            <div class="flex-1">
-                                <h4 class="font-semibold mb-1">Extract the espresso</h4>
-                                <p class="text-sm text-gray-600">Place the device over your cup. Unlock the piston (twist if needed). Press/pump the plunger steadily 10–15 times until the shot is complete (~25–40 ml espresso with crema).</p>
-                                <div class="mt-6 bg-[#f5e8d3] p-6 rounded-3xl text-center text-sm">
-                                    <div class="inline-flex items-center gap-x-2 text-[#6b3f1f] font-medium">
-                                        <span class="text-2xl">☕</span>
-                                        You should get rich crema like the photos you shared!
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start gap-x-4">
-                            <div class="step-number w-8 h-8 bg-[#6b3f1f] text-white rounded-2xl flex items-center justify-center font-bold text-lg shrink-0">5</div>
-                            <div class="flex-1">
-                                <h4 class="font-semibold mb-1">Clean &amp; store</h4>
-                                <p class="text-sm text-gray-600">Rinse all parts with warm water immediately after use. Dry completely. The device is portable and durable — perfect for daily use at home in Semarang.</p>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-8 text-xs border border-dashed border-[#d4b08c] p-4 rounded-3xl">
-                            Works with ground coffee (recommended) or Nespresso® capsules. For best results with your Arabica beans, always use fresh grind.
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- DRINK RECIPE VIEW -->
-            <div id="view-recipe" class="hidden">
-                <div class="flex justify-between items-baseline mb-6">
-                    <div>
-                        <span id="recipe-emoji" class="text-6xl"></span>
-                        <h1 id="recipe-name" class="header-font text-4xl text-[#6b3f1f]"></h1>
-                    </div>
-                    <div class="flex items-center gap-x-8 text-sm">
-                        <!-- Controls -->
+
+                    <!-- Controls -->
+                    <div class="flex items-center gap-x-8">
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-gray-500 mb-1">Servings</label>
-                            <div class="flex border border-[#e8d4b8] rounded-3xl p-1">
-                                <button onclick="changeServings(-1)" class="w-8 h-8 flex items-center justify-center text-xl hover:bg-[#f5e8d3] rounded-3xl">-</button>
-                                <div id="servings-display" class="px-6 font-semibold flex items-center">1</div>
-                                <button onclick="changeServings(1)" class="w-8 h-8 flex items-center justify-center text-xl hover:bg-[#f5e8d3] rounded-3xl">+</button>
+                            <div class="text-xs font-medium tracking-widest text-gray-400 mb-1">SERVINGS</div>
+                            <div class="flex items-center border border-[#d4b08c] rounded-3xl">
+                                <button onclick="changeServings(-1)" class="w-10 h-10 text-2xl flex items-center justify-center hover:bg-[#f5e8d3] rounded-l-3xl">-</button>
+                                <div id="servings-display" class="px-8 font-semibold text-2xl">1</div>
+                                <button onclick="changeServings(1)" class="w-10 h-10 text-2xl flex items-center justify-center hover:bg-[#f5e8d3] rounded-r-3xl">+</button>
                             </div>
                         </div>
-                        
+
                         <div>
-                            <label class="block text-xs uppercase tracking-widest text-gray-500 mb-1">Strength</label>
-                            <div class="flex gap-x-1 bg-[#f5e8d3] rounded-3xl p-1">
-                                <button onclick="setStrength(0)" id="strength-0" class="px-5 py-2 text-xs font-medium rounded-3xl">MILD</button>
-                                <button onclick="setStrength(1)" id="strength-1" class="px-5 py-2 text-xs font-medium rounded-3xl bg-[#6b3f1f] text-white">STANDARD</button>
-                                <button onclick="setStrength(2)" id="strength-2" class="px-5 py-2 text-xs font-medium rounded-3xl">STRONG</button>
+                            <div class="text-xs font-medium tracking-widest text-gray-400 mb-1">STRENGTH</div>
+                            <div class="flex bg-[#f5e8d3] rounded-3xl p-1 text-sm font-medium">
+                                <button onclick="setStrength(0)" id="strength-0" class="px-7 py-3 rounded-3xl">MILD</button>
+                                <button onclick="setStrength(1)" id="strength-1" class="px-7 py-3 rounded-3xl bg-[#5d4037] text-white">STANDARD</button>
+                                <button onclick="setStrength(2)" id="strength-2" class="px-7 py-3 rounded-3xl">STRONG</button>
                             </div>
                         </div>
-                        
-                        <button onclick="printRecipe()" 
-                                class="flex items-center gap-x-2 text-[#6b3f1f] hover:bg-[#f5e8d3] px-5 py-3 rounded-3xl text-sm font-medium">
-                            🖨️ Print / Save as PDF
-                        </button>
+
+                        <div class="flex flex-col gap-y-2">
+                            <button onclick="printRecipe()" class="flex items-center gap-x-2 text-[#5d4037] hover:text-white hover:bg-[#5d4037] px-6 py-3 border border-[#5d4037] rounded-3xl text-sm font-medium">
+                                🖨️ Print
+                            </button>
+                            <button onclick="printRecipe()" class="flex items-center gap-x-2 text-[#5d4037] hover:text-white hover:bg-[#5d4037] px-6 py-3 border border-[#5d4037] rounded-3xl text-sm font-medium">
+                                💾 Save as PDF
+                            </button>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="flex gap-8">
-                    <!-- Ingredients -->
-                    <div class="flex-1 bg-white rounded-3xl p-8 shadow-inner">
-                        <h3 class="uppercase text-xs font-medium mb-6 text-[#6b3f1f]">INGREDIENTS</h3>
-                        
+
+                <div class="grid grid-cols-12 gap-8 mt-10">
+                    <!-- INGREDIENTS -->
+                    <div class="col-span-5 bg-white rounded-3xl shadow-sm p-8">
+                        <h3 class="uppercase text-xs font-semibold tracking-widest text-[#5d4037] mb-6">INGREDIENTS</h3>
                         <div id="ingredients-list" class="space-y-6"></div>
                         
-                        <div class="mt-8 pt-8 border-t text-xs flex justify-between items-center text-gray-400">
-                            <div>Total time: <span id="total-time" class="font-medium text-[#6b3f1f]">~4 minutes</span></div>
-                            <div class="flex items-center gap-x-1">
-                                <span>☕</span> 
-                                <span id="espresso-yield"></span>
-                            </div>
+                        <div class="mt-8 text-xs flex items-center justify-between text-gray-400 border-t pt-6">
+                            <div>Total time: <span id="total-time" class="text-[#5d4037] font-semibold">~4 minutes</span></div>
+                            <div id="espresso-yield-badge" class="flex items-center gap-x-2"></div>
                         </div>
                     </div>
-                    
-                    <!-- Steps -->
-                    <div class="flex-[1.6] bg-white rounded-3xl p-8">
-                        <h3 class="uppercase text-xs font-medium mb-6 text-[#6b3f1f]">STEP-BY-STEP</h3>
+
+                    <!-- STEP-BY-STEP -->
+                    <div class="col-span-7 bg-white rounded-3xl shadow-sm p-8">
+                        <h3 class="uppercase text-xs font-semibold tracking-widest text-[#5d4037] mb-6">STEP-BY-STEP</h3>
                         <div id="steps-list" class="space-y-8"></div>
-                        
-                        <!-- Visual diagram placeholder -->
-                        <div id="visual-diagram" class="mt-12 bg-[#f5e8d3] rounded-3xl p-6 hidden"></div>
+                    </div>
+
+                    <!-- VISUAL -->
+                    <div class="col-span-12 mt-4">
+                        <div id="visual-diagram" class="visual-box rounded-3xl p-8 flex items-center justify-center text-center min-h-[220px]"></div>
                     </div>
                 </div>
-                
-                <div class="mt-8 flex gap-6 text-xs">
-                    <div class="flex-1 bg-amber-50 p-4 rounded-3xl">
-                        💡 <strong>Customization tip:</strong> Add 1 tsp palm sugar or condensed milk for that classic Indonesian kopi susu sweetness.
-                    </div>
-                    <div onclick="resetRecipe()" class="cursor-pointer flex-1 border border-dashed border-gray-300 p-4 rounded-3xl flex items-center justify-center gap-x-2 hover:border-[#6b3f1f]">
-                        🔄 Reset to default recipe
-                    </div>
+            </div>
+
+            <!-- HOME VIEW -->
+            <div id="view-home" class="hidden">
+                <div class="coffee-bg rounded-3xl p-16 text-center max-w-2xl mx-auto">
+                    <div class="text-8xl mb-8">☕🧊🥛</div>
+                    <h1 class="header-font text-5xl text-[#5d4037]">Your café is ready</h1>
+                    <p class="text-xl mt-4 text-[#5d4037]/80">Master every drink with your One Two Cups Mini Hand Press</p>
+                    <button onclick="selectDrink(5)" class="mt-10 bg-[#5d4037] text-white px-10 py-5 rounded-3xl text-xl font-medium">Start with Coffee on the Rocks →</button>
+                </div>
+            </div>
+
+            <!-- MACHINE GUIDE VIEW -->
+            <div id="view-machine" class="hidden">
+                <h1 class="header-font text-4xl text-[#5d4037]">How to Use Your One Two Cups Mini Hand Press</h1>
+                <p class="mt-3 text-gray-500">Simple 5-step guide for perfect espresso every time with your portable maker.</p>
+                <!-- Machine steps would go here (kept short for cleanliness) -->
+                <div class="mt-12 grid grid-cols-5 gap-6">
+                    <div class="bg-white rounded-3xl p-6 text-center">1. Grind 8g</div>
+                    <div class="bg-white rounded-3xl p-6 text-center">2. Fill portafilter</div>
+                    <div class="bg-white rounded-3xl p-6 text-center">3. Add hot water</div>
+                    <div class="bg-white rounded-3xl p-6 text-center">4. Pump 10-15 times</div>
+                    <div class="bg-white rounded-3xl p-6 text-center">5. Enjoy crema!</div>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- SETTINGS MODAL -->
-    <div onclick="if(event.target.id === 'settings-modal')toggleSettings()" 
-         id="settings-modal"
-         class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-        <div onclick="event.stopImmediatePropagation()" 
-             class="bg-white rounded-3xl max-w-md w-full mx-4 p-8">
-            <h3 class="text-2xl header-font mb-6">Customize your guide</h3>
-            <div class="space-y-6">
-                <div>
-                    <label class="text-sm block mb-2">Default grind size</label>
-                    <select id="grind-select" class="w-full border border-[#e8d4b8] rounded-3xl px-5 py-4 text-sm">
-                        <option value="fine">Fine (espresso)</option>
-                        <option value="medium-fine" selected>Medium-fine (recommended for your machine)</option>
-                    </select>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div>Show visual diagrams</div>
-                    <input type="checkbox" id="visual-toggle" checked class="w-5 h-5 accent-[#6b3f1f]">
-                </div>
-                <div class="flex items-center justify-between">
-                    <div>Metric units (ml / g)</div>
-                    <input type="checkbox" checked class="w-5 h-5 accent-[#6b3f1f]">
-                </div>
-                <button onclick="toggleSettings()" 
-                        class="w-full bg-[#6b3f1f] text-white py-6 rounded-3xl text-lg mt-6">
-                    SAVE PREFERENCES
-                </button>
-            </div>
+    <div onclick="if(event.target.id==='modal')toggleSettings()" id="modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+        <div class="bg-white rounded-3xl max-w-lg w-full mx-4 p-10">
+            <h2 class="text-3xl header-font mb-8">Settings</h2>
+            <button onclick="toggleSettings()" class="w-full py-6 bg-[#5d4037] text-white rounded-3xl text-lg">Done</button>
         </div>
     </div>
 
     <script>
-        // Tailwind script already loaded
-        function initializeTailwind() {
-            return {
-                config(userConfig = {}) {
-                    return {
-                        configUser: userConfig,
-                        theme: {
-                            extend: {},
-                        },
-                    }
-                },
-                theme: {
-                    extend: {},
-                },
-            }
-        }
-        
-        // Global variables
-        let currentDrinkIndex = 0
-        let servings = 1
-        let strengthLevel = 1 // 0 mild, 1 standard, 2 strong
-        
-        // Drink database
+        // === DRINK DATABASE ===
         const drinksData = [
-            {
-                // 0 - Espresso
-                emoji: "☕",
-                name: "Espresso",
-                description: "The pure foundation of every café drink",
-                shots: 1,
-                coffeeGramsPerShot: 8,
-                yieldMl: 35,
-                waterMl: 0,
-                milkMl: 0,
-                ice: 0,
-                steps: [
-                    "Boil water to 92–96°C",
-                    "Grind {coffeeGrams} g fresh Flores Bajawa Arabica (medium-fine)",
-                    "Assemble portafilter with grounds and tamp lightly",
-                    "Fill water chamber to the line and attach",
-                    "Position over cup and pump plunger steadily 10–15 times until shot is complete",
-                    "Enjoy immediately — look for thick crema!"
-                ],
-                visual: "espresso"
-            },
-            {
-                // 1 - Iced Americano
-                emoji: "🧊",
-                name: "Iced Americano",
-                description: "Bold espresso diluted with cold water over ice",
-                shots: 2,
-                coffeeGramsPerShot: 8,
-                yieldMl: 70,
-                waterMl: 120,
-                milkMl: 0,
-                ice: 8,
-                steps: [
-                    "Brew {shots} shots of espresso using your One Two Cups hand press",
-                    "Fill a tall glass with ice cubes",
-                    "Pour cold water over the ice",
-                    "Gently pour the hot espresso over the top",
-                    "Stir once and serve immediately"
-                ],
-                visual: "americano"
-            },
-            {
-                // 2 - Hot Milk Coffee
-                emoji: "🥛",
-                name: "Hot Milk Coffee",
-                description: "Espresso blended with steamed hot milk",
-                shots: 1,
-                coffeeGramsPerShot: 8,
-                yieldMl: 35,
-                waterMl: 0,
-                milkMl: 180,
-                ice: 0,
-                steps: [
-                    "Brew 1 shot of espresso",
-                    "Heat milk to 60–65°C (do not boil)",
-                    "Pour hot milk into your cup",
-                    "Add espresso shot on top",
-                    "Stir gently and enjoy"
-                ],
-                visual: "hot-milk"
-            },
-            {
-                // 3 - Iced Milk Coffee
-                emoji: "🧊🥛",
-                name: "Iced Milk Coffee",
-                description: "Espresso mixed with cold milk and ice",
-                shots: 1,
-                coffeeGramsPerShot: 8,
-                yieldMl: 35,
-                waterMl: 0,
-                milkMl: 150,
-                ice: 6,
-                steps: [
-                    "Brew 1 shot of espresso",
-                    "Fill glass with ice and cold milk",
-                    "Pour espresso over the milk and ice",
-                    "Stir well for a uniform creamy texture"
-                ],
-                visual: "iced-milk"
-            },
-            {
-                // 4 - Dirty Latte
-                emoji: "🌀",
-                name: "Dirty Latte",
-                description: "Espresso poured over cold milk for a beautiful marbled swirl",
-                shots: 1,
-                coffeeGramsPerShot: 8,
-                yieldMl: 35,
-                waterMl: 0,
-                milkMl: 200,
-                ice: 6,
-                steps: [
-                    "Fill a glass with cold milk + ice (leave 2 cm space)",
-                    "Brew 1 shot of espresso",
-                    "Pour the espresso slowly over the milk from a low height",
-                    "Do NOT stir — watch the beautiful dirty swirl form",
-                    "Serve immediately"
-                ],
-                visual: "dirty"
-            },
-            {
-                // 5 - Coffee on the Rocks
-                emoji: "🪨",
-                name: "Coffee on the Rocks",
-                description: "Espresso poured straight over ice cubes",
-                shots: 2,
-                coffeeGramsPerShot: 8,
-                yieldMl: 70,
-                waterMl: 0,
-                milkMl: 0,
-                ice: 8,
-                steps: [
-                    "Fill a rocks glass generously with ice",
-                    "Brew {shots} shots of espresso",
-                    "Pour espresso directly over the ice",
-                    "Let it melt slightly and enjoy the concentrated flavor"
-                ],
-                visual: "rocks"
-            },
-            {
-                // 6 - Flat White
-                emoji: "🥛",
-                name: "Flat White",
-                description: "Velvety microfoam milk with espresso",
-                shots: 2,
-                coffeeGramsPerShot: 8,
-                yieldMl: 60,
-                waterMl: 0,
-                milkMl: 130,
-                ice: 0,
-                steps: [
-                    "Brew 2 shots of espresso",
-                    "Steam milk to create microfoam (silky, not bubbly)",
-                    "Pour milk slowly into espresso",
-                    "Create a simple latte art pattern if you like"
-                ],
-                visual: "flatwhite"
-            },
-            {
-                // 7 - Espresso Tonic
-                emoji: "🍋",
-                name: "Espresso Tonic",
-                description: "Espresso + sparkling tonic water",
-                shots: 1,
-                coffeeGramsPerShot: 8,
-                yieldMl: 35,
-                waterMl: 150,
-                milkMl: 0,
-                ice: 4,
-                steps: [
-                    "Fill glass with ice and tonic water",
-                    "Brew 1 shot of espresso",
-                    "Pour espresso gently over the tonic",
-                    "The two will create a beautiful separation effect"
-                ],
-                visual: "tonic"
-            },
-            {
-                // 8 - Affogato
-                emoji: "🍦",
-                name: "Affogato",
-                description: "Espresso poured over vanilla ice cream",
-                shots: 1,
-                coffeeGramsPerShot: 8,
-                yieldMl: 35,
-                waterMl: 0,
-                milkMl: 0,
-                ice: 0,
-                steps: [
-                    "Place 1 scoop of good vanilla ice cream in a glass",
-                    "Brew 1 shot of hot espresso",
-                    "Pour espresso directly over the ice cream",
-                    "Serve immediately and eat with a spoon"
-                ],
-                visual: "affogato"
-            }
+            {id:0, emoji:"☕", name:"Espresso", subtitle:"The perfect base shot", shots:1, coffeePerShot:8, yield:35, water:0, milk:0, ice:0,
+             steps:["Boil water to 92–96°C","Grind {coffee} g medium-fine","Assemble portafilter","Fill water chamber","Pump steadily until shot complete"]},
+            {id:1, emoji:"🧊", name:"Iced Americano", subtitle:"Bold & refreshing", shots:2, coffeePerShot:8, yield:70, water:120, milk:0, ice:8,
+             steps:["Brew {shots} shots","Fill glass with ice","Add cold water","Pour espresso over the top","Stir gently"]},
+            {id:2, emoji:"🥛", name:"Hot Milk Coffee", subtitle:"Smooth & comforting", shots:1, coffeePerShot:8, yield:35, water:0, milk:180, ice:0,
+             steps:["Brew 1 shot","Heat milk to 60–65°C","Pour milk into cup","Add espresso","Stir"]},
+            {id:3, emoji:"🧊🥛", name:"Iced Milk Coffee", subtitle:"Creamy & chilled", shots:1, coffeePerShot:8, yield:35, water:0, milk:150, ice:6,
+             steps:["Brew 1 shot","Fill glass with ice + milk","Pour espresso over","Stir well"]},
+            {id:4, emoji:"🌀", name:"Dirty Latte", subtitle:"Marbled espresso swirl", shots:1, coffeePerShot:8, yield:35, water:0, milk:200, ice:6,
+             steps:["Fill glass with cold milk + ice","Brew 1 shot","Pour espresso slowly from low height","Do not stir – enjoy the swirl"]},
+            {id:5, emoji:"🪨", name:"Coffee on the Rocks", subtitle:"Pure espresso chill", shots:2, coffeePerShot:8, yield:70, water:0, milk:0, ice:8,
+             steps:["Fill rocks glass with ice","Brew {shots} shots","Pour espresso directly over ice","Let it melt slightly"]},
+            {id:6, emoji:"🥛", name:"Flat White", subtitle:"Velvety microfoam", shots:2, coffeePerShot:8, yield:60, water:0, milk:130, ice:0,
+             steps:["Brew 2 shots","Steam milk to microfoam","Pour milk into espresso"]},
+            {id:7, emoji:"🍋", name:"Espresso Tonic", subtitle:"Sparkling & bright", shots:1, coffeePerShot:8, yield:35, water:150, milk:0, ice:4,
+             steps:["Fill glass with ice + tonic","Brew 1 shot","Pour espresso gently over tonic"]},
+            {id:8, emoji:"🍦", name:"Affogato", subtitle:"Espresso meets ice cream", shots:1, coffeePerShot:8, yield:35, water:0, milk:0, ice:0,
+             steps:["Place 1 scoop vanilla ice cream","Brew 1 hot shot","Pour espresso over ice cream"]}
         ]
-        
-        function calculateRecipe(drink, servings, strength) {
-            const multiplier = servings
-            const strengthMultiplier = strength === 0 ? 0.75 : strength === 1 ? 1 : 1.35
-            
-            const coffeePerShot = Math.round(drink.coffeeGramsPerShot * strengthMultiplier)
-            const totalShots = Math.ceil(drink.shots * multiplier)
-            const totalCoffee = Math.round(coffeePerShot * totalShots)
-            
+
+        let currentDrink = 5
+        let servings = 1
+        let strength = 1
+
+        function calculate(drink) {
+            const mult = servings
+            const strMult = strength === 0 ? 0.75 : strength === 1 ? 1 : 1.35
+            const totalShots = Math.ceil(drink.shots * mult)
+            const coffee = Math.round(drink.coffeePerShot * totalShots * strMult)
             return {
-                totalShots: totalShots,
-                totalCoffeeGrams: totalCoffee,
-                espressoYieldMl: Math.round(drink.yieldMl * totalShots),
-                waterMl: Math.round(drink.waterMl * multiplier),
-                milkMl: Math.round(drink.milkMl * multiplier),
-                iceCubes: Math.round(drink.ice * multiplier)
+                shots: totalShots,
+                coffee: coffee,
+                yield: Math.round(drink.yield * totalShots),
+                water: Math.round(drink.water * mult),
+                milk: Math.round(drink.milk * mult),
+                ice: Math.round(drink.ice * mult)
             }
         }
-        
+
         function renderRecipe() {
-            const drink = drinksData[currentDrinkIndex]
-            const recipe = calculateRecipe(drink, servings, strengthLevel)
-            
-            // Update header
-            document.getElementById('recipe-emoji').innerHTML = drink.emoji
-            document.getElementById('recipe-name').innerHTML = `${drink.name} <span class="text-base font-sans text-gray-400 ml-3">(${drink.description})</span>`
-            
+            const drink = drinksData[currentDrink]
+            const r = calculate(drink)
+
+            // Header
+            document.getElementById("recipe-emoji").textContent = drink.emoji
+            document.getElementById("recipe-name").innerHTML = drink.name
+            document.getElementById("recipe-subtitle").textContent = drink.subtitle
+
+            // Servings
+            document.getElementById("servings-display").textContent = servings
+
+            // Strength buttons
+            document.getElementById("strength-0").classList.toggle("bg-[#5d4037]", strength===0)
+            document.getElementById("strength-0").classList.toggle("text-white", strength===0)
+            document.getElementById("strength-1").classList.toggle("bg-[#5d4037]", strength===1)
+            document.getElementById("strength-1").classList.toggle("text-white", strength===1)
+            document.getElementById("strength-2").classList.toggle("bg-[#5d4037]", strength===2)
+            document.getElementById("strength-2").classList.toggle("text-white", strength===2)
+
             // Ingredients
-            let ingredientsHTML = `
-                <div class="flex justify-between items-center py-3 border-b">
-                    <div class="flex items-center gap-x-3">
-                        <span class="text-2xl">🌾</span>
-                        <div>
-                            <div class="font-medium">Coffee grounds</div>
-                            <div class="text-xs text-gray-500">Flores Bajawa Arabica</div>
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-2xl font-semibold">${recipe.totalCoffeeGrams}</span> g
-                        <div class="text-xs text-gray-500">(${recipe.totalShots} shots × ${Math.round(recipe.totalCoffeeGrams / recipe.totalShots)} g each)</div>
-                    </div>
+            let ingHTML = `
+                <div class="flex justify-between items-center py-4 border-b">
+                    <div class="flex items-center gap-4"><span class="text-3xl">🌾</span><div><div class="font-semibold">Coffee grounds</div><div class="text-xs text-gray-400">Flores Bajawa Arabica</div></div></div>
+                    <div class="text-right"><span class="text-3xl font-semibold">${r.coffee}</span> g</div>
                 </div>
-                
-                <div class="flex justify-between items-center py-3 border-b">
-                    <div class="flex items-center gap-x-3">
-                        <span class="text-2xl">☕</span>
-                        <div>Espresso yield</div>
-                    </div>
-                    <div class="font-semibold">${recipe.espressoYieldMl} ml</div>
+                <div class="flex justify-between items-center py-4 border-b">
+                    <div class="flex items-center gap-4"><span class="text-3xl">☕</span><div>Espresso yield</div></div>
+                    <div class="font-semibold">${r.yield} ml</div>
                 </div>`
-            
-            if (drink.waterMl > 0) {
-                ingredientsHTML += `
-                <div class="flex justify-between items-center py-3 border-b">
-                    <div class="flex items-center gap-x-3">
-                        <span class="text-2xl">💧</span>
-                        <div>Cold / room temp water</div>
-                    </div>
-                    <div class="font-semibold">${recipe.waterMl} ml</div>
-                </div>`
-            }
-            
-            if (drink.milkMl > 0) {
-                ingredientsHTML += `
-                <div class="flex justify-between items-center py-3 border-b">
-                    <div class="flex items-center gap-x-3">
-                        <span class="text-2xl">🥛</span>
-                        <div>Whole milk (or oat/almond)</div>
-                    </div>
-                    <div class="font-semibold">${recipe.milkMl} ml</div>
-                </div>`
-            }
-            
-            if (drink.ice > 0) {
-                ingredientsHTML += `
-                <div class="flex justify-between items-center py-3">
-                    <div class="flex items-center gap-x-3">
-                        <span class="text-2xl">🧊</span>
-                        <div>Ice cubes</div>
-                    </div>
-                    <div class="font-semibold">${recipe.iceCubes} cubes</div>
-                </div>`
-            }
-            
-            document.getElementById('ingredients-list').innerHTML = ingredientsHTML
-            document.getElementById('espresso-yield').innerHTML = `${recipe.espressoYieldMl} ml espresso`
-            
+
+            if (r.water > 0) ingHTML += `<div class="flex justify-between items-center py-4 border-b"><div class="flex items-center gap-4"><span class="text-3xl">💧</span><div>Cold water</div></div><div class="font-semibold">${r.water} ml</div></div>`
+            if (r.milk > 0) ingHTML += `<div class="flex justify-between items-center py-4 border-b"><div class="flex items-center gap-4"><span class="text-3xl">🥛</span><div>Milk</div></div><div class="font-semibold">${r.milk} ml</div></div>`
+            if (r.ice > 0) ingHTML += `<div class="flex justify-between items-center py-4"><div class="flex items-center gap-4"><span class="text-3xl">🧊</span><div>Ice cubes</div></div><div class="font-semibold">${r.ice} cubes</div></div>`
+
+            document.getElementById("ingredients-list").innerHTML = ingHTML
+            document.getElementById("espresso-yield-badge").innerHTML = `☕ <span class="font-semibold">${r.yield} ml espresso</span>`
+
             // Steps
             let stepsHTML = ''
             drink.steps.forEach((step, i) => {
-                let processedStep = step
-                    .replace('{shots}', recipe.totalShots)
-                    .replace('{coffeeGrams}', recipe.totalCoffeeGrams)
-                
+                const finalStep = step.replace('{shots}', r.shots).replace('{coffee}', r.coffee)
                 stepsHTML += `
-                <div class="flex gap-x-4">
-                    <div class="step-number w-7 h-7 shrink-0 bg-[#6b3f1f] text-white text-sm font-semibold rounded-2xl flex items-center justify-center">${i+1}</div>
-                    <div class="flex-1 text-[15px]">${processedStep}</div>
+                <div class="flex gap-6">
+                    <div class="step-number w-8 h-8 bg-[#5d4037] text-white flex items-center justify-center rounded-2xl font-semibold text-lg shrink-0">${i+1}</div>
+                    <div class="flex-1 pt-1">${finalStep}</div>
                 </div>`
-                if (i < drink.steps.length - 1) stepsHTML += `<div class="h-px bg-[#e8d4b8] my-6"></div>`
+                if (i < drink.steps.length-1) stepsHTML += `<div class="border-b border-dashed border-[#e8d4b8] my-6"></div>`
             })
-            document.getElementById('steps-list').innerHTML = stepsHTML
-            
-            // Visual diagram
-            const diagramContainer = document.getElementById('visual-diagram')
-            if (drink.visual) {
-                diagramContainer.classList.remove('hidden')
-                
-                let diagram = ''
-                
-                if (drink.visual === 'americano') {
-                    diagram = `<div class="flex flex-col items-center"><div class="w-40 h-40 border-4 border-[#6b3f1f] rounded-3xl relative flex items-center justify-center text-6xl overflow-hidden">🧊<div class="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-[#6b3f1f] to-transparent flex items-end justify-center text-white text-4xl pb-4">☕</div></div><div class="text-xs text-center mt-4 font-medium">Ice → Water → Espresso</div></div>`
-                } else if (drink.visual === 'dirty') {
-                    diagram = `<div class="flex flex-col items-center"><div class="w-40 h-40 border-4 border-[#6b3f1f] rounded-3xl relative flex items-center justify-center text-6xl overflow-hidden">🥛<div class="layer absolute bottom-6 left-8 right-8 h-4 bg-[#6b3f1f] rounded-full opacity-80"></div></div><div class="text-xs text-center mt-4 font-medium">Cold milk + dramatic espresso swirl</div></div>`
-                } else if (drink.visual === 'rocks') {
-                    diagram = `<div class="flex flex-col items-center"><div class="w-40 h-40 border-4 border-[#6b3f1f] rounded-3xl relative flex items-center justify-center text-6xl">🪨☕</div><div class="text-xs text-center mt-4 font-medium">Espresso melting over ice</div></div>`
-                } else {
-                    diagramContainer.classList.add('hidden')
-                }
-                
-                diagramContainer.innerHTML = diagram
+            document.getElementById("steps-list").innerHTML = stepsHTML
+
+            // Visual for Coffee on the Rocks (matches your screenshot)
+            const vis = document.getElementById("visual-diagram")
+            if (currentDrink === 5) {
+                vis.innerHTML = `
+                <div class="flex flex-col items-center">
+                    <div class="w-56 h-56 border-4 border-[#5d4037] rounded-3xl relative flex items-center justify-center text-8xl">🪨</div>
+                    <div class="mt-8 text-[#5d4037] font-medium flex items-center gap-3">
+                        <div class="w-6 h-px bg-[#5d4037]"></div>
+                        Espresso melting over ice
+                        <div class="w-6 h-px bg-[#5d4037]"></div>
+                    </div>
+                </div>`
             } else {
-                diagramContainer.classList.add('hidden')
+                vis.innerHTML = `<div class="text-8xl opacity-30">${drink.emoji}</div>`
             }
-            
-            // Show recipe view
-            document.getElementById('view-home').classList.add('hidden')
-            document.getElementById('view-machine').classList.add('hidden')
-            document.getElementById('view-recipe').classList.remove('hidden')
+
+            // Show recipe
+            document.getElementById("view-home").classList.add("hidden")
+            document.getElementById("view-machine").classList.add("hidden")
+            document.getElementById("view-recipe").classList.remove("hidden")
         }
-        
-        function selectDrink(index) {
-            currentDrinkIndex = index
+
+        function selectDrink(id) {
+            currentDrink = id
             servings = 1
-            strengthLevel = 1
-            updateActiveSidebar()
+            strength = 1
+            // Update sidebar highlight
+            document.querySelectorAll('.drink-item').forEach(el => el.classList.remove('selected'))
+            const active = document.getElementById('drink-' + id)
+            if (active) active.classList.add('selected')
             renderRecipe()
         }
-        
+
         function changeServings(delta) {
             servings = Math.max(1, Math.min(4, servings + delta))
-            document.getElementById('servings-display').innerHTML = servings
             renderRecipe()
         }
-        
+
         function setStrength(level) {
-            strengthLevel = level
-            // Update buttons
-            for (let i = 0; i < 3; i++) {
-                const btn = document.getElementById('strength-' + i)
-                if (btn) {
-                    if (i === level) {
-                        btn.classList.add('bg-[#6b3f1f]', 'text-white')
-                        btn.classList.remove('bg-[#f5e8d3]')
-                    } else {
-                        btn.classList.remove('bg-[#6b3f1f]', 'text-white')
-                        btn.classList.add('bg-[#f5e8d3]')
-                    }
-                }
-            }
+            strength = level
             renderRecipe()
         }
-        
-        function updateActiveSidebar() {
-            document.querySelectorAll('.drink-item').forEach(item => {
-                item.classList.remove('bg-[#f5e8d3]', 'shadow-inner')
-            })
-            const active = document.getElementById('drink-' + currentDrinkIndex)
-            if (active) active.classList.add('bg-[#f5e8d3]', 'shadow-inner')
+
+        function navigateTo(page) {
+            document.getElementById("view-recipe").classList.add("hidden")
+            document.getElementById("view-home").classList.add("hidden")
+            document.getElementById("view-machine").classList.add("hidden")
+            if (page === "home") document.getElementById("view-home").classList.remove("hidden")
+            if (page === "machine") document.getElementById("view-machine").classList.remove("hidden")
         }
-        
-        function navigateTo(section) {
-            document.getElementById('view-home').classList.add('hidden')
-            document.getElementById('view-machine').classList.add('hidden')
-            document.getElementById('view-recipe').classList.add('hidden')
-            
-            if (section === 'home') {
-                document.getElementById('view-home').classList.remove('hidden')
-            } else if (section === 'machine') {
-                document.getElementById('view-machine').classList.remove('hidden')
-            }
-        }
-        
+
         function toggleSettings() {
-            const modal = document.getElementById('settings-modal')
-            modal.classList.toggle('hidden')
+            const modal = document.getElementById("modal")
+            modal.classList.toggle("hidden")
         }
-        
+
         function printRecipe() {
-            const originalContent = document.getElementById('main-content').innerHTML
-            const recipeHTML = document.getElementById('view-recipe').innerHTML
-            
-            const printContents = `
-            <div style="padding:40px;font-family:sans-serif;max-width:800px;margin:0 auto;">
-                <h1 style="font-size:42px;margin-bottom:8px;color:#6b3f1f">☕ ${drinksData[currentDrinkIndex].name}</h1>
-                <p style="color:#999">${drinksData[currentDrinkIndex].description}</p>
-                ${recipeHTML}
-                <p style="margin-top:60px;font-size:11px;color:#999">Made with your One Two Cups Mini Hand Press • Flores Bajawa Arabica</p>
-            </div>`
-            
-            const originalTitle = document.title
-            document.title = drinksData[currentDrinkIndex].name + ' Recipe'
-            const printWin = window.open('', '_blank')
-            printWin.document.write(printContents)
-            printWin.document.close()
-            printWin.focus()
-            printWin.print()
-            printWin.close()
-            document.title = originalTitle
+            window.print()
         }
-        
-        function resetRecipe() {
-            servings = 1
-            strengthLevel = 1
+
+        // Initialize
+        window.onload = () => {
             renderRecipe()
-        }
-        
-        // Initialize everything
-        window.onload = function() {
-            initializeTailwind()
-            // Set first drink as active
-            updateActiveSidebar()
-            console.log('%c✅ Your interactive One Two Cups coffee app is ready!', 'color:#6b3f1f;font-weight:bold')
-            console.log('Copy this entire HTML into a file called coffee-guide.html and open it in any browser.')
+            console.log('%c✅ Neat Café at Home app loaded with Bahnschrift font!', 'color:#5d4037;font-weight:600')
         }
     </script>
 </body>
