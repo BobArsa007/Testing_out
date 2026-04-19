@@ -51,6 +51,10 @@
             border: 3px solid #d4b08c;
             background: #fdfaf3;
         }
+        
+        .pro-tip {
+            background: #f5e8d3;
+        }
     </style>
 </head>
 <body class="bg-[#f8f1e3] text-[#3f2a22]">
@@ -66,13 +70,11 @@
             </div>
 
             <div class="flex items-center gap-x-8">
-                <!-- Ready badge -->
                 <div class="bg-[#d4b08c] text-[#5d4037] text-xs font-semibold px-5 py-2 rounded-3xl flex items-center gap-x-2">
                     <div class="w-2 h-2 bg-[#5d4037] rounded-full animate-pulse"></div>
                     READY TO BREW
                 </div>
 
-                <!-- Navigation -->
                 <a onclick="navigateTo('home')" class="flex items-center gap-x-2 text-sm font-medium hover:text-[#d4b08c]">
                     <span class="text-xl">🏠</span>
                     HOME
@@ -84,14 +86,12 @@
 
                 <div class="h-6 w-px bg-white/30"></div>
 
-                <!-- Your Beans -->
                 <div class="flex items-center bg-white/10 hover:bg-white/20 px-4 py-2 rounded-3xl cursor-pointer">
                     <span class="text-lg mr-2">🌿</span>
                     <div class="text-sm font-medium">YOUR BEANS</div>
                     <div class="ml-3 px-3 py-1 bg-white text-[#5d4037] text-xs font-semibold rounded-3xl">Flores Bajawa Arabica</div>
                 </div>
 
-                <!-- Settings -->
                 <button onclick="toggleSettings()" class="w-9 h-9 flex items-center justify-center text-2xl hover:bg-white/20 rounded-2xl">⚙️</button>
             </div>
         </div>
@@ -167,7 +167,7 @@
         <!-- MAIN CONTENT AREA -->
         <div class="flex-1 p-10" id="main-content">
             
-            <!-- RECIPE VIEW (default) -->
+            <!-- RECIPE VIEW -->
             <div id="view-recipe">
                 <div class="flex items-baseline justify-between">
                     <div>
@@ -198,7 +198,7 @@
 
                         <div class="flex flex-col gap-y-2">
                             <button onclick="printRecipe()" class="flex items-center gap-x-2 text-[#5d4037] hover:text-white hover:bg-[#5d4037] px-6 py-3 border border-[#5d4037] rounded-3xl text-sm font-medium">
-                                🖨️ Print
+                                🖨️ Print Recipe
                             </button>
                             <button onclick="printRecipe()" class="flex items-center gap-x-2 text-[#5d4037] hover:text-white hover:bg-[#5d4037] px-6 py-3 border border-[#5d4037] rounded-3xl text-sm font-medium">
                                 💾 Save as PDF
@@ -214,7 +214,7 @@
                         <div id="ingredients-list" class="space-y-6"></div>
                         
                         <div class="mt-8 text-xs flex items-center justify-between text-gray-400 border-t pt-6">
-                            <div>Total time: <span id="total-time" class="text-[#5d4037] font-semibold">~4 minutes</span></div>
+                            <div>Total time: <span id="total-time" class="text-[#5d4037] font-semibold">~4–6 minutes</span></div>
                             <div id="espresso-yield-badge" class="flex items-center gap-x-2"></div>
                         </div>
                     </div>
@@ -223,6 +223,12 @@
                     <div class="col-span-7 bg-white rounded-3xl shadow-sm p-8">
                         <h3 class="uppercase text-xs font-semibold tracking-widest text-[#5d4037] mb-6">STEP-BY-STEP</h3>
                         <div id="steps-list" class="space-y-8"></div>
+                        
+                        <!-- Pro Tip Box -->
+                        <div id="pro-tip" class="pro-tip mt-10 rounded-3xl p-6 text-sm flex gap-4">
+                            <span class="text-2xl">💡</span>
+                            <div id="pro-tip-text" class="flex-1"></div>
+                        </div>
                     </div>
 
                     <!-- VISUAL -->
@@ -245,14 +251,13 @@
             <!-- MACHINE GUIDE VIEW -->
             <div id="view-machine" class="hidden">
                 <h1 class="header-font text-4xl text-[#5d4037]">How to Use Your One Two Cups Mini Hand Press</h1>
-                <p class="mt-3 text-gray-500">Simple 5-step guide for perfect espresso every time with your portable maker.</p>
-                <!-- Machine steps would go here (kept short for cleanliness) -->
+                <p class="mt-3 text-gray-500">Detailed 5-step guide for perfect espresso every time with your portable maker and Flores Bajawa Arabica.</p>
                 <div class="mt-12 grid grid-cols-5 gap-6">
-                    <div class="bg-white rounded-3xl p-6 text-center">1. Grind 8g</div>
-                    <div class="bg-white rounded-3xl p-6 text-center">2. Fill portafilter</div>
-                    <div class="bg-white rounded-3xl p-6 text-center">3. Add hot water</div>
-                    <div class="bg-white rounded-3xl p-6 text-center">4. Pump 10-15 times</div>
-                    <div class="bg-white rounded-3xl p-6 text-center">5. Enjoy crema!</div>
+                    <div class="bg-white rounded-3xl p-6 text-center">1. Grind 8–10 g medium-fine</div>
+                    <div class="bg-white rounded-3xl p-6 text-center">2. Fill &amp; tamp portafilter</div>
+                    <div class="bg-white rounded-3xl p-6 text-center">3. Add 92–96°C water</div>
+                    <div class="bg-white rounded-3xl p-6 text-center">4. Pump steadily 12–18 times</div>
+                    <div class="bg-white rounded-3xl p-6 text-center">5. Enjoy thick crema!</div>
                 </div>
             </div>
         </div>
@@ -267,26 +272,125 @@
     </div>
 
     <script>
-        // === DRINK DATABASE ===
+        // === ENHANCED DRINK DATABASE WITH DETAILED STEPS ===
         const drinksData = [
-            {id:0, emoji:"☕", name:"Espresso", subtitle:"The perfect base shot", shots:1, coffeePerShot:8, yield:35, water:0, milk:0, ice:0,
-             steps:["Boil water to 92–96°C","Grind {coffee} g medium-fine","Assemble portafilter","Fill water chamber","Pump steadily until shot complete"]},
-            {id:1, emoji:"🧊", name:"Iced Americano", subtitle:"Bold & refreshing", shots:2, coffeePerShot:8, yield:70, water:120, milk:0, ice:8,
-             steps:["Brew {shots} shots","Fill glass with ice","Add cold water","Pour espresso over the top","Stir gently"]},
-            {id:2, emoji:"🥛", name:"Hot Milk Coffee", subtitle:"Smooth & comforting", shots:1, coffeePerShot:8, yield:35, water:0, milk:180, ice:0,
-             steps:["Brew 1 shot","Heat milk to 60–65°C","Pour milk into cup","Add espresso","Stir"]},
-            {id:3, emoji:"🧊🥛", name:"Iced Milk Coffee", subtitle:"Creamy & chilled", shots:1, coffeePerShot:8, yield:35, water:0, milk:150, ice:6,
-             steps:["Brew 1 shot","Fill glass with ice + milk","Pour espresso over","Stir well"]},
-            {id:4, emoji:"🌀", name:"Dirty Latte", subtitle:"Marbled espresso swirl", shots:1, coffeePerShot:8, yield:35, water:0, milk:200, ice:6,
-             steps:["Fill glass with cold milk + ice","Brew 1 shot","Pour espresso slowly from low height","Do not stir – enjoy the swirl"]},
-            {id:5, emoji:"🪨", name:"Coffee on the Rocks", subtitle:"Pure espresso chill", shots:2, coffeePerShot:8, yield:70, water:0, milk:0, ice:8,
-             steps:["Fill rocks glass with ice","Brew {shots} shots","Pour espresso directly over ice","Let it melt slightly"]},
-            {id:6, emoji:"🥛", name:"Flat White", subtitle:"Velvety microfoam", shots:2, coffeePerShot:8, yield:60, water:0, milk:130, ice:0,
-             steps:["Brew 2 shots","Steam milk to microfoam","Pour milk into espresso"]},
-            {id:7, emoji:"🍋", name:"Espresso Tonic", subtitle:"Sparkling & bright", shots:1, coffeePerShot:8, yield:35, water:150, milk:0, ice:4,
-             steps:["Fill glass with ice + tonic","Brew 1 shot","Pour espresso gently over tonic"]},
-            {id:8, emoji:"🍦", name:"Affogato", subtitle:"Espresso meets ice cream", shots:1, coffeePerShot:8, yield:35, water:0, milk:0, ice:0,
-             steps:["Place 1 scoop vanilla ice cream","Brew 1 hot shot","Pour espresso over ice cream"]}
+            {
+                id: 0, emoji: "☕", name: "Espresso", subtitle: "The perfect base shot",
+                shots: 1, coffeePerShot: 8, yield: 35, water: 0, milk: 0, ice: 0,
+                steps: [
+                    "1. Bring fresh water to 92–96°C (just off the boil — never boiling).",
+                    "2. Grind 8 g of Flores Bajawa Arabica to a medium-fine consistency (like fine table salt). Use the included scoop for accuracy.",
+                    "3. Unscrew the portafilter from the body. Remove the filter basket, fill with grounds, and tamp lightly (do not press too hard).",
+                    "4. Re-insert the basket and screw the portafilter tightly back onto the body.",
+                    "5. Fill the water chamber with hot water up to the marked line (~80–100 ml). Screw the chamber securely onto the body.",
+                    "6. Place the device over your espresso cup. Unlock the piston if needed, then pump the plunger steadily 12–18 times until the shot is complete (25–40 ml with rich crema).",
+                    "7. Serve immediately. Look for thick, golden-brown crema — the sign of a perfect extraction with your hand press."
+                ],
+                proTip: "Your Flores Bajawa Arabica shines best at 8–10 g per shot. Too coarse = weak; too fine = hard to pump."
+            },
+            {
+                id: 1, emoji: "🧊", name: "Iced Americano", subtitle: "Bold & refreshing",
+                shots: 2, coffeePerShot: 8, yield: 70, water: 120, milk: 0, ice: 8,
+                steps: [
+                    "1. Brew 2 shots of espresso using the steps above (total 16 g coffee).",
+                    "2. Fill a tall glass generously with ice cubes (about 8 cubes).",
+                    "3. Pour 120 ml of cold filtered water over the ice.",
+                    "4. Slowly pour the hot espresso over the water and ice from a low height to preserve the crema.",
+                    "5. Stir gently once or twice. The espresso will layer beautifully on top at first.",
+                    "6. Serve immediately and enjoy the bold, refreshing contrast."
+                ],
+                proTip: "Ice + water first prevents the espresso from melting all the ice instantly and watering down the drink."
+            },
+            {
+                id: 2, emoji: "🥛", name: "Hot Milk Coffee", subtitle: "Smooth & comforting",
+                shots: 1, coffeePerShot: 8, yield: 35, water: 0, milk: 180, ice: 0,
+                steps: [
+                    "1. Brew 1 shot of espresso (8 g coffee).",
+                    "2. Heat 180 ml whole milk (or oat/almond milk) to 60–65°C in a small pot or microwave — do not boil.",
+                    "3. Pour the hot milk into your serving cup first.",
+                    "4. Gently pour the espresso shot on top of the milk.",
+                    "5. Stir slowly to combine. The crema will create a beautiful layer.",
+                    "6. Optional: Add a small pinch of palm sugar for Indonesian-style sweetness."
+                ],
+                proTip: "Milk first keeps the temperature balanced and prevents curdling."
+            },
+            {
+                id: 3, emoji: "🧊🥛", name: "Iced Milk Coffee", subtitle: "Creamy & chilled",
+                shots: 1, coffeePerShot: 8, yield: 35, water: 0, milk: 150, ice: 6,
+                steps: [
+                    "1. Brew 1 shot of espresso (8 g coffee).",
+                    "2. Fill a glass with 6 ice cubes and 150 ml cold milk.",
+                    "3. Slowly pour the hot espresso over the milk and ice from a low height.",
+                    "4. Stir well for 5–8 seconds until the drink becomes uniformly creamy.",
+                    "5. Taste and adjust sweetness if desired.",
+                    "6. Serve right away while the crema is still floating."
+                ],
+                proTip: "Cold milk + ice first keeps the espresso from curdling the milk and creates a smoother texture."
+            },
+            {
+                id: 4, emoji: "🌀", name: "Dirty Latte", subtitle: "Marbled espresso swirl",
+                shots: 1, coffeePerShot: 8, yield: 35, water: 0, milk: 200, ice: 6,
+                steps: [
+                    "1. Fill a tall glass with 200 ml cold milk and 6 ice cubes (leave 2 cm space at the top).",
+                    "2. Brew 1 shot of espresso (8 g coffee).",
+                    "3. Pour the espresso very slowly from just 2–3 cm above the glass rim so it sinks and creates the signature marbled swirl.",
+                    "4. Do NOT stir — the visual swirl is what makes it “dirty.”",
+                    "5. Serve immediately and watch the layers gently mix as you drink."
+                ],
+                proTip: "Slow pour from low height is the secret to the beautiful dirty effect with your hand-press espresso."
+            },
+            {
+                id: 5, emoji: "🪨", name: "Coffee on the Rocks", subtitle: "Pure espresso chill",
+                shots: 2, coffeePerShot: 8, yield: 70, water: 0, milk: 0, ice: 8,
+                steps: [
+                    "1. Fill a rocks glass generously with 8 ice cubes (use large cubes if possible to melt slower).",
+                    "2. Brew 2 shots of espresso using your One Two Cups hand press (total 16 g of Flores Bajawa Arabica).",
+                    "3. Immediately pour the hot espresso directly over the ice from a low height.",
+                    "4. Let the drink sit for 15–20 seconds so the ice begins to melt slightly and chill the espresso without diluting it too fast.",
+                    "5. Give it one gentle swirl if desired, then sip slowly.",
+                    "6. Enjoy the concentrated flavor as the ice melts — the perfect summer espresso experience."
+                ],
+                proTip: "Always ice first, espresso second. This keeps the drink strong and prevents instant watering down."
+            },
+            {
+                id: 6, emoji: "🥛", name: "Flat White", subtitle: "Velvety microfoam",
+                shots: 2, coffeePerShot: 8, yield: 60, water: 0, milk: 130, ice: 0,
+                steps: [
+                    "1. Brew 2 shots of espresso (16 g total).",
+                    "2. Heat 130 ml milk to 60–65°C and create silky microfoam (tilt the cup while heating for best texture).",
+                    "3. Pour the espresso into your cup first.",
+                    "4. Gently pour the microfoam milk into the center of the espresso in a thin, steady stream.",
+                    "5. Create simple latte art if desired (heart or rosetta).",
+                    "6. Serve immediately — the flat white should have a velvety mouthfeel with no big bubbles."
+                ],
+                proTip: "Microfoam is key. Your hand-press crema pairs perfectly with the silky milk."
+            },
+            {
+                id: 7, emoji: "🍋", name: "Espresso Tonic", subtitle: "Sparkling & bright",
+                shots: 1, coffeePerShot: 8, yield: 35, water: 150, milk: 0, ice: 4,
+                steps: [
+                    "1. Fill a tall glass with 4 ice cubes and 150 ml cold tonic water.",
+                    "2. Brew 1 shot of espresso (8 g coffee).",
+                    "3. Pour the espresso gently over the tonic and ice from a low height — watch the beautiful separation effect.",
+                    "4. Do not stir immediately; let the flavors mingle for 10 seconds.",
+                    "5. Give one light stir before drinking.",
+                    "6. Garnish with a lemon twist if you have one."
+                ],
+                proTip: "The effervescence of tonic lifts the floral notes of Flores Bajawa Arabica beautifully."
+            },
+            {
+                id: 8, emoji: "🍦", name: "Affogato", subtitle: "Espresso meets ice cream",
+                shots: 1, coffeePerShot: 8, yield: 35, water: 0, milk: 0, ice: 0,
+                steps: [
+                    "1. Place 1 generous scoop of good-quality vanilla ice cream into a chilled glass or bowl.",
+                    "2. Brew 1 shot of hot espresso (8 g coffee).",
+                    "3. Immediately pour the espresso directly over the ice cream.",
+                    "4. Let it sit for 10–15 seconds so the ice cream begins to melt and mingle with the crema.",
+                    "5. Eat with a spoon, alternating between ice cream and espresso.",
+                    "6. Best enjoyed within 2 minutes before it becomes too soupy."
+                ],
+                proTip: "The hot espresso melts the ice cream into a luxurious sauce — pure dessert in a cup."
+            }
         ]
 
         let currentDrink = 5
@@ -321,17 +425,18 @@
             document.getElementById("servings-display").textContent = servings
 
             // Strength buttons
-            document.getElementById("strength-0").classList.toggle("bg-[#5d4037]", strength===0)
-            document.getElementById("strength-0").classList.toggle("text-white", strength===0)
-            document.getElementById("strength-1").classList.toggle("bg-[#5d4037]", strength===1)
-            document.getElementById("strength-1").classList.toggle("text-white", strength===1)
-            document.getElementById("strength-2").classList.toggle("bg-[#5d4037]", strength===2)
-            document.getElementById("strength-2").classList.toggle("text-white", strength===2)
+            for (let i = 0; i < 3; i++) {
+                const btn = document.getElementById("strength-" + i)
+                if (btn) {
+                    btn.classList.toggle("bg-[#5d4037]", i === strength)
+                    btn.classList.toggle("text-white", i === strength)
+                }
+            }
 
             // Ingredients
             let ingHTML = `
                 <div class="flex justify-between items-center py-4 border-b">
-                    <div class="flex items-center gap-4"><span class="text-3xl">🌾</span><div><div class="font-semibold">Coffee grounds</div><div class="text-xs text-gray-400">Flores Bajawa Arabica</div></div></div>
+                    <div class="flex items-center gap-4"><span class="text-3xl">🌾</span><div><div class="font-semibold">Coffee grounds</div><div class="text-xs text-gray-400">Flores Bajawa Arabica (medium-fine grind)</div></div></div>
                     <div class="text-right"><span class="text-3xl font-semibold">${r.coffee}</span> g</div>
                 </div>
                 <div class="flex justify-between items-center py-4 border-b">
@@ -339,9 +444,9 @@
                     <div class="font-semibold">${r.yield} ml</div>
                 </div>`
 
-            if (r.water > 0) ingHTML += `<div class="flex justify-between items-center py-4 border-b"><div class="flex items-center gap-4"><span class="text-3xl">💧</span><div>Cold water</div></div><div class="font-semibold">${r.water} ml</div></div>`
-            if (r.milk > 0) ingHTML += `<div class="flex justify-between items-center py-4 border-b"><div class="flex items-center gap-4"><span class="text-3xl">🥛</span><div>Milk</div></div><div class="font-semibold">${r.milk} ml</div></div>`
-            if (r.ice > 0) ingHTML += `<div class="flex justify-between items-center py-4"><div class="flex items-center gap-4"><span class="text-3xl">🧊</span><div>Ice cubes</div></div><div class="font-semibold">${r.ice} cubes</div></div>`
+            if (r.water > 0) ingHTML += `<div class="flex justify-between items-center py-4 border-b"><div class="flex items-center gap-4"><span class="text-3xl">💧</span><div>Cold filtered water</div></div><div class="font-semibold">${r.water} ml</div></div>`
+            if (r.milk > 0) ingHTML += `<div class="flex justify-between items-center py-4 border-b"><div class="flex items-center gap-4"><span class="text-3xl">🥛</span><div>Whole milk (or oat/almond)</div></div><div class="font-semibold">${r.milk} ml</div></div>`
+            if (r.ice > 0) ingHTML += `<div class="flex justify-between items-center py-4"><div class="flex items-center gap-4"><span class="text-3xl">🧊</span><div>Large ice cubes</div></div><div class="font-semibold">${r.ice} cubes</div></div>`
 
             document.getElementById("ingredients-list").innerHTML = ingHTML
             document.getElementById("espresso-yield-badge").innerHTML = `☕ <span class="font-semibold">${r.yield} ml espresso</span>`
@@ -349,17 +454,19 @@
             // Steps
             let stepsHTML = ''
             drink.steps.forEach((step, i) => {
-                const finalStep = step.replace('{shots}', r.shots).replace('{coffee}', r.coffee)
                 stepsHTML += `
                 <div class="flex gap-6">
                     <div class="step-number w-8 h-8 bg-[#5d4037] text-white flex items-center justify-center rounded-2xl font-semibold text-lg shrink-0">${i+1}</div>
-                    <div class="flex-1 pt-1">${finalStep}</div>
+                    <div class="flex-1 pt-1">${step}</div>
                 </div>`
-                if (i < drink.steps.length-1) stepsHTML += `<div class="border-b border-dashed border-[#e8d4b8] my-6"></div>`
+                if (i < drink.steps.length - 1) stepsHTML += `<div class="border-b border-dashed border-[#e8d4b8] my-6"></div>`
             })
             document.getElementById("steps-list").innerHTML = stepsHTML
 
-            // Visual for Coffee on the Rocks (matches your screenshot)
+            // Pro Tip
+            document.getElementById("pro-tip-text").innerHTML = drink.proTip
+
+            // Visual
             const vis = document.getElementById("visual-diagram")
             if (currentDrink === 5) {
                 vis.innerHTML = `
@@ -367,7 +474,7 @@
                     <div class="w-56 h-56 border-4 border-[#5d4037] rounded-3xl relative flex items-center justify-center text-8xl">🪨</div>
                     <div class="mt-8 text-[#5d4037] font-medium flex items-center gap-3">
                         <div class="w-6 h-px bg-[#5d4037]"></div>
-                        Espresso melting over ice
+                        Espresso melting slowly over ice
                         <div class="w-6 h-px bg-[#5d4037]"></div>
                     </div>
                 </div>`
@@ -375,7 +482,7 @@
                 vis.innerHTML = `<div class="text-8xl opacity-30">${drink.emoji}</div>`
             }
 
-            // Show recipe
+            // Show recipe view
             document.getElementById("view-home").classList.add("hidden")
             document.getElementById("view-machine").classList.add("hidden")
             document.getElementById("view-recipe").classList.remove("hidden")
@@ -385,7 +492,6 @@
             currentDrink = id
             servings = 1
             strength = 1
-            // Update sidebar highlight
             document.querySelectorAll('.drink-item').forEach(el => el.classList.remove('selected'))
             const active = document.getElementById('drink-' + id)
             if (active) active.classList.add('selected')
@@ -422,7 +528,7 @@
         // Initialize
         window.onload = () => {
             renderRecipe()
-            console.log('%c✅ Neat Café at Home app loaded with Bahnschrift font!', 'color:#5d4037;font-weight:600')
+            console.log('%c✅ Fully detailed Café at Home app loaded with Bahnschrift font!', 'color:#5d4037;font-weight:600')
         }
     </script>
 </body>
