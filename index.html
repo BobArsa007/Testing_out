@@ -3,533 +3,1413 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Café at Home • One Two Cups</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Indonesian Coffee Explorer - Interactive Guide</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
-        
-        :root {
-            --primary: #5d4037;
-        }
-        
         * {
-            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-            transition-duration: 150ms;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
+
+        :root {
+            --coffee-dark: #2C1810;
+            --coffee-medium: #4A2C17;
+            --coffee-light: #8B6914;
+            --cream: #F5F0E8;
+            --accent: #C4A35A;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+        }
+
         body {
-            font-family: 'Bahnschrift', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Georgia', serif;
+            background: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.6;
         }
-        
-        .header-font {
-            font-family: 'Bahnschrift', system-ui, sans-serif;
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(44, 24, 16, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        
-        .coffee-bg {
-            background: linear-gradient(135deg, #f5e8d3 0%, #e8d4b8 100%);
+
+        .nav-logo {
+            color: var(--accent);
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
         }
-        
-        .drink-item {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
         }
-        
-        .drink-item:hover {
-            background-color: #f5e8d3;
+
+        .nav-links a {
+            color: var(--cream);
+            text-decoration: none;
+            transition: color 0.3s;
+            cursor: pointer;
         }
-        
-        .selected {
-            background-color: #f5e8d3;
-            box-shadow: inset 4px 0 0 #5d4037;
+
+        .nav-links a:hover {
+            color: var(--accent);
         }
-        
-        .step-number {
-            font-family: 'Bahnschrift', sans-serif;
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, var(--coffee-dark) 0%, var(--coffee-medium) 50%, var(--coffee-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--cream);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .visual-box {
-            border: 3px solid #d4b08c;
-            background: #fdfaf3;
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
         }
-        
-        .pro-tip {
-            background: #f5e8d3;
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--accent);
+            color: var(--coffee-dark);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(196, 163, 90, 0.3);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section Styles */
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--coffee-dark);
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+            font-size: 1.1rem;
+        }
+
+        /* History Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 50%;
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-right: 0;
+            padding-left: 50%;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 0 2rem;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            right: -62px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::before {
+            left: -62px;
+        }
+
+        .timeline-year {
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Region Cards */
+        .regions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .region-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .region-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .region-header {
+            padding: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .region-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.9;
+        }
+
+        .sumatra .region-header::before { background: linear-gradient(135deg, #2C1810, #4A2C17); }
+        .java .region-header::before { background: linear-gradient(135deg, #4A2C17, #6B4226); }
+        .bali .region-header::before { background: linear-gradient(135deg, #6B4226, #8B6914); }
+        .sulawesi .region-header::before { background: linear-gradient(135deg, #2C1810, #6B4226); }
+        .flores .region-header::before { background: linear-gradient(135deg, #4A2C17, #8B6914); }
+        .papua .region-header::before { background: linear-gradient(135deg, #1a1a1a, #4A2C17); }
+
+        .region-header h3 {
+            position: relative;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .region-header p {
+            position: relative;
+            opacity: 0.9;
+        }
+
+        .region-body {
+            padding: 2rem;
+        }
+
+        .flavor-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .flavor-tag {
+            background: var(--cream);
+            color: var(--coffee-dark);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            border: 1px solid var(--accent);
+        }
+
+        .region-details {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .region-details.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Processing Methods */
+        .process-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .process-tab {
+            padding: 1rem 2rem;
+            background: white;
+            border: 2px solid var(--accent);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            color: var(--coffee-dark);
+        }
+
+        .process-tab.active {
+            background: var(--accent);
+            color: var(--coffee-dark);
+        }
+
+        .process-content {
+            display: none;
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+
+        .process-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .process-visual {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .process-step {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .process-step-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--cream);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            border: 3px solid var(--accent);
+        }
+
+        .arrow {
+            font-size: 2rem;
+            color: var(--accent);
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .quiz-question {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--coffee-dark);
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .quiz-option {
+            padding: 1rem 1.5rem;
+            background: var(--cream);
+            border: 2px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--accent);
+            background: white;
+        }
+
+        .quiz-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .quiz-option.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .quiz-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            color: var(--text-light);
+        }
+
+        .quiz-result {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .quiz-result h3 {
+            color: var(--coffee-dark);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        /* Flavor Wheel */
+        .flavor-wheel-container {
+            display: flex;
+            justify-content: center;
+            margin: 3rem 0;
+        }
+
+        .flavor-wheel {
+            width: 400px;
+            height: 400px;
+            position: relative;
+        }
+
+        .flavor-slice {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: 100% 100%;
+            left: 0;
+            top: 0;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .flavor-slice:hover {
+            transform: scale(1.05);
+            z-index: 10;
+        }
+
+        .flavor-center {
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: var(--coffee-dark);
+            border-radius: 50%;
+            top: 35%;
+            left: 35%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            z-index: 20;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--coffee-dark);
+            color: var(--cream);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer p {
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item,
+            .timeline-item:nth-child(even) {
+                justify-content: flex-start;
+                padding-left: 50px;
+                padding-right: 0;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content::before,
+            .timeline-item:nth-child(even) .timeline-content::before {
+                left: -42px;
+                right: auto;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .flavor-wheel {
+                width: 300px;
+                height: 300px;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Interactive Map Placeholder */
+        .map-container {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+
+        .map-regions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .map-region {
+            padding: 1rem;
+            background: var(--cream);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .map-region:hover,
+        .map-region.active {
+            border-color: var(--accent);
+            background: white;
+        }
+
+        .map-region h4 {
+            color: var(--coffee-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .map-region-info {
+            display: none;
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--cream);
+            border-radius: 10px;
+        }
+
+        .map-region-info.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
         }
     </style>
+<base target="_blank">
 </head>
-<body class="bg-[#f8f1e3] text-[#3f2a22]">
-    <!-- HEADER -->
-    <div class="bg-[#5d4037] text-white shadow-lg">
-        <div class="max-w-screen-2xl mx-auto px-8 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-x-4">
-                <div class="w-9 h-9 bg-white rounded-2xl flex items-center justify-center text-3xl shadow-inner">☕</div>
-                <div>
-                    <h1 class="header-font text-3xl tracking-[-0.5px]">Café at Home</h1>
-                    <p class="text-[#d4b08c] text-sm -mt-0.5">One Two Cups Mini Hand Press Guide</p>
-                </div>
-            </div>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">☕ INDONESIAN COFFEE</div>
+        <ul class="nav-links">
+            <li><a onclick="scrollToSection('history')">History</a></li>
+            <li><a onclick="scrollToSection('regions')">Regions</a></li>
+            <li><a onclick="scrollToSection('processing')">Processing</a></li>
+            <li><a onclick="scrollToSection('varieties')">Varieties</a></li>
+            <li><a onclick="scrollToSection('quiz')">Quiz</a></li>
+        </ul>
+    </nav>
 
-            <div class="flex items-center gap-x-8">
-                <div class="bg-[#d4b08c] text-[#5d4037] text-xs font-semibold px-5 py-2 rounded-3xl flex items-center gap-x-2">
-                    <div class="w-2 h-2 bg-[#5d4037] rounded-full animate-pulse"></div>
-                    READY TO BREW
-                </div>
-
-                <a onclick="navigateTo('home')" class="flex items-center gap-x-2 text-sm font-medium hover:text-[#d4b08c]">
-                    <span class="text-xl">🏠</span>
-                    HOME
-                </a>
-                <a onclick="navigateTo('machine')" class="flex items-center gap-x-2 text-sm font-medium hover:text-[#d4b08c]">
-                    <span class="text-xl">🔧</span>
-                    MACHINE GUIDE
-                </a>
-
-                <div class="h-6 w-px bg-white/30"></div>
-
-                <div class="flex items-center bg-white/10 hover:bg-white/20 px-4 py-2 rounded-3xl cursor-pointer">
-                    <span class="text-lg mr-2">🌿</span>
-                    <div class="text-sm font-medium">YOUR BEANS</div>
-                    <div class="ml-3 px-3 py-1 bg-white text-[#5d4037] text-xs font-semibold rounded-3xl">Flores Bajawa Arabica</div>
-                </div>
-
-                <button onclick="toggleSettings()" class="w-9 h-9 flex items-center justify-center text-2xl hover:bg-white/20 rounded-2xl">⚙️</button>
-            </div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Indonesian Coffee</h1>
+            <p>Discover the rich heritage, diverse flavors, and unique traditions of coffee from the world's largest archipelago</p>
+            <button class="btn" onclick="scrollToSection('history')">Start Exploring</button>
         </div>
-    </div>
+    </section>
 
-    <div class="max-w-screen-2xl mx-auto flex min-h-[calc(100vh-73px)]">
-        
-        <!-- SIDEBAR MENU -->
-        <div class="w-80 bg-white border-r border-[#e8d4b8] py-8 px-6">
-            <div class="uppercase text-xs font-semibold text-[#5d4037] mb-6 px-3 tracking-[1px]">MENU</div>
-            
-            <div onclick="selectDrink(0)" id="drink-0" class="drink-item flex items-center gap-x-4 px-4 py-4 rounded-3xl mb-1 cursor-pointer">
-                <span class="text-3xl">☕</span>
-                <div>
-                    <div class="font-semibold text-base">Espresso</div>
-                    <div class="text-sm text-gray-500">The perfect base shot</div>
-                </div>
-            </div>
-            
-            <div onclick="selectDrink(1)" id="drink-1" class="drink-item flex items-center gap-x-4 px-4 py-4 rounded-3xl mb-1 cursor-pointer">
-                <span class="text-3xl">🧊</span>
-                <div>
-                    <div class="font-semibold text-base">Iced Americano</div>
-                    <div class="text-sm text-gray-500">Bold &amp; refreshing</div>
-                </div>
-            </div>
-            
-            <div onclick="selectDrink(2)" id="drink-2" class="drink-item flex items-center gap-x-4 px-4 py-4 rounded-3xl mb-1 cursor-pointer">
-                <span class="text-3xl">🥛</span>
-                <div>
-                    <div class="font-semibold text-base">Hot Milk Coffee</div>
-                    <div class="text-sm text-gray-500">Smooth &amp; comforting</div>
-                </div>
-            </div>
-            
-            <div onclick="selectDrink(3)" id="drink-3" class="drink-item flex items-center gap-x-4 px-4 py-4 rounded-3xl mb-1 cursor-pointer">
-                <span class="text-3xl">🧊🥛</span>
-                <div>
-                    <div class="font-semibold text-base">Iced Milk Coffee</div>
-                    <div class="text-sm text-gray-500">Creamy &amp; chilled</div>
-                </div>
-            </div>
-            
-            <div onclick="selectDrink(4)" id="drink-4" class="drink-item flex items-center gap-x-4 px-4 py-4 rounded-3xl mb-1 cursor-pointer">
-                <span class="text-3xl">🌀</span>
-                <div>
-                    <div class="font-semibold text-base">Dirty Latte</div>
-                    <div class="text-sm text-gray-500">Marbled espresso swirl</div>
-                </div>
-            </div>
-            
-            <div onclick="selectDrink(5)" id="drink-5" class="drink-item flex items-center gap-x-4 px-4 py-4 rounded-3xl mb-1 cursor-pointer selected">
-                <span class="text-3xl">🪨</span>
-                <div>
-                    <div class="font-semibold text-base">Coffee on the Rocks</div>
-                    <div class="text-sm text-gray-500">Pure espresso chill</div>
+    <!-- History Section -->
+    <section id="history" class="section">
+        <h2 class="section-title fade-in">A Journey Through Time</h2>
+        <p class="section-subtitle fade-in">400 years of coffee heritage in Indonesia</p>
+
+        <div class="timeline">
+            <div class="timeline-item fade-in">
+                <div class="timeline-content">
+                    <div class="timeline-year">1696</div>
+                    <h3>The Beginning</h3>
+                    <p>The Dutch East India Company introduces coffee to Indonesia, planting the first trees in Java. The seeds were smuggled from Yemen's port of Mocha, marking the start of Indonesia's coffee journey.</p>
                 </div>
             </div>
 
-            <div class="mt-10 px-3">
-                <div class="uppercase text-xs font-semibold text-[#5d4037] mb-4 tracking-[1px]">OTHER VARIATIONS</div>
-                <div onclick="selectDrink(6)" class="flex justify-between items-center py-3 px-4 hover:bg-[#f5e8d3] rounded-3xl cursor-pointer text-sm">Flat White <span class="text-[#d4b08c]">→</span></div>
-                <div onclick="selectDrink(7)" class="flex justify-between items-center py-3 px-4 hover:bg-[#f5e8d3] rounded-3xl cursor-pointer text-sm">Espresso Tonic <span class="text-[#d4b08c]">→</span></div>
-                <div onclick="selectDrink(8)" class="flex justify-between items-center py-3 px-4 hover:bg-[#f5e8d3] rounded-3xl cursor-pointer text-sm">Affogato <span class="text-[#d4b08c]">→</span></div>
-            </div>
-
-            <div class="absolute bottom-8 left-8 text-[10px] text-gray-400 leading-tight">
-                One Two Cups Mini Hand Press<br>
-                Flores Bajawa Arabica • Semarang, ID
-            </div>
-        </div>
-
-        <!-- MAIN CONTENT AREA -->
-        <div class="flex-1 p-10" id="main-content">
-            
-            <!-- RECIPE VIEW -->
-            <div id="view-recipe">
-                <div class="flex items-baseline justify-between">
-                    <div>
-                        <span id="recipe-emoji" class="text-7xl inline-block mr-4"></span>
-                        <h1 id="recipe-name" class="header-font text-4xl text-[#5d4037]"></h1>
-                        <p id="recipe-subtitle" class="text-gray-500 text-lg mt-1"></p>
-                    </div>
-
-                    <!-- Controls -->
-                    <div class="flex items-center gap-x-8">
-                        <div>
-                            <div class="text-xs font-medium tracking-widest text-gray-400 mb-1">SERVINGS</div>
-                            <div class="flex items-center border border-[#d4b08c] rounded-3xl">
-                                <button onclick="changeServings(-1)" class="w-10 h-10 text-2xl flex items-center justify-center hover:bg-[#f5e8d3] rounded-l-3xl">-</button>
-                                <div id="servings-display" class="px-8 font-semibold text-2xl">1</div>
-                                <button onclick="changeServings(1)" class="w-10 h-10 text-2xl flex items-center justify-center hover:bg-[#f5e8d3] rounded-r-3xl">+</button>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="text-xs font-medium tracking-widest text-gray-400 mb-1">STRENGTH</div>
-                            <div class="flex bg-[#f5e8d3] rounded-3xl p-1 text-sm font-medium">
-                                <button onclick="setStrength(0)" id="strength-0" class="px-7 py-3 rounded-3xl">MILD</button>
-                                <button onclick="setStrength(1)" id="strength-1" class="px-7 py-3 rounded-3xl bg-[#5d4037] text-white">STANDARD</button>
-                                <button onclick="setStrength(2)" id="strength-2" class="px-7 py-3 rounded-3xl">STRONG</button>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col gap-y-2">
-                            <button onclick="printRecipe()" class="flex items-center gap-x-2 text-[#5d4037] hover:text-white hover:bg-[#5d4037] px-6 py-3 border border-[#5d4037] rounded-3xl text-sm font-medium">
-                                🖨️ Print Recipe
-                            </button>
-                            <button onclick="printRecipe()" class="flex items-center gap-x-2 text-[#5d4037] hover:text-white hover:bg-[#5d4037] px-6 py-3 border border-[#5d4037] rounded-3xl text-sm font-medium">
-                                💾 Save as PDF
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-12 gap-8 mt-10">
-                    <!-- INGREDIENTS -->
-                    <div class="col-span-5 bg-white rounded-3xl shadow-sm p-8">
-                        <h3 class="uppercase text-xs font-semibold tracking-widest text-[#5d4037] mb-6">INGREDIENTS</h3>
-                        <div id="ingredients-list" class="space-y-6"></div>
-                        
-                        <div class="mt-8 text-xs flex items-center justify-between text-gray-400 border-t pt-6">
-                            <div>Total time: <span id="total-time" class="text-[#5d4037] font-semibold">~4–6 minutes</span></div>
-                            <div id="espresso-yield-badge" class="flex items-center gap-x-2"></div>
-                        </div>
-                    </div>
-
-                    <!-- STEP-BY-STEP -->
-                    <div class="col-span-7 bg-white rounded-3xl shadow-sm p-8">
-                        <h3 class="uppercase text-xs font-semibold tracking-widest text-[#5d4037] mb-6">STEP-BY-STEP</h3>
-                        <div id="steps-list" class="space-y-8"></div>
-                        
-                        <!-- Pro Tip Box -->
-                        <div id="pro-tip" class="pro-tip mt-10 rounded-3xl p-6 text-sm flex gap-4">
-                            <span class="text-2xl">💡</span>
-                            <div id="pro-tip-text" class="flex-1"></div>
-                        </div>
-                    </div>
-
-                    <!-- VISUAL -->
-                    <div class="col-span-12 mt-4">
-                        <div id="visual-diagram" class="visual-box rounded-3xl p-8 flex items-center justify-center text-center min-h-[220px]"></div>
-                    </div>
+            <div class="timeline-item fade-in">
+                <div class="timeline-content">
+                    <div class="timeline-year">1830-1870</div>
+                    <h3>The Cultivation System</h3>
+                    <p>The Dutch enforced the Cultuurstelsel, requiring farmers to dedicate land to coffee. This exploitative system was later exposed by the novel "Max Havelaar," which helped change public opinion.</p>
                 </div>
             </div>
 
-            <!-- HOME VIEW -->
-            <div id="view-home" class="hidden">
-                <div class="coffee-bg rounded-3xl p-16 text-center max-w-2xl mx-auto">
-                    <div class="text-8xl mb-8">☕🧊🥛</div>
-                    <h1 class="header-font text-5xl text-[#5d4037]">Your café is ready</h1>
-                    <p class="text-xl mt-4 text-[#5d4037]/80">Master every drink with your One Two Cups Mini Hand Press</p>
-                    <button onclick="selectDrink(5)" class="mt-10 bg-[#5d4037] text-white px-10 py-5 rounded-3xl text-xl font-medium">Start with Coffee on the Rocks →</button>
+            <div class="timeline-item fade-in">
+                <div class="timeline-content">
+                    <div class="timeline-year">1876</div>
+                    <h3>Coffee Leaf Rust</h3>
+                    <p>A devastating outbreak of coffee leaf rust (Hemileia vastatrix) swept through Indonesia, wiping out most Arabica Typica cultivars. This led to the introduction of Robusta coffee.</p>
                 </div>
             </div>
 
-            <!-- MACHINE GUIDE VIEW -->
-            <div id="view-machine" class="hidden">
-                <h1 class="header-font text-4xl text-[#5d4037]">How to Use Your One Two Cups Mini Hand Press</h1>
-                <p class="mt-3 text-gray-500">Detailed 5-step guide for perfect espresso every time with your portable maker and Flores Bajawa Arabica.</p>
-                <div class="mt-12 grid grid-cols-5 gap-6">
-                    <div class="bg-white rounded-3xl p-6 text-center">1. Grind 8–10 g medium-fine</div>
-                    <div class="bg-white rounded-3xl p-6 text-center">2. Fill &amp; tamp portafilter</div>
-                    <div class="bg-white rounded-3xl p-6 text-center">3. Add 92–96°C water</div>
-                    <div class="bg-white rounded-3xl p-6 text-center">4. Pump steadily 12–18 times</div>
-                    <div class="bg-white rounded-3xl p-6 text-center">5. Enjoy thick crema!</div>
+            <div class="timeline-item fade-in">
+                <div class="timeline-content">
+                    <div class="timeline-year">1945</div>
+                    <h3>Independence</h3>
+                    <p>Indonesia gained independence from the Dutch. The colonial plantations were nationalized, and today over 90% of coffee is grown by smallholder farmers on farms averaging just 1 hectare.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item fade-in">
+                <div class="timeline-content">
+                    <div class="timeline-year">2025/26</div>
+                    <h3>Modern Era</h3>
+                    <p>Indonesia is now the world's 4th largest coffee producer, with 12.5 million 60-kg bags produced annually. The specialty coffee market is thriving, with unique varieties and processing methods gaining global recognition.</p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- SETTINGS MODAL -->
-    <div onclick="if(event.target.id==='modal')toggleSettings()" id="modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-        <div class="bg-white rounded-3xl max-w-lg w-full mx-4 p-10">
-            <h2 class="text-3xl header-font mb-8">Settings</h2>
-            <button onclick="toggleSettings()" class="w-full py-6 bg-[#5d4037] text-white rounded-3xl text-lg">Done</button>
+    <!-- Statistics Section -->
+    <section class="section" style="background: linear-gradient(to bottom, var(--cream), white);">
+        <h2 class="section-title fade-in">Indonesia by Numbers</h2>
+        <p class="section-subtitle fade-in">Key facts about Indonesian coffee production</p>
+
+        <div class="stats-grid">
+            <div class="stat-card fade-in">
+                <div class="stat-number">4th</div>
+                <div class="stat-label">Largest Coffee Producer Globally</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number">12.5M</div>
+                <div class="stat-label">60-kg Bags (2025/26)</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number">90%</div>
+                <div class="stat-label">Grown by Smallholders</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number">17,000+</div>
+                <div class="stat-label">Islands in the Archipelago</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number">80%</div>
+                <div class="stat-label">Robusta Production</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-number">$1.5B+</div>
+                <div class="stat-label">Annual Export Revenue</div>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Regions Section -->
+    <section id="regions" class="section">
+        <h2 class="section-title fade-in">Coffee Regions</h2>
+        <p class="section-subtitle fade-in">Explore the unique characteristics of each island</p>
+
+        <div class="map-container fade-in">
+            <h3 style="text-align: center; margin-bottom: 1rem;">Click on a region to learn more</h3>
+            <div class="map-regions">
+                <div class="map-region" onclick="showRegion('sumatra')">
+                    <h4>Sumatra</h4>
+                    <p>Earthy & Full-bodied</p>
+                </div>
+                <div class="map-region" onclick="showRegion('java')">
+                    <h4>Java</h4>
+                    <p>Balanced & Classic</p>
+                </div>
+                <div class="map-region" onclick="showRegion('bali')">
+                    <h4>Bali</h4>
+                    <p>Bright & Floral</p>
+                </div>
+                <div class="map-region" onclick="showRegion('sulawesi')">
+                    <h4>Sulawesi</h4>
+                    <p>Rich & Spicy</p>
+                </div>
+                <div class="map-region" onclick="showRegion('flores')">
+                    <h4>Flores</h4>
+                    <p>Sweet & Chocolatey</p>
+                </div>
+                <div class="map-region" onclick="showRegion('papua')">
+                    <h4>Papua</h4>
+                    <p>Clean & Complex</p>
+                </div>
+            </div>
+
+            <div id="sumatra-info" class="map-region-info">
+                <h3>Sumatra</h3>
+                <p><strong>Key Areas:</strong> Aceh (Gayo), Lake Toba (Lintong, Mandheling)</p>
+                <p><strong>Altitude:</strong> 1,100 - 1,600 masl</p>
+                <p><strong>Processing:</strong> Wet-hulled (Giling Basah)</p>
+                <p><strong>Flavor Profile:</strong> Full body, low acidity, earthy, dark chocolate, herbal notes, sometimes spicy. The wet-hulling process creates the signature syrupy body and complex earthy flavors.</p>
+                <p><strong>Notable:</strong> Produces 70-75% of Indonesia's total coffee output. Mandheling is named after the Mandailing people, not a place.</p>
+            </div>
+
+            <div id="java-info" class="map-region-info">
+                <h3>Java</h3>
+                <p><strong>Key Areas:</strong> Ijen Plateau, Preanger</p>
+                <p><strong>Altitude:</strong> 1,400+ masl</p>
+                <p><strong>Processing:</strong> Washed, some aged (Old Java)</p>
+                <p><strong>Flavor Profile:</strong> Clean, bright acidity, herbal undertones, spicy notes, sweet finish. Aged Java develops cedar and cinnamon notes with heavy body.</p>
+                <p><strong>Notable:</strong> Birthplace of Indonesian coffee (1696). Famous for "Mocha Java" blend. Five historic Dutch estates still operate: Blawan, Jampit, Pancoer, Kayumas, and Tugosari.</p>
+            </div>
+
+            <div id="bali-info" class="map-region-info">
+                <h3>Bali</h3>
+                <p><strong>Key Areas:</strong> Kintamani Highlands</p>
+                <p><strong>Altitude:</strong> 1,200 - 1,600 masl</p>
+                <p><strong>Processing:</strong> Washed, Natural, Honey</p>
+                <p><strong>Flavor Profile:</strong> Clean cup, citrus (lemon/orange), floral, milk chocolate, mild intensity. Higher acidity than Sumatra.</p>
+                <p><strong>Notable:</strong> Farmers use the "Subak Abian" system based on Hindu philosophy "Tri Hita Karana." Indonesia's first Geographic Indication (G.I.) was issued for Kintamani coffee in 2008. Almost all exported to Japan.</p>
+            </div>
+
+            <div id="sulawesi-info" class="map-region-info">
+                <h3>Sulawesi (Toraja)</h3>
+                <p><strong>Key Areas:</strong> Tana Toraja Highlands, Kalosi</p>
+                <p><strong>Altitude:</strong> 1,400 - 2,000 masl</p>
+                <p><strong>Processing:</strong> Wet-hulled</p>
+                <p><strong>Flavor Profile:</strong> Full-bodied, rich, earthy, sweet spice, dark chocolate, ripe fruit undertones, vibrant yet low-toned acidity.</p>
+                <p><strong>Notable:</strong> 95% Arabica in Toraja. S795 (Jember) variety is common - one of the earliest leaf rust resistant varieties. Mainly exported to Japan by Key Coffee.</p>
+            </div>
+
+            <div id="flores-info" class="map-region-info">
+                <h3>Flores</h3>
+                <p><strong>Key Areas:</strong> Bajawa</p>
+                <p><strong>Altitude:</strong> 1,200 - 1,800 masl</p>
+                <p><strong>Processing:</strong> Washed, Pulped Natural</p>
+                <p><strong>Flavor Profile:</strong> Sweet, smooth, milk chocolate, cocoa, citrus lift, clean finish, syrupy body.</p>
+                <p><strong>Notable:</strong> Relatively new to specialty coffee. Volcanic Andosols soil is extremely fertile. 12 cooperatives work together to bring coffee to market.</p>
+            </div>
+
+            <div id="papua-info" class="map-region-info">
+                <h3>Papua</h3>
+                <p><strong>Key Areas:</strong> Baliem Valley</p>
+                <p><strong>Altitude:</strong> 1,400 - 2,000 masl</p>
+                <p><strong>Processing:</strong> Washed</p>
+                <p><strong>Flavor Profile:</strong> Clean, complex, sweet, fruity, floral notes with good acidity.</p>
+                <p><strong>Notable:</strong> One of the newest coffee regions in Indonesia. Gaining recognition for high-quality Arabica with unique profiles due to isolated growing conditions.</p>
+            </div>
+        </div>
+
+        <div class="regions-grid">
+            <div class="region-card sumatra" onclick="toggleDetails(this)">
+                <div class="region-header">
+                    <h3>☕ Sumatra</h3>
+                    <p>The Heart of Indonesian Coffee</p>
+                </div>
+                <div class="region-body">
+                    <div class="flavor-tags">
+                        <span class="flavor-tag">Earthy</span>
+                        <span class="flavor-tag">Dark Chocolate</span>
+                        <span class="flavor-tag">Herbal</span>
+                        <span class="flavor-tag">Full Body</span>
+                        <span class="flavor-tag">Low Acidity</span>
+                    </div>
+                    <p>Sumatra produces 70-75% of Indonesia's coffee. Famous for Mandheling, Lintong, and Gayo varieties.</p>
+                    <div class="region-details">
+                        <p><strong>Process:</strong> Wet-hulled (Giling Basah) - unique to Indonesia</p>
+                        <p><strong>Best for:</strong> Espresso, French Press</p>
+                        <p><strong>Harvest:</strong> November - March</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card java" onclick="toggleDetails(this)">
+                <div class="region-header">
+                    <h3>☕ Java</h3>
+                    <p>Where It All Began</p>
+                </div>
+                <div class="region-body">
+                    <div class="flavor-tags">
+                        <span class="flavor-tag">Balanced</span>
+                        <span class="flavor-tag">Bright Acidity</span>
+                        <span class="flavor-tag">Herbal</span>
+                        <span class="flavor-tag">Spicy</span>
+                        <span class="flavor-tag">Clean</span>
+                    </div>
+                    <p>The birthplace of Indonesian coffee since 1696. Home to historic Dutch estates and the famous Mocha Java blend.</p>
+                    <div class="region-details">
+                        <p><strong>Process:</strong> Washed, some aged (Old Java)</p>
+                        <p><strong>Best for:</strong> Pour-over, Drip</p>
+                        <p><strong>Harvest:</strong> June - October</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card bali" onclick="toggleDetails(this)">
+                <div class="region-header">
+                    <h3>☕ Bali</h3>
+                    <p>The Hidden Jewel</p>
+                </div>
+                <div class="region-body">
+                    <div class="flavor-tags">
+                        <span class="flavor-tag">Citrus</span>
+                        <span class="flavor-tag">Floral</span>
+                        <span class="flavor-tag">Milk Chocolate</span>
+                        <span class="flavor-tag">Clean</span>
+                        <span class="flavor-tag">Medium Body</span>
+                    </div>
+                    <p>Grown in the Kintamani Highlands between volcanoes. Known for organic farming and unique Subak Abian system.</p>
+                    <div class="region-details">
+                        <p><strong>Process:</strong> Washed, Natural, Honey</p>
+                        <p><strong>Best for:</strong> Pour-over, V60</p>
+                        <p><strong>Harvest:</strong> May - October</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card sulawesi" onclick="toggleDetails(this)">
+                <div class="region-header">
+                    <h3>☕ Sulawesi</h3>
+                    <p>Toraja Treasure</p>
+                </div>
+                <div class="region-body">
+                    <div class="flavor-tags">
+                        <span class="flavor-tag">Rich</span>
+                        <span class="flavor-tag">Sweet Spice</span>
+                        <span class="flavor-tag">Dark Chocolate</span>
+                        <span class="flavor-tag">Fruity</span>
+                        <span class="flavor-tag">Full Body</span>
+                    </div>
+                    <p>From the highlands of Tana Toraja. Multi-dimensional coffee with 95% Arabica production in the region.</p>
+                    <div class="region-details">
+                        <p><strong>Process:</strong> Wet-hulled</p>
+                        <p><strong>Best for:</strong> Chemex, French Press</p>
+                        <p><strong>Harvest:</strong> June - September</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card flores" onclick="toggleDetails(this)">
+                <div class="region-header">
+                    <h3>☕ Flores</h3>
+                    <p>The Rising Star</p>
+                </div>
+                <div class="region-body">
+                    <div class="flavor-tags">
+                        <span class="flavor-tag">Sweet</span>
+                        <span class="flavor-tag">Milk Chocolate</span>
+                        <span class="flavor-tag">Citrus</span>
+                        <span class="flavor-tag">Smooth</span>
+                        <span class="flavor-tag">Syrupy</span>
+                    </div>
+                    <p>Named "Flowers" by Portuguese explorers. New to specialty coffee but gaining rapid popularity for quality.</p>
+                    <div class="region-details">
+                        <p><strong>Process:</strong> Washed, Pulped Natural</p>
+                        <p><strong>Best for:</strong> Pour-over, Aeropress</p>
+                        <p><strong>Harvest:</strong> May - October</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card papua" onclick="toggleDetails(this)">
+                <div class="region-header">
+                    <h3>☕ Papua</h3>
+                    <p>The Frontier</p>
+                </div>
+                <div class="region-body">
+                    <div class="flavor-tags">
+                        <span class="flavor-tag">Clean</span>
+                        <span class="flavor-tag">Complex</span>
+                        <span class="flavor-tag">Fruity</span>
+                        <span class="flavor-tag">Floral</span>
+                        <span class="flavor-tag">Unique</span>
+                    </div>
+                    <p>One of Indonesia's newest coffee regions. Isolated conditions create unique, high-quality profiles.</p>
+                    <div class="region-details">
+                        <p><strong>Process:</strong> Washed</p>
+                        <p><strong>Best for:</strong> Pour-over, Cold Brew</p>
+                        <p><strong>Harvest:</strong> April - September</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Processing Section -->
+    <section id="processing" class="section" style="background: white;">
+        <h2 class="section-title fade-in">Processing Methods</h2>
+        <p class="section-subtitle fade-in">How processing shapes the final cup</p>
+
+        <div class="process-tabs fade-in">
+            <div class="process-tab active" onclick="showProcess('wethulled')">Wet-Hulled (Giling Basah)</div>
+            <div class="process-tab" onclick="showProcess('washed')">Washed</div>
+            <div class="process-tab" onclick="showProcess('natural')">Natural</div>
+            <div class="process-tab" onclick="showProcess('honey')">Honey</div>
+        </div>
+
+        <div id="wethulled" class="process-content active">
+            <h3>Wet-Hulled (Giling Basah) ☕</h3>
+            <p><strong>The Signature Indonesian Method</strong></p>
+            <p>Wet-hulling is almost exclusive to Indonesia and defines the classic "Sumatra" profile. The process involves removing the parchment while the coffee is still wet (around 30-35% moisture), then drying the exposed green bean.</p>
+
+            <div class="process-visual">
+                <div class="process-step">
+                    <div class="process-step-icon">🍒</div>
+                    <p>Harvest</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="process-step">
+                    <div class="process-step-icon">💧</div>
+                    <p>Pulp & Ferment</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="process-step">
+                    <div class="process-step-icon">🏔️</div>
+                    <p>Partial Dry</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="process-step">
+                    <div class="process-step-icon">⚙️</div>
+                    <p>Hull (Wet)</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="process-step">
+                    <div class="process-step-icon">☀️</div>
+                    <p>Final Dry</p>
+                </div>
+            </div>
+
+            <p><strong>Result:</strong> Lower acidity, more body, earthy/herbal/spicy notes, sometimes woody or tobacco. The beans often have a distinctive bluish-green color.</p>
+            <p><strong>Common in:</strong> Sumatra, Sulawesi, parts of Java</p>
+        </div>
+
+        <div id="washed" class="process-content">
+            <h3>Washed (Fully Washed) 💧</h3>
+            <p><strong>The Clean Cup</strong></p>
+            <p>The cherry is pulped, fermented to remove mucilage, washed clean, and then dried in parchment. This is the most common method globally and produces cleaner, brighter cups.</p>
+
+            <div class="process-visual">
+                <div class="process-step">
+                    <div class="process-step-icon">🍒</div>
+                    <p>Harvest</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="process-step">
+                    <div class="process-step-icon">⚙️</div>
+                    <p>Pulp</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="process-step">
+                    <div class="process-step-icon">🦠</div>
+                    <p>Ferment</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="process-step">
+                    <div class="process-step-icon">💧</div>
+                    <p>Wash</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="process-step">
+                    <div class="process-step-icon">☀️</div>
+                    <p>Dry in Parchment</p>
+                </div>
+            </div>
+
+            <p><strong>Result:</strong> Higher acidity, cleaner flavors, citrus and floral notes, lighter body, more clarity.</p>
+            <p><strong>Common in:</strong> Bali, Java, Flores, some Sumatra micro-lots</p>
+        </div>
+
+        <div id="natural" class="process-content">
+            <h3>Natural (Dry Process) ☀️</h3>
+            <p><strong>The Fruit-Forward Method</strong></p>
+            <p>The entire cherry is dried intact, allowing the fruit's sugars to impart flavors to the bean. This is the oldest processing method.</p>
+
+            <div class="process-visual">
+                <div class="process-step">
+                    <div class="process-step-icon">🍒</div>
+                    <p>Harvest</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="process-step">
+                    <div class="process-step-icon">☀️</div>
+                    <p>Dry Whole Cherry</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="process-step">
+                    <div class="process-step-icon">⚙️</div>
+                    <p>Remove Husk</p>
+                </div>
+            </div>
+
+            <p><strong>Result:</strong> Fruity, wine-like, heavy body, lower acidity, berry and tropical fruit notes.</p>
+            <p><strong>Common in:</strong> Bali, some experimental lots in Sumatra and Java</p>
+        </div>
+
+        <div id="honey" class="process-content">
+            <h3>Honey (Pulped Natural) 🍯</h3>
+            <p><strong>The Middle Ground</strong></p>
+            <p>The skin and some pulp are removed, but the sticky mucilage ("honey") is left on the bean during drying. The amount of mucilage determines the "color" (white, yellow, red, black).</p>
+
+            <div class="process-visual">
+                <div class="process-step">
+                    <div class="process-step-icon">🍒</div>
+                    <p>Harvest</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="process-step">
+                    <div class="process-step-icon">⚙️</div>
+                    <p>Pulp (keep mucilage)</p>
+                </div>
+                <div class="arrow">→</div>
+                <div class="process-step">
+                    <div class="process-step-icon">☀️</div>
+                    <p>Dry with Mucilage</p>
+                </div>
+            </div>
+
+            <p><strong>Result:</strong> Sweet, balanced, some fruity notes, medium body, cleaner than natural but sweeter than washed.</p>
+            <p><strong>Common in:</strong> Bali, Java, emerging in other regions</p>
+        </div>
+    </section>
+
+    <!-- Varieties Section -->
+    <section id="varieties" class="section">
+        <h2 class="section-title fade-in">Coffee Varieties</h2>
+        <p class="section-subtitle fade-in">The genetic diversity of Indonesian coffee</p>
+
+        <div class="regions-grid">
+            <div class="region-card fade-in">
+                <div class="region-header" style="background: linear-gradient(135deg, #2C1810, #4A2C17);">
+                    <h3>Typica</h3>
+                    <p>The Original</p>
+                </div>
+                <div class="region-body">
+                    <p>The first variety introduced by the Dutch in the 1600s. Most was wiped out by leaf rust in the 1880s, but some survives in Sumatra (Bergandal, Sidikalang).</p>
+                    <div class="flavor-tags">
+                        <span class="flavor-tag">Sweet</span>
+                        <span class="flavor-tag">Clean</span>
+                        <span class="flavor-tag">Complex</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card fade-in">
+                <div class="region-header" style="background: linear-gradient(135deg, #4A2C17, #6B4226);">
+                    <h3>Tim Tim (HDT)</h3>
+                    <p>The Survivor</p>
+                </div>
+                <div class="region-body">
+                    <p>Natural Arabica-Robusta hybrid from Timor. Highly disease resistant and widely planted across Indonesia. Parent of Catimor and Sarchimor.</p>
+                    <div class="flavor-tags">
+                        <span class="flavor-tag">Bold</span>
+                        <span class="flavor-tag">Thick Body</span>
+                        <span class="flavor-tag">Resilient</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card fade-in">
+                <div class="region-header" style="background: linear-gradient(135deg, #6B4226, #8B6914);">
+                    <h3>S-795 (Jember)</h3>
+                    <p>The Sweet One</p>
+                </div>
+                <div class="region-body">
+                    <p>Developed in India from Bourbon lineage. One of the earliest leaf rust resistant varieties. Known for sweet, maple syrup or brown sugar notes.</p>
+                    <div class="flavor-tags">
+                        <span class="flavor-tag">Sweet</span>
+                        <span class="flavor-tag">Maple</span>
+                        <span class="flavor-tag">Brown Sugar</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card fade-in">
+                <div class="region-header" style="background: linear-gradient(135deg, #8B6914, #C4A35A);">
+                    <h3>USDA 762</h3>
+                    <p>The Ethiopian Connection</p>
+                </div>
+                <div class="region-body">
+                    <p>Introduced from Ethiopia in the 1950s. From the same region as Geisha but adapted differently in Indonesia. Found mainly in Java and Sumatra.</p>
+                    <div class="flavor-tags">
+                        <span class="flavor-tag">Mild</span>
+                        <span class="flavor-tag">Subtle</span>
+                        <span class="flavor-tag">Historical</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card fade-in">
+                <div class="region-header" style="background: linear-gradient(135deg, #2C1810, #1a1a1a);">
+                    <h3>Ateng (Catimor)</h3>
+                    <p>The Workhorse</p>
+                </div>
+                <div class="region-body">
+                    <p>Local name for Catimor lines. High yielding and disease resistant but often criticized for cup quality. Some locally adapted types show excellent characteristics.</p>
+                    <div class="flavor-tags">
+                        <span class="flavor-tag">High Yield</span>
+                        <span class="flavor-tag">Disease Resistant</span>
+                        <span class="flavor-tag">Variable Quality</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="region-card fade-in">
+                <div class="region-header" style="background: linear-gradient(135deg, #4A2C17, #2C1810);">
+                    <h3>Gayo 1</h3>
+                    <p>The Local Star</p>
+                </div>
+                <div class="region-body">
+                    <p>Local adaptation of Tim Tim in the Gayo highlands of Aceh. Well-known across Indonesia for its quality and adaptation to local conditions.</p>
+                    <div class="flavor-tags">
+                        <span class="flavor-tag">Local Adapted</span>
+                        <span class="flavor-tag">Quality</span>
+                        <span class="flavor-tag">Aceh Special</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section id="quiz" class="section" style="background: linear-gradient(to bottom, white, var(--cream));">
+        <h2 class="section-title fade-in">Test Your Knowledge</h2>
+        <p class="section-subtitle fade-in">How well do you know Indonesian coffee?</p>
+
+        <div class="quiz-container fade-in">
+            <div id="quiz-start">
+                <div class="quiz-result">
+                    <h3>Ready to Brew?</h3>
+                    <p>Take this 5-question quiz to test your knowledge of Indonesian coffee regions, history, and processing methods.</p>
+                    <button class="btn" onclick="startQuiz()" style="margin-top: 1rem;">Start Quiz</button>
+                </div>
+            </div>
+
+            <div id="quiz-questions" style="display: none;">
+                <div class="quiz-progress">
+                    <span id="question-number">Question 1/5</span>
+                    <span id="score-display">Score: 0</span>
+                </div>
+                <div class="quiz-question" id="question-text"></div>
+                <div class="quiz-options" id="options-container"></div>
+            </div>
+
+            <div id="quiz-end" style="display: none;">
+                <div class="quiz-result">
+                    <h3 id="final-score"></h3>
+                    <p id="final-message"></p>
+                    <button class="btn" onclick="restartQuiz()" style="margin-top: 1rem;">Try Again</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>☕ Indonesian Coffee Explorer - Educational Interactive Guide</p>
+        <p style="margin-top: 0.5rem; font-size: 0.9rem;">Sources: USDA FAS, World Coffee Research, Specialty Coffee Association, Indonesian Coffee and Cocoa Research Institute</p>
+        <p style="margin-top: 1rem; opacity: 0.6;">Data current as of 2025/26</p>
+    </footer>
 
     <script>
-        // === ENHANCED DRINK DATABASE WITH DETAILED STEPS ===
-        const drinksData = [
-            {
-                id: 0, emoji: "☕", name: "Espresso", subtitle: "The perfect base shot",
-                shots: 1, coffeePerShot: 8, yield: 35, water: 0, milk: 0, ice: 0,
-                steps: [
-                    "1. Bring fresh water to 92–96°C (just off the boil — never boiling).",
-                    "2. Grind 8 g of Flores Bajawa Arabica to a medium-fine consistency (like fine table salt). Use the included scoop for accuracy.",
-                    "3. Unscrew the portafilter from the body. Remove the filter basket, fill with grounds, and tamp lightly (do not press too hard).",
-                    "4. Re-insert the basket and screw the portafilter tightly back onto the body.",
-                    "5. Fill the water chamber with hot water up to the marked line (~80–100 ml). Screw the chamber securely onto the body.",
-                    "6. Place the device over your espresso cup. Unlock the piston if needed, then pump the plunger steadily 12–18 times until the shot is complete (25–40 ml with rich crema).",
-                    "7. Serve immediately. Look for thick, golden-brown crema — the sign of a perfect extraction with your hand press."
-                ],
-                proTip: "Your Flores Bajawa Arabica shines best at 8–10 g per shot. Too coarse = weak; too fine = hard to pump."
-            },
-            {
-                id: 1, emoji: "🧊", name: "Iced Americano", subtitle: "Bold & refreshing",
-                shots: 2, coffeePerShot: 8, yield: 70, water: 120, milk: 0, ice: 8,
-                steps: [
-                    "1. Brew 2 shots of espresso using the steps above (total 16 g coffee).",
-                    "2. Fill a tall glass generously with ice cubes (about 8 cubes).",
-                    "3. Pour 120 ml of cold filtered water over the ice.",
-                    "4. Slowly pour the hot espresso over the water and ice from a low height to preserve the crema.",
-                    "5. Stir gently once or twice. The espresso will layer beautifully on top at first.",
-                    "6. Serve immediately and enjoy the bold, refreshing contrast."
-                ],
-                proTip: "Ice + water first prevents the espresso from melting all the ice instantly and watering down the drink."
-            },
-            {
-                id: 2, emoji: "🥛", name: "Hot Milk Coffee", subtitle: "Smooth & comforting",
-                shots: 1, coffeePerShot: 8, yield: 35, water: 0, milk: 180, ice: 0,
-                steps: [
-                    "1. Brew 1 shot of espresso (8 g coffee).",
-                    "2. Heat 180 ml whole milk (or oat/almond milk) to 60–65°C in a small pot or microwave — do not boil.",
-                    "3. Pour the hot milk into your serving cup first.",
-                    "4. Gently pour the espresso shot on top of the milk.",
-                    "5. Stir slowly to combine. The crema will create a beautiful layer.",
-                    "6. Optional: Add a small pinch of palm sugar for Indonesian-style sweetness."
-                ],
-                proTip: "Milk first keeps the temperature balanced and prevents curdling."
-            },
-            {
-                id: 3, emoji: "🧊🥛", name: "Iced Milk Coffee", subtitle: "Creamy & chilled",
-                shots: 1, coffeePerShot: 8, yield: 35, water: 0, milk: 150, ice: 6,
-                steps: [
-                    "1. Brew 1 shot of espresso (8 g coffee).",
-                    "2. Fill a glass with 6 ice cubes and 150 ml cold milk.",
-                    "3. Slowly pour the hot espresso over the milk and ice from a low height.",
-                    "4. Stir well for 5–8 seconds until the drink becomes uniformly creamy.",
-                    "5. Taste and adjust sweetness if desired.",
-                    "6. Serve right away while the crema is still floating."
-                ],
-                proTip: "Cold milk + ice first keeps the espresso from curdling the milk and creates a smoother texture."
-            },
-            {
-                id: 4, emoji: "🌀", name: "Dirty Latte", subtitle: "Marbled espresso swirl",
-                shots: 1, coffeePerShot: 8, yield: 35, water: 0, milk: 200, ice: 6,
-                steps: [
-                    "1. Fill a tall glass with 200 ml cold milk and 6 ice cubes (leave 2 cm space at the top).",
-                    "2. Brew 1 shot of espresso (8 g coffee).",
-                    "3. Pour the espresso very slowly from just 2–3 cm above the glass rim so it sinks and creates the signature marbled swirl.",
-                    "4. Do NOT stir — the visual swirl is what makes it “dirty.”",
-                    "5. Serve immediately and watch the layers gently mix as you drink."
-                ],
-                proTip: "Slow pour from low height is the secret to the beautiful dirty effect with your hand-press espresso."
-            },
-            {
-                id: 5, emoji: "🪨", name: "Coffee on the Rocks", subtitle: "Pure espresso chill",
-                shots: 2, coffeePerShot: 8, yield: 70, water: 0, milk: 0, ice: 8,
-                steps: [
-                    "1. Fill a rocks glass generously with 8 ice cubes (use large cubes if possible to melt slower).",
-                    "2. Brew 2 shots of espresso using your One Two Cups hand press (total 16 g of Flores Bajawa Arabica).",
-                    "3. Immediately pour the hot espresso directly over the ice from a low height.",
-                    "4. Let the drink sit for 15–20 seconds so the ice begins to melt slightly and chill the espresso without diluting it too fast.",
-                    "5. Give it one gentle swirl if desired, then sip slowly.",
-                    "6. Enjoy the concentrated flavor as the ice melts — the perfect summer espresso experience."
-                ],
-                proTip: "Always ice first, espresso second. This keeps the drink strong and prevents instant watering down."
-            },
-            {
-                id: 6, emoji: "🥛", name: "Flat White", subtitle: "Velvety microfoam",
-                shots: 2, coffeePerShot: 8, yield: 60, water: 0, milk: 130, ice: 0,
-                steps: [
-                    "1. Brew 2 shots of espresso (16 g total).",
-                    "2. Heat 130 ml milk to 60–65°C and create silky microfoam (tilt the cup while heating for best texture).",
-                    "3. Pour the espresso into your cup first.",
-                    "4. Gently pour the microfoam milk into the center of the espresso in a thin, steady stream.",
-                    "5. Create simple latte art if desired (heart or rosetta).",
-                    "6. Serve immediately — the flat white should have a velvety mouthfeel with no big bubbles."
-                ],
-                proTip: "Microfoam is key. Your hand-press crema pairs perfectly with the silky milk."
-            },
-            {
-                id: 7, emoji: "🍋", name: "Espresso Tonic", subtitle: "Sparkling & bright",
-                shots: 1, coffeePerShot: 8, yield: 35, water: 150, milk: 0, ice: 4,
-                steps: [
-                    "1. Fill a tall glass with 4 ice cubes and 150 ml cold tonic water.",
-                    "2. Brew 1 shot of espresso (8 g coffee).",
-                    "3. Pour the espresso gently over the tonic and ice from a low height — watch the beautiful separation effect.",
-                    "4. Do not stir immediately; let the flavors mingle for 10 seconds.",
-                    "5. Give one light stir before drinking.",
-                    "6. Garnish with a lemon twist if you have one."
-                ],
-                proTip: "The effervescence of tonic lifts the floral notes of Flores Bajawa Arabica beautifully."
-            },
-            {
-                id: 8, emoji: "🍦", name: "Affogato", subtitle: "Espresso meets ice cream",
-                shots: 1, coffeePerShot: 8, yield: 35, water: 0, milk: 0, ice: 0,
-                steps: [
-                    "1. Place 1 generous scoop of good-quality vanilla ice cream into a chilled glass or bowl.",
-                    "2. Brew 1 shot of hot espresso (8 g coffee).",
-                    "3. Immediately pour the espresso directly over the ice cream.",
-                    "4. Let it sit for 10–15 seconds so the ice cream begins to melt and mingle with the crema.",
-                    "5. Eat with a spoon, alternating between ice cream and espresso.",
-                    "6. Best enjoyed within 2 minutes before it becomes too soupy."
-                ],
-                proTip: "The hot espresso melts the ice cream into a luxurious sauce — pure dessert in a cup."
-            }
-        ]
-
-        let currentDrink = 5
-        let servings = 1
-        let strength = 1
-
-        function calculate(drink) {
-            const mult = servings
-            const strMult = strength === 0 ? 0.75 : strength === 1 ? 1 : 1.35
-            const totalShots = Math.ceil(drink.shots * mult)
-            const coffee = Math.round(drink.coffeePerShot * totalShots * strMult)
-            return {
-                shots: totalShots,
-                coffee: coffee,
-                yield: Math.round(drink.yield * totalShots),
-                water: Math.round(drink.water * mult),
-                milk: Math.round(drink.milk * mult),
-                ice: Math.round(drink.ice * mult)
-            }
+        // Scroll to section
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
 
-        function renderRecipe() {
-            const drink = drinksData[currentDrink]
-            const r = calculate(drink)
+        // Fade in on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
-            // Header
-            document.getElementById("recipe-emoji").textContent = drink.emoji
-            document.getElementById("recipe-name").innerHTML = drink.name
-            document.getElementById("recipe-subtitle").textContent = drink.subtitle
-
-            // Servings
-            document.getElementById("servings-display").textContent = servings
-
-            // Strength buttons
-            for (let i = 0; i < 3; i++) {
-                const btn = document.getElementById("strength-" + i)
-                if (btn) {
-                    btn.classList.toggle("bg-[#5d4037]", i === strength)
-                    btn.classList.toggle("text-white", i === strength)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
                 }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Region details toggle
+        function toggleDetails(card) {
+            const details = card.querySelector('.region-details');
+            details.classList.toggle('active');
+        }
+
+        // Map region info
+        function showRegion(region) {
+            // Hide all info
+            document.querySelectorAll('.map-region-info').forEach(info => {
+                info.classList.remove('active');
+            });
+            document.querySelectorAll('.map-region').forEach(r => {
+                r.classList.remove('active');
+            });
+
+            // Show selected
+            document.getElementById(region + '-info').classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Process tabs
+        function showProcess(process) {
+            // Hide all content
+            document.querySelectorAll('.process-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.process-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected
+            document.getElementById(process).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // Quiz Data
+        const quizData = [
+            {
+                question: "Which Indonesian island is known as the birthplace of Indonesian coffee, where the Dutch first planted coffee in 1696?",
+                options: ["Sumatra", "Java", "Bali", "Sulawesi"],
+                correct: 1
+            },
+            {
+                question: "What is the unique processing method called that is almost exclusive to Indonesia and creates the signature earthy, full-bodied profile?",
+                options: ["Washed", "Natural", "Wet-Hulled (Giling Basah)", "Honey"],
+                correct: 2
+            },
+            {
+                question: "Which region produces 70-75% of Indonesia's total coffee output?",
+                options: ["Java", "Sulawesi", "Sumatra", "Bali"],
+                correct: 2
+            },
+            {
+                question: "What devastating disease wiped out most of Indonesia's Arabica Typica cultivars in the late 1800s?",
+                options: ["Coffee Berry Borer", "Coffee Leaf Rust", "Wilt Disease", "Mosaic Virus"],
+                correct: 1
+            },
+            {
+                question: "Which variety is a natural Arabica-Robusta hybrid from Timor that is highly disease resistant?",
+                options: ["Typica", "S-795", "Tim Tim (HDT)", "USDA 762"],
+                correct: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function startQuiz() {
+            document.getElementById('quiz-start').style.display = 'none';
+            document.getElementById('quiz-questions').style.display = 'block';
+            currentQuestion = 0;
+            score = 0;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = quizData[currentQuestion];
+            document.getElementById('question-number').textContent = `Question ${currentQuestion + 1}/${quizData.length}`;
+            document.getElementById('score-display').textContent = `Score: ${score}`;
+            document.getElementById('question-text').textContent = q.question;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((option, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'quiz-option';
+                btn.textContent = option;
+                btn.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected) {
+            const q = quizData[currentQuestion];
+            const options = document.querySelectorAll('.quiz-option');
+
+            options[selected].classList.add(selected === q.correct ? 'correct' : 'wrong');
+            if (selected === q.correct) score++;
+
+            if (q.correct !== selected) {
+                options[q.correct].classList.add('correct');
             }
 
-            // Ingredients
-            let ingHTML = `
-                <div class="flex justify-between items-center py-4 border-b">
-                    <div class="flex items-center gap-4"><span class="text-3xl">🌾</span><div><div class="font-semibold">Coffee grounds</div><div class="text-xs text-gray-400">Flores Bajawa Arabica (medium-fine grind)</div></div></div>
-                    <div class="text-right"><span class="text-3xl font-semibold">${r.coffee}</span> g</div>
-                </div>
-                <div class="flex justify-between items-center py-4 border-b">
-                    <div class="flex items-center gap-4"><span class="text-3xl">☕</span><div>Espresso yield</div></div>
-                    <div class="font-semibold">${r.yield} ml</div>
-                </div>`
+            // Disable all options
+            options.forEach(opt => opt.style.pointerEvents = 'none');
 
-            if (r.water > 0) ingHTML += `<div class="flex justify-between items-center py-4 border-b"><div class="flex items-center gap-4"><span class="text-3xl">💧</span><div>Cold filtered water</div></div><div class="font-semibold">${r.water} ml</div></div>`
-            if (r.milk > 0) ingHTML += `<div class="flex justify-between items-center py-4 border-b"><div class="flex items-center gap-4"><span class="text-3xl">🥛</span><div>Whole milk (or oat/almond)</div></div><div class="font-semibold">${r.milk} ml</div></div>`
-            if (r.ice > 0) ingHTML += `<div class="flex justify-between items-center py-4"><div class="flex items-center gap-4"><span class="text-3xl">🧊</span><div>Large ice cubes</div></div><div class="font-semibold">${r.ice} cubes</div></div>`
-
-            document.getElementById("ingredients-list").innerHTML = ingHTML
-            document.getElementById("espresso-yield-badge").innerHTML = `☕ <span class="font-semibold">${r.yield} ml espresso</span>`
-
-            // Steps
-            let stepsHTML = ''
-            drink.steps.forEach((step, i) => {
-                stepsHTML += `
-                <div class="flex gap-6">
-                    <div class="step-number w-8 h-8 bg-[#5d4037] text-white flex items-center justify-center rounded-2xl font-semibold text-lg shrink-0">${i+1}</div>
-                    <div class="flex-1 pt-1">${step}</div>
-                </div>`
-                if (i < drink.steps.length - 1) stepsHTML += `<div class="border-b border-dashed border-[#e8d4b8] my-6"></div>`
-            })
-            document.getElementById("steps-list").innerHTML = stepsHTML
-
-            // Pro Tip
-            document.getElementById("pro-tip-text").innerHTML = drink.proTip
-
-            // Visual
-            const vis = document.getElementById("visual-diagram")
-            if (currentDrink === 5) {
-                vis.innerHTML = `
-                <div class="flex flex-col items-center">
-                    <div class="w-56 h-56 border-4 border-[#5d4037] rounded-3xl relative flex items-center justify-center text-8xl">🪨</div>
-                    <div class="mt-8 text-[#5d4037] font-medium flex items-center gap-3">
-                        <div class="w-6 h-px bg-[#5d4037]"></div>
-                        Espresso melting slowly over ice
-                        <div class="w-6 h-px bg-[#5d4037]"></div>
-                    </div>
-                </div>`
-            } else {
-                vis.innerHTML = `<div class="text-8xl opacity-30">${drink.emoji}</div>`
-            }
-
-            // Show recipe view
-            document.getElementById("view-home").classList.add("hidden")
-            document.getElementById("view-machine").classList.add("hidden")
-            document.getElementById("view-recipe").classList.remove("hidden")
+            setTimeout(() => {
+                currentQuestion++;
+                if (currentQuestion < quizData.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            }, 1500);
         }
 
-        function selectDrink(id) {
-            currentDrink = id
-            servings = 1
-            strength = 1
-            document.querySelectorAll('.drink-item').forEach(el => el.classList.remove('selected'))
-            const active = document.getElementById('drink-' + id)
-            if (active) active.classList.add('selected')
-            renderRecipe()
+        function showResults() {
+            document.getElementById('quiz-questions').style.display = 'none';
+            document.getElementById('quiz-end').style.display = 'block';
+
+            const percentage = (score / quizData.length) * 100;
+            document.getElementById('final-score').textContent = `You scored ${score}/${quizData.length}`;
+
+            let message = '';
+            if (percentage === 100) message = "Perfect! You're a true Indonesian coffee connoisseur! ☕👑";
+            else if (percentage >= 80) message = "Great job! You know your Indonesian coffee very well! ☕";
+            else if (percentage >= 60) message = "Good effort! Keep exploring Indonesian coffee! ☕";
+            else message = "Keep learning! There's so much to discover about Indonesian coffee! ☕";
+
+            document.getElementById('final-message').textContent = message;
         }
 
-        function changeServings(delta) {
-            servings = Math.max(1, Math.min(4, servings + delta))
-            renderRecipe()
-        }
-
-        function setStrength(level) {
-            strength = level
-            renderRecipe()
-        }
-
-        function navigateTo(page) {
-            document.getElementById("view-recipe").classList.add("hidden")
-            document.getElementById("view-home").classList.add("hidden")
-            document.getElementById("view-machine").classList.add("hidden")
-            if (page === "home") document.getElementById("view-home").classList.remove("hidden")
-            if (page === "machine") document.getElementById("view-machine").classList.remove("hidden")
-        }
-
-        function toggleSettings() {
-            const modal = document.getElementById("modal")
-            modal.classList.toggle("hidden")
-        }
-
-        function printRecipe() {
-            window.print()
-        }
-
-        // Initialize
-        window.onload = () => {
-            renderRecipe()
-            console.log('%c✅ Fully detailed Café at Home app loaded with Bahnschrift font!', 'color:#5d4037;font-weight:600')
+        function restartQuiz() {
+            document.getElementById('quiz-end').style.display = 'none';
+            document.getElementById('quiz-start').style.display = 'block';
         }
     </script>
 </body>
-</html>
+</html> 
