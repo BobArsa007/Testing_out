@@ -3,622 +3,552 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Indonesian Coffee Varieties Explorer</title>
+    <title>The Nomad's Espresso Ritual | Bajawa & Palm Sugar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        coffee: {
+                            50: '#fdf8f6',
+                            100: '#f2e8e5',
+                            200: '#eaddd7',
+                            300: '#e0cec7',
+                            400: '#d2bab0',
+                            500: '#a07e6f',
+                            600: '#8b6b5c',
+                            700: '#6f4e37',
+                            800: '#5a3e2b',
+                            900: '#3d2b1f',
+                        },
+                        palm: {
+                            50: '#fefce8',
+                            100: '#fef9c3',
+                            200: '#fef08a',
+                            300: '#fde047',
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                            700: '#a16207',
+                            800: '#854d0e',
+                            900: '#713f12',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background: #1a1512; color: #e7e5e4; }
-        h1, h2, h3, .serif { font-family: 'Playfair Display', serif; }
-        .bean-card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .bean-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        .flavor-bar { transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); }
-        .region-btn { transition: all 0.3s ease; }
-        .region-btn.active { background: #d97706; color: white; border-color: #d97706; }
-        .brew-card { cursor: pointer; transition: all 0.3s; }
-        .brew-card:hover { background: rgba(217, 119, 6, 0.1); border-color: #d97706; }
-        .brew-card.selected { background: rgba(217, 119, 6, 0.2); border-color: #d97706; }
-        .radar-point { transition: all 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-in { animation: fadeIn 0.6s ease-out forwards; }
-        .coffee-gradient { background: linear-gradient(135deg, #2c1810 0%, #1a1512 100%); }
-        .bean-shape { border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1a1512; }
-        ::-webkit-scrollbar-thumb { background: #44403c; border-radius: 4px; }
-        .tooltip { opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-        .has-tooltip:hover .tooltip { opacity: 1; }
+        .step-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .step-card.active {
+            transform: scale(1.02);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        .flavor-note {
+            transition: all 0.3s ease;
+        }
+        .flavor-note:hover {
+            transform: translateY(-2px);
+        }
+        @keyframes pulse-slow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .animate-pulse-slow {
+            animation: pulse-slow 3s infinite;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            cursor: pointer;
+        }
+        input[type="range"]::-webkit-slider-track {
+            background: #eaddd7;
+            height: 6px;
+            border-radius: 3px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #6f4e37;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            margin-top: -7px;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
-<body class="min-h-screen coffee-gradient">
+<body class="bg-coffee-50 text-coffee-900 font-sans antialiased">
 
-    <!-- Header -->
-    <header class="relative overflow-hidden bg-gradient-to-b from-amber-900/20 to-transparent pt-12 pb-8 px-4">
-        <div class="max-w-6xl mx-auto text-center">
-            <div class="inline-block mb-4 px-4 py-1 rounded-full bg-amber-900/30 border border-amber-700/30 text-amber-400 text-sm tracking-wider uppercase">Interactive Guide</div>
-            <h1 class="text-5xl md:text-7xl font-bold text-amber-100 mb-4 leading-tight">
-                Indonesian<br><span class="text-amber-600">Coffee Varieties</span>
+    <!-- Hero Section -->
+    <header class="relative h-screen max-h-[800px] overflow-hidden bg-coffee-900">
+        <div class="absolute inset-0 bg-gradient-to-b from-coffee-900/90 via-coffee-800/80 to-coffee-900/90 z-10"></div>
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=1920&q=80')] bg-cover bg-center opacity-40"></div>
+        
+        <div class="relative z-20 h-full flex flex-col justify-center items-center text-center px-4">
+            <div class="mb-6 inline-block p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20">
+                <svg class="w-8 h-8 text-palm-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <h1 class="font-serif text-5xl md:text-7xl text-coffee-50 mb-4 italic leading-tight">
+                The Nomad's<br>Espresso Ritual
             </h1>
-            <p class="text-lg text-stone-400 max-w-2xl mx-auto leading-relaxed">
-                Explore the archipelago's finest beans from Sumatra's earthy depths to Bali's citrus heights. 
-                Discover flavor profiles, brewing methods, and the stories behind every cup.
+            <p class="text-coffee-200 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light">
+                Master the art of hand-pressed espresso with <span class="text-palm-300 font-medium">Bajawa pre-ground</span> and <span class="text-palm-300 font-medium">liquid palm sugar</span>
             </p>
+            <div class="mt-8 flex gap-4 text-sm text-coffee-300">
+                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-palm-400"></span>Hand Press</span>
+                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-palm-400"></span>Flores Beans</span>
+                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-palm-400"></span>Natural Sweet</span>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+            <svg class="w-6 h-6 text-coffee-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+            </svg>
         </div>
     </header>
 
-    <!-- Region Filter -->
-    <section class="px-4 py-8 sticky top-0 z-40 bg-[#1a1512]/95 backdrop-blur-md border-b border-stone-800">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex flex-wrap gap-3 justify-center">
-                <button onclick="filterRegion('all')" class="region-btn active px-6 py-2 rounded-full border border-stone-700 text-stone-300 hover:border-amber-600" data-region="all">All Islands</button>
-                <button onclick="filterRegion('sumatra')" class="region-btn px-6 py-2 rounded-full border border-stone-700 text-stone-300 hover:border-amber-600" data-region="sumatra">Sumatra</button>
-                <button onclick="filterRegion('java')" class="region-btn px-6 py-2 rounded-full border border-stone-700 text-stone-300 hover:border-amber-600" data-region="java">Java</button>
-                <button onclick="filterRegion('sulawesi')" class="region-btn px-6 py-2 rounded-full border border-stone-700 text-stone-300 hover:border-amber-600" data-region="sulawesi">Sulawesi</button>
-                <button onclick="filterRegion('bali')" class="region-btn px-6 py-2 rounded-full border border-stone-700 text-stone-300 hover:border-amber-600" data-region="bali">Bali</button>
-                <button onclick="filterRegion('flores')" class="region-btn px-6 py-2 rounded-full border border-stone-700 text-stone-300 hover:border-amber-600" data-region="flores">Flores</button>
-                <button onclick="filterRegion('papua')" class="region-btn px-6 py-2 rounded-full border border-stone-700 text-stone-300 hover:border-amber-600" data-region="papua">Papua</button>
+    <!-- Equipment Overview -->
+    <section class="py-16 px-4 max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="glass-panel p-6 rounded-2xl text-center group hover:bg-white/80 transition-all">
+                <div class="w-16 h-16 mx-auto mb-4 bg-coffee-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-coffee-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                    </svg>
+                </div>
+                <h3 class="font-serif text-xl text-coffee-800 mb-2">Hand Press Espresso</h3>
+                <p class="text-coffee-600 text-sm leading-relaxed">Manual lever pressure for authentic extraction. No electricity needed—just your hands and patience.</p>
+            </div>
+            
+            <div class="glass-panel p-6 rounded-2xl text-center group hover:bg-white/80 transition-all">
+                <div class="w-16 h-16 mx-auto mb-4 bg-palm-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-palm-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                </div>
+                <h3 class="font-serif text-xl text-coffee-800 mb-2">Bajawa Pre-ground</h3>
+                <p class="text-coffee-600 text-sm leading-relaxed">Indonesian Flores beans with chocolate, floral, and woody notes. Low acidity, full body.</p>
+            </div>
+            
+            <div class="glass-panel p-6 rounded-2xl text-center group hover:bg-white/80 transition-all">
+                <div class="w-16 h-16 mx-auto mb-4 bg-palm-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg class="w-8 h-8 text-palm-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
+                    </svg>
+                </div>
+                <h3 class="font-serif text-xl text-coffee-800 mb-2">Liquid Palm Sugar</h3>
+                <p class="text-coffee-600 text-sm leading-relaxed">Natural caramel sweetness with a hint of molasses. Dissolves instantly in hot espresso.</p>
             </div>
         </div>
     </section>
 
-    <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-4 py-12 space-y-16">
+    <!-- Interactive Brewing Guide -->
+    <section class="py-16 bg-white">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="font-serif text-4xl text-coffee-900 mb-4">The Brewing Ritual</h2>
+                <p class="text-coffee-600">Follow these steps precisely. Your equipment has been accounted for.</p>
+            </div>
 
-        <!-- Variety Cards Grid -->
-        <div id="varieties-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Cards injected by JS -->
+            <!-- Progress -->
+            <div class="mb-8 bg-coffee-100 rounded-full h-2 overflow-hidden">
+                <div id="progressBar" class="progress-bar bg-gradient-to-r from-coffee-600 to-palm-600 h-full rounded-full" style="width: 12.5%"></div>
+            </div>
+
+            <!-- Steps Container -->
+            <div class="space-y-4" id="stepsContainer">
+                <!-- Step 1 -->
+                <div class="step-card active bg-coffee-50 border-2 border-coffee-200 rounded-2xl p-6 cursor-pointer" onclick="activateStep(0)">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-700 text-white flex items-center justify-center font-serif font-bold text-lg">1</div>
+                        <div class="flex-1">
+                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Preheat Everything</h3>
+                            <p class="text-coffee-700 mb-3">Hand press devices lose heat fast. Run hot water through the empty chamber once to warm the metal. This prevents sour, under-extracted shots.</p>
+                            <div class="flex items-center gap-2 text-sm text-palm-700 bg-palm-50 px-3 py-2 rounded-lg inline-flex">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <span>Target: 90-96°C water for dark roast Bajawa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(1)">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">2</div>
+                        <div class="flex-1">
+                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Dose the Coffee</h3>
+                            <p class="text-coffee-700 mb-3">Since you're using pre-ground Bajawa, fill the basket to <strong>8-10 grams</strong> depending on your handpress model. Level it off but don't compress yet.</p>
+                            <div class="bg-coffee-50 p-3 rounded-lg text-sm text-coffee-600">
+                                <strong>Pro tip:</strong> Bajawa pre-ground tends to be slightly coarser than ideal for handpress. Fill on the higher end (10g) to slow extraction.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(2)">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">3</div>
+                        <div class="flex-1">
+                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Tamp with Pressure</h3>
+                            <p class="text-coffee-700 mb-3">Use the back of a spoon or your thumb to press down firmly. You're aiming for <strong>~15-20 lbs of pressure</strong>—firm but not bodyweight.</p>
+                            <div class="flex gap-2 mt-2">
+                                <span class="px-3 py-1 bg-coffee-100 text-coffee-700 rounded-full text-xs">Too loose = watery shot</span>
+                                <span class="px-3 py-1 bg-coffee-100 text-coffee-700 rounded-full text-xs">Too tight = no flow</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(3)">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">4</div>
+                        <div class="flex-1">
+                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Lock and Load</h3>
+                            <p class="text-coffee-700 mb-3">Attach the portafilter/brew head tightly. Add <strong>50-60ml hot water</strong> to the chamber. Screw on the pump mechanism securely.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(4)">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">5</div>
+                        <div class="flex-1">
+                            <h3 class="font-serif text-xl text-coffee-900 mb-2">The Press (Critical)</h3>
+                            <p class="text-coffee-700 mb-3">Pump slowly and steadily. Aim for <strong>8-10 bars of pressure</strong> (firm resistance). First drops should appear in 3-5 seconds.</p>
+                            <div class="bg-palm-50 border border-palm-200 p-3 rounded-lg text-sm text-palm-800">
+                                <strong>Bajawa timing:</strong> Total extraction should take <strong>20-30 seconds</strong>. The dark chocolate notes extract late, so don't rush the last third.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 6 -->
+                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(5)">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">6</div>
+                        <div class="flex-1">
+                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Sweeten with Palm Sugar</h3>
+                            <p class="text-coffee-700 mb-3">While espresso is hot, add liquid palm sugar. Stir vigorously for 10 seconds to integrate.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 7 -->
+                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(6)">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">7</div>
+                        <div class="flex-1">
+                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Serve & Savor</h3>
+                            <p class="text-coffee-700 mb-3">Bajawa's low acidity and full body pair beautifully with palm sugar's caramel notes. Look for the lingering tobacco and floral finish.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 8 -->
+                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(7)">
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">8</div>
+                        <div class="flex-1">
+                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Clean Immediately</h3>
+                            <p class="text-coffee-700 mb-3">Palm sugar residue gets sticky fast. Rinse all parts with hot water within 2 minutes of brewing.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Palm Sugar Calculator -->
+    <section class="py-16 bg-gradient-to-br from-coffee-50 to-palm-50">
+        <div class="max-w-3xl mx-auto px-4">
+            <div class="glass-panel rounded-3xl p-8 md:p-12 shadow-xl">
+                <div class="text-center mb-8">
+                    <h2 class="font-serif text-3xl text-coffee-900 mb-2">Palm Sugar Ratio Calculator</h2>
+                    <p class="text-coffee-600">Fine-tune sweetness to your taste and cup size</p>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-coffee-700 mb-2">Espresso Shot Size</label>
+                        <input type="range" id="shotSize" min="30" max="120" value="60" class="w-full" oninput="updateRatio()">
+                        <div class="flex justify-between text-xs text-coffee-500 mt-1">
+                            <span>30ml (Ristretto)</span>
+                            <span id="shotValue" class="font-bold text-coffee-800">60ml</span>
+                            <span>120ml (Lungo)</span>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-coffee-700 mb-2">Sweetness Level</label>
+                        <div class="grid grid-cols-4 gap-2">
+                            <button onclick="setSweetness(0.5)" class="sweetness-btn px-4 py-2 rounded-lg border border-coffee-200 text-sm hover:bg-coffee-50 transition-colors" data-value="0.5">Barely</button>
+                            <button onclick="setSweetness(1)" class="sweetness-btn px-4 py-2 rounded-lg border border-coffee-200 text-sm bg-coffee-700 text-white" data-value="1">Balanced</button>
+                            <button onclick="setSweetness(1.5)" class="sweetness-btn px-4 py-2 rounded-lg border border-coffee-200 text-sm hover:bg-coffee-50 transition-colors" data-value="1.5">Sweet</button>
+                            <button onclick="setSweetness(2)" class="sweetness-btn px-4 py-2 rounded-lg border border-coffee-200 text-sm hover:bg-coffee-50 transition-colors" data-value="2">Dessert</button>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl p-6 border border-coffee-200 text-center">
+                        <div class="text-sm text-coffee-500 mb-1">Recommended Liquid Palm Sugar</div>
+                        <div class="font-serif text-4xl text-palm-700 font-bold" id="sugarAmount">1.0 tsp</div>
+                        <div class="text-xs text-coffee-400 mt-2">(5ml / ~7g)</div>
+                    </div>
+
+                    <div class="bg-palm-50 rounded-lg p-4 text-sm text-palm-800 border border-palm-200">
+                        <strong>Note:</strong> Liquid palm sugar is roughly 1.5x sweeter than white sugar. Start with less than you think you need—you can always add more, but you can't take it out.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flavor Profile Explorer -->
+    <section class="py-16 px-4 max-w-5xl mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="font-serif text-4xl text-coffee-900 mb-4">Bajawa Flavor Compass</h2>
+            <p class="text-coffee-600 max-w-2xl mx-auto">Your specific beans carry these characteristics. Click to see how palm sugar interacts with each note.</p>
         </div>
 
-        <!-- Brewing Matcher -->
-        <section class="bg-stone-900/50 rounded-3xl p-8 md:p-12 border border-stone-800">
-            <div class="text-center mb-10">
-                <h2 class="text-3xl md:text-4xl font-bold text-amber-100 mb-3">Find Your Perfect Brew</h2>
-                <p class="text-stone-400">Select your preferred brewing method to discover matching Indonesian varieties</p>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="flavor-note bg-white p-6 rounded-xl border border-coffee-200 cursor-pointer" onclick="toggleFlavor(this, 'chocolate')">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-serif text-lg text-coffee-800">Dark Chocolate</h3>
+                    <span class="text-2xl">🍫</span>
+                </div>
+                <div class="h-2 bg-coffee-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-coffee-700 w-[90%]"></div>
+                </div>
+                <p class="text-xs text-coffee-500 mt-2">Intensity: High</p>
+                <div class="hidden mt-3 text-sm text-coffee-600 bg-coffee-50 p-3 rounded-lg">
+                    Palm sugar's caramel undertones amplify the chocolate body. This is your dominant pairing.
+                </div>
             </div>
+
+            <div class="flavor-note bg-white p-6 rounded-xl border border-coffee-200 cursor-pointer" onclick="toggleFlavor(this, 'floral')">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-serif text-lg text-coffee-800">Tobacco & Wood</h3>
+                    <span class="text-2xl">🪵</span>
+                </div>
+                <div class="h-2 bg-coffee-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-coffee-600 w-[75%]"></div>
+                </div>
+                <p class="text-xs text-coffee-500 mt-2">Intensity: Medium-High</p>
+                <div class="hidden mt-3 text-sm text-coffee-600 bg-coffee-50 p-3 rounded-lg">
+                    The earthy, smoky finish is characteristic of semi-washed Flores processing. Palm sugar softens the edge without masking it.
+                </div>
+            </div>
+
+            <div class="flavor-note bg-white p-6 rounded-xl border border-coffee-200 cursor-pointer" onclick="toggleFlavor(this, 'caramel')">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-serif text-lg text-coffee-800">Caramel/Molasses</h3>
+                    <span class="text-2xl">🍯</span>
+                </div>
+                <div class="h-2 bg-coffee-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-palm-600 w-[80%]"></div>
+                </div>
+                <p class="text-xs text-coffee-500 mt-2">Intensity: Medium</p>
+                <div class="hidden mt-3 text-sm text-coffee-600 bg-coffee-50 p-3 rounded-lg">
+                    Naturally occurring in Bajawa. Liquid palm sugar <em>extends</em> this note rather than replacing it.
+                </div>
+            </div>
+
+            <div class="flavor-note bg-white p-6 rounded-xl border border-coffee-200 cursor-pointer" onclick="toggleFlavor(this, 'acidity')">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-serif text-lg text-coffee-800">Acidity</h3>
+                    <span class="text-2xl">🍋</span>
+                </div>
+                <div class="h-2 bg-coffee-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-yellow-500 w-[20%]"></div>
+                </div>
+                <p class="text-xs text-coffee-500 mt-2">Intensity: Very Low</p>
+                <div class="hidden mt-3 text-sm text-coffee-600 bg-coffee-50 p-3 rounded-lg">
+                    Bajawa is famously low-acid. This makes it forgiving with palm sugar—no risk of clashing with bright citrus notes.
+                </div>
+            </div>
+
+            <div class="flavor-note bg-white p-6 rounded-xl border border-coffee-200 cursor-pointer" onclick="toggleFlavor(this, 'body')">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-serif text-lg text-coffee-800">Body/Mouthfeel</h3>
+                    <span class="text-2xl">☁️</span>
+                </div>
+                <div class="h-2 bg-coffee-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-coffee-800 w-[85%]"></div>
+                </div>
+                <p class="text-xs text-coffee-500 mt-2">Intensity: Full</p>
+                <div class="hidden mt-3 text-sm text-coffee-600 bg-coffee-50 p-3 rounded-lg">
+                    Syrupy and smooth. The handpress method preserves this better than pour-over. Palm sugar adds to the viscosity.
+                </div>
+            </div>
+
+            <div class="flavor-note bg-white p-6 rounded-xl border border-coffee-200 cursor-pointer" onclick="toggleFlavor(this, 'finish')">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-serif text-lg text-coffee-800">Lingering Finish</h3>
+                    <span class="text-2xl">✨</span>
+                </div>
+                <div class="h-2 bg-coffee-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-palm-500 w-[70%]"></div>
+                </div>
+                <p class="text-xs text-coffee-500 mt-2">Intensity: Medium-Long</p>
+                <div class="hidden mt-3 text-sm text-coffee-600 bg-coffee-50 p-3 rounded-lg">
+                    Expect a clean, sweet aftertaste that lasts 2-3 minutes. The floral aromatics (rose, berry) appear here.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Troubleshooting -->
+    <section class="py-16 bg-coffee-900 text-coffee-50">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="font-serif text-3xl text-center mb-12">Rescue Your Shot</h2>
             
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="brew-methods">
-                <div class="brew-card p-6 rounded-2xl border border-stone-700 text-center" onclick="selectBrew('espresso')">
-                    <div class="text-4xl mb-3">☕</div>
-                    <h3 class="font-bold text-amber-100">Espresso</h3>
-                    <p class="text-xs text-stone-500 mt-1">Intense & concentrated</p>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-coffee-800/50 p-6 rounded-xl border border-coffee-700">
+                    <h3 class="font-serif text-xl text-palm-300 mb-2">Too Bitter / Harsh</h3>
+                    <ul class="space-y-2 text-coffee-200 text-sm">
+                        <li class="flex items-start gap-2"><span class="text-palm-400">→</span> Lower water temp slightly (85-88°C)</li>
+                        <li class="flex items-start gap-2"><span class="text-palm-400">→</span> Reduce dose to 8g (pre-ground may be too fine)</li>
+                        <li class="flex items-start gap-2"><span class="text-palm-400">→</span> Add palm sugar <em>before</em> tasting to balance</li>
+                    </ul>
                 </div>
-                <div class="brew-card p-6 rounded-2xl border border-stone-700 text-center" onclick="selectBrew('v60')">
-                    <div class="text-4xl mb-3">🫗</div>
-                    <h3 class="font-bold text-amber-100">V60 / Pour Over</h3>
-                    <p class="text-xs text-stone-500 mt-1">Clean & bright</p>
-                </div>
-                <div class="brew-card p-6 rounded-2xl border border-stone-700 text-center" onclick="selectBrew('french')">
-                    <div class="text-4xl mb-3">🍵</div>
-                    <h3 class="font-bold text-amber-100">French Press</h3>
-                    <p class="text-xs text-stone-500 mt-1">Full-bodied & rich</p>
-                </div>
-                <div class="brew-card p-6 rounded-2xl border border-stone-700 text-center" onclick="selectBrew('cold')">
-                    <div class="text-4xl mb-3">🧊</div>
-                    <h3 class="font-bold text-amber-100">Cold Brew</h3>
-                    <p class="text-xs text-stone-500 mt-1">Smooth & sweet</p>
-                </div>
-            </div>
 
-            <div id="brew-recommendation" class="hidden animate-in">
-                <div class="bg-amber-900/20 rounded-2xl p-6 border border-amber-800/30">
-                    <h3 class="text-xl font-bold text-amber-400 mb-4">Recommended Varieties</h3>
-                    <div id="brew-results" class="flex flex-wrap gap-3"></div>
+                <div class="bg-coffee-800/50 p-6 rounded-xl border border-coffee-700">
+                    <h3 class="font-serif text-xl text-palm-300 mb-2">Too Sour / Weak</h3>
+                    <ul class="space-y-2 text-coffee-200 text-sm">
+                        <li class="flex items-start gap-2"><span class="text-palm-400">→</span> Preheat more aggressively (2 rinse cycles)</li>
+                        <li class="flex items-start gap-2"><span class="text-palm-400">→</span> Tamp harder—aim for 20+ lbs pressure</li>
+                        <li class="flex items-start gap-2"><span class="text-palm-400">→</span> Extend extraction to 30+ seconds if possible</li>
+                    </ul>
                 </div>
-            </div>
-        </section>
 
-        <!-- Processing Methods Comparison -->
-        <section>
-            <h2 class="text-3xl md:text-4xl font-bold text-amber-100 mb-8 text-center">Processing Methods</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-stone-900/50 rounded-2xl p-6 border border-stone-800 hover:border-amber-700 transition-colors">
-                    <div class="w-12 h-12 rounded-full bg-amber-900/50 flex items-center justify-center mb-4 text-2xl">🌧️</div>
-                    <h3 class="text-xl font-bold text-amber-200 mb-2">Wet-Hulled (Giling Basah)</h3>
-                    <p class="text-stone-400 text-sm mb-4">The signature Indonesian method. Parchment is removed at high moisture content (30-40%), then dried.</p>
-                    <div class="space-y-2">
-                        <div class="flex justify-between text-sm"><span class="text-stone-500">Body</span><span class="text-amber-400">Very High</span></div>
-                        <div class="flex justify-between text-sm"><span class="text-stone-500">Acidity</span><span class="text-amber-400">Low</span></div>
-                        <div class="flex justify-between text-sm"><span class="text-stone-500">Flavor</span><span class="text-amber-400">Earthy, Herbal</span></div>
-                    </div>
+                <div class="bg-coffee-800/50 p-6 rounded-xl border border-coffee-700">
+                    <h3 class="font-serif text-xl text-palm-300 mb-2">No Crema / Thin</h3>
+                    <ul class="space-y-2 text-coffee-200 text-sm">
+                        <li class="flex items-start gap-2"><span class="text-palm-400">→</span> Check coffee freshness (pre-ground stales in 2-3 weeks)</li>
+                        <li class="flex items-start gap-2"><span class="text-palm-400">→</span> Use finer grind if you switch beans later</li>
+                        <li class="flex items-start gap-2"><span class="text-palm-400">→</span> Ensure full pressure build-up before first pump</li>
+                    </ul>
                 </div>
-                <div class="bg-stone-900/50 rounded-2xl p-6 border border-stone-800 hover:border-amber-700 transition-colors">
-                    <div class="w-12 h-12 rounded-full bg-blue-900/50 flex items-center justify-center mb-4 text-2xl">💧</div>
-                    <h3 class="text-xl font-bold text-amber-200 mb-2">Washed</h3>
-                    <p class="text-stone-400 text-sm mb-4">Fermented in water tanks to remove mucilage, then dried with parchment intact. Clean and bright.</p>
-                    <div class="space-y-2">
-                        <div class="flex justify-between text-sm"><span class="text-stone-500">Body</span><span class="text-blue-400">Medium</span></div>
-                        <div class="flex justify-between text-sm"><span class="text-stone-500">Acidity</span><span class="text-blue-400">High</span></div>
-                        <div class="flex justify-between text-sm"><span class="text-stone-500">Flavor</span><span class="text-blue-400">Clean, Floral</span></div>
-                    </div>
-                </div>
-                <div class="bg-stone-900/50 rounded-2xl p-6 border border-stone-800 hover:border-amber-700 transition-colors">
-                    <div class="w-12 h-12 rounded-full bg-orange-900/50 flex items-center justify-center mb-4 text-2xl">☀️</div>
-                    <h3 class="text-xl font-bold text-amber-200 mb-2">Natural / Dry</h3>
-                    <p class="text-stone-400 text-sm mb-4">Dried whole in the cherry. Rare in Indonesia but emerging for fruity profiles.</p>
-                    <div class="space-y-2">
-                        <div class="flex justify-between text-sm"><span class="text-stone-500">Body</span><span class="text-orange-400">Heavy</span></div>
-                        <div class="flex justify-between text-sm"><span class="text-stone-500">Acidity</span><span class="text-orange-400">Medium</span></div>
-                        <div class="flex justify-between text-sm"><span class="text-stone-500">Flavor</span><span class="text-orange-400">Fruity, Sweet</span></div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <!-- Species Comparison -->
-        <section class="bg-gradient-to-r from-stone-900 to-stone-800 rounded-3xl p-8 md:p-12 border border-stone-700">
-            <h2 class="text-3xl md:text-4xl font-bold text-amber-100 mb-8">The Big Four: Coffee Species in Indonesia</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="border-b border-stone-700">
-                            <th class="pb-4 text-amber-400 font-bold">Species</th>
-                            <th class="pb-4 text-stone-400">Share</th>
-                            <th class="pb-4 text-stone-400">Caffeine</th>
-                            <th class="pb-4 text-stone-400">Key Regions</th>
-                            <th class="pb-4 text-stone-400">Flavor Profile</th>
-                        </tr>
-                    </thead>
-                    <tbody class="space-y-4">
-                        <tr class="border-b border-stone-800/50">
-                            <td class="py-4 font-bold text-amber-200">Arabica</td>
-                            <td class="py-4 text-stone-300">~30-40%</td>
-                            <td class="py-4 text-stone-300">1.2-1.5%</td>
-                            <td class="py-4 text-stone-300">Gayo, Toraja, Kintamani, Ijen</td>
-                            <td class="py-4 text-stone-300">Smooth, complex, floral, fruity</td>
-                        </tr>
-                        <tr class="border-b border-stone-800/50">
-                            <td class="py-4 font-bold text-amber-200">Robusta</td>
-                            <td class="py-4 text-stone-300">~60-70%</td>
-                            <td class="py-4 text-stone-300">2.2-2.7%</td>
-                            <td class="py-4 text-stone-300">Temanggung, Lampung, Bali</td>
-                            <td class="py-4 text-stone-300">Bold, earthy, nutty, bitter</td>
-                        </tr>
-                        <tr class="border-b border-stone-800/50">
-                            <td class="py-4 font-bold text-amber-200">Liberica</td>
-                            <td class="py-4 text-stone-300">&lt;2%</td>
-                            <td class="py-4 text-stone-300">1.2-1.5%</td>
-                            <td class="py-4 text-stone-300">Maluku, Papua (rare)</td>
-                            <td class="py-4 text-stone-300">Smoky, woody, fruity, floral</td>
-                        </tr>
-                        <tr>
-                            <td class="py-4 font-bold text-amber-200">Excelsa</td>
-                            <td class="py-4 text-stone-300">Rare</td>
-                            <td class="py-4 text-stone-300">0.86-1.13%</td>
-                            <td class="py-4 text-stone-300">Southeast Asia</td>
-                            <td class="py-4 text-stone-300">Tart, berry-like, spicy</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Footer -->
-        <footer class="text-center text-stone-600 pt-8 pb-12 border-t border-stone-800">
-            <p class="text-sm">Data sourced from specialty coffee research and Indonesian coffee associations. Flavor profiles are representative and may vary by harvest.</p>
-        </footer>
-    </main>
-
-    <!-- Detail Modal -->
-    <div id="detail-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm overflow-y-auto">
-        <div class="min-h-screen px-4 py-8 flex items-center justify-center">
-            <div class="bg-stone-900 rounded-3xl max-w-4xl w-full border border-stone-700 shadow-2xl overflow-hidden" onclick="event.stopPropagation()">
-                <div id="modal-content" class="p-8 md:p-12">
-                    <!-- Injected by JS -->
+                <div class="bg-coffee-800/50 p-6 rounded-xl border border-coffee-700">
+                    <h3 class="font-serif text-xl text-palm-300 mb-2">Palm Sugar Not Dissolving</h3>
+                    <ul class="space-y-2 text-coffee-200 text-sm">
+                        <li class="flex items-start gap-2"><span class="text-palm-400">→</span> Add immediately while espresso is >80°C</li>
+                        <li class="flex items-start gap-2"><span class="text-palm-400">→</span> Stir with a spoon, not just swirling</li>
+                        <li class="flex items-start gap-2"><span class="text-palm-400">→</span> If crystallized, warm the bottle in water first</li>
+                    </ul>
                 </div>
-                <button onclick="closeModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-stone-800 text-stone-400 hover:bg-stone-700 flex items-center justify-center text-xl">&times;</button>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-coffee-950 text-coffee-400 py-12 text-center text-sm">
+        <p class="font-serif text-lg text-coffee-300 mb-2">Brewed with intention.</p>
+        <p>Remember: Bajawa is a Geographical Indication protected coffee from Flores, Indonesia.</p>
+    </footer>
 
     <script>
-        // Coffee Data
-        const varieties = [
-            {
-                id: 'gayo',
-                name: 'Gayo',
-                region: 'sumatra',
-                island: 'Sumatra',
-                location: 'Aceh Highlands',
-                species: 'Arabica',
-                altitude: '1,200 - 1,600 masl',
-                process: 'Wet-Hulled / Washed',
-                roast: 'Medium',
-                description: 'From the northern tip of Sumatra, Gayo coffee grows in rich volcanic soil near the equator. Known for its complex, delicate stone fruit flavors with surprising cleanliness for a Sumatran coffee.',
-                flavors: { body: 75, acidity: 60, sweetness: 70, bitterness: 40, aroma: 85 },
-                notes: ['Peach', 'Caramel', 'Wisteria', 'Cacao Nibs', 'Earthy'],
-                bestFor: ['v60', 'espresso', 'cold'],
-                history: 'The Gayo Highlands have produced coffee since the early 20th century, with many farms organized into cooperatives focused on organic and fair-trade practices.'
-            },
-            {
-                id: 'mandheling',
-                name: 'Mandheling',
-                region: 'sumatra',
-                island: 'Sumatra',
-                location: 'North Sumatra',
-                species: 'Arabica',
-                altitude: '750 - 1,500 masl',
-                process: 'Wet-Hulled (Giling Basah)',
-                roast: 'Medium-Dark',
-                description: 'Named after the Mandailing people (not a place), this is one of the most full-bodied coffees in the world. Syrupy, heavy, with low acidity and intense chocolate and spice notes.',
-                flavors: { body: 95, acidity: 30, sweetness: 60, bitterness: 70, aroma: 80 },
-                notes: ['Dark Chocolate', 'Cedar', 'Spice', 'Tobacco', 'Syrupy'],
-                bestFor: ['french', 'espresso'],
-                history: 'The name "Mandheling" originated from a misunderstanding in the 19th century but stuck as a brand representing the bold character of North Sumatran coffee.'
-            },
-            {
-                id: 'lintong',
-                name: 'Lintong',
-                region: 'sumatra',
-                island: 'Sumatra',
-                location: 'Lake Toba Region',
-                species: 'Arabica',
-                altitude: '1,000 - 1,600 masl',
-                process: 'Wet-Hulled / Washed',
-                roast: 'Medium',
-                description: 'Grown southwest of Lake Toba, Lintong offers a more balanced and crisp profile compared to northern Sumatras. Nutty with gentle fruit and a clean finish when washed.',
-                flavors: { body: 70, acidity: 65, sweetness: 75, bitterness: 45, aroma: 78 },
-                notes: ['Nutty', 'Green Capsicum', 'Gentle Fruit', 'Clean', 'Balanced'],
-                bestFor: ['v60', 'french'],
-                history: 'Lintong Nihuta has been a coffee-producing region for generations, with smallholder farmers preserving traditional wet-hulling techniques.'
-            },
-            {
-                id: 'toraja',
-                name: 'Toraja',
-                region: 'sulawesi',
-                island: 'Sulawesi',
-                location: 'South Sulawesi Highlands',
-                species: 'Arabica',
-                altitude: '1,400 - 2,100 masl',
-                process: 'Wet-Hulled / Washed',
-                roast: 'Medium',
-                description: 'Often compared to fine wine, Toraja is distinctive and layered. Grown on ancient volcanic slopes, it offers herbal depth, chocolate, and sweet spice with architectural structure.',
-                flavors: { body: 85, acidity: 55, sweetness: 72, bitterness: 50, aroma: 88 },
-                notes: ['Dark Cherry', 'Chocolate', 'Cardamom', 'Cinnamon', 'Herbal'],
-                bestFor: ['v60', 'espresso', 'french'],
-                history: 'For the Toraja people, coffee is cultural heritage inherited from colonial times. Many trees are over 250 years old, growing in small family plots.'
-            },
-            {
-                id: 'kintamani',
-                name: 'Kintamani',
-                region: 'bali',
-                island: 'Bali',
-                location: 'Kintamani Plateau',
-                species: 'Arabica (80% Robusta on island)',
-                altitude: '1,200 - 1,500 masl',
-                process: 'Washed / Natural',
-                roast: 'Light-Medium',
-                description: 'Bright, citrusy, and clean — the exception to Indonesia\'s earthy reputation. Grown around Mount Batur\'s caldera with intercropped citrus providing natural fertilization.',
-                flavors: { body: 55, acidity: 85, sweetness: 80, bitterness: 25, aroma: 82 },
-                notes: ['Orange', 'Lemon', 'Honey', 'Black Tea', 'Floral'],
-                bestFor: ['v60', 'cold'],
-                history: 'First planted in the 1970s after government distribution of Arabica seedlings. The subak abian system integrates coffee farming with Balinese Hindu philosophy of harmony.'
-            },
-            {
-                id: 'java-ijen',
-                name: 'Java Ijen',
-                region: 'java',
-                island: 'Java',
-                location: 'East Java (Ijen Plateau)',
-                species: 'Arabica',
-                altitude: '900 - 1,600 masl',
-                process: 'Washed / Wet-Hulled',
-                roast: 'Medium',
-                description: 'The island that gave coffee its nickname. Java Ijen is clean and spicy with chocolate underneath, grown on the volcanic Ijen plateau by smallholder farmers and historic estates.',
-                flavors: { body: 65, acidity: 70, sweetness: 68, bitterness: 40, aroma: 75 },
-                notes: ['Spice', 'Chocolate', 'Clean', 'Nutty', 'Caramel'],
-                bestFor: ['v60', 'french', 'espresso'],
-                history: 'Java is Indonesia\'s oldest coffee producer since 1699. The Dutch established the first estates (Blawan, Jampit, Kayumas) which still operate today.'
-            },
-            {
-                id: 'java-preanger',
-                name: 'Java Preanger',
-                region: 'java',
-                island: 'Java',
-                location: 'West Java',
-                species: 'Arabica',
-                altitude: '1,000 - 1,400 masl',
-                process: 'Washed',
-                roast: 'Light-Medium',
-                description: 'From the Priangan highlands, Preanger shows more florals and caramelized sweetness with soft-medium acidity. Forgiving and sweet even with imperfect brewing.',
-                flavors: { body: 60, acidity: 65, sweetness: 82, bitterness: 30, aroma: 80 },
-                notes: ['Floral', 'Caramel', 'Sweet', 'Soft', 'Elegant'],
-                bestFor: ['v60', 'cold'],
-                history: 'The Preanger region was the heart of Dutch colonial coffee production, with beans so prized they commanded premium prices in 18th-century Europe.'
-            },
-            {
-                id: 'flores-bajawa',
-                name: 'Flores Bajawa',
-                region: 'flores',
-                island: 'Flores',
-                location: 'Bajawa Highlands',
-                species: 'Arabica',
-                altitude: '1,200 - 1,800 masl',
-                process: 'Semi-Washed (Giling Basah)',
-                roast: 'Medium',
-                description: 'An emerging hidden gem. Sweet milk chocolate with hazelnut, caramel, and floral woody notes. The volcanic soil supports both excellent coffee and Komodo dragons.',
-                flavors: { body: 72, acidity: 60, sweetness: 78, bitterness: 45, aroma: 76 },
-                notes: ['Milk Chocolate', 'Hazelnut', 'Caramel', 'Floral', 'Woody'],
-                bestFor: ['v60', 'french', 'cold'],
-                history: 'Coffee arrived relatively recently to Flores. Previously blended with other islands, single-origin Flores is now gaining recognition in specialty markets.'
-            },
-            {
-                id: 'wamena',
-                name: 'Wamena',
-                region: 'papua',
-                island: 'Papua',
-                location: 'Baliem Valley',
-                species: 'Arabica',
-                altitude: '1,200 - 1,600 masl',
-                process: 'Washed',
-                roast: 'Medium',
-                description: 'Grown in the valley east of Indonesia\'s only snowy mountain (Jaya Wijaya). Organic by necessity — farmers avoid pesticides. Floral aroma with creamy body and soft wine-like acidity.',
-                flavors: { body: 70, acidity: 55, sweetness: 75, bitterness: 35, aroma: 90 },
-                notes: ['Floral', 'Creamy', 'Soft Wine', 'Organic', 'Delicate'],
-                bestFor: ['v60', 'cold'],
-                history: 'Papua\'s remote highlands create natural organic conditions. The slow ripening at altitude develops complex floral characteristics rare in Indonesian coffee.'
-            },
-            {
-                id: 'temanggung',
-                name: 'Temanggung',
-                region: 'java',
-                island: 'Java',
-                location: 'Central Java',
-                species: 'Robusta',
-                altitude: '400 - 800 masl',
-                process: 'Natural / Semi-Washed',
-                roast: 'Dark',
-                description: 'Representing Indonesia\'s robusta tradition, Temanggung offers a slight tobacco taste with medium acidity, balanced sweet-bitter profile, and distinct mocha aroma.',
-                flavors: { body: 90, acidity: 45, sweetness: 50, bitterness: 80, aroma: 70 },
-                notes: ['Tobacco', 'Mocha', 'Bitter', 'Earthy', 'Bold'],
-                bestFor: ['espresso', 'french'],
-                history: 'Robusta dominates Indonesian production volume. Temanggung represents the potential for fine robusta when processed with care and selective harvesting.'
-            },
-            {
-                id: 'kopi-luwak',
-                name: 'Kopi Luwak',
-                region: 'sumatra',
-                island: 'Sumatra / Java / Sulawesi',
-                location: 'Multiple Regions',
-                species: 'Arabica / Robusta',
-                altitude: 'Varies',
-                process: 'Civet Fermentation',
-                roast: 'Medium',
-                description: 'The world\'s most controversial coffee. Civets select only the ripest cherries. After 24-36 hours in their digestive system, enzymes create a unique flavor. <strong>Warning:</strong> Many producers now use caged civets. Seek wild-sourced only.',
-                flavors: { body: 80, acidity: 50, sweetness: 65, bitterness: 40, aroma: 85 },
-                notes: ['Fruity', 'Complex', 'Smooth', 'Unique', 'Controversial'],
-                bestFor: ['french', 'espresso'],
-                history: 'Originally discovered by Indonesian plantation workers forbidden from harvesting coffee for their own use. The exclusivity drives high prices, but ethical concerns are paramount.'
-            },
-            {
-                id: 'sulawesi-kalosi',
-                name: 'Sulawesi Kalosi',
-                region: 'sulawesi',
-                island: 'Sulawesi',
-                location: 'Enrekang Regency',
-                species: 'Arabica',
-                altitude: '1,200 - 1,800 masl',
-                process: 'Washed / Wet-Hulled',
-                roast: 'Medium',
-                description: 'Slightly lighter than Toraja but with the typical Sulawesi syrupiness. Chocolate-leaning with nutty aromas and less earthiness than Sumatran counterparts.',
-                flavors: { body: 78, acidity: 58, sweetness: 74, bitterness: 48, aroma: 79 },
-                notes: ['Chocolate', 'Nutty', 'Syrupy', 'Clean', 'Balanced'],
-                bestFor: ['v60', 'espresso'],
-                history: 'Kalosi has become a brand name representing the broader Toraja region\'s coffee, exported through the port town of the same name.'
-            }
-        ];
+        let currentStep = 0;
+        const totalSteps = 8;
+        let sweetnessMultiplier = 1;
 
-        let currentRegion = 'all';
-        let selectedBrew = null;
+        function activateStep(index) {
+            const cards = document.querySelectorAll('.step-card');
+            const progressBar = document.getElementById('progressBar');
+            
+            cards.forEach((card, i) => {
+                if (i === index) {
+                    card.classList.add('active', 'bg-coffee-50', 'border-coffee-300');
+                    card.classList.remove('bg-white', 'border-coffee-200', 'opacity-70');
+                    card.querySelector('.rounded-full').classList.add('bg-coffee-700', 'text-white');
+                    card.querySelector('.rounded-full').classList.remove('bg-coffee-200', 'text-coffee-700');
+                } else {
+                    card.classList.remove('active', 'bg-coffee-50', 'border-coffee-300');
+                    card.classList.add('bg-white', 'border-coffee-200', 'opacity-70');
+                    card.querySelector('.rounded-full').classList.remove('bg-coffee-700', 'text-white');
+                    card.querySelector('.rounded-full').classList.add('bg-coffee-200', 'text-coffee-700');
+                }
+            });
+            
+            currentStep = index;
+            const progress = ((index + 1) / totalSteps) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        function setSweetness(value) {
+            sweetnessMultiplier = value;
+            document.querySelectorAll('.sweetness-btn').forEach(btn => {
+                if (parseFloat(btn.dataset.value) === value) {
+                    btn.classList.add('bg-coffee-700', 'text-white');
+                    btn.classList.remove('hover:bg-coffee-50');
+                } else {
+                    btn.classList.remove('bg-coffee-700', 'text-white');
+                    btn.classList.add('hover:bg-coffee-50');
+                }
+            });
+            updateRatio();
+        }
+
+        function updateRatio() {
+            const shotSize = parseInt(document.getElementById('shotSize').value);
+            document.getElementById('shotValue').textContent = shotSize + 'ml';
+            
+            // Base ratio: 1 tsp per 60ml, adjusted by sweetness preference
+            const baseSugar = (shotSize / 60) * 5; // 5ml = 1 tsp
+            const totalSugar = (baseSugar * sweetnessMultiplier).toFixed(1);
+            
+            let displayText;
+            if (totalSugar < 2.5) {
+                displayText = totalSugar + ' tsp';
+            } else {
+                displayText = (totalSugar / 5).toFixed(1) + ' tbsp';
+            }
+            
+            document.getElementById('sugarAmount').textContent = displayText;
+        }
+
+        function toggleFlavor(element, flavor) {
+            const hiddenDiv = element.querySelector('.hidden, .block');
+            if (hiddenDiv.classList.contains('hidden')) {
+                hiddenDiv.classList.remove('hidden');
+                hiddenDiv.classList.add('block');
+                element.classList.add('border-palm-400', 'bg-palm-50/30');
+            } else {
+                hiddenDiv.classList.add('hidden');
+                hiddenDiv.classList.remove('block');
+                element.classList.remove('border-palm-400', 'bg-palm-50/30');
+            }
+        }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            renderVarieties();
-        });
-
-        function renderVarieties() {
-            const grid = document.getElementById('varieties-grid');
-            const filtered = currentRegion === 'all' 
-                ? varieties 
-                : varieties.filter(v => v.region === currentRegion);
-            
-            grid.innerHTML = filtered.map((v, i) => `
-                <div class="bean-card bg-stone-900/60 rounded-2xl overflow-hidden border border-stone-800 cursor-pointer animate-in" 
-                     style="animation-delay: ${i * 0.1}s"
-                     onclick="openModal('${v.id}')">
-                    <div class="h-48 bg-gradient-to-br from-amber-900/40 to-stone-900 relative overflow-hidden">
-                        <div class="absolute inset-0 flex items-center justify-center">
-                            <div class="bean-shape w-32 h-20 bg-gradient-to-br from-amber-700 to-amber-900 shadow-2xl transform rotate-12"></div>
-                            <div class="bean-shape w-28 h-18 bg-gradient-to-br from-amber-600 to-amber-800 shadow-xl transform -rotate-6 -ml-8 mt-4"></div>
-                        </div>
-                        <div class="absolute top-4 right-4 px-3 py-1 rounded-full bg-black/40 text-xs font-bold text-amber-300 border border-amber-700/30">
-                            ${v.species}
-                        </div>
-                        <div class="absolute bottom-4 left-4">
-                            <span class="text-xs text-stone-400 uppercase tracking-wider">${v.island}</span>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold text-amber-100 mb-1">${v.name}</h3>
-                        <p class="text-sm text-amber-600/80 mb-3">${v.location}</p>
-                        <p class="text-stone-400 text-sm mb-4 line-clamp-2">${v.description}</p>
-                        
-                        <div class="space-y-2 mb-4">
-                            ${renderFlavorBar('Body', v.flavors.body, 'bg-amber-700')}
-                            ${renderFlavorBar('Acidity', v.flavors.acidity, 'bg-yellow-600')}
-                            ${renderFlavorBar('Sweetness', v.flavors.sweetness, 'bg-orange-600')}
-                        </div>
-                        
-                        <div class="flex flex-wrap gap-2">
-                            ${v.notes.slice(0, 3).map(n => `
-                                <span class="px-3 py-1 rounded-full bg-stone-800 text-stone-300 text-xs border border-stone-700">${n}</span>
-                            `).join('')}
-                            <span class="px-3 py-1 rounded-full bg-stone-800 text-stone-500 text-xs border border-stone-700">+${v.notes.length - 3}</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderFlavorBar(label, value, colorClass) {
-            return `
-                <div class="flex items-center gap-3">
-                    <span class="text-xs text-stone-500 w-16">${label}</span>
-                    <div class="flex-1 h-2 bg-stone-800 rounded-full overflow-hidden">
-                        <div class="h-full ${colorClass} rounded-full flavor-bar" style="width: ${value}%"></div>
-                    </div>
-                    <span class="text-xs text-stone-400 w-8 text-right">${value}</span>
-                </div>
-            `;
-        }
-
-        function filterRegion(region) {
-            currentRegion = region;
-            document.querySelectorAll('.region-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.region === region);
-            });
-            renderVarieties();
-        }
-
-        function openModal(id) {
-            const v = varieties.find(x => x.id === id);
-            if (!v) return;
-            
-            const modal = document.getElementById('detail-modal');
-            const content = document.getElementById('modal-content');
-            
-            content.innerHTML = `
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div>
-                        <div class="flex items-center gap-3 mb-2">
-                            <span class="px-3 py-1 rounded-full bg-amber-900/30 text-amber-400 text-sm border border-amber-700/30">${v.species}</span>
-                            <span class="px-3 py-1 rounded-full bg-stone-800 text-stone-400 text-sm border border-stone-700">${v.process}</span>
-                        </div>
-                        <h2 class="text-4xl font-bold text-amber-100 mb-2">${v.name}</h2>
-                        <p class="text-amber-600 text-lg mb-6">${v.island} • ${v.location}</p>
-                        
-                        <p class="text-stone-300 leading-relaxed mb-6 text-lg">${v.description}</p>
-                        
-                        <div class="grid grid-cols-2 gap-4 mb-6">
-                            <div class="bg-stone-800/50 rounded-xl p-4 border border-stone-700">
-                                <div class="text-stone-500 text-sm mb-1">Altitude</div>
-                                <div class="text-amber-200 font-bold">${v.altitude}</div>
-                            </div>
-                            <div class="bg-stone-800/50 rounded-xl p-4 border border-stone-700">
-                                <div class="text-stone-500 text-sm mb-1">Roast Level</div>
-                                <div class="text-amber-200 font-bold">${v.roast}</div>
-                            </div>
-                        </div>
-
-                        <div class="mb-6">
-                            <h4 class="font-bold text-amber-100 mb-3">Flavor Notes</h4>
-                            <div class="flex flex-wrap gap-2">
-                                ${v.notes.map(n => `
-                                    <span class="px-4 py-2 rounded-full bg-amber-900/20 text-amber-300 border border-amber-800/30 text-sm">${n}</span>
-                                `).join('')}
-                            </div>
-                        </div>
-
-                        <div class="bg-stone-800/30 rounded-xl p-4 border border-stone-700">
-                            <h4 class="font-bold text-amber-100 mb-2">Best Brewing Methods</h4>
-                            <div class="flex flex-wrap gap-2">
-                                ${v.bestFor.map(b => `
-                                    <span class="text-stone-300 text-sm capitalize">• ${b === 'v60' ? 'V60 / Pour Over' : b === 'french' ? 'French Press' : b}</span>
-                                `).join('')}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="space-y-6">
-                        <!-- Radar Chart -->
-                        <div class="bg-stone-800/30 rounded-2xl p-6 border border-stone-700">
-                            <h4 class="font-bold text-amber-100 mb-4 text-center">Taste Profile</h4>
-                            <svg viewBox="0 0 200 200" class="w-full max-w-sm mx-auto">
-                                <defs>
-                                    <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
-                                        <stop offset="0%" stop-color="rgba(217,119,6,0.3)" />
-                                        <stop offset="100%" stop-color="rgba(217,119,6,0.05)" />
-                                    </radialGradient>
-                                </defs>
-                                ${[20, 40, 60, 80, 100].map(r => `
-                                    <circle cx="100" cy="100" r="${r}" fill="none" stroke="#44403c" stroke-width="0.5"/>
-                                `).join('')}
-                                ${[0, 72, 144, 216, 288].map((angle, i) => {
-                                    const x = 100 + 100 * Math.cos((angle - 90) * Math.PI / 180);
-                                    const y = 100 + 100 * Math.sin((angle - 90) * Math.PI / 180);
-                                    const labels = ['Body', 'Acidity', 'Sweetness', 'Bitterness', 'Aroma'];
-                                    return `<line x1="100" y1="100" x2="${x}" y2="${y}" stroke="#44403c" stroke-width="0.5"/>
-                                            <text x="${x}" y="${y}" fill="#a8a29e" font-size="8" text-anchor="middle" dominant-baseline="middle">${labels[i]}</text>`;
-                                }).join('')}
-                                <polygon points="${Object.values(v.flavors).map((val, i) => {
-                                    const angle = (i * 72 - 90) * Math.PI / 180;
-                                    const r = val;
-                                    return `${100 + r * Math.cos(angle)},${100 + r * Math.sin(angle)}`;
-                                }).join(' ')}" fill="url(#radarGrad)" stroke="#d97706" stroke-width="2"/>
-                                ${Object.values(v.flavors).map((val, i) => {
-                                    const angle = (i * 72 - 90) * Math.PI / 180;
-                                    const x = 100 + val * Math.cos(angle);
-                                    const y = 100 + val * Math.sin(angle);
-                                    return `<circle cx="${x}" cy="${y}" r="3" fill="#d97706" class="radar-point"/>`;
-                                }).join('')}
-                            </svg>
-                        </div>
-
-                        <!-- History -->
-                        <div class="bg-stone-800/30 rounded-2xl p-6 border border-stone-700">
-                            <h4 class="font-bold text-amber-100 mb-3">History & Origin</h4>
-                            <p class="text-stone-400 text-sm leading-relaxed">${v.history}</p>
-                        </div>
-
-                        <!-- Processing Info -->
-                        <div class="bg-stone-800/30 rounded-2xl p-6 border border-stone-700">
-                            <h4 class="font-bold text-amber-100 mb-3">Processing Method</h4>
-                            <p class="text-stone-400 text-sm leading-relaxed mb-3">
-                                ${v.process.includes('Wet-Hulled') 
-                                    ? 'Wet-Hulled (Giling Basah): The defining Indonesian process where parchment is removed at 30-40% moisture, creating the signature heavy body and earthy flavors.' 
-                                    : v.process.includes('Washed')
-                                    ? 'Washed: Fermented in water to remove mucilage, then dried with parchment intact. Produces cleaner, brighter cups with higher acidity.'
-                                    : 'Natural: Dried whole in the cherry, allowing fruit sugars to impart sweetness and fruity complexity.'}
-                            </p>
-                            <div class="text-xs text-stone-500 mt-2">Current Process: <span class="text-amber-400">${v.process}</span></div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            document.getElementById('detail-modal').classList.add('hidden');
-            document.body.style.overflow = '';
-        }
-
-        function selectBrew(method) {
-            selectedBrew = method;
-            document.querySelectorAll('.brew-card').forEach(card => card.classList.remove('selected'));
-            event.currentTarget.classList.add('selected');
-            
-            const matches = varieties.filter(v => v.bestFor.includes(method));
-            const container = document.getElementById('brew-recommendation');
-            const results = document.getElementById('brew-results');
-            
-            results.innerHTML = matches.map(m => `
-                <button onclick="openModal('${m.id}')" class="px-4 py-3 bg-stone-800 hover:bg-stone-700 rounded-xl border border-stone-700 text-left transition-colors">
-                    <div class="font-bold text-amber-200">${m.name}</div>
-                    <div class="text-xs text-stone-500">${m.island} • ${m.notes.slice(0, 2).join(', ')}</div>
-                </button>
-            `).join('');
-            
-            container.classList.remove('hidden');
-        }
-
-        // Close modal on outside click
-        document.getElementById('detail-modal').addEventListener('click', closeModal);
-        
-        // Escape key to close
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
+        updateRatio();
     </script>
 </body>
 </html>
