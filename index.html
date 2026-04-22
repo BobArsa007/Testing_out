@@ -1,644 +1,420 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Palm Sugar Iced Milk Coffee | Bajawa & Cold Brew</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        serif: ['Playfair Display', 'serif'],
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        coffee: {
-                            50: '#fdf8f6',
-                            100: '#f2e8e5',
-                            200: '#eaddd7',
-                            300: '#e0cec7',
-                            400: '#d2bab0',
-                            500: '#a07e6f',
-                            600: '#8b6b5c',
-                            700: '#6f4e37',
-                            800: '#5a3e2b',
-                            900: '#3d2b1f',
-                        },
-                        palm: {
-                            50: '#fefce8',
-                            100: '#fef9c3',
-                            200: '#fef08a',
-                            300: '#fde047',
-                            400: '#facc15',
-                            500: '#eab308',
-                            600: '#ca8a04',
-                            700: '#a16207',
-                            800: '#854d0e',
-                            900: '#713f12',
-                        },
-                        ice: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            200: '#bae6fd',
-                            300: '#7dd3fc',
-                            400: '#38bdf8',
-                            500: '#0ea5e9',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .step-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .step-card.active {
-            transform: scale(1.02);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-        .progress-bar {
-            transition: width 0.5s ease;
-        }
-        .layer-visual {
-            transition: all 0.5s ease;
-        }
-        @keyframes pour {
-            0% { height: 0; opacity: 0; }
-            50% { opacity: 1; }
-            100% { height: 100%; opacity: 1; }
-        }
-        .animate-pour {
-            animation: pour 1.5s ease-out forwards;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
-        }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        input[type="range"] {
-            -webkit-appearance: none;
-            appearance: none;
-            background: transparent;
-            cursor: pointer;
-        }
-        input[type="range"]::-webkit-slider-track {
-            background: #eaddd7;
-            height: 6px;
-            border-radius: 3px;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            background: #6f4e37;
-            height: 20px;
-            width: 20px;
-            border-radius: 50%;
-            margin-top: -7px;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .glass-cup {
-            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
-            border: 2px solid rgba(255,255,255,0.5);
-            border-radius: 12px 12px 24px 24px;
-            position: relative;
-            overflow: hidden;
-        }
-        .layer {
-            width: 100%;
-            transition: height 0.8s ease;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semarang Culinary Explorer</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+  
+  body {
+    background: linear-gradient(135deg, #fff5e6 0%, #ffe4c4 100%);
+    min-height: 100vh;
+    color: #333;
+  }
+  
+  header {
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  
+  header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  header p { font-size: 1.1rem; opacity: 0.95; }
+  
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  
+  .controls {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+  }
+  
+  .search-box {
+    flex: 1;
+    min-width: 200px;
+    padding: 12px 20px;
+    border: 2px solid #e74c3c;
+    border-radius: 25px;
+    font-size: 1rem;
+    outline: none;
+    transition: 0.3s;
+  }
+  
+  .search-box:focus { box-shadow: 0 0 10px rgba(231, 76, 60, 0.3); }
+  
+  .filter-btn {
+    padding: 10px 20px;
+    border: 2px solid #e74c3c;
+    background: white;
+    color: #e74c3c;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+  
+  .filter-btn:hover, .filter-btn.active {
+    background: #e74c3c;
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+  }
+  
+  .card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    transition: 0.3s;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  }
+  
+  .card-image {
+    height: 180px;
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+  }
+  
+  .card-content { padding: 18px; }
+  
+  .card-title {
+    font-size: 1.3rem;
+    color: #c0392b;
+    margin-bottom: 8px;
+  }
+  
+  .card-category {
+    display: inline-block;
+    background: #f1c40f;
+    color: #333;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .card-desc {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .price { color: #27ae60; font-weight: 700; }
+  
+  .fav-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .fav-btn:hover { transform: scale(1.2); }
+  
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .modal.active { display: flex; }
+  
+  .modal-content {
+    background: white;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  .modal-header {
+    height: 200px;
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7rem;
+    position: relative;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .modal-body { padding: 25px; }
+  
+  .modal-body h2 { color: #c0392b; margin-bottom: 10px; }
+  
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 20px 0;
+  }
+  
+  .info-item {
+    background: #fff5e6;
+    padding: 12px;
+    border-radius: 10px;
+    border-left: 4px solid #e74c3c;
+  }
+  
+  .info-label {
+    font-size: 0.8rem;
+    color: #888;
+    text-transform: uppercase;
+  }
+  
+  .info-value {
+    font-weight: 600;
+    color: #333;
+    margin-top: 4px;
+  }
+  
+  .empty {
+    text-align: center;
+    padding: 50px;
+    color: #888;
+    font-size: 1.2rem;
+    grid-column: 1 / -1;
+  }
+  
+  .stats {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px 0;
+    flex-wrap: wrap;
+  }
+  
+  .stat-box {
+    background: white;
+    padding: 15px 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+  
+  .stat-num {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #e74c3c;
+  }
+  
+  .stat-label { font-size: 0.85rem; color: #666; }
+</style>
 </head>
-<body class="bg-coffee-50 text-coffee-900 font-sans antialiased">
+<body>
 
-    <!-- Hero Section -->
-    <header class="relative h-screen max-h-[800px] overflow-hidden bg-coffee-900">
-        <div class="absolute inset-0 bg-gradient-to-b from-coffee-900/90 via-coffee-800/80 to-coffee-900/90 z-10"></div>
-        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=1920&q=80')] bg-cover bg-center opacity-40"></div>
-        
-        <div class="relative z-20 h-full flex flex-col justify-center items-center text-center px-4">
-            <div class="mb-6 inline-block p-3 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 animate-float">
-                <svg class="w-8 h-8 text-ice-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-                </svg>
-            </div>
-            <h1 class="font-serif text-5xl md:text-7xl text-coffee-50 mb-4 italic leading-tight">
-                Palm Sugar<br>Iced Milk Coffee
-            </h1>
-            <p class="text-coffee-200 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light">
-                Flash-brewed <span class="text-palm-300 font-medium">Bajawa concentrate</span> meets <span class="text-palm-300 font-medium">cold milk</span> and <span class="text-palm-300 font-medium">liquid palm sugar</span>
-            </p>
-            <div class="mt-8 flex gap-4 text-sm text-coffee-300">
-                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-ice-400"></span>Iced</span>
-                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-palm-400"></span>Flores Beans</span>
-                <span class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-palm-400"></span>Natural Sweet</span>
-            </div>
+<header>
+  <h1>🍜 Semarang Culinary Explorer</h1>
+  <p>Discover the Authentic Flavors of Semarang, Indonesia</p>
+</header>
+
+<div class="container">
+  <div class="stats">
+    <div class="stat-box"><div class="stat-num" id="totalCount">0</div><div class="stat-label">Total Dishes</div></div>
+    <div class="stat-box"><div class="stat-num" id="favCount">0</div><div class="stat-label">Favorites</div></div>
+    <div class="stat-box"><div class="stat-num" id="shownCount">0</div><div class="stat-label">Showing</div></div>
+  </div>
+  
+  <div class="controls">
+    <input type="text" class="search-box" id="search" placeholder="🔍 Search culinary...">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="main">Main Dish</button>
+    <button class="filter-btn" data-filter="snack">Snack</button>
+    <button class="filter-btn" data-filter="dessert">Dessert</button>
+    <button class="filter-btn" data-filter="drink">Drink</button>
+    <button class="filter-btn" data-filter="favorites">❤️ Favorites</button>
+  </div>
+  
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span id="modalEmoji"></span>
+      <button class="close-btn" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <h2 id="modalTitle"></h2>
+      <span class="card-category" id="modalCategory"></span>
+      <p id="modalDesc" style="margin-top:15px; line-height:1.6;"></p>
+      <div class="info-grid">
+        <div class="info-item"><div class="info-label">Price Range</div><div class="info-value" id="modalPrice"></div></div>
+        <div class="info-item"><div class="info-label">Origin</div><div class="info-value" id="modalOrigin"></div></div>
+        <div class="info-item"><div class="info-label">Best Time</div><div class="info-value" id="modalTime"></div></div>
+        <div class="info-item"><div class="info-label">Spice Level</div><div class="info-value" id="modalSpice"></div></div>
+      </div>
+      <div class="info-item" style="margin-top:15px;">
+        <div class="info-label">Where to Find</div>
+        <div class="info-value" id="modalLocation"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const foods = [
+  { id:1, name:"Lumpia Semarang", emoji:"🥟", category:"snack", price:"Rp 10K-20K", desc:"Iconic spring roll filled with bamboo shoots, egg, shrimp, and chicken. The signature dish of Semarang with a unique sweet-savory taste.", origin:"Semarang (Chinese-Javanese fusion)", time:"Anytime", spice:"Mild 🌶️", location:"Lumpia Gang Lombok, Lumpia Mbak Lien" },
+  { id:2, name:"Tahu Gimbal", emoji:"🍤", category:"main", price:"Rp 15K-25K", desc:"Tofu served with shrimp fritters (gimbal), cabbage, bean sprouts, and peanut sauce with sweet soy sauce dressing.", origin:"Semarang", time:"Lunch/Dinner", spice:"Medium 🌶️🌶️", location:"Tahu Gimbal Pak Edy, Simpang Lima area" },
+  { id:3, name:"Soto Semarang", emoji:"🍲", category:"main", price:"Rp 12K-20K", desc:"Clear chicken soup with rice, bean sprouts, and fried shallots. Light and refreshing broth perfect for any time.", origin:"Semarang", time:"Breakfast/Lunch", spice:"Mild 🌶️", location:"Soto Bangkong, Soto Bokoran" },
+  { id:4, name:"Bandeng Presto", emoji:"🐟", category:"main", price:"Rp 25K-50K", desc:"Pressure-cooked milkfish with tender bones you can eat whole. A famous Semarang souvenir and delicacy.", origin:"Semarang", time:"Lunch/Dinner", spice:"Mild 🌶️", location:"Bandeng Juwana, Bandeng Presto Pak Yon" },
+  { id:5, name:"Wingko Babat", emoji:"🥮", category:"dessert", price:"Rp 3K-10K", desc:"Sweet coconut pancake made from glutinous rice and grated coconut. Crispy outside, chewy inside.", origin:"Babat, popular in Semarang", time:"Snack time", spice:"None", location:"Wingko Babat Cap Kereta Api" },
+  { id:6, name:"Es Puter Cong Lik", emoji:"🍨", category:"dessert", price:"Rp 10K-20K", desc:"Traditional Indonesian ice cream made with coconut milk. Legendary since 1960s in Semarang.", origin:"Semarang", time:"Afternoon", spice:"None", location:"Jl. KH Ahmad Dahlan" },
+  { id:7, name:"Nasi Ayam Semarang", emoji:"🍚", category:"main", price:"Rp 15K-25K", desc:"Rice with chicken in rich coconut gravy, similar to nasi liwet but with distinct Semarang flavors.", origin:"Semarang", time:"Breakfast/Dinner", spice:"Medium 🌶️🌶️", location:"Nasi Ayam Bu Sami, Nasi Ayam Bu Nyoto" },
+  { id:8, name:"Mie Kopyok", emoji:"🍜", category:"main", price:"Rp 10K-18K", desc:"Yellow noodles with tofu, crackers, bean sprouts, and sweet-savory broth. A comforting local favorite.", origin:"Semarang", time:"Lunch", spice:"Mild 🌶️", location:"Mie Kopyok Pak Dhuwur" },
+  { id:9, name:"Ganjel Rel", emoji:"🍞", category:"snack", price:"Rp 5K-15K", desc:"Traditional brown sugar bread with sesame seeds, shaped like railway ties (hence the name).", origin:"Semarang (Dutch colonial era)", time:"Snack", spice:"None", location:"Toko Oen, traditional markets" },
+  { id:10, name:"Es Cao", emoji:"🥤", category:"drink", price:"Rp 5K-10K", desc:"Refreshing grass jelly drink with coconut milk and palm sugar syrup. Perfect for hot days.", origin:"Semarang", time:"Afternoon", spice:"None", location:"Street vendors in old town" },
+  { id:11, name:"Tahu Pong", emoji:"🥟", category:"snack", price:"Rp 10K-20K", desc:"Hollow fried tofu served with egg, sweet soy sauce, and chili. Crispy outside, empty inside.", origin:"Semarang", time:"Anytime", spice:"Medium 🌶️🌶️", location:"Tahu Pong Karangsaru, Gajahmada" },
+  { id:12, name:"Gado-Gado Semarang", emoji:"🥗", category:"main", price:"Rp 12K-20K", desc:"Vegetable salad with peanut sauce, Semarang style with unique additions and flavors.", origin:"Java (Semarang variant)", time:"Lunch", spice:"Medium 🌶️🌶️", location:"Various warungs citywide" },
+  { id:13, name:"Roti Gandjel Rel", emoji:"🥖", category:"snack", price:"Rp 8K-15K", desc:"Dutch-influenced sweet bread with unique texture, a nostalgic colonial-era treat.", origin:"Semarang", time:"Breakfast/Snack", spice:"None", location:"Toko Oen, Dhaup bakery" },
+  { id:14, name:"Sate Sapi Pak Kempleng", emoji:"🍢", category:"main", price:"Rp 25K-40K", desc:"Tender beef satay with rich peanut sauce, a must-try Semarang favorite since decades.", origin:"Semarang", time:"Dinner", spice:"Medium 🌶️🌶️", location:"Sate Pak Kempleng Ungaran" },
+  { id:15, name:"Wedang Tahu", emoji:"☕", category:"drink", price:"Rp 5K-10K", desc:"Warm silken tofu in ginger syrup, a traditional warming dessert-drink.", origin:"Semarang (Chinese influence)", time:"Morning/Evening", spice:"Mild ginger", location:"Jl. Gajahmada, Pecinan area" }
+];
+
+let favorites = JSON.parse(localStorage.getItem('semarangFavs') || '[]');
+let currentFilter = 'all';
+let currentSearch = '';
+
+function render() {
+  const grid = document.getElementById('grid');
+  let filtered = foods.filter(f => {
+    const matchSearch = f.name.toLowerCase().includes(currentSearch) || f.desc.toLowerCase().includes(currentSearch);
+    const matchFilter = currentFilter === 'all' ? true : currentFilter === 'favorites' ? favorites.includes(f.id) : f.category === currentFilter;
+    return matchSearch && matchFilter;
+  });
+  
+  document.getElementById('totalCount').textContent = foods.length;
+  document.getElementById('favCount').textContent = favorites.length;
+  document.getElementById('shownCount').textContent = filtered.length;
+  
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="empty">🔍 No dishes found. Try different keywords!</div>';
+    return;
+  }
+  
+  grid.innerHTML = filtered.map(f => `
+    <div class="card" onclick="openModal(${f.id})">
+      <div class="card-image">${f.emoji}</div>
+      <div class="card-content">
+        <h3 class="card-title">${f.name}</h3>
+        <span class="card-category">${f.category.toUpperCase()}</span>
+        <p class="card-desc">${f.desc.substring(0, 80)}...</p>
+        <div class="card-footer">
+          <span class="price">${f.price}</span>
+          <button class="fav-btn" onclick="event.stopPropagation(); toggleFav(${f.id})">${favorites.includes(f.id) ? '❤️' : '🤍'}</button>
         </div>
-        
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce">
-            <svg class="w-6 h-6 text-coffee-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-            </svg>
-        </div>
-    </header>
+      </div>
+    </div>
+  `).join('');
+}
 
-    <!-- Equipment Overview -->
-    <section class="py-16 px-4 max-w-6xl mx-auto">
-        <div class="grid md:grid-cols-3 gap-8">
-            <div class="glass-panel p-6 rounded-2xl text-center group hover:bg-white/80 transition-all">
-                <div class="w-16 h-16 mx-auto mb-4 bg-ice-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg class="w-8 h-8 text-ice-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                    </svg>
-                </div>
-                <h3 class="font-serif text-xl text-coffee-800 mb-2">Hand Press Concentrate</h3>
-                <p class="text-coffee-600 text-sm leading-relaxed">Brew a double-strength shot. The ice will dilute it to perfect drinking strength.</p>
-            </div>
-            
-            <div class="glass-panel p-6 rounded-2xl text-center group hover:bg-white/80 transition-all">
-                <div class="w-16 h-16 mx-auto mb-4 bg-palm-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg class="w-8 h-8 text-palm-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                    </svg>
-                </div>
-                <h3 class="font-serif text-xl text-coffee-800 mb-2">Bajawa Pre-ground</h3>
-                <p class="text-coffee-600 text-sm leading-relaxed">Same Flores beans. Chocolate and woody notes hold up beautifully against cold milk.</p>
-            </div>
-            
-            <div class="glass-panel p-6 rounded-2xl text-center group hover:bg-white/80 transition-all">
-                <div class="w-16 h-16 mx-auto mb-4 bg-ice-100 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg class="w-8 h-8 text-ice-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
-                    </svg>
-                </div>
-                <h3 class="font-serif text-xl text-coffee-800 mb-2">Cold Milk + Ice</h3>
-                <p class="text-coffee-600 text-sm leading-relaxed">Whole milk for creaminess, or oat milk for nuttiness. Lots of ice—this is a slow sipper.</p>
-            </div>
-        </div>
-    </section>
+function toggleFav(id) {
+  if (favorites.includes(id)) favorites = favorites.filter(f => f !== id);
+  else favorites.push(id);
+  localStorage.setItem('semarangFavs', JSON.stringify(favorites));
+  render();
+}
 
-    <!-- Interactive Brewing Guide -->
-    <section class="py-16 bg-white">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="font-serif text-4xl text-coffee-900 mb-4">The Iced Ritual</h2>
-                <p class="text-coffee-600">Brew hot, chill fast, layer beautifully.</p>
-            </div>
+function openModal(id) {
+  const f = foods.find(x => x.id === id);
+  document.getElementById('modalEmoji').textContent = f.emoji;
+  document.getElementById('modalTitle').textContent = f.name;
+  document.getElementById('modalCategory').textContent = f.category.toUpperCase();
+  document.getElementById('modalDesc').textContent = f.desc;
+  document.getElementById('modalPrice').textContent = f.price;
+  document.getElementById('modalOrigin').textContent = f.origin;
+  document.getElementById('modalTime').textContent = f.time;
+  document.getElementById('modalSpice').textContent = f.spice;
+  document.getElementById('modalLocation').textContent = f.location;
+  document.getElementById('modal').classList.add('active');
+}
 
-            <!-- Progress -->
-            <div class="mb-8 bg-coffee-100 rounded-full h-2 overflow-hidden">
-                <div id="progressBar" class="progress-bar bg-gradient-to-r from-coffee-600 to-ice-500 h-full rounded-full" style="width: 12.5%"></div>
-            </div>
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
 
-            <!-- Steps Container -->
-            <div class="space-y-4" id="stepsContainer">
-                <!-- Step 1 -->
-                <div class="step-card active bg-coffee-50 border-2 border-coffee-200 rounded-2xl p-6 cursor-pointer" onclick="activateStep(0)">
-                    <div class="flex items-start gap-4">
-                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-700 text-white flex items-center justify-center font-serif font-bold text-lg">1</div>
-                        <div class="flex-1">
-                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Brew Double Strength</h3>
-                            <p class="text-coffee-700 mb-3">Use <strong>10-12g Bajawa pre-ground</strong> with only <strong>30-40ml water</strong>. You're making a concentrate that ice and milk will dilute.</p>
-                            <div class="flex items-center gap-2 text-sm text-ice-700 bg-ice-50 px-3 py-2 rounded-lg inline-flex">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                <span>Target: 20-25 second extraction for concentrate</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+document.getElementById('search').addEventListener('input', e => {
+  currentSearch = e.target.value.toLowerCase();
+  render();
+});
 
-                <!-- Step 2 -->
-                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(1)">
-                    <div class="flex items-start gap-4">
-                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">2</div>
-                        <div class="flex-1">
-                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Dissolve Palm Sugar First</h3>
-                            <p class="text-coffee-700 mb-3">While the espresso is hot, add palm sugar and stir vigorously for 15 seconds. It must dissolve completely before hitting the ice.</p>
-                            <div class="bg-palm-50 p-3 rounded-lg text-sm text-palm-700 border border-palm-200">
-                                <strong>Why hot:</strong> Palm sugar won't dissolve well in cold liquid. This is your only chance.
-                            </div>
-                        </div>
-                    </div>
-                </div>
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    render();
+  });
+});
 
-                <!-- Step 3 -->
-                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(2)">
-                    <div class="flex items-start gap-4">
-                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">3</div>
-                        <div class="flex-1">
-                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Flash Chill (Critical)</h3>
-                            <p class="text-coffee-700 mb-3">Pour the hot sweetened concentrate over <strong>a full glass of ice</strong> (not just a few cubes). Stir for 10 seconds until the glass feels cold.</p>
-                            <div class="flex gap-2 mt-2">
-                                <span class="px-3 py-1 bg-ice-100 text-ice-700 rounded-full text-xs">Don't let it sit hot</span>
-                                <span class="px-3 py-1 bg-ice-100 text-ice-700 rounded-full text-xs">Ice is your chiller</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target.id === 'modal') closeModal();
+});
 
-                <!-- Step 4 -->
-                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(3)">
-                    <div class="flex items-start gap-4">
-                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">4</div>
-                        <div class="flex-1">
-                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Add Cold Milk</h3>
-                            <p class="text-coffee-700 mb-3">Pour <strong>120-150ml cold milk</strong> over the iced coffee. Whole milk gives body; oat milk adds a malty note that pairs with palm sugar.</p>
-                        </div>
-                    </div>
-                </div>
+render();
+</script>
 
-                <!-- Step 5 -->
-                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(4)">
-                    <div class="flex items-start gap-4">
-                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">5</div>
-                        <div class="flex-1">
-                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Layer or Mix</h3>
-                            <p class="text-coffee-700 mb-3">For the gradient effect: pour milk slowly over the back of a spoon. For full integration: stir vigorously until uniform caramel color.</p>
-                            <div class="bg-ice-50 border border-ice-200 p-3 rounded-lg text-sm text-ice-800">
-                                <strong>Pro move:</strong> The layered look lasts about 30 seconds before settling. Serve immediately if showing off.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 6 -->
-                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(5)">
-                    <div class="flex items-start gap-4">
-                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">6</div>
-                        <div class="flex-1">
-                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Adjust & Taste</h3>
-                            <p class="text-coffee-700 mb-3">After the first sip, decide: too strong? Add milk. Too sweet? More ice. Too weak? You need more concentrate next time, not less ice.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 7 -->
-                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(6)">
-                    <div class="flex items-start gap-4">
-                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">7</div>
-                        <div class="flex-1">
-                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Serve with a Straw</h3>
-                            <p class="text-coffee-700 mb-3">The layers taste different as you drink. A straw lets you control whether you get the sweet bottom, creamy middle, or coffee top.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Step 8 -->
-                <div class="step-card bg-white border border-coffee-200 rounded-2xl p-6 cursor-pointer opacity-70" onclick="activateStep(7)">
-                    <div class="flex items-start gap-4">
-                        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-coffee-200 text-coffee-700 flex items-center justify-center font-serif font-bold text-lg">8</div>
-                        <div class="flex-1">
-                            <h3 class="font-serif text-xl text-coffee-900 mb-2">Clean While Cold</h3>
-                            <p class="text-coffee-700 mb-3">Palm sugar hardens as it cools. Rinse your hand press and stirring spoon with warm water immediately.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Visual Layer Builder -->
-    <section class="py-16 bg-gradient-to-br from-coffee-50 to-ice-50">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="font-serif text-3xl text-coffee-900 mb-2">Visual Layer Builder</h2>
-                <p class="text-coffee-600">See how your glass comes together</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-8 items-center">
-                <!-- Glass Visualization -->
-                <div class="flex justify-center">
-                    <div class="glass-cup w-48 h-72 relative shadow-2xl">
-                        <!-- Ice layer -->
-                        <div class="layer absolute bottom-0 h-[30%] bg-ice-200/60 flex items-center justify-center">
-                            <span class="text-ice-600 text-xs font-medium">ICE</span>
-                        </div>
-                        <!-- Milk layer -->
-                        <div class="layer absolute bottom-[30%] h-[35%] bg-coffee-100 flex items-center justify-center">
-                            <span class="text-coffee-600 text-xs font-medium">MILK</span>
-                        </div>
-                        <!-- Coffee layer -->
-                        <div class="layer absolute bottom-[65%] h-[20%] bg-coffee-700 flex items-center justify-center">
-                            <span class="text-coffee-100 text-xs font-medium">COFFEE</span>
-                        </div>
-                        <!-- Palm sugar swirl -->
-                        <div class="layer absolute bottom-[65%] h-[8%] bg-palm-600/80 flex items-center justify-center">
-                            <span class="text-white text-xs font-medium">PALM SUGAR</span>
-                        </div>
-                        <!-- Foam/space -->
-                        <div class="layer absolute top-0 h-[15%] bg-transparent"></div>
-                    </div>
-                </div>
-
-                <!-- Controls -->
-                <div class="space-y-6">
-                    <div class="bg-white rounded-xl p-6 border border-coffee-200">
-                        <h3 class="font-serif text-lg text-coffee-800 mb-4">Your Build</h3>
-                        <div class="space-y-3 text-sm">
-                            <div class="flex justify-between items-center">
-                                <span class="text-coffee-600">Ice</span>
-                                <span class="font-medium text-coffee-800">Full glass (~150g)</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-coffee-600">Milk</span>
-                                <span class="font-medium text-coffee-800">120-150ml cold</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-coffee-600">Coffee Concentrate</span>
-                                <span class="font-medium text-coffee-800">30-40ml double-strength</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-coffee-600">Palm Sugar</span>
-                                <span class="font-medium text-palm-700" id="layerSugarDisplay">1.0 tsp</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-ice-50 rounded-lg p-4 text-sm text-ice-800 border border-ice-200">
-                        <strong>Tip:</strong> Fill ice to the brim. It chills the hot concentrate instantly and prevents dilution as it melts.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Palm Sugar Calculator -->
-    <section class="py-16 bg-white">
-        <div class="max-w-3xl mx-auto px-4">
-            <div class="glass-panel rounded-3xl p-8 md:p-12 shadow-xl border border-coffee-200">
-                <div class="text-center mb-8">
-                    <h2 class="font-serif text-3xl text-coffee-900 mb-2">Iced Ratio Calculator</h2>
-                    <p class="text-coffee-600">Sweetness accounts for cold milk dilution</p>
-                </div>
-
-                <div class="space-y-6">
-                    <div>
-                        <label class="block text-sm font-medium text-coffee-700 mb-2">Milk Volume</label>
-                        <input type="range" id="milkSize" min="80" max="200" value="120" class="w-full" oninput="updateIcedRatio()">
-                        <div class="flex justify-between text-xs text-coffee-500 mt-1">
-                            <span>80ml (Strong)</span>
-                            <span id="milkValue" class="font-bold text-coffee-800">120ml</span>
-                            <span>200ml (Mild)</span>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-coffee-700 mb-2">Sweetness Level</label>
-                        <div class="grid grid-cols-4 gap-2">
-                            <button onclick="setSweetness(0.5)" class="sweetness-btn px-4 py-2 rounded-lg border border-coffee-200 text-sm hover:bg-coffee-50 transition-colors" data-value="0.5">Barely</button>
-                            <button onclick="setSweetness(1)" class="sweetness-btn px-4 py-2 rounded-lg border border-coffee-200 text-sm bg-coffee-700 text-white" data-value="1">Balanced</button>
-                            <button onclick="setSweetness(1.5)" class="sweetness-btn px-4 py-2 rounded-lg border border-coffee-200 text-sm hover:bg-coffee-50 transition-colors" data-value="1.5">Sweet</button>
-                            <button onclick="setSweetness(2)" class="sweetness-btn px-4 py-2 rounded-lg border border-coffee-200 text-sm hover:bg-coffee-50 transition-colors" data-value="2">Dessert</button>
-                        </div>
-                    </div>
-
-                    <div class="bg-coffee-50 rounded-xl p-6 border border-coffee-200 text-center">
-                        <div class="text-sm text-coffee-500 mb-1">Recommended Liquid Palm Sugar</div>
-                        <div class="font-serif text-4xl text-palm-700 font-bold" id="sugarAmount">1.5 tsp</div>
-                        <div class="text-xs text-coffee-400 mt-2">(~7.5ml / ~11g)</div>
-                    </div>
-
-                    <div class="bg-palm-50 rounded-lg p-4 text-sm text-palm-800 border border-palm-200">
-                        <strong>Note:</strong> Iced drinks need slightly more sugar than hot drinks—cold temperatures suppress sweetness perception. Start here and adjust to taste.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Flavor Profile Explorer -->
-    <section class="py-16 px-4 max-w-5xl mx-auto">
-        <div class="text-center mb-12">
-            <h2 class="font-serif text-4xl text-coffee-900 mb-4">Iced Flavor Compass</h2>
-            <p class="text-coffee-600 max-w-2xl mx-auto">How cold and milk transform your Bajawa. Click to explore.</p>
-        </div>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div class="flavor-note bg-white p-6 rounded-xl border border-coffee-200 cursor-pointer" onclick="toggleFlavor(this, 'chocolate')">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="font-serif text-lg text-coffee-800">Dark Chocolate</h3>
-                    <span class="text-2xl">🍫</span>
-                </div>
-                <div class="h-2 bg-coffee-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-coffee-700 w-[85%]"></div>
-                </div>
-                <p class="text-xs text-coffee-500 mt-2">Intensity: High (slightly muted by cold)</p>
-                <div class="hidden mt-3 text-sm text-coffee-600 bg-coffee-50 p-3 rounded-lg">
-                    Cold milk softens the edges but the chocolate backbone remains. This is why Bajawa works so well iced.
-                </div>
-            </div>
-
-            <div class="flavor-note bg-white p-6 rounded-xl border border-coffee-200 cursor-pointer" onclick="toggleFlavor(this, 'floral')">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="font-serif text-lg text-coffee-800">Tobacco & Wood</h3>
-                    <span class="text-2xl">🪵</span>
-                </div>
-                <div class="h-2 bg-coffee-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-coffee-600 w-[60%]"></div>
-                </div>
-                <p class="text-xs text-coffee-500 mt-2">Intensity: Medium (recedes with dilution)</p>
-                <div class="hidden mt-3 text-sm text-coffee-600 bg-coffee-50 p-3 rounded-lg">
-                    The smoky notes become a background complexity rather than front-and-center. Pleasant but subtle.
-                </div>
-            </div>
-
-            <div class="flavor-note bg-white p-6 rounded-xl border border-coffee-200 cursor-pointer" onclick="toggleFlavor(this, 'caramel')">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="font-serif text-lg text-coffee-800">Caramel/Molasses</h3>
-                    <span class="text-2xl">🍯</span>
-                </div>
-                <div class="h-2 bg-coffee-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-palm-600 w-[95%]"></div>
-                </div>
-                <p class="text-xs text-coffee-500 mt-2">Intensity: Very High (star of the show)</p>
-                <div class="hidden mt-3 text-sm text-coffee-600 bg-coffee-50 p-3 rounded-lg">
-                    Palm sugar + cold milk = liquid caramel. This becomes the dominant flavor profile when iced.
-                </div>
-            </div>
-
-            <div class="flavor-note bg-white p-6 rounded-xl border border-coffee-200 cursor-pointer" onclick="toggleFlavor(this, 'acidity')">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="font-serif text-lg text-coffee-800">Perceived Acidity</h3>
-                    <span class="text-2xl">🍋</span>
-                </div>
-                <div class="h-2 bg-coffee-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-yellow-500 w-[15%]"></div>
-                </div>
-                <p class="text-xs text-coffee-500 mt-2">Intensity: Very Low</p>
-                <div class="hidden mt-3 text-sm text-coffee-600 bg-coffee-50 p-3 rounded-lg">
-                    Cold further suppresses acidity. Combined with milk and palm sugar, this is an incredibly smooth, forgiving drink.
-                </div>
-            </div>
-
-            <div class="flavor-note bg-white p-6 rounded-xl border border-coffee-200 cursor-pointer" onclick="toggleFlavor(this, 'body')">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="font-serif text-lg text-coffee-800">Body/Mouthfeel</h3>
-                    <span class="text-2xl">☁️</span>
-                </div>
-                <div class="h-2 bg-coffee-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-coffee-800 w-[70%]"></div>
-                </div>
-                <p class="text-xs text-coffee-500 mt-2">Intensity: Medium-Full (milk adds creaminess)</p>
-                <div class="hidden mt-3 text-sm text-coffee-600 bg-coffee-50 p-3 rounded-lg">
-                    Less syrupy than hot espresso, but milk compensates with fat content. Whole milk recommended for best texture.
-                </div>
-            </div>
-
-            <div class="flavor-note bg-white p-6 rounded-xl border border-coffee-200 cursor-pointer" onclick="toggleFlavor(this, 'finish')">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="font-serif text-lg text-coffee-800">Lingering Finish</h3>
-                    <span class="text-2xl">✨</span>
-                </div>
-                <div class="h-2 bg-coffee-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-palm-500 w-[80%]"></div>
-                </div>
-                <p class="text-xs text-coffee-500 mt-2">Intensity: Medium-Long (sweet aftertaste)</p>
-                <div class="hidden mt-3 text-sm text-coffee-600 bg-coffee-50 p-3 rounded-lg">
-                    The palm sugar sweetness lingers longer than the coffee itself. Clean, sweet, refreshing finish.
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Troubleshooting -->
-    <section class="py-16 bg-coffee-900 text-coffee-50">
-        <div class="max-w-4xl mx-auto px-4">
-            <h2 class="font-serif text-3xl text-center mb-12">Rescue Your Iced Coffee</h2>
-            
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-coffee-800/50 p-6 rounded-xl border border-coffee-700">
-                    <h3 class="font-serif text-xl text-ice-300 mb-2">Too Weak / Watery</h3>
-                    <ul class="space-y-2 text-coffee-200 text-sm">
-                        <li class="flex items-start gap-2"><span class="text-ice-400">→</span> Brew concentrate stronger (less water, same coffee)</li>
-                        <li class="flex items-start gap-2"><span class="text-ice-400">→</span> Use more ice, not less—then less milk</li>
-                        <li class="flex items-start gap-2"><span class="text-ice-400">→</span> Check pre-ground freshness (stales faster exposed to humidity)</li>
-                    </ul>
-                </div>
-
-                <div class="bg-coffee-800/50 p-6 rounded-xl border border-coffee-700">
-                    <h3 class="font-serif text-xl text-ice-300 mb-2">Palm Sugar Gritty / Undissolved</h3>
-                    <ul class="space-y-2 text-coffee-200 text-sm">
-                        <li class="flex items-start gap-2"><span class="text-ice-400">→</span> Must dissolve in HOT coffee before any ice touches it</li>
-                        <li class="flex items-start gap-2"><span class="text-ice-400">→</span> If crystallized, warm the bottle in hot water first</li>
-                        <li class="flex items-start gap-2"><span class="text-ice-400">→</span> Use simple syrup as backup (1:1 palm sugar:water, heated)</li>
-                    </ul>
-                </div>
-
-                <div class="bg-coffee-800/50 p-6 rounded-xl border border-coffee-700">
-                    <h3 class="font-serif text-xl text-ice-300 mb-2">Too Bitter When Cold</h3>
-                    <ul class="space-y-2 text-coffee-200 text-sm">
-                        <li class="flex items-start gap-2"><span class="text-ice-400">→</span> Lower brew temp to 85-88°C (cold magnifies bitterness)</li>
-                        <li class="flex items-start gap-2"><span class="text-ice-400">→</span> Reduce tamp pressure slightly</li>
-                        <li class="flex items-start gap-2"><span class="text-ice-400">→</span> Add more milk or palm sugar to balance</li>
-                    </ul>
-                </div>
-
-                <div class="bg-coffee-800/50 p-6 rounded-xl border border-coffee-700">
-                    <h3 class="font-serif text-xl text-ice-300 mb-2">Layers Mix Too Fast</h3>
-                    <ul class="space-y-2 text-coffee-200 text-sm">
-                        <li class="flex items-start gap-2"><span class="text-ice-400">→</span> Pour milk over back of spoon onto ice, not directly into coffee</li>
-                        <li class="flex items-start gap-2"><span class="text-ice-400">→</span> Ensure coffee is fully chilled before adding milk</li>
-                        <li class="flex items-start gap-2"><span class="text-ice-400">→</span> Use a clear glass and serve immediately for photos</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-coffee-950 text-coffee-400 py-12 text-center text-sm">
-        <p class="font-serif text-lg text-coffee-300 mb-2">Brewed cold, savored slow.</p>
-        <p>Bajawa is a Geographical Indication protected coffee from Flores, Indonesia.</p>
-    </footer>
-
-    <script>
-        let currentStep = 0;
-        const totalSteps = 8;
-        let sweetnessMultiplier = 1;
-
-        function activateStep(index) {
-            const cards = document.querySelectorAll('.step-card');
-            const progressBar = document.getElementById('progressBar');
-            
-            cards.forEach((card, i) => {
-                if (i === index) {
-                    card.classList.add('active', 'bg-coffee-50', 'border-coffee-300');
-                    card.classList.remove('bg-white', 'border-coffee-200', 'opacity-70');
-                    card.querySelector('.rounded-full').classList.add('bg-coffee-700', 'text-white');
-                    card.querySelector('.rounded-full').classList.remove('bg-coffee-200', 'text-coffee-700');
-                } else {
-                    card.classList.remove('active', 'bg-coffee-50', 'border-coffee-300');
-                    card.classList.add('bg-white', 'border-coffee-200', 'opacity-70');
-                    card.querySelector('.rounded-full').classList.remove('bg-coffee-700', 'text-white');
-                    card.querySelector('.rounded-full').classList.add('bg-coffee-200', 'text-coffee-700');
-                }
-            });
-            
-            currentStep = index;
-            const progress = ((index + 1) / totalSteps) * 100;
-            progressBar.style.width = progress + '%';
-        }
-
-        function setSweetness(value) {
-            sweetnessMultiplier = value;
-            document.querySelectorAll('.sweetness-btn').forEach(btn => {
-                if (parseFloat(btn.dataset.value) === value) {
-                    btn.classList.add('bg-coffee-700', 'text-white');
-                    btn.classList.remove('hover:bg-coffee-50');
-                } else {
-                    btn.classList.remove('bg-coffee-700', 'text-white');
-                    btn.classList.add('hover:bg-coffee-50');
-                }
-            });
-            updateIcedRatio();
-        }
-
-        function updateIcedRatio() {
-            const milkSize = parseInt(document.getElementById('milkSize').value);
-            document.getElementById('milkValue').textContent = milkSize + 'ml';
-            
-            // Base: 1.5 tsp per 120ml milk (slightly more than hot version)
-            const baseSugar = (milkSize / 120) * 7.5; // 7.5ml = 1.5 tsp
-            const totalSugar = (baseSugar * sweetnessMultiplier).toFixed(1);
-            
-            let displayText;
-            if (totalSugar < 2.5) {
-                displayText = totalSugar + ' tsp';
-            } else {
-                displayText = (totalSugar / 5).toFixed(1) + ' tbsp';
-            }
-            
-            document.getElementById('sugarAmount').textContent = displayText;
-            document.getElementById('layerSugarDisplay').textContent = displayText;
-        }
-
-        function toggleFlavor(element, flavor) {
-            const hiddenDiv = element.querySelector('.hidden, .block');
-            if (hiddenDiv.classList.contains('hidden')) {
-                hiddenDiv.classList.remove('hidden');
-                hiddenDiv.classList.add('block');
-                element.classList.add('border-palm-400', 'bg-palm-50/30');
-            } else {
-                hiddenDiv.classList.add('hidden');
-                hiddenDiv.classList.remove('block');
-                element.classList.remove('border-palm-400', 'bg-palm-50/30');
-            }
-        }
-
-        // Initialize
-        updateIcedRatio();
-    </script>
 </body>
 </html>
