@@ -478,6 +478,174 @@
     letter-spacing: 0.5px;
   }
 
+  /* === COFFEE SECTION === */
+  .coffee-section-header {
+    margin: 56px 0 28px;
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+    border-bottom: 2px solid var(--dark-cream);
+    padding-bottom: 20px;
+  }
+  .coffee-section-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--jungle);
+    line-height: 1.1;
+  }
+  .coffee-section-header h3 em { font-style: italic; color: var(--terra); }
+  .coffee-sub {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 420px;
+    line-height: 1.6;
+    padding-bottom: 4px;
+  }
+
+  .coffee-filter-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .cf-btn {
+    font-family: 'Karla', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 7px 16px;
+    border: 1px solid var(--dark-cream);
+    background: var(--cream);
+    color: var(--muted);
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, border-color 0.18s;
+  }
+  .cf-btn:hover, .cf-btn.active {
+    background: var(--jungle);
+    color: var(--gold);
+    border-color: var(--jungle);
+  }
+
+  .coffee-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 2px;
+    background: var(--dark-cream);
+  }
+
+  .coffee-card {
+    background: var(--cream);
+    padding: 28px 26px 24px;
+    transition: background 0.2s;
+    position: relative;
+  }
+  .coffee-card:hover { background: #ede6d8; }
+
+  .coffee-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 12px;
+  }
+
+  .coffee-vibe {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    flex-shrink: 0;
+  }
+  .vibe-specialty { background: var(--jungle); color: var(--gold); }
+  .vibe-cozy      { background: #5a3a1a; color: #f5d9a8; }
+  .vibe-scenic    { background: #2a5040; color: #a8d5b5; }
+  .vibe-trendy    { background: var(--terra); color: var(--cream); }
+  .vibe-bookish   { background: #3a3060; color: #c8c0f0; }
+  .vibe-local     { background: #4a4028; color: #d8c890; }
+
+  .coffee-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--jungle);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .coffee-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .coffee-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .coffee-tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border: 1px solid var(--dark-cream);
+    color: var(--muted);
+    letter-spacing: 0.5px;
+  }
+
+  .coffee-meta {
+    display: flex;
+    gap: 14px;
+    font-size: 12px;
+    color: var(--muted);
+    flex-wrap: wrap;
+    padding-top: 12px;
+    border-top: 1px solid var(--dark-cream);
+  }
+  .coffee-meta span { display: flex; align-items: center; gap: 5px; }
+
+  .coffee-order {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(26,58,47,0.06);
+    padding: 10px 12px;
+    border-left: 2px solid var(--ochre);
+  }
+  .coffee-order-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--ochre);
+    flex-shrink: 0;
+  }
+  .coffee-order-text {
+    font-size: 13px;
+    color: var(--jungle);
+    font-style: italic;
+  }
+
+  .coffee-intro-banner {
+    background: var(--jungle);
+    padding: 32px 36px;
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .coffee-intro-banner .big-emoji { font-size: 42px; flex-shrink: 0; }
+  .coffee-intro-banner h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .coffee-intro-banner p { font-size: 14px; color: rgba(245,239,228,0.75); line-height: 1.7; }
+
   /* === STAY SECTION === */
   .stay-grid {
     display: grid;
@@ -1045,6 +1213,234 @@
       </div>
     </div>
   </div>
+
+  <!-- ☕ COFFEE SHOPS -->
+  <div class="coffee-section-header">
+    <h3>Coffee Shops <em>Worth Finding</em></h3>
+    <p class="coffee-sub">Bogor's rainy-day culture was practically built for lingering over coffee. The city's café scene ranges from hushed specialty roasters to lively hill-view hangouts.</p>
+  </div>
+
+  <div class="coffee-intro-banner">
+    <div class="big-emoji">☕</div>
+    <div>
+      <h4>A city that drinks coffee seriously</h4>
+      <p>Sitting at 300m altitude with near-daily rain, Bogor has cultivated one of West Java's most vibrant café cultures. Local baristas source beans from nearby Javan and Sumatran plantations, and the cool climate means a hot cup of kopi isn't just a drink — it's an event. Expect everything from no-frills warung kopi with kopi tubruk to polished specialty bars and view cafés that look out over volcanic peaks.</p>
+    </div>
+  </div>
+
+  <div class="coffee-filter-bar">
+    <button class="cf-btn active" onclick="filterCoffee(this,'all')">All</button>
+    <button class="cf-btn" onclick="filterCoffee(this,'specialty')">Specialty Coffee</button>
+    <button class="cf-btn" onclick="filterCoffee(this,'cozy')">Cozy & Work-Friendly</button>
+    <button class="cf-btn" onclick="filterCoffee(this,'scenic')">Scenic Views</button>
+    <button class="cf-btn" onclick="filterCoffee(this,'trendy')">Trendy & Instagrammable</button>
+    <button class="cf-btn" onclick="filterCoffee(this,'local')">Local Warung</button>
+  </div>
+
+  <div class="coffee-grid" id="coffeeGrid">
+
+    <div class="coffee-card" data-vibe="specialty cozy">
+      <div class="coffee-card-top">
+        <div class="coffee-name">Kopi Nako</div>
+        <span class="coffee-vibe vibe-specialty">Specialty</span>
+      </div>
+      <div class="coffee-desc">One of Bogor's most celebrated coffee spots. Industrial-chic design with a serious commitment to quality beans — espresso-based drinks, pour-overs, and cold brews sourced from Indonesian plantations. Sometimes hosts live music events.</div>
+      <div class="coffee-tags">
+        <span class="coffee-tag">Pour-over</span>
+        <span class="coffee-tag">Live music</span>
+        <span class="coffee-tag">Work-friendly</span>
+        <span class="coffee-tag">Full meals</span>
+      </div>
+      <div class="coffee-order">
+        <span class="coffee-order-label">Order this</span>
+        <span class="coffee-order-text">Kopi Nako Signature + Hazelnut Latte Donut</span>
+      </div>
+      <div class="coffee-meta">
+        <span>📍 Jl. Pajajaran Indah V, Bogor Timur</span>
+        <span>💰 IDR 25–60k</span>
+      </div>
+    </div>
+
+    <div class="coffee-card" data-vibe="cozy bookish">
+      <div class="coffee-card-top">
+        <div class="coffee-name">Maraca Books & Coffee</div>
+        <span class="coffee-vibe vibe-bookish">Bookish</span>
+      </div>
+      <div class="coffee-desc">A library café with two branches — shelves of books, warm lighting, and coffee blends that reward slow sipping. The perfect place to wait out an afternoon downpour. Locals love it for solo reading sessions and quiet work.</div>
+      <div class="coffee-tags">
+        <span class="coffee-tag">Book library</span>
+        <span class="coffee-tag">Quiet atmosphere</span>
+        <span class="coffee-tag">WiFi</span>
+        <span class="coffee-tag">Light bites</span>
+      </div>
+      <div class="coffee-order">
+        <span class="coffee-order-label">Order this</span>
+        <span class="coffee-order-text">Iced premium matcha + pão de queijo (cheese bread)</span>
+      </div>
+      <div class="coffee-meta">
+        <span>📍 Jl. Jalak Harupat, Babakan</span>
+        <span>💰 IDR 20–50k</span>
+      </div>
+    </div>
+
+    <div class="coffee-card" data-vibe="specialty cozy">
+      <div class="coffee-card-top">
+        <div class="coffee-name">Baked & Brewed</div>
+        <span class="coffee-vibe vibe-specialty">Specialty</span>
+      </div>
+      <div class="coffee-desc">A semi-outdoor café with a lush, cool backyard feel — beloved by the work-from-café crowd. Excellent creative coffee paired with freshly baked goods. The chocolate croissant has a devoted following. Relaxed and spacious.</div>
+      <div class="coffee-tags">
+        <span class="coffee-tag">Semi-outdoor</span>
+        <span class="coffee-tag">Baked goods</span>
+        <span class="coffee-tag">Work-friendly</span>
+        <span class="coffee-tag">Power outlets</span>
+      </div>
+      <div class="coffee-order">
+        <span class="coffee-order-label">Order this</span>
+        <span class="coffee-order-text">Café latte + chocolate croissant or chicken salad</span>
+      </div>
+      <div class="coffee-meta">
+        <span>📍 Jl. Loader No.9, Baranangsiang</span>
+        <span>💰 IDR 25–55k</span>
+      </div>
+    </div>
+
+    <div class="coffee-card" data-vibe="cozy">
+      <div class="coffee-card-top">
+        <div class="coffee-name">Awal Mula Coffee</div>
+        <span class="coffee-vibe vibe-cozy">Cozy</span>
+      </div>
+      <div class="coffee-desc">A bright, modern café designed for those who need to get things done without sacrificing their coffee order. Air-conditioned interior, ergonomic seating, power outlets at every table, and fast WiFi. Light meals and heavy plates available.</div>
+      <div class="coffee-tags">
+        <span class="coffee-tag">AC</span>
+        <span class="coffee-tag">Power outlets</span>
+        <span class="coffee-tag">Fast WiFi</span>
+        <span class="coffee-tag">Outdoor option</span>
+      </div>
+      <div class="coffee-order">
+        <span class="coffee-order-label">Order this</span>
+        <span class="coffee-order-text">Iced dark chocolate or any espresso-based drink</span>
+      </div>
+      <div class="coffee-meta">
+        <span>📍 Jl. Bina Marga I No.7, Baranangsiang</span>
+        <span>💰 IDR 20–50k</span>
+      </div>
+    </div>
+
+    <div class="coffee-card" data-vibe="trendy scenic">
+      <div class="coffee-card-top">
+        <div class="coffee-name">POPOLO Coffee</div>
+        <span class="coffee-vibe vibe-trendy">Trendy</span>
+      </div>
+      <div class="coffee-desc">A lively, Instagrammable spot known for live music and specialty coffee from Indonesian regional beans. Also serves smoothies, mocktails, and Indonesian favourites like nasi goreng and pisang goreng. Fun atmosphere, great for evenings out.</div>
+      <div class="coffee-tags">
+        <span class="coffee-tag">Live music</span>
+        <span class="coffee-tag">Indonesian beans</span>
+        <span class="coffee-tag">Full menu</span>
+        <span class="coffee-tag">Mocktails</span>
+      </div>
+      <div class="coffee-order">
+        <span class="coffee-order-label">Order this</span>
+        <span class="coffee-order-text">Specialty pour-over + ayam geprek on the side</span>
+      </div>
+      <div class="coffee-meta">
+        <span>📍 Jl. Loader No.9, Baranangsiang</span>
+        <span>💰 IDR 20–80k</span>
+      </div>
+    </div>
+
+    <div class="coffee-card" data-vibe="trendy scenic">
+      <div class="coffee-card-top">
+        <div class="coffee-name">Barcelona The Glass House</div>
+        <span class="coffee-vibe vibe-trendy">Trendy</span>
+      </div>
+      <div class="coffee-desc">The newest hit café in Bogor — an Italian-inspired two-storey glass house in the city center that immediately became a magnet for young visitors from across West Java. Multiple photogenic seating zones, warm atmosphere, and menus starting from IDR 20k.</div>
+      <div class="coffee-tags">
+        <span class="coffee-tag">Italian-inspired</span>
+        <span class="coffee-tag">Instagrammable</span>
+        <span class="coffee-tag">2 floors</span>
+        <span class="coffee-tag">Nusantara + Western menu</span>
+      </div>
+      <div class="coffee-order">
+        <span class="coffee-order-label">Order this</span>
+        <span class="coffee-order-text">Signature house latte + pasta or local bites</span>
+      </div>
+      <div class="coffee-meta">
+        <span>📍 Jl. Villa Duta II No.9, Bogor Timur</span>
+        <span>💰 from IDR 20k</span>
+        <span>🕗 Mon–Fri 11–23:00, Sat–Sun 07–23:00</span>
+      </div>
+    </div>
+
+    <div class="coffee-card" data-vibe="scenic cozy">
+      <div class="coffee-card-top">
+        <div class="coffee-name">Tamnu Coffee</div>
+        <span class="coffee-vibe vibe-scenic">Scenic</span>
+      </div>
+      <div class="coffee-desc">Famous for being Bogor's earliest-opening café — a favourite of early-morning risers who want their coffee with mountain air and birdsong. Spacious, semi-indoor layout with excellent mocktails alongside the coffee menu. Always busy on weekends.</div>
+      <div class="coffee-tags">
+        <span class="coffee-tag">Opens early</span>
+        <span class="coffee-tag">Spacious</span>
+        <span class="coffee-tag">Mocktails</span>
+        <span class="coffee-tag">Semi-outdoor</span>
+      </div>
+      <div class="coffee-order">
+        <span class="coffee-order-label">Order this</span>
+        <span class="coffee-order-text">Morning kopi susu + a mocktail of the season</span>
+      </div>
+      <div class="coffee-meta">
+        <span>📍 Jl. Pajajaran Indah V No.38, Bogor Timur</span>
+        <span>💰 IDR 20–55k</span>
+        <span>🕗 Sat–Sun from 07:00</span>
+      </div>
+    </div>
+
+    <div class="coffee-card" data-vibe="local">
+      <div class="coffee-card-top">
+        <div class="coffee-name">Kopi Surya Kencana (Warung Kopi)</div>
+        <span class="coffee-vibe vibe-local">Local Warung</span>
+      </div>
+      <div class="coffee-desc">The most authentic Bogor coffee experience: a traditional warung kopi tucked into the heart of Jalan Surya Kencana. Famous for its Kopi Susu Bu Linda recipe and the street nickname "Kopi Surken." Plastic stools, smoky aromas, real Bogor energy.</div>
+      <div class="coffee-tags">
+        <span class="coffee-tag">Kopi tubruk</span>
+        <span class="coffee-tag">Kopi susu</span>
+        <span class="coffee-tag">Street atmosphere</span>
+        <span class="coffee-tag">Very cheap</span>
+      </div>
+      <div class="coffee-order">
+        <span class="coffee-order-label">Order this</span>
+        <span class="coffee-order-text">Kopi Susu Bu Linda — the neighbourhood's signature brew</span>
+      </div>
+      <div class="coffee-meta">
+        <span>📍 Jl. Surya Kencana, Bogor Timur</span>
+        <span>💰 IDR 5–15k</span>
+      </div>
+    </div>
+
+    <div class="coffee-card" data-vibe="scenic trendy">
+      <div class="coffee-card-top">
+        <div class="coffee-name">Bukit Senja Café</div>
+        <span class="coffee-vibe vibe-scenic">Scenic</span>
+      </div>
+      <div class="coffee-desc">A hillside café in the Cisarua area with breathtaking sunset views over the Puncak valley — exactly as the name ("Sunset Hill") promises. Wide outdoor terrace, full restaurant menu (Indonesian, Asian, Western), and desserts including crème brûlée es serut.</div>
+      <div class="coffee-tags">
+        <span class="coffee-tag">Sunset views</span>
+        <span class="coffee-tag">Puncak area</span>
+        <span class="coffee-tag">Full restaurant</span>
+        <span class="coffee-tag">Large groups</span>
+      </div>
+      <div class="coffee-order">
+        <span class="coffee-order-label">Order this</span>
+        <span class="coffee-order-text">Any coffee at golden hour + crème brûlée es serut</span>
+      </div>
+      <div class="coffee-meta">
+        <span>📍 Cisarua, Puncak area</span>
+        <span>💰 from IDR 30k</span>
+      </div>
+    </div>
+
+  </div><!-- end coffee-grid -->
+
 </section>
 
 <!-- ===== STAY ===== -->
