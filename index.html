@@ -1,1694 +1,1008 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Bogor — A Traveller's Guidebook</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Karla:wght@300;400;500;600&display=swap" rel="stylesheet"/>
-<style>
-  :root {
-    --jungle: #1a3a2f;
-    --deep: #0f2219;
-    --mid: #2d5c42;
-    --light-green: #4a8c66;
-    --ochre: #c8953a;
-    --gold: #e8b84b;
-    --terra: #c4633a;
-    --cream: #f5efe4;
-    --parchment: #ede3d0;
-    --dark-cream: #d9cdb8;
-    --text: #1e1e1e;
-    --muted: #6b6157;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    font-family: 'Karla', sans-serif;
-    background: var(--cream);
-    color: var(--text);
-    overflow-x: hidden;
-  }
-
-  /* === HERO === */
-  .hero {
-    position: relative;
-    height: 100vh;
-    min-height: 600px;
-    background: var(--jungle);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    text-align: center;
-  }
-
-  .hero-bg {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 60% 30%, rgba(74,140,102,0.18) 0%, transparent 70%),
-      radial-gradient(ellipse 60% 80% at 20% 70%, rgba(200,149,58,0.10) 0%, transparent 60%),
-      linear-gradient(160deg, #0f2219 0%, #1a3a2f 45%, #2d5c42 100%);
-  }
-
-  /* Decorative botanical SVG lines */
-  .hero-deco {
-    position: absolute; inset: 0; pointer-events: none;
-    opacity: 0.12;
-  }
-
-  .hero-badge {
-    font-family: 'Karla', sans-serif;
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--gold);
-    border: 1px solid rgba(232,184,75,0.4);
-    padding: 6px 18px;
-    margin-bottom: 28px;
-    position: relative;
-    animation: fadeUp 0.8s ease both;
-  }
-
-  .hero h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(56px, 10vw, 110px);
-    font-weight: 700;
-    color: var(--cream);
-    line-height: 0.95;
-    letter-spacing: -2px;
-    position: relative;
-    animation: fadeUp 0.8s 0.15s ease both;
-  }
-
-  .hero h1 em {
-    font-style: italic;
-    color: var(--gold);
-  }
-
-  .hero-sub {
-    font-family: 'Karla', sans-serif;
-    font-size: 16px;
-    color: rgba(245,239,228,0.65);
-    margin-top: 18px;
-    letter-spacing: 1px;
-    position: relative;
-    animation: fadeUp 0.8s 0.3s ease both;
-  }
-
-  .hero-tagline {
-    margin-top: 12px;
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 18px;
-    color: rgba(232,184,75,0.8);
-    animation: fadeUp 0.8s 0.4s ease both;
-  }
-
-  .hero-scroll {
-    position: absolute;
-    bottom: 32px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    color: rgba(245,239,228,0.4);
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    animation: fadeUp 1s 0.8s ease both;
-  }
-  .scroll-line {
-    width: 1px;
-    height: 40px;
-    background: linear-gradient(to bottom, rgba(245,239,228,0.4), transparent);
-    animation: scrollPulse 2s 1.5s infinite;
-  }
-
-  /* Rain drops decorative */
-  .rain {
-    position: absolute; inset: 0; pointer-events: none; overflow: hidden;
-  }
-  .drop {
-    position: absolute;
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, rgba(200,230,215,0.15), transparent);
-    animation: rain linear infinite;
-  }
-
-  /* === NAV === */
-  .nav {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: var(--jungle);
-    border-bottom: 1px solid rgba(74,140,102,0.3);
-    padding: 0 24px;
-  }
-
-  .nav-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-  }
-  .nav-inner::-webkit-scrollbar { display: none; }
-
-  .nav-logo {
-    font-family: 'Playfair Display', serif;
-    font-size: 16px;
-    color: var(--gold);
-    margin-right: 32px;
-    white-space: nowrap;
-    padding: 16px 0;
-    flex-shrink: 0;
-  }
-
-  .nav-tab {
-    font-family: 'Karla', sans-serif;
-    font-size: 13px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: rgba(245,239,228,0.55);
-    padding: 18px 20px;
-    cursor: pointer;
-    border: none;
-    background: none;
-    white-space: nowrap;
-    border-bottom: 2px solid transparent;
-    transition: color 0.2s, border-color 0.2s;
-    flex-shrink: 0;
-  }
-  .nav-tab:hover { color: var(--cream); }
-  .nav-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
-
-  /* === SECTIONS === */
-  .section {
-    display: none;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 64px 24px 80px;
-  }
-  .section.active { display: block; }
-
-  /* === SECTION HEADER === */
-  .section-header {
-    margin-bottom: 48px;
-  }
-
-  .section-eyebrow {
-    font-size: 11px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--ochre);
-    margin-bottom: 12px;
-  }
-
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(36px, 5vw, 56px);
-    font-weight: 600;
-    color: var(--jungle);
-    line-height: 1.1;
-  }
-  .section-title em { font-style: italic; color: var(--terra); }
-
-  .section-desc {
-    margin-top: 16px;
-    max-width: 600px;
-    font-size: 16px;
-    line-height: 1.7;
-    color: var(--muted);
-  }
-
-  .divider {
-    width: 60px;
-    height: 2px;
-    background: var(--ochre);
-    margin: 20px 0;
-  }
-
-  /* === OVERVIEW SECTION === */
-  .overview-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    margin-bottom: 48px;
-  }
-
-  @media (max-width: 700px) {
-    .overview-grid { grid-template-columns: 1fr; }
-  }
-
-  .fact-card {
-    background: var(--jungle);
-    color: var(--cream);
-    padding: 32px;
-    position: relative;
-    overflow: hidden;
-  }
-  .fact-card::before {
-    content: '';
-    position: absolute;
-    top: -20px; right: -20px;
-    width: 100px; height: 100px;
-    border-radius: 50%;
-    background: rgba(232,184,75,0.08);
-  }
-
-  .fact-icon { font-size: 28px; margin-bottom: 12px; }
-  .fact-label {
-    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 6px;
-  }
-  .fact-value {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  .fact-note { font-size: 13px; color: rgba(245,239,228,0.6); line-height: 1.5; }
-
-  .overview-prose {
-    background: var(--parchment);
-    padding: 40px;
-    border-left: 4px solid var(--ochre);
-  }
-  .overview-prose p {
-    font-size: 16px;
-    line-height: 1.8;
-    color: #3a3028;
-    margin-bottom: 16px;
-  }
-  .overview-prose p:last-child { margin-bottom: 0; }
-
-  .pull-quote {
-    font-family: 'Playfair Display', serif;
-    font-style: italic;
-    font-size: 22px;
-    color: var(--jungle);
-    line-height: 1.5;
-    border-left: 3px solid var(--gold);
-    padding-left: 24px;
-    margin: 40px 0;
-  }
-
-  .season-strip {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-    margin-top: 16px;
-    overflow: hidden;
-    border: 1px solid var(--dark-cream);
-  }
-  @media (max-width: 600px) {
-    .season-strip { grid-template-columns: repeat(2, 1fr); }
-  }
-  .season-item {
-    padding: 20px 16px;
-    text-align: center;
-    border-right: 1px solid var(--dark-cream);
-  }
-  .season-item:last-child { border-right: none; }
-  .season-item.good { background: rgba(26,58,47,0.07); }
-  .season-item.ok { background: rgba(196,99,58,0.05); }
-  .season-name { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-  .season-rating { font-size: 18px; }
-  .season-note { font-size: 12px; color: var(--muted); margin-top: 4px; }
-
-  /* === CARDS === */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2px;
-    background: var(--dark-cream);
-  }
-
-  .card {
-    background: var(--cream);
-    padding: 32px 28px;
-    cursor: pointer;
-    transition: background 0.25s;
-    position: relative;
-    overflow: hidden;
-  }
-  .card:hover { background: #f0e8d9; }
-  .card::after {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 0;
-    background: var(--ochre);
-    transition: width 0.25s;
-  }
-  .card:hover::after { width: 3px; }
-
-  .card-tag {
-    display: inline-block;
-    font-size: 10px;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    background: var(--jungle);
-    color: var(--gold);
-    padding: 4px 10px;
-    margin-bottom: 16px;
-  }
-
-  .card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--jungle);
-    margin-bottom: 10px;
-    line-height: 1.2;
-  }
-
-  .card-desc {
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--muted);
-    margin-bottom: 16px;
-  }
-
-  .card-meta {
-    display: flex;
-    gap: 16px;
-    font-size: 12px;
-    color: var(--muted);
-    flex-wrap: wrap;
-  }
-  .card-meta span {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .card-tip {
-    margin-top: 16px;
-    padding: 12px 14px;
-    background: rgba(26,58,47,0.06);
-    border-left: 2px solid var(--light-green);
-    font-size: 13px;
-    color: var(--jungle);
-    font-style: italic;
-    display: none;
-  }
-  .card.open .card-tip { display: block; }
-  .card-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--ochre);
-    margin-top: 10px;
-    cursor: pointer;
-    background: none; border: none; padding: 0;
-    font-family: 'Karla', sans-serif;
-  }
-  .card-arrow { transition: transform 0.2s; }
-  .card.open .card-arrow { transform: rotate(180deg); }
-
-  /* === FOOD SECTION === */
-  .food-intro {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    margin-bottom: 48px;
-  }
-  @media (max-width: 700px) { .food-intro { grid-template-columns: 1fr; } }
-
-  .must-try {
-    background: var(--jungle);
-    color: var(--cream);
-    padding: 36px;
-  }
-  .must-try h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    color: var(--gold);
-    margin-bottom: 20px;
-  }
-  .dish-list { list-style: none; }
-  .dish-list li {
-    padding: 12px 0;
-    border-bottom: 1px solid rgba(245,239,228,0.1);
-    display: flex;
-    gap: 14px;
-  }
-  .dish-list li:last-child { border-bottom: none; }
-  .dish-emoji { font-size: 20px; flex-shrink: 0; }
-  .dish-info {}
-  .dish-name { font-weight: 600; font-size: 15px; margin-bottom: 2px; }
-  .dish-desc { font-size: 13px; color: rgba(245,239,228,0.6); line-height: 1.5; }
-
-  .street-guide {
-    background: var(--parchment);
-    padding: 36px;
-  }
-  .street-guide h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    color: var(--jungle);
-    margin-bottom: 20px;
-  }
-  .street-item {
-    padding: 14px 0;
-    border-bottom: 1px solid var(--dark-cream);
-  }
-  .street-item:last-child { border-bottom: none; }
-  .street-name { font-weight: 600; font-size: 15px; color: var(--jungle); margin-bottom: 3px; }
-  .street-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
-  .price-pill {
-    display: inline-block;
-    font-size: 11px;
-    padding: 2px 8px;
-    border: 1px solid var(--ochre);
-    color: var(--ochre);
-    margin-top: 4px;
-    letter-spacing: 0.5px;
-  }
-
-  /* === COFFEE SECTION === */
-  .coffee-section-header {
-    margin: 56px 0 28px;
-    display: flex;
-    align-items: flex-end;
-    gap: 24px;
-    flex-wrap: wrap;
-    border-bottom: 2px solid var(--dark-cream);
-    padding-bottom: 20px;
-  }
-  .coffee-section-header h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    font-weight: 600;
-    color: var(--jungle);
-    line-height: 1.1;
-  }
-  .coffee-section-header h3 em { font-style: italic; color: var(--terra); }
-  .coffee-sub {
-    font-size: 14px;
-    color: var(--muted);
-    max-width: 420px;
-    line-height: 1.6;
-    padding-bottom: 4px;
-  }
-
-  .coffee-filter-bar {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-  }
-  .cf-btn {
-    font-family: 'Karla', sans-serif;
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 7px 16px;
-    border: 1px solid var(--dark-cream);
-    background: var(--cream);
-    color: var(--muted);
-    cursor: pointer;
-    transition: background 0.18s, color 0.18s, border-color 0.18s;
-  }
-  .cf-btn:hover, .cf-btn.active {
-    background: var(--jungle);
-    color: var(--gold);
-    border-color: var(--jungle);
-  }
-
-  .coffee-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    gap: 2px;
-    background: var(--dark-cream);
-  }
-
-  .coffee-card {
-    background: var(--cream);
-    padding: 28px 26px 24px;
-    transition: background 0.2s;
-    position: relative;
-  }
-  .coffee-card:hover { background: #ede6d8; }
-
-  .coffee-card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 10px;
-    gap: 12px;
-  }
-
-  .coffee-vibe {
-    display: inline-block;
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    flex-shrink: 0;
-  }
-  .vibe-specialty { background: var(--jungle); color: var(--gold); }
-  .vibe-cozy      { background: #5a3a1a; color: #f5d9a8; }
-  .vibe-scenic    { background: #2a5040; color: #a8d5b5; }
-  .vibe-trendy    { background: var(--terra); color: var(--cream); }
-  .vibe-bookish   { background: #3a3060; color: #c8c0f0; }
-  .vibe-local     { background: #4a4028; color: #d8c890; }
-
-  .coffee-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 21px;
-    font-weight: 600;
-    color: var(--jungle);
-    margin-bottom: 8px;
-    line-height: 1.2;
-  }
-
-  .coffee-desc {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 14px;
-  }
-
-  .coffee-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 12px;
-  }
-  .coffee-tag {
-    font-size: 11px;
-    padding: 3px 9px;
-    border: 1px solid var(--dark-cream);
-    color: var(--muted);
-    letter-spacing: 0.5px;
-  }
-
-  .coffee-meta {
-    display: flex;
-    gap: 14px;
-    font-size: 12px;
-    color: var(--muted);
-    flex-wrap: wrap;
-    padding-top: 12px;
-    border-top: 1px solid var(--dark-cream);
-  }
-  .coffee-meta span { display: flex; align-items: center; gap: 5px; }
-
-  .coffee-order {
-    margin-top: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: rgba(26,58,47,0.06);
-    padding: 10px 12px;
-    border-left: 2px solid var(--ochre);
-  }
-  .coffee-order-label {
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--ochre);
-    flex-shrink: 0;
-  }
-  .coffee-order-text {
-    font-size: 13px;
-    color: var(--jungle);
-    font-style: italic;
-  }
-
-  .coffee-intro-banner {
-    background: var(--jungle);
-    padding: 32px 36px;
-    display: flex;
-    align-items: flex-start;
-    gap: 24px;
-    margin-bottom: 32px;
-  }
-  .coffee-intro-banner .big-emoji { font-size: 42px; flex-shrink: 0; }
-  .coffee-intro-banner h4 {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    color: var(--gold);
-    margin-bottom: 8px;
-  }
-  .coffee-intro-banner p { font-size: 14px; color: rgba(245,239,228,0.75); line-height: 1.7; }
-
-  /* === STAY SECTION === */
-  .stay-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2px;
-    background: var(--dark-cream);
-  }
-
-  .hotel-card {
-    background: var(--cream);
-    padding: 32px 28px;
-    transition: background 0.2s;
-  }
-  .hotel-card:hover { background: #ede6d8; }
-
-  .hotel-tier {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 14px;
-  }
-  .tier-badge {
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    padding: 4px 10px;
-  }
-  .tier-luxury { background: var(--jungle); color: var(--gold); }
-  .tier-mid { background: var(--terra); color: var(--cream); }
-  .tier-budget { background: var(--parchment); color: var(--jungle); border: 1px solid var(--dark-cream); }
-
-  .stars { color: var(--ochre); font-size: 14px; letter-spacing: 2px; }
-
-  .hotel-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    color: var(--jungle);
-    margin-bottom: 8px;
-  }
-  .hotel-desc {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.7;
-    margin-bottom: 16px;
-  }
-  .hotel-highlights { list-style: none; }
-  .hotel-highlights li {
-    font-size: 13px;
-    color: #4a4038;
-    padding: 4px 0;
-    display: flex;
-    gap: 8px;
-  }
-  .hotel-highlights li::before { content: '→'; color: var(--ochre); flex-shrink: 0; }
-  .hotel-price {
-    margin-top: 16px;
-    font-family: 'Playfair Display', serif;
-    font-size: 18px;
-    color: var(--jungle);
-  }
-  .hotel-price span { font-family: 'Karla', sans-serif; font-size: 13px; color: var(--muted); }
-
-  /* === TIPS SECTION === */
-  .tips-layout {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-  }
-  @media (max-width: 700px) { .tips-layout { grid-template-columns: 1fr; } }
-
-  .tip-block {
-    padding: 36px;
-  }
-  .tip-block.dark { background: var(--jungle); color: var(--cream); }
-  .tip-block.light { background: var(--parchment); }
-
-  .tip-block h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 22px;
-    margin-bottom: 20px;
-  }
-  .tip-block.dark h3 { color: var(--gold); }
-  .tip-block.light h3 { color: var(--jungle); }
-
-  .tip-list { list-style: none; }
-  .tip-list li {
-    padding: 11px 0;
-    border-bottom: 1px solid;
-    font-size: 14px;
-    line-height: 1.6;
-    display: flex;
-    gap: 12px;
-  }
-  .tip-block.dark .tip-list li { border-color: rgba(245,239,228,0.1); color: rgba(245,239,228,0.8); }
-  .tip-block.light .tip-list li { border-color: var(--dark-cream); color: #4a4038; }
-  .tip-list li:last-child { border-bottom: none; }
-  .tip-icon { flex-shrink: 0; font-size: 18px; }
-
-  .transport-grid {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    background: var(--dark-cream);
-  }
-  @media (max-width: 600px) { .transport-grid { grid-template-columns: 1fr 1fr; } }
-
-  .transport-card {
-    background: var(--cream);
-    padding: 24px 20px;
-    text-align: center;
-  }
-  .transport-icon { font-size: 32px; margin-bottom: 10px; }
-  .transport-name { font-weight: 600; font-size: 15px; color: var(--jungle); margin-bottom: 6px; }
-  .transport-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
-
-  .warning-box {
-    background: rgba(196,99,58,0.1);
-    border: 1px solid rgba(196,99,58,0.3);
-    border-left: 4px solid var(--terra);
-    padding: 20px 24px;
-    margin-top: 24px;
-    grid-column: 1 / -1;
-  }
-  .warning-box h4 {
-    color: var(--terra);
-    font-size: 14px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .warning-box p { font-size: 14px; color: #5a3a2a; line-height: 1.6; }
-
-  /* === FOOTER === */
-  .guide-footer {
-    background: var(--deep);
-    color: rgba(245,239,228,0.5);
-    text-align: center;
-    padding: 40px 24px;
-    font-size: 13px;
-    line-height: 1.8;
-  }
-  .guide-footer strong { color: var(--gold); }
-
-  /* === ANIMATIONS === */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @keyframes scrollPulse {
-    0%, 100% { opacity: 0.4; transform: scaleY(1); }
-    50% { opacity: 0.8; transform: scaleY(1.2); }
-  }
-
-  @keyframes rain {
-    from { transform: translateY(-100%); opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    to { transform: translateY(110vh); opacity: 0; }
-  }
-
-  /* Card open state */
-  .section.active .card {
-    animation: cardIn 0.4s ease both;
-  }
-  @keyframes cardIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .intro-facts {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
-    background: var(--dark-cream);
-    margin-bottom: 40px;
-  }
-  @media (max-width: 700px) { .intro-facts { grid-template-columns: repeat(2,1fr); } }
-
-  .intro-fact {
-    background: var(--jungle);
-    padding: 24px 20px;
-    text-align: center;
-  }
-  .intro-fact-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 32px;
-    color: var(--gold);
-    font-weight: 700;
-  }
-  .intro-fact-label {
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: rgba(245,239,228,0.6);
-    margin-top: 4px;
-  }
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasih — Coffee & Tea</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0C0C0C;
+            --surface: #141414;
+            --surface-hover: #1A1A1A;
+            --border: #222222;
+            --text: #F0F0F0;
+            --text-secondary: #888888;
+            --text-tertiary: #555555;
+            --accent: #C4A882;
+            --accent-dim: rgba(196,168,130,0.08);
+            --accent-glow: rgba(196,168,130,0.15);
+            --danger: #C45C5C;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            height: 70vh;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 0 5vw 4rem;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(12,12,12,0) 0%, var(--bg) 100%),
+                        radial-gradient(ellipse at 50% 0%, rgba(196,168,130,0.08) 0%, transparent 60%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+        }
+
+        .hero-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: reveal 0.8s ease 0.2s forwards;
+        }
+
+        .hero-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            font-weight: 400;
+            line-height: 0.95;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: reveal 1s ease 0.4s forwards;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            max-width: 420px;
+            line-height: 1.7;
+            font-weight: 300;
+            opacity: 0;
+            animation: reveal 0.8s ease 0.6s forwards;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-tertiary);
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            opacity: 0;
+            animation: reveal 0.8s ease 1s forwards;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--accent), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { transform: scaleY(0); opacity: 0; }
+            50% { transform: scaleY(1); opacity: 1; }
+        }
+
+        @keyframes reveal {
+            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(20px); }
+        }
+
+        /* Sticky Nav */
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(12,12,12,0.85);
+            backdrop-filter: blur(20px) saturate(1.2);
+            border-bottom: 1px solid var(--border);
+            padding: 0 5vw;
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .nav-logo {
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.4rem;
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+            padding-right: 1rem;
+        }
+
+        .nav-links::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--text);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-cart {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .nav-cart:hover {
+            border-color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        .nav-cart .count {
+            background: var(--accent);
+            color: var(--bg);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+
+        .nav-cart .count.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Main Content */
+        .main {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 5vw;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 6rem;
+            scroll-margin-top: 80px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 400;
+        }
+
+        .section-count {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Menu Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .menu-item {
+            background: var(--surface);
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .menu-item:hover {
+            background: var(--surface-hover);
+            transform: translateY(-2px);
+            z-index: 1;
+        }
+
+        .menu-item:hover::before {
+            opacity: 0.5;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .item-name {
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.35rem;
+            font-weight: 400;
+            line-height: 1.2;
+        }
+
+        .item-price {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--accent);
+            white-space: nowrap;
+            padding-top: 0.2rem;
+        }
+
+        .item-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        .item-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 1rem;
+        }
+
+        .item-tag {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .add-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .add-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-dim);
+            transform: scale(1.1);
+        }
+
+        .add-btn.added {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+
+        /* Payment Section */
+        .payment-section {
+            max-width: 400px;
+            margin: 6rem auto;
+            text-align: center;
+        }
+
+        .payment-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--text-tertiary);
+            margin-bottom: 2rem;
+        }
+
+        .qr-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        }
+
+        .qr-placeholder {
+            width: 160px;
+            height: 160px;
+            margin: 0 auto 1.5rem;
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .qr-placeholder::after {
+            content: 'QRIS';
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 6px;
+            color: var(--text-tertiary);
+        }
+
+        .qr-note {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+        }
+
+        /* Cart Drawer */
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .drawer-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 480px;
+            height: 100vh;
+            background: var(--bg);
+            border-left: 1px solid var(--border);
+            z-index: 201;
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .drawer.open {
+            transform: translateX(0);
+        }
+
+        .drawer-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .drawer-title {
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.5rem;
+        }
+
+        .drawer-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .drawer-close:hover {
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .drawer-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem 2rem;
+        }
+
+        .drawer-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-tertiary);
+        }
+
+        .drawer-empty svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .cart-item-price {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0.25rem;
+            transition: color 0.3s ease;
+        }
+
+        .cart-item-remove:hover {
+            color: var(--danger);
+        }
+
+        .drawer-footer {
+            padding: 1.5rem 2rem 2rem;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .drawer-subtotal {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .drawer-total {
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Instrument Serif', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1.1rem;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: 12px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        .checkout-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--surface);
+            color: var(--text);
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            z-index: 300;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-tertiary);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .hero {
+                height: 60vh;
+                min-height: 400px;
+            }
+            .nav-links {
+                gap: 1.25rem;
+            }
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            .drawer {
+                max-width: 100%;
+            }
+        }
+
+        /* Intersection Observer animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
 
-<!-- ===== HERO ===== -->
-<header class="hero" id="top">
-  <div class="hero-bg"></div>
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <p class="hero-label">Est. 2024 — Jakarta</p>
+            <h1 class="hero-title">Crafted with<br><em>intention.</em></h1>
+            <p class="hero-desc">Small-batch coffee and ceremonial matcha, brewed slow and served with care.</p>
+        </div>
+        <div class="scroll-hint">
+            <div class="scroll-line"></div>
+            <span>Scroll</span>
+        </div>
+    </section>
 
-  <!-- Rain animation -->
-  <div class="rain" id="rain"></div>
+    <nav class="sticky-nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">tasih</a>
+            <ul class="nav-links">
+                <li><a href="#espresso" class="active">Espresso</a></li>
+                <li><a href="#manual">Manual Brew</a></li>
+                <li><a href="#creamy">Iced Coffee</a></li>
+                <li><a href="#mocktail">Mocktails</a></li>
+                <li><a href="#matcha">Matcha & Tea</a></li>
+                <li><a href="#others">Others</a></li>
+            </ul>
+            <button class="nav-cart" onclick="toggleDrawer()">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                </svg>
+                <span>Order</span>
+                <span class="count" id="cartCount">0</span>
+            </button>
+        </div>
+    </nav>
 
-  <!-- Decorative leaf SVG -->
-  <svg class="hero-deco" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice">
-    <path d="M-50 400 Q200 100 500 300 Q700 450 1000 200 Q1100 150 1250 300" stroke="#4a8c66" stroke-width="1.5" fill="none"/>
-    <path d="M-50 500 Q300 250 600 400 Q850 500 1100 350 Q1180 310 1250 380" stroke="#4a8c66" stroke-width="1" fill="none"/>
-    <circle cx="150" cy="200" r="80" stroke="rgba(232,184,75,0.3)" stroke-width="1" fill="none"/>
-    <circle cx="1050" cy="500" r="120" stroke="rgba(232,184,75,0.2)" stroke-width="1" fill="none"/>
-    <path d="M900 50 Q950 100 920 160 Q890 200 850 180 Q820 160 840 110 Q860 70 900 50Z" stroke="#4a8c66" stroke-width="1" fill="none"/>
-    <path d="M200 600 Q230 550 260 580 Q280 600 250 630 Q230 645 200 630 Z" stroke="#4a8c66" stroke-width="1" fill="none"/>
-    <path d="M1100 100 Q1130 80 1150 110 Q1160 130 1140 150 Q1120 165 1100 145 Z" stroke="rgba(232,184,75,0.5)" stroke-width="1" fill="none"/>
-  </svg>
+    <main class="main" id="menuContainer"></main>
 
-  <div style="position:relative; z-index:2;">
-    <div class="hero-badge">West Java, Indonesia</div>
-    <h1>Bo<em>gor</em></h1>
-    <p class="hero-sub">The Rainy City · Kota Hujan · 300m above sea level</p>
-    <p class="hero-tagline">Where gardens grow and raindrops sing</p>
-  </div>
+    <section class="payment-section">
+        <p class="payment-label">Payment</p>
+        <div class="qr-card">
+            <div class="qr-placeholder"></div>
+            <p class="qr-note">Scan to pay with QRIS</p>
+        </div>
+    </section>
 
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    <span>Explore</span>
-  </div>
-</header>
+    <footer class="footer">
+        tasih — Artisan Coffee & Tea
+    </footer>
 
-<!-- ===== NAV ===== -->
-<nav class="nav">
-  <div class="nav-inner">
-    <div class="nav-logo">Bogor Guide</div>
-    <button class="nav-tab active" onclick="showTab('overview')">Overview</button>
-    <button class="nav-tab" onclick="showTab('sights')">Sights</button>
-    <button class="nav-tab" onclick="showTab('food')">Food & Drink</button>
-    <button class="nav-tab" onclick="showTab('stay')">Where to Stay</button>
-    <button class="nav-tab" onclick="showTab('tips')">Essentials</button>
-  </div>
-</nav>
-
-<!-- ===== OVERVIEW ===== -->
-<section class="section active" id="overview">
-  <div class="section-header">
-    <div class="section-eyebrow">The City at a Glance</div>
-    <h2 class="section-title">Meet <em>Bogor</em></h2>
-    <div class="divider"></div>
-    <p class="section-desc">A lush hill city just 60 km south of Jakarta — cooler, greener, and full of character. Famous for its world-class botanical garden, a presidential palace with roaming deer, and streets that smell of rain.</p>
-  </div>
-
-  <div class="intro-facts">
-    <div class="intro-fact">
-      <div class="intro-fact-num">~1hr</div>
-      <div class="intro-fact-label">from Jakarta by train</div>
-    </div>
-    <div class="intro-fact">
-      <div class="intro-fact-num">87ha</div>
-      <div class="intro-fact-label">Botanical Garden area</div>
-    </div>
-    <div class="intro-fact">
-      <div class="intro-fact-num">300m</div>
-      <div class="intro-fact-label">altitude above sea level</div>
-    </div>
-    <div class="intro-fact">
-      <div class="intro-fact-num">320+</div>
-      <div class="intro-fact-label">rainy days per year</div>
-    </div>
-  </div>
-
-  <div class="overview-grid">
-    <div class="overview-prose" style="grid-column: 1 / -1;">
-      <p>Nestled at the foot of Mount Salak and Mount Gede Pangrango, Bogor is where Jakartans escape when the capital's heat and smog become too much. It's earned the nickname <em>Kota Hujan</em> — the Rain City — for its near-daily afternoon showers, which keep the city blanketed in rich tropical green year-round.</p>
-      <p>The Dutch built a botanical garden here in 1817 that became one of the finest in Southeast Asia. Next door, the colonial-era Presidential Palace still serves as a working retreat for Indonesia's head of state — you may spot deer grazing on its elegant lawns through the iron fence. Beyond the city center, volcanic peaks, hidden waterfalls, tea plantations, and wildlife parks await.</p>
-    </div>
-  </div>
-
-  <blockquote class="pull-quote">
-    "Bogor is what happens when a colonial hill station slowly grows into a city but never quite loses its garden soul."
-  </blockquote>
-
-  <div class="overview-grid">
-    <div class="fact-card">
-      <div class="fact-icon">🌿</div>
-      <div class="fact-label">Known For</div>
-      <div class="fact-value">Kebun Raya Bogor</div>
-      <div class="fact-note">One of Asia's oldest and most impressive botanical gardens, home to 3,500+ plant species including a legendary corpse flower.</div>
-    </div>
-    <div class="fact-card">
-      <div class="fact-icon">🌧️</div>
-      <div class="fact-label">Weather Wisdom</div>
-      <div class="fact-value">Always pack an umbrella</div>
-      <div class="fact-note">Rain can arrive fast, usually in the afternoon. Mornings are typically clear and cool — perfect for sightseeing outdoors.</div>
-    </div>
-    <div class="fact-card">
-      <div class="fact-icon">🦌</div>
-      <div class="fact-label">Hidden Delight</div>
-      <div class="fact-value">Deer at the Palace</div>
-      <div class="fact-note">A small herd of spotted deer roam freely within the Presidential Palace grounds — visible through the gates from the botanical garden.</div>
-    </div>
-    <div class="fact-card">
-      <div class="fact-icon">🍜</div>
-      <div class="fact-label">Local Specialty</div>
-      <div class="fact-value">Soto Bogor & Asinan</div>
-      <div class="fact-note">Bogor's answer to a rainy day: a steaming bowl of yellowish beef soup, or a tangy pickled vegetable salad bursting with local character.</div>
-    </div>
-  </div>
-
-  <div style="margin-top: 48px;">
-    <div class="section-eyebrow">Best Time to Visit</div>
-    <h3 style="font-family:'Playfair Display',serif; font-size:22px; color:var(--jungle); margin-bottom:16px;">When to Go</h3>
-    <div class="season-strip">
-      <div class="season-item good">
-        <div class="season-name">Apr – Jun</div>
-        <div class="season-rating">☀️☀️</div>
-        <div class="season-note">Dry, ideal</div>
-      </div>
-      <div class="season-item good">
-        <div class="season-name">Jul – Sep</div>
-        <div class="season-rating">☀️☀️</div>
-        <div class="season-note">Peak season</div>
-      </div>
-      <div class="season-item ok">
-        <div class="season-name">Oct – Dec</div>
-        <div class="season-rating">🌦️</div>
-        <div class="season-note">Wetter, lush</div>
-      </div>
-      <div class="season-item ok">
-        <div class="season-name">Jan – Mar</div>
-        <div class="season-rating">🌧️</div>
-        <div class="season-note">Rainy season</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== SIGHTS ===== -->
-<section class="section" id="sights">
-  <div class="section-header">
-    <div class="section-eyebrow">What to See & Do</div>
-    <h2 class="section-title">Places to <em>Explore</em></h2>
-    <div class="divider"></div>
-    <p class="section-desc">From botanical wonders and ancient inscriptions to volcanic hikes and wildlife parks. Tap any card for a local tip.</p>
-  </div>
-
-  <div class="cards-grid">
-    <div class="card" onclick="toggleCard(this)">
-      <div class="card-tag">Must See</div>
-      <div class="card-title">Kebun Raya Bogor</div>
-      <div class="card-desc">The jewel of Bogor — 87 hectares of botanical paradise founded in 1817. Over 3,500 plant species, lotus ponds, ancient rainforest trees, and an orchid house with 3,000+ varieties. You can rent bikes or electric scooters to explore.</div>
-      <div class="card-meta">
-        <span>🕗 Full day</span>
-        <span>💰 ~IDR 30,000</span>
-        <span>📍 City Center</span>
-      </div>
-      <button class="card-toggle">Local tip <span class="card-arrow">▾</span></button>
-      <div class="card-tip">🌿 Come early on weekdays — the garden is serene before 9am. The Grand Garden Café inside offers a dreamy lunch spot overlooking the lily ponds.</div>
+    <!-- Drawer -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <h2 class="drawer-title">Your Order</h2>
+            <button class="drawer-close" onclick="toggleDrawer()">&times;</button>
+        </div>
+        <div class="drawer-body" id="drawerBody">
+            <div class="drawer-empty">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                <p>Your cart is empty</p>
+            </div>
+        </div>
+        <div class="drawer-footer">
+            <div class="drawer-subtotal">
+                <span>Items</span>
+                <span id="subtotalItems">0</span>
+            </div>
+            <div class="drawer-total">
+                <span>Total</span>
+                <span id="drawerTotal">Rp 0k</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn" onclick="checkout()" disabled>Place Order</button>
+        </div>
     </div>
 
-    <div class="card" onclick="toggleCard(this)">
-      <div class="card-tag">Landmark</div>
-      <div class="card-title">Istana Bogor (Presidential Palace)</div>
-      <div class="card-desc">A magnificent white colonial palace sitting within the botanical gardens, originally built in 1744 as a Dutch governor's summer retreat. Now a presidential residence — the 280,000 m² grounds hold 448 artworks and a herd of free-roaming deer.</div>
-      <div class="card-meta">
-        <span>🕗 1–2 hrs</span>
-        <span>💰 Free to view</span>
-        <span>📍 Kebun Raya</span>
-      </div>
-      <button class="card-toggle">Local tip <span class="card-arrow">▾</span></button>
-      <div class="card-tip">🦌 You can't enter the palace itself, but watching the deer through the iron fence from inside the botanical garden is genuinely magical — especially at dawn.</div>
+    <div class="toast" id="toast">
+        <span class="toast-dot"></span>
+        <span id="toastText">Added to order</span>
     </div>
 
-    <div class="card" onclick="toggleCard(this)">
-      <div class="card-tag">Nature</div>
-      <div class="card-title">Taman Safari Indonesia</div>
-      <div class="card-desc">One of Indonesia's top wildlife attractions, located at Cisarua in the Puncak area (~40 min from Bogor). Drive through open enclosures past lions, tigers, elephants, zebras, and orangutans. An unforgettable experience for all ages.</div>
-      <div class="card-meta">
-        <span>🕗 Half–full day</span>
-        <span>💰 ~IDR 200,000+</span>
-        <span>📍 Cisarua, Puncak</span>
-      </div>
-      <button class="card-toggle">Local tip <span class="card-arrow">▾</span></button>
-      <div class="card-tip">🦁 Arrive early (8am) to beat Jakarta weekend traffic. Book online for discounts. The evening safari show is worth staying for if you can.</div>
-    </div>
+    <script>
+        const menuData = [
+            { name: "Black", desc: "Espresso + ice hot water / Espresso only", price: 19, category: "espresso", catName: "Espresso Based" },
+            { name: "White", desc: "Cafe Latte / Cappucino / Piccolo", price: 22, category: "espresso", catName: "Espresso Based" },
+            { name: "Magic", desc: "Double ristretto, steamed milk", price: 25, category: "espresso", catName: "Espresso Based" },
+            { name: "Split Shot", desc: "1 espresso/ristretto + 1 cafe latte/cappucino/piccolo", price: 27, category: "espresso", catName: "Espresso Based" },
+            { name: "Dirty Latte", desc: "Double ristretto, creamy sweet cold milk", price: 27, category: "espresso", catName: "Espresso Based" },
+            
+            { name: "Seasonal Beans", desc: "Rotating selection of single origin beans", price: 25, category: "manual", catName: "Manual Brew", priceNote: "30" },
+            
+            { name: "Tasih Kopi Susu", desc: "Creamy coffee milk", price: 20, category: "creamy", catName: "Creamy Milky Iced Coffee" },
+            { name: "Tansah Kopi Susu", desc: "Creamy coffee milk, aren sugar", price: 23, category: "creamy", catName: "Creamy Milky Iced Coffee" },
+            { name: "Butterscrumb Latte", desc: "Espresso, milk, homemade butterscotch, crumb", price: 27, category: "creamy", catName: "Creamy Milky Iced Coffee" },
+            
+            { name: "Americane", desc: "Sugarcane water, lime, espresso", price: 22, category: "mocktail", catName: "Coffee Mocktail" },
+            { name: "Markisa Kiss", desc: "Homemade passion fruit jam, soda, espresso", price: 23, category: "mocktail", catName: "Coffee Mocktail" },
+            { name: "Bloomy Berry", desc: "Homemade strawberry jam, mint, soda, espresso", price: 23, category: "mocktail", catName: "Coffee Mocktail" },
+            { name: "Agnimaya", desc: "Pomegranate juice, coconut water, lemon, espresso", price: 24, category: "mocktail", catName: "Coffee Mocktail" },
+            { name: "Black Lemonade", desc: "Sweet lemonade, espresso", price: 22, category: "mocktail", catName: "Coffee Mocktail" },
+            
+            { name: "Komorebi", desc: "Bitter umami premium matcha, milk", price: 25, category: "matcha", catName: "Matcha Latte & Milktea" },
+            { name: "Jing Shan", desc: "Nutty notes less bitter premium matcha, milk", price: 27, category: "matcha", catName: "Matcha Latte & Milktea" },
+            { name: "Kana", desc: "Ceremonial matcha, milk", price: 45, category: "matcha", catName: "Matcha Latte & Milktea" },
+            { name: "EGMT", desc: "Earlgrey tea, cream, milk", price: 24, category: "matcha", catName: "Matcha Latte & Milktea" },
+            
+            { name: "Classic Chocolate", desc: "Classic dark cocoa, milk", price: 20, category: "others", catName: "Others" },
+            { name: "Thirsty Strawberry", desc: "Homemade strawberry jam, soda", price: 18, category: "others", catName: "Others" },
+            { name: "Early Markisa", desc: "Homemade passion fruit jam, lemon, soda", price: 18, category: "others", catName: "Others" },
+            { name: "Limemade", desc: "Sweet lime water, cocopandan", price: 15, category: "others", catName: "Others" }
+        ];
 
-    <div class="card" onclick="toggleCard(this)">
-      <div class="card-tag">Adventure</div>
-      <div class="card-title">Waterfalls (Leuwi Hejo & Cilember)</div>
-      <div class="card-desc">Bogor's surrounding hills hide dozens of waterfalls. Leuwi Hejo is famous for its turquoise plunge pool; Cilember features seven cascades in a row; Bidadari stands 50m tall. Most require a short jungle hike — worth every step.</div>
-      <div class="card-meta">
-        <span>🕗 2–4 hrs</span>
-        <span>💰 IDR 5,000–15,000</span>
-        <span>📍 Various</span>
-      </div>
-      <button class="card-toggle">Local tip <span class="card-arrow">▾</span></button>
-      <div class="card-tip">👟 Wear waterproof shoes — the jungle paths get muddy fast. Visit midweek to have these gems almost entirely to yourself.</div>
-    </div>
+        let order = [];
 
-    <div class="card" onclick="toggleCard(this)">
-      <div class="card-tag">Hiking</div>
-      <div class="card-title">Mount Salak & Mount Pangrango</div>
-      <div class="card-desc">Twin volcanic peaks that frame Bogor's skyline. Mount Salak (2,211m) offers adventurous jungle trails to a sulphur crater. Mount Gede Pangrango National Park is home to rare Javan edelweiss and incredible biodiversity.</div>
-      <div class="card-meta">
-        <span>🕗 Full day</span>
-        <span>💰 Permit required</span>
-        <span>📍 Outskirts</span>
-      </div>
-      <button class="card-toggle">Local tip <span class="card-arrow">▾</span></button>
-      <div class="card-tip">⛰️ Permits for Gede Pangrango must be booked in advance online at bookingpendakian.menlhk.go.id — slots fill quickly on weekends.</div>
-    </div>
+        function formatPrice(price, note) {
+            if (note) return `Rp ${price}k–${note}k`;
+            return `Rp ${price}k`;
+        }
 
-    <div class="card" onclick="toggleCard(this)">
-      <div class="card-tag">History</div>
-      <div class="card-title">Batu Tulis (Ancient Inscription)</div>
-      <div class="card-desc">A sacred inscribed stone from 1533 dedicating it to Sri Baduga Maharaja of the Sunda Kingdom's Pajajaran empire. Located in a small shrine near the garden, it remains an active site of devotion for local visitors.</div>
-      <div class="card-meta">
-        <span>🕗 30 mins</span>
-        <span>💰 Free</span>
-        <span>📍 Bogor Selatan</span>
-      </div>
-      <button class="card-toggle">Local tip <span class="card-arrow">▾</span></button>
-      <div class="card-tip">📜 Open Mon–Sun 8am–4pm (closed Friday). Dress modestly and speak quietly — this is still a place of worship for some.</div>
-    </div>
+        function renderMenu() {
+            const container = document.getElementById('menuContainer');
+            const grouped = menuData.reduce((acc, item) => {
+                if (!acc[item.catName]) acc[item.catName] = [];
+                acc[item.catName].push(item);
+                return acc;
+            }, {});
 
-    <div class="card" onclick="toggleCard(this)">
-      <div class="card-tag">Museum</div>
-      <div class="card-title">Museum Zoologi</div>
-      <div class="card-desc">A fascinating natural history museum beside the botanical gardens, housing a massive zoological collection including a rare blue whale skeleton, thousands of insects, reptiles, and taxidermy specimens. Underrated by tourists, adored by locals.</div>
-      <div class="card-meta">
-        <span>🕗 1–2 hrs</span>
-        <span>💰 Small fee</span>
-        <span>📍 Kebun Raya</span>
-      </div>
-      <button class="card-toggle">Local tip <span class="card-arrow">▾</span></button>
-      <div class="card-tip">🦋 Combine this with the botanical garden visit — they're right next door. A great refuge when afternoon rain arrives suddenly.</div>
-    </div>
+            container.innerHTML = Object.entries(grouped).map(([catName, items]) => `
+                <section class="section fade-in" id="${items[0].category}">
+                    <div class="section-header">
+                        <h2 class="section-title">${catName}</h2>
+                        <span class="section-count">${items.length} items</span>
+                    </div>
+                    <div class="menu-grid">
+                        ${items.map(item => `
+                            <div class="menu-item" onclick="addToOrder('${item.name}', ${item.price}, this)">
+                                <div class="item-header">
+                                    <h3 class="item-name">${item.name}</h3>
+                                    <span class="item-price">${formatPrice(item.price, item.priceNote)}</span>
+                                </div>
+                                <p class="item-desc">${item.desc}</p>
+                                <div class="item-meta">
+                                    <span class="item-tag">${item.category}</span>
+                                    <button class="add-btn" onclick="event.stopPropagation(); addToOrder('${item.name}', ${item.price}, this.parentElement.parentElement)">
+                                        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            `).join('');
 
-    <div class="card" onclick="toggleCard(this)">
-      <div class="card-tag">Local Life</div>
-      <div class="card-title">Jalan Surya Kencana</div>
-      <div class="card-desc">Bogor's vibrant Chinatown street, lined with street food stalls, traditional shops, and the aromas of ngohiang, soto kuning, and bubur ayam. This is where Bogor locals truly eat. A sensory feast day or night.</div>
-      <div class="card-meta">
-        <span>🕗 1–2 hrs</span>
-        <span>💰 Very cheap</span>
-        <span>📍 Bogor Timur</span>
-      </div>
-      <button class="card-toggle">Local tip <span class="card-arrow">▾</span></button>
-      <div class="card-tip">🍜 Go hungry. Start with a bowl of soto kuning, grab some ngohiang dimsum, and finish with a cup of es pala (nutmeg drink). The stalls get busiest from 10am–2pm.</div>
-    </div>
+            // Intersection Observer
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
 
-    <div class="card" onclick="toggleCard(this)">
-      <div class="card-tag">Family</div>
-      <div class="card-title">Kuntum Farmfield</div>
-      <div class="card-desc">A working agro-edu-tourism farm where you can feed animals, pick fruit, plant rice, and learn about traditional Sundanese farming. One of the best family attractions in Bogor — interactive, educational, and genuinely charming.</div>
-      <div class="card-meta">
-        <span>🕗 2–3 hrs</span>
-        <span>💰 ~IDR 50,000</span>
-        <span>📍 Bogor Tengah</span>
-      </div>
-      <button class="card-toggle">Local tip <span class="card-arrow">▾</span></button>
-      <div class="card-tip">🐄 Best with kids aged 4–12. Arrive in the morning for feeding sessions. The fresh milk from the farm cafe is genuinely excellent.</div>
-    </div>
-  </div>
-</section>
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        }
 
-<!-- ===== FOOD ===== -->
-<section class="section" id="food">
-  <div class="section-header">
-    <div class="section-eyebrow">Culinary Guide</div>
-    <h2 class="section-title">Eat & <em>Drink</em></h2>
-    <div class="divider"></div>
-    <p class="section-desc">Bogor's food scene is a wonderful blend of Sundanese tradition, Javanese influence, and Chinese-Indonesian flavors. The rainy climate means locals love warming soups above all else.</p>
-  </div>
+        function addToOrder(name, price, el) {
+            order.push({ name, price });
+            updateCartUI();
+            showToast(`${name} added`);
 
-  <div class="food-intro">
-    <div class="must-try">
-      <h3>Must-Try Dishes</h3>
-      <ul class="dish-list">
-        <li>
-          <span class="dish-emoji">🍲</span>
-          <div class="dish-info">
-            <div class="dish-name">Soto Bogor</div>
-            <div class="dish-desc">Bogor's signature yellowish beef soup, made with coconut milk and warming spices. The perfect antidote to an afternoon shower.</div>
-          </div>
-        </li>
-        <li>
-          <span class="dish-emoji">🥗</span>
-          <div class="dish-info">
-            <div class="dish-name">Asinan Bogor</div>
-            <div class="dish-desc">A refreshing pickled vegetable and fruit salad with a sweet-spicy-sour sauce. Unique to Bogor and utterly addictive.</div>
-          </div>
-        </li>
-        <li>
-          <span class="dish-emoji">🍜</span>
-          <div class="dish-info">
-            <div class="dish-name">Toge Goreng</div>
-            <div class="dish-desc">Fried bean sprouts with noodles, tofu, and sticky rice cake in a dark fermented soybean sauce. A true Bogor original.</div>
-          </div>
-        </li>
-        <li>
-          <span class="dish-emoji">🥟</span>
-          <div class="dish-info">
-            <div class="dish-name">Ngohiang</div>
-            <div class="dish-desc">Chinese-Sundanese fried meat rolls and dumplings — a Jalan Surya Kencana staple. Each family stall has their own secret recipe.</div>
-          </div>
-        </li>
-        <li>
-          <span class="dish-emoji">🍞</span>
-          <div class="dish-info">
-            <div class="dish-name">Roti Unyil</div>
-            <div class="dish-desc">Thumb-sized breads with creative fillings — chocolate, cheese, coconut, strawberry jam. Famous souvenir. Look for the queues on Jalan Pajajaran.</div>
-          </div>
-        </li>
-        <li>
-          <span class="dish-emoji">🥧</span>
-          <div class="dish-info">
-            <div class="dish-name">Pia Apple Pie</div>
-            <div class="dish-desc">Bogor's most beloved pastry shop — flaky apple pies that disappear fast. On Jalan Pangrango, expect a queue.</div>
-          </div>
-        </li>
-      </ul>
-    </div>
+            // Animate the card or button
+            const btn = el.querySelector('.add-btn') || el;
+            btn.classList.add('added');
+            btn.innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>';
+            setTimeout(() => {
+                btn.classList.remove('added');
+                btn.innerHTML = '<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>';
+            }, 1200);
+        }
 
-    <div class="street-guide">
-      <h3>Where to Eat</h3>
+        function removeFromOrder(index) {
+            order.splice(index, 1);
+            updateCartUI();
+        }
 
-      <div class="street-item">
-        <div class="street-name">Gurih 7</div>
-        <div class="street-desc">Beautiful open-air Sundanese restaurant with a natural waterfall feature. Famous for its nasi liwet, grilled gurame fish, and authentic family-style service.</div>
-        <span class="price-pill">Mid-range · Jl. Pajajaran</span>
-      </div>
+        function updateCartUI() {
+            const count = document.getElementById('cartCount');
+            const body = document.getElementById('drawerBody');
+            const totalEl = document.getElementById('drawerTotal');
+            const subtotalItems = document.getElementById('subtotalItems');
+            const checkoutBtn = document.getElementById('checkoutBtn');
 
-      <div class="street-item">
-        <div class="street-name">Gumati</div>
-        <div class="street-desc">Hillside restaurant with panoramic views over Bogor toward Mount Salak. Extensive Indonesian and Western menu, popular on weekends for its atmosphere.</div>
-        <span class="price-pill">Mid-range · Jl. Paledang</span>
-      </div>
+            if (order.length > 0) {
+                count.classList.add('show');
+                count.textContent = order.length;
+            } else {
+                count.classList.remove('show');
+            }
 
-      <div class="street-item">
-        <div class="street-name">Grand Garden Café</div>
-        <div class="street-desc">Tucked inside the botanical garden, overlooking manicured lawns and lily ponds. The most scenic lunch spot in Bogor — Indonesian and international bites.</div>
-        <span class="price-pill">Mid-range · Kebun Raya</span>
-      </div>
+            const total = order.reduce((sum, item) => sum + item.price, 0);
 
-      <div class="street-item">
-        <div class="street-name">De' Leuit</div>
-        <div class="street-desc">Top pick for authentic Sundanese cuisine. Their Nasi Jambal — rice with fried fish, tofu, and vegetables — is what locals bring visitors to try. Rustic décor, traditional music.</div>
-        <span class="price-pill">Budget–Mid · Jl. Pajajaran</span>
-      </div>
+            if (order.length === 0) {
+                body.innerHTML = `
+                    <div class="drawer-empty">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
+                        <p>Your cart is empty</p>
+                    </div>
+                `;
+                checkoutBtn.disabled = true;
+            } else {
+                body.innerHTML = order.map((item, idx) => `
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <div class="cart-item-name">${item.name}</div>
+                            <div class="cart-item-price">Rp ${item.price}k</div>
+                        </div>
+                        <button class="cart-item-remove" onclick="removeFromOrder(${idx})">Remove</button>
+                    </div>
+                `).join('');
+                checkoutBtn.disabled = false;
+            }
 
-      <div class="street-item">
-        <div class="street-name">Doea Tjangkir</div>
-        <div class="street-desc">Sundanese cuisine served in a beautifully restored colonial building. Antique-filled interiors, garden seating, and a menu that respects local tradition. A rare atmosphere.</div>
-        <span class="price-pill">Mid-range · Jl. Sawojajar</span>
-      </div>
+            subtotalItems.textContent = `${order.length} item${order.length !== 1 ? 's' : ''}`;
+            totalEl.textContent = `Rp ${total}k`;
+        }
 
-      <div class="street-item">
-        <div class="street-name">Jalan Selot Food Court</div>
-        <div class="street-desc">The best place to eat street food sheltered from the rain. A collection of traditional warung stalls on the west side of the botanical garden. Cheap, cheerful, authentic.</div>
-        <span class="price-pill">Budget · Near Kebun Raya West Gate</span>
-      </div>
-    </div>
-  </div>
+        function toggleDrawer() {
+            document.getElementById('drawer').classList.toggle('open');
+            document.getElementById('drawerOverlay').classList.toggle('open');
+            document.body.style.overflow = document.getElementById('drawer').classList.contains('open') ? 'hidden' : '';
+        }
 
-  <!-- ☕ COFFEE SHOPS -->
-  <div class="coffee-section-header">
-    <h3>Coffee Shops <em>Worth Finding</em></h3>
-    <p class="coffee-sub">Bogor's rainy-day culture was practically built for lingering over coffee. The city's café scene ranges from hushed specialty roasters to lively hill-view hangouts.</p>
-  </div>
+        function checkout() {
+            const total = order.reduce((sum, item) => sum + item.price, 0);
+            showToast(`Order placed — Rp ${total}k`);
+            order = [];
+            updateCartUI();
+            setTimeout(toggleDrawer, 800);
+        }
 
-  <div class="coffee-intro-banner">
-    <div class="big-emoji">☕</div>
-    <div>
-      <h4>A city that drinks coffee seriously</h4>
-      <p>Sitting at 300m altitude with near-daily rain, Bogor has cultivated one of West Java's most vibrant café cultures. Local baristas source beans from nearby Javan and Sumatran plantations, and the cool climate means a hot cup of kopi isn't just a drink — it's an event. Expect everything from no-frills warung kopi with kopi tubruk to polished specialty bars and view cafés that look out over volcanic peaks.</p>
-    </div>
-  </div>
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastText').textContent = text;
+            toast.classList.add('show');
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
+        }
 
-  <div class="coffee-filter-bar">
-    <button class="cf-btn active" onclick="filterCoffee(this,'all')">All</button>
-    <button class="cf-btn" onclick="filterCoffee(this,'specialty')">Specialty Coffee</button>
-    <button class="cf-btn" onclick="filterCoffee(this,'cozy')">Cozy & Work-Friendly</button>
-    <button class="cf-btn" onclick="filterCoffee(this,'scenic')">Scenic Views</button>
-    <button class="cf-btn" onclick="filterCoffee(this,'trendy')">Trendy & Instagrammable</button>
-    <button class="cf-btn" onclick="filterCoffee(this,'local')">Local Warung</button>
-  </div>
+        // Active nav link on scroll
+        const sections = ['espresso', 'manual', 'creamy', 'mocktail', 'matcha', 'others'];
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.getBoundingClientRect().top <= 100) {
+                    current = id;
+                }
+            });
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === `#${current}`);
+            });
+        });
 
-  <div class="coffee-grid" id="coffeeGrid">
-
-    <div class="coffee-card" data-vibe="specialty cozy">
-      <div class="coffee-card-top">
-        <div class="coffee-name">Kopi Nako</div>
-        <span class="coffee-vibe vibe-specialty">Specialty</span>
-      </div>
-      <div class="coffee-desc">One of Bogor's most celebrated coffee spots. Industrial-chic design with a serious commitment to quality beans — espresso-based drinks, pour-overs, and cold brews sourced from Indonesian plantations. Sometimes hosts live music events.</div>
-      <div class="coffee-tags">
-        <span class="coffee-tag">Pour-over</span>
-        <span class="coffee-tag">Live music</span>
-        <span class="coffee-tag">Work-friendly</span>
-        <span class="coffee-tag">Full meals</span>
-      </div>
-      <div class="coffee-order">
-        <span class="coffee-order-label">Order this</span>
-        <span class="coffee-order-text">Kopi Nako Signature + Hazelnut Latte Donut</span>
-      </div>
-      <div class="coffee-meta">
-        <span>📍 Jl. Pajajaran Indah V, Bogor Timur</span>
-        <span>💰 IDR 25–60k</span>
-      </div>
-    </div>
-
-    <div class="coffee-card" data-vibe="cozy bookish">
-      <div class="coffee-card-top">
-        <div class="coffee-name">Maraca Books & Coffee</div>
-        <span class="coffee-vibe vibe-bookish">Bookish</span>
-      </div>
-      <div class="coffee-desc">A library café with two branches — shelves of books, warm lighting, and coffee blends that reward slow sipping. The perfect place to wait out an afternoon downpour. Locals love it for solo reading sessions and quiet work.</div>
-      <div class="coffee-tags">
-        <span class="coffee-tag">Book library</span>
-        <span class="coffee-tag">Quiet atmosphere</span>
-        <span class="coffee-tag">WiFi</span>
-        <span class="coffee-tag">Light bites</span>
-      </div>
-      <div class="coffee-order">
-        <span class="coffee-order-label">Order this</span>
-        <span class="coffee-order-text">Iced premium matcha + pão de queijo (cheese bread)</span>
-      </div>
-      <div class="coffee-meta">
-        <span>📍 Jl. Jalak Harupat, Babakan</span>
-        <span>💰 IDR 20–50k</span>
-      </div>
-    </div>
-
-    <div class="coffee-card" data-vibe="specialty cozy">
-      <div class="coffee-card-top">
-        <div class="coffee-name">Baked & Brewed</div>
-        <span class="coffee-vibe vibe-specialty">Specialty</span>
-      </div>
-      <div class="coffee-desc">A semi-outdoor café with a lush, cool backyard feel — beloved by the work-from-café crowd. Excellent creative coffee paired with freshly baked goods. The chocolate croissant has a devoted following. Relaxed and spacious.</div>
-      <div class="coffee-tags">
-        <span class="coffee-tag">Semi-outdoor</span>
-        <span class="coffee-tag">Baked goods</span>
-        <span class="coffee-tag">Work-friendly</span>
-        <span class="coffee-tag">Power outlets</span>
-      </div>
-      <div class="coffee-order">
-        <span class="coffee-order-label">Order this</span>
-        <span class="coffee-order-text">Café latte + chocolate croissant or chicken salad</span>
-      </div>
-      <div class="coffee-meta">
-        <span>📍 Jl. Loader No.9, Baranangsiang</span>
-        <span>💰 IDR 25–55k</span>
-      </div>
-    </div>
-
-    <div class="coffee-card" data-vibe="cozy">
-      <div class="coffee-card-top">
-        <div class="coffee-name">Awal Mula Coffee</div>
-        <span class="coffee-vibe vibe-cozy">Cozy</span>
-      </div>
-      <div class="coffee-desc">A bright, modern café designed for those who need to get things done without sacrificing their coffee order. Air-conditioned interior, ergonomic seating, power outlets at every table, and fast WiFi. Light meals and heavy plates available.</div>
-      <div class="coffee-tags">
-        <span class="coffee-tag">AC</span>
-        <span class="coffee-tag">Power outlets</span>
-        <span class="coffee-tag">Fast WiFi</span>
-        <span class="coffee-tag">Outdoor option</span>
-      </div>
-      <div class="coffee-order">
-        <span class="coffee-order-label">Order this</span>
-        <span class="coffee-order-text">Iced dark chocolate or any espresso-based drink</span>
-      </div>
-      <div class="coffee-meta">
-        <span>📍 Jl. Bina Marga I No.7, Baranangsiang</span>
-        <span>💰 IDR 20–50k</span>
-      </div>
-    </div>
-
-    <div class="coffee-card" data-vibe="trendy scenic">
-      <div class="coffee-card-top">
-        <div class="coffee-name">POPOLO Coffee</div>
-        <span class="coffee-vibe vibe-trendy">Trendy</span>
-      </div>
-      <div class="coffee-desc">A lively, Instagrammable spot known for live music and specialty coffee from Indonesian regional beans. Also serves smoothies, mocktails, and Indonesian favourites like nasi goreng and pisang goreng. Fun atmosphere, great for evenings out.</div>
-      <div class="coffee-tags">
-        <span class="coffee-tag">Live music</span>
-        <span class="coffee-tag">Indonesian beans</span>
-        <span class="coffee-tag">Full menu</span>
-        <span class="coffee-tag">Mocktails</span>
-      </div>
-      <div class="coffee-order">
-        <span class="coffee-order-label">Order this</span>
-        <span class="coffee-order-text">Specialty pour-over + ayam geprek on the side</span>
-      </div>
-      <div class="coffee-meta">
-        <span>📍 Jl. Loader No.9, Baranangsiang</span>
-        <span>💰 IDR 20–80k</span>
-      </div>
-    </div>
-
-    <div class="coffee-card" data-vibe="trendy scenic">
-      <div class="coffee-card-top">
-        <div class="coffee-name">Barcelona The Glass House</div>
-        <span class="coffee-vibe vibe-trendy">Trendy</span>
-      </div>
-      <div class="coffee-desc">The newest hit café in Bogor — an Italian-inspired two-storey glass house in the city center that immediately became a magnet for young visitors from across West Java. Multiple photogenic seating zones, warm atmosphere, and menus starting from IDR 20k.</div>
-      <div class="coffee-tags">
-        <span class="coffee-tag">Italian-inspired</span>
-        <span class="coffee-tag">Instagrammable</span>
-        <span class="coffee-tag">2 floors</span>
-        <span class="coffee-tag">Nusantara + Western menu</span>
-      </div>
-      <div class="coffee-order">
-        <span class="coffee-order-label">Order this</span>
-        <span class="coffee-order-text">Signature house latte + pasta or local bites</span>
-      </div>
-      <div class="coffee-meta">
-        <span>📍 Jl. Villa Duta II No.9, Bogor Timur</span>
-        <span>💰 from IDR 20k</span>
-        <span>🕗 Mon–Fri 11–23:00, Sat–Sun 07–23:00</span>
-      </div>
-    </div>
-
-    <div class="coffee-card" data-vibe="scenic cozy">
-      <div class="coffee-card-top">
-        <div class="coffee-name">Tamnu Coffee</div>
-        <span class="coffee-vibe vibe-scenic">Scenic</span>
-      </div>
-      <div class="coffee-desc">Famous for being Bogor's earliest-opening café — a favourite of early-morning risers who want their coffee with mountain air and birdsong. Spacious, semi-indoor layout with excellent mocktails alongside the coffee menu. Always busy on weekends.</div>
-      <div class="coffee-tags">
-        <span class="coffee-tag">Opens early</span>
-        <span class="coffee-tag">Spacious</span>
-        <span class="coffee-tag">Mocktails</span>
-        <span class="coffee-tag">Semi-outdoor</span>
-      </div>
-      <div class="coffee-order">
-        <span class="coffee-order-label">Order this</span>
-        <span class="coffee-order-text">Morning kopi susu + a mocktail of the season</span>
-      </div>
-      <div class="coffee-meta">
-        <span>📍 Jl. Pajajaran Indah V No.38, Bogor Timur</span>
-        <span>💰 IDR 20–55k</span>
-        <span>🕗 Sat–Sun from 07:00</span>
-      </div>
-    </div>
-
-    <div class="coffee-card" data-vibe="local">
-      <div class="coffee-card-top">
-        <div class="coffee-name">Kopi Surya Kencana (Warung Kopi)</div>
-        <span class="coffee-vibe vibe-local">Local Warung</span>
-      </div>
-      <div class="coffee-desc">The most authentic Bogor coffee experience: a traditional warung kopi tucked into the heart of Jalan Surya Kencana. Famous for its Kopi Susu Bu Linda recipe and the street nickname "Kopi Surken." Plastic stools, smoky aromas, real Bogor energy.</div>
-      <div class="coffee-tags">
-        <span class="coffee-tag">Kopi tubruk</span>
-        <span class="coffee-tag">Kopi susu</span>
-        <span class="coffee-tag">Street atmosphere</span>
-        <span class="coffee-tag">Very cheap</span>
-      </div>
-      <div class="coffee-order">
-        <span class="coffee-order-label">Order this</span>
-        <span class="coffee-order-text">Kopi Susu Bu Linda — the neighbourhood's signature brew</span>
-      </div>
-      <div class="coffee-meta">
-        <span>📍 Jl. Surya Kencana, Bogor Timur</span>
-        <span>💰 IDR 5–15k</span>
-      </div>
-    </div>
-
-    <div class="coffee-card" data-vibe="scenic trendy">
-      <div class="coffee-card-top">
-        <div class="coffee-name">Bukit Senja Café</div>
-        <span class="coffee-vibe vibe-scenic">Scenic</span>
-      </div>
-      <div class="coffee-desc">A hillside café in the Cisarua area with breathtaking sunset views over the Puncak valley — exactly as the name ("Sunset Hill") promises. Wide outdoor terrace, full restaurant menu (Indonesian, Asian, Western), and desserts including crème brûlée es serut.</div>
-      <div class="coffee-tags">
-        <span class="coffee-tag">Sunset views</span>
-        <span class="coffee-tag">Puncak area</span>
-        <span class="coffee-tag">Full restaurant</span>
-        <span class="coffee-tag">Large groups</span>
-      </div>
-      <div class="coffee-order">
-        <span class="coffee-order-label">Order this</span>
-        <span class="coffee-order-text">Any coffee at golden hour + crème brûlée es serut</span>
-      </div>
-      <div class="coffee-meta">
-        <span>📍 Cisarua, Puncak area</span>
-        <span>💰 from IDR 30k</span>
-      </div>
-    </div>
-
-  </div><!-- end coffee-grid -->
-
-</section>
-
-<!-- ===== STAY ===== -->
-<section class="section" id="stay">
-  <div class="section-header">
-    <div class="section-eyebrow">Accommodation Guide</div>
-    <h2 class="section-title">Where to <em>Stay</em></h2>
-    <div class="divider"></div>
-    <p class="section-desc">Bogor has something for every budget — from lush hillside resorts to charming budget guesthouses. Most sights are easily walkable or a short Grab ride from the city center.</p>
-  </div>
-
-  <div class="stay-grid">
-    <div class="hotel-card">
-      <div class="hotel-tier">
-        <span class="tier-badge tier-luxury">Luxury</span>
-        <span class="stars">★★★★★</span>
-      </div>
-      <div class="hotel-name">Pullman Ciawi Vimala Hills</div>
-      <div class="hotel-desc">A spectacular hillside resort in the Puncak area (~40 min from Bogor city). Mountain views, multiple pools, cycling, and three restaurants including the acclaimed Mad Cow steakhouse. Perfect for a nature retreat.</div>
-      <ul class="hotel-highlights">
-        <li>Infinity pool overlooking Puncak valley</li>
-        <li>Kids' club, billiards, table tennis</li>
-        <li>Free bicycles for guests</li>
-        <li>Mad Cow Steakhouse on premises</li>
-      </ul>
-      <div class="hotel-price">From IDR 1,800,000 <span>per night</span></div>
-    </div>
-
-    <div class="hotel-card">
-      <div class="hotel-tier">
-        <span class="tier-badge tier-luxury">Luxury</span>
-        <span class="stars">★★★★★</span>
-      </div>
-      <div class="hotel-name">Aston Bogor Hotel & Resort</div>
-      <div class="hotel-desc">A popular resort-style hotel surrounded by mountains and rivers, with large pools, kids' playground, jogging tracks, and weekend family activities. Great for families wanting everything in one place.</div>
-      <ul class="hotel-highlights">
-        <li>Large outdoor pools, kids playground</li>
-        <li>Mountain and river views from balconies</li>
-        <li>Weekend activities for children</li>
-        <li>Excellent buffet breakfast</li>
-      </ul>
-      <div class="hotel-price">From IDR 950,000 <span>per night</span></div>
-    </div>
-
-    <div class="hotel-card">
-      <div class="hotel-tier">
-        <span class="tier-badge tier-mid">Mid-Range</span>
-        <span class="stars">★★★★</span>
-      </div>
-      <div class="hotel-name">Grand Savero Hotel Bogor</div>
-      <div class="hotel-desc">A smart choice in the city center with mountain views from the rooms, a spa, swimming pool, and three dining options including the Lotus Garden Restaurant. Well-maintained and centrally located.</div>
-      <ul class="hotel-highlights">
-        <li>Pool, spa, and fitness center</li>
-        <li>Mountain views from upper floors</li>
-        <li>3 restaurants on-site</li>
-        <li>Close to botanical garden</li>
-      </ul>
-      <div class="hotel-price">From IDR 600,000 <span>per night</span></div>
-    </div>
-
-    <div class="hotel-card">
-      <div class="hotel-tier">
-        <span class="tier-badge tier-mid">Mid-Range</span>
-        <span class="stars">★★★★</span>
-      </div>
-      <div class="hotel-name">Zest Bogor by Swiss-Belhotel</div>
-      <div class="hotel-desc">Modern, colorful boutique hotel just 5 minutes from the Presidential Palace. Free WiFi throughout, meeting facilities, and a cheerful design that punches above its price. Popular with both business and leisure travelers.</div>
-      <ul class="hotel-highlights">
-        <li>5-min walk from the botanical garden</li>
-        <li>Contemporary colorful design</li>
-        <li>Reliable WiFi, good for remote work</li>
-        <li>Excellent location, easy access to food</li>
-      </ul>
-      <div class="hotel-price">From IDR 420,000 <span>per night</span></div>
-    </div>
-
-    <div class="hotel-card">
-      <div class="hotel-tier">
-        <span class="tier-badge tier-budget">Budget</span>
-        <span class="stars">★★★</span>
-      </div>
-      <div class="hotel-name">Jeng Tini Guesthouse</div>
-      <div class="hotel-desc">A beloved backpacker favourite — a converted suburban bungalow set in a leafy garden. Spotlessly clean, warm and characterful. A 2.4km walk (or short angkot ride) to the botanical garden. Exceptional value.</div>
-      <ul class="hotel-highlights">
-        <li>Leafy garden setting, quiet neighborhood</li>
-        <li>Warm, personal service from local owners</li>
-        <li>Excellent budget pick for solo travellers</li>
-        <li>Short angkot ride to all sights</li>
-      </ul>
-      <div class="hotel-price">From IDR 180,000 <span>per night</span></div>
-    </div>
-
-    <div class="hotel-card">
-      <div class="hotel-tier">
-        <span class="tier-badge tier-budget">Budget</span>
-        <span class="stars">★★</span>
-      </div>
-      <div class="hotel-name">Rion Hostel</div>
-      <div class="hotel-desc">A charming riverside hostel ideal for solo travelers and backpackers. Nearby colourful river islands with street art, warung stalls, and friendly local life. The most social atmosphere of any budget accommodation in Bogor.</div>
-      <ul class="hotel-highlights">
-        <li>Riverside location near colourful kampung</li>
-        <li>Social atmosphere, great for solo travel</li>
-        <li>Very central — close to train station</li>
-        <li>Starting from just $5/night</li>
-      </ul>
-      <div class="hotel-price">From IDR 70,000 <span>per night</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== TIPS ===== -->
-<section class="section" id="tips">
-  <div class="section-header">
-    <div class="section-eyebrow">Before You Go</div>
-    <h2 class="section-title">Travel <em>Essentials</em></h2>
-    <div class="divider"></div>
-    <p class="section-desc">Everything a first-time visitor needs to know before arriving in the Rainy City.</p>
-  </div>
-
-  <div class="tips-layout">
-    <div class="tip-block dark">
-      <h3>Getting There</h3>
-      <ul class="tip-list">
-        <li><span class="tip-icon">🚆</span><span><strong>KRL Commuter Line</strong> — The easiest way. Trains from Jakarta Kota, Tanah Abang, or Manggarai to Bogor Station run every 10–20 minutes. Journey: ~1 hour. Fare: IDR 6,000. Air-conditioned and reliable.</span></li>
-        <li><span class="tip-icon">🚗</span><span><strong>By Car/Taxi</strong> — Via the Jagorawi Toll Road. Takes 1–1.5 hrs outside rush hour, or 3+ hrs during Jakarta peak times. Driving yourself or Grab Car are both viable options.</span></li>
-        <li><span class="tip-icon">🚌</span><span><strong>Bus (DAMRI)</strong> — Affordable buses from Kampung Rambutan terminal in Jakarta. Slower than the train but good if you're coming from South Jakarta.</span></li>
-      </ul>
-    </div>
-
-    <div class="tip-block light">
-      <h3>Getting Around</h3>
-      <ul class="tip-list">
-        <li><span class="tip-icon">📱</span><span><strong>Grab & Gojek</strong> — The most convenient way to get around. Both apps work well in Bogor and are very affordable.</span></li>
-        <li><span class="tip-icon">🚐</span><span><strong>Angkot</strong> — Small minibuses that ply fixed routes around the city. Extremely cheap (IDR 3,000–5,000). Worth trying for the local experience, though crowded.</span></li>
-        <li><span class="tip-icon">🛺</span><span><strong>Becak</strong> — Three-wheeled cycle rickshaws are available near the train station and market areas. Good for short distances. Negotiate the fare first.</span></li>
-        <li><span class="tip-icon">🚶</span><span><strong>On Foot</strong> — The city center around Kebun Raya is very walkable. The botanical garden alone can occupy an entire day of gentle exploration.</span></li>
-      </ul>
-    </div>
-
-    <div class="tip-block light">
-      <h3>Money & Practicalities</h3>
-      <ul class="tip-list">
-        <li><span class="tip-icon">💵</span><span><strong>Currency:</strong> Indonesian Rupiah (IDR). ATMs are widely available, especially near Botani Square mall and Jalan Pajajaran.</span></li>
-        <li><span class="tip-icon">🍽️</span><span><strong>Food budget:</strong> IDR 50,000–150,000/day for street food; IDR 200,000–500,000 for restaurant meals.</span></li>
-        <li><span class="tip-icon">📶</span><span><strong>SIM Cards:</strong> Buy a Telkomsel or XL SIM at the train station or any Indomaret/Alfamart convenience store. Data is cheap and fast.</span></li>
-        <li><span class="tip-icon">🕌</span><span><strong>Friday prayer:</strong> Many shops and attractions reduce hours or close 11:30am–1:30pm on Fridays. Plan ahead.</span></li>
-      </ul>
-    </div>
-
-    <div class="tip-block dark">
-      <h3>Local Customs & Tips</h3>
-      <ul class="tip-list">
-        <li><span class="tip-icon">☂️</span><span><strong>Always carry an umbrella.</strong> Rain arrives with very little warning, usually in the afternoon. A small fold-up umbrella is your best travel companion here.</span></li>
-        <li><span class="tip-icon">🤝</span><span><strong>Bargain respectfully</strong> at markets — it's expected and part of the experience. Smile and be friendly; locals respond warmly.</span></li>
-        <li><span class="tip-icon">👗</span><span><strong>Dress modestly</strong> when visiting mosques, the Batutulis shrine, or religious sites. Covered shoulders and knees are appreciated.</span></li>
-        <li><span class="tip-icon">🍽️</span><span><strong>Eat with your right hand</strong> if eating without utensils — this is standard local etiquette across Indonesia.</span></li>
-        <li><span class="tip-icon">📸</span><span><strong>Ask before photographing people,</strong> especially at markets and places of worship. Most locals are happy to oblige with a smile.</span></li>
-      </ul>
-    </div>
-
-    <div class="transport-grid">
-      <div class="transport-card">
-        <div class="transport-icon">🌡️</div>
-        <div class="transport-name">Temperature</div>
-        <div class="transport-desc">20–28°C year-round. Cool evenings. Light layers are useful.</div>
-      </div>
-      <div class="transport-card">
-        <div class="transport-icon">🗣️</div>
-        <div class="transport-name">Language</div>
-        <div class="transport-desc">Bahasa Indonesia + Sundanese. Basic English in hotels and tourist areas.</div>
-      </div>
-      <div class="transport-card">
-        <div class="transport-icon">⚡</div>
-        <div class="transport-name">Electricity</div>
-        <div class="transport-desc">220V, 50Hz. Type C & F plugs (European style).</div>
-      </div>
-      <div class="transport-card">
-        <div class="transport-icon">💊</div>
-        <div class="transport-name">Health</div>
-        <div class="transport-desc">Drink bottled water. Pharmacies (Apotek) are abundant.</div>
-      </div>
-      <div class="transport-card">
-        <div class="transport-icon">🛍️</div>
-        <div class="transport-name">Souvenirs</div>
-        <div class="transport-desc">Roti Unyil, Pia Apple Pie, batik textiles, gong handicrafts.</div>
-      </div>
-      <div class="transport-card">
-        <div class="transport-icon">🏥</div>
-        <div class="transport-name">Emergency</div>
-        <div class="transport-desc">Police: 110 · Ambulance: 118 · Tourism helpline: 1500-304</div>
-      </div>
-
-      <div class="warning-box">
-        <h4>☔ The Rain City Warning</h4>
-        <p>Bogor receives some of the highest annual rainfall of any city in Indonesia — hence its nickname. Afternoon downpours are frequent and can be heavy. Plan outdoor activities for the morning, and have an indoor backup plan (museum, restaurant, café) ready for afternoons. Locals embrace the rain as part of Bogor's soul — so should you.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== FOOTER ===== -->
-<footer class="guide-footer">
-  <p><strong>Bogor Traveller's Guidebook</strong></p>
-  <p>Information current as of 2025–2026. Prices and hours subject to change.<br>
-  Always check ahead for public holidays and Ramadan hours.</p>
-  <p style="margin-top:12px; font-size:12px; opacity:0.5;">🌿 Selamat jalan — safe travels.</p>
-</footer>
-
-<script>
-  // Tab navigation
-  function showTab(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    const tabs = ['overview','sights','food','stay','tips'];
-    document.querySelectorAll('.nav-tab')[tabs.indexOf(id)].classList.add('active');
-    window.scrollTo({ top: document.querySelector('.nav').offsetTop, behavior: 'smooth' });
-  }
-
-  // Card toggle
-  function toggleCard(card) {
-    card.classList.toggle('open');
-  }
-
-  // Rain drops animation
-  (function createRain() {
-    const rain = document.getElementById('rain');
-    for (let i = 0; i < 60; i++) {
-      const d = document.createElement('div');
-      d.className = 'drop';
-      const left = Math.random() * 100;
-      const height = Math.random() * 60 + 40;
-      const duration = Math.random() * 2 + 1.5;
-      const delay = Math.random() * 4;
-      d.style.cssText = `left:${left}%;height:${height}px;animation-duration:${duration}s;animation-delay:${delay}s;`;
-      rain.appendChild(d);
-    }
-  })();
-
-  // Stagger card animations on tab switch
-  function staggerCards() {
-    document.querySelectorAll('.section.active .card, .section.active .hotel-card').forEach((card, i) => {
-      card.style.animationDelay = (i * 0.05) + 's';
-    });
-  }
-
-  const origShowTab = showTab;
-  window.showTab = function(id) { origShowTab(id); setTimeout(staggerCards, 50); };
-</script>
+        renderMenu();
+    </script>
 </body>
 </html>
