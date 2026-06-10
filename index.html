@@ -3,1189 +3,1531 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Bandwidth Tax — An Interactive Exploration of Scarcity</title>
+    <title>Packing and Slack — The Psychology of Scarcity</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0b0f19;
-            --surface: #151b2b;
-            --surface-light: #1e293b;
-            --text: #e2e8f0;
-            --text-muted: #94a3b8;
-            --accent: #f59e0b;
-            --accent-glow: rgba(245, 158, 11, 0.3);
-            --secondary: #10b981;
-            --danger: #ef4444;
-            --font-body: Georgia, 'Times New Roman', serif;
-            --font-ui: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --cream: #FAF7F2;
+            --charcoal: #1a1a1a;
+            --warm-gray: #6b6560;
+            --accent: #c75b3a;
+            --accent-light: #e8a88c;
+            --beige: #e8e0d5;
+            --dark-beige: #d4c9ba;
+            --shadow: rgba(0,0,0,0.08);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
 
         body {
-            font-family: var(--font-body);
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.65;
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--charcoal);
+            line-height: 1.7;
             overflow-x: hidden;
         }
 
-        /* Bandwidth Meter */
-        .bandwidth-container {
+        /* Navigation */
+        .nav {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--surface-light);
+            right: 0;
+            background: rgba(250, 247, 242, 0.95);
+            backdrop-filter: blur(20px);
             z-index: 1000;
-        }
-        .bandwidth-fill {
-            height: 100%;
-            width: 100%;
-            background: linear-gradient(90deg, var(--accent), var(--secondary));
-            transform-origin: left;
-            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            border-bottom: 1px solid var(--beige);
+            transition: all 0.3s ease;
         }
 
-        /* Navigation */
-        .nav-dots {
-            position: fixed;
-            right: 1.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 999;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-        .nav-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--surface-light);
-            border: 2px solid var(--text-muted);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .nav-dot.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            transform: scale(1.4);
-            box-shadow: 0 0 12px var(--accent-glow);
-        }
-        @media (max-width: 768px) { .nav-dots { display: none; } }
-
-        /* Typography */
-        h1, h2, h3, h4 { font-family: var(--font-ui); line-height: 1.2; }
-        .section-title {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .lead {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            max-width: 65ch;
-            margin-bottom: 2rem;
-        }
-        .pull-quote {
-            font-size: 1.5rem;
-            font-style: italic;
-            border-left: 4px solid var(--accent);
-            padding-left: 1.5rem;
-            margin: 2rem 0;
-            color: var(--text);
-            max-width: 55ch;
-        }
-
-        /* Layout */
-        section {
-            min-height: 100vh;
-            padding: 6rem 2rem;
-            max-width: 1100px;
+        .nav-container {
+            max-width: 1200px;
             margin: 0 auto;
-            position: relative;
+            padding: 1rem 2rem;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-        section.visible {
-            opacity: 1;
-            transform: translateY(0);
+            justify-content: space-between;
+            align-items: center;
         }
 
-        /* Hero */
-        .hero { text-align: center; align-items: center; }
-        .hero h1 {
-            font-size: clamp(3rem, 10vw, 7rem);
-            font-weight: 900;
-            letter-spacing: -0.03em;
-            line-height: 0.95;
+        .nav-logo {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--charcoal);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--warm-gray);
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--charcoal);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 6rem 2rem 4rem;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .hero-content {
+            max-width: 800px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-eyebrow {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: var(--accent);
+            font-weight: 600;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            display: block;
+            animation: fadeInUp 1s ease;
         }
-        .hero-sub {
-            font-size: 1.5rem;
-            color: var(--text-muted);
-            max-width: 50ch;
-            font-family: var(--font-ui);
+
+        .hero h1 {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+            animation: fadeInUp 1s ease 0.2s both;
         }
-        .scroll-hint {
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.35rem);
+            color: var(--warm-gray);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--charcoal);
+            color: var(--cream);
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .hero-cta:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(199, 91, 58, 0.3);
+        }
+
+        .scroll-indicator {
             position: absolute;
             bottom: 2rem;
             left: 50%;
             transform: translateX(-50%);
             animation: bounce 2s infinite;
-            color: var(--text-muted);
-            font-family: var(--font-ui);
-            font-size: 0.875rem;
         }
+
+        .scroll-indicator svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--warm-gray);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .section-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+        }
+
+        .section-number {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .section-title {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .section-intro {
+            font-size: 1.15rem;
+            color: var(--warm-gray);
+            max-width: 700px;
+            line-height: 1.8;
+        }
+
+        /* Interactive Suitcase Demo */
+        .suitcase-demo {
+            background: linear-gradient(135deg, #f5f0e8 0%, #e8e0d5 100%);
+            border-radius: 24px;
+            padding: 3rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .suitcase-demo h3 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .suitcase-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .suitcase {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            border: 2px solid transparent;
+        }
+
+        .suitcase:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+
+        .suitcase.active {
+            border-color: var(--accent);
+        }
+
+        .suitcase h4 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .suitcase-icon {
+            font-size: 1.5rem;
+        }
+
+        .suitcase-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            min-height: 120px;
+            align-content: flex-start;
+        }
+
+        .item {
+            padding: 0.4rem 0.8rem;
+            background: var(--cream);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            border: 1px solid var(--beige);
+            transition: all 0.3s;
+            animation: popIn 0.4s ease;
+        }
+
+        .item.essential {
+            background: #e8f4e8;
+            border-color: #b8d4b8;
+        }
+
+        .item.extra {
+            background: #fff3e0;
+            border-color: #e0c8a0;
+        }
+
+        .item.removed {
+            opacity: 0.3;
+            text-decoration: line-through;
+        }
+
+        .suitcase-capacity {
+            margin-top: 1.5rem;
+            height: 8px;
+            background: var(--beige);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .suitcase-capacity-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: all 0.6s ease;
+            width: 0%;
+        }
+
+        .large-fill { background: #7cb87c; }
+        .small-fill { background: var(--accent); }
+
+        .capacity-label {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--warm-gray);
+        }
+
+        .demo-controls {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            background: var(--charcoal);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin: 0 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--charcoal);
+            border: 1px solid var(--dark-beige);
+        }
+
+        .btn-secondary:hover {
+            background: var(--beige);
+        }
+
+        /* Quote Block */
+        .quote-block {
+            background: var(--charcoal);
+            color: var(--cream);
+            padding: 4rem 3rem;
+            border-radius: 20px;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-block::before {
+            content: '"';
+            position: absolute;
+            top: -2rem;
+            left: 1rem;
+            font-family: 'Crimson Text', serif;
+            font-size: 12rem;
+            opacity: 0.1;
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-family: 'Crimson Text', serif;
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            line-height: 1.6;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quote-author {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 4px 20px var(--shadow);
+            transition: all 0.4s ease;
+            border: 1px solid var(--beige);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-light), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h3 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--warm-gray);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Interactive Comparison */
+        .comparison-section {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            margin: 3rem 0;
+            box-shadow: 0 4px 30px var(--shadow);
+        }
+
+        .comparison-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 3rem;
+            background: var(--cream);
+            padding: 0.5rem;
+            border-radius: 12px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .toggle-btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: var(--warm-gray);
+        }
+
+        .toggle-btn.active {
+            background: white;
+            color: var(--charcoal);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .comparison-content {
+            display: none;
+        }
+
+        .comparison-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .comparison-side {
+            text-align: center;
+        }
+
+        .comparison-side .emoji {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .comparison-side h4 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .comparison-side ul {
+            list-style: none;
+            text-align: left;
+            margin-top: 1.5rem;
+        }
+
+        .comparison-side li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--beige);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .comparison-side li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            padding: 3rem 2rem;
+            background: var(--charcoal);
+            color: var(--cream);
+            border-radius: 20px;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'Crimson Text', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent-light);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        /* Timeline / Process */
+        .process-steps {
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .process-step {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .process-step::before {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 60px;
+            bottom: -3rem;
+            width: 2px;
+            background: var(--beige);
+        }
+
+        .process-step:last-child::before {
+            display: none;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: var(--charcoal);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-content h4 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .step-content p {
+            color: var(--warm-gray);
+            line-height: 1.7;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, #fff8f0, #fff0e0);
+            border-left: 4px solid var(--accent);
+            padding: 2rem;
+            border-radius: 0 16px 16px 0;
+            margin: 2rem 0;
+        }
+
+        .highlight-box p {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: var(--charcoal);
+        }
+
+        /* Text Content Styling */
+        .prose {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--charcoal);
+        }
+
+        .prose p {
+            margin-bottom: 1.5rem;
+        }
+
+        .prose p:first-child::first-letter {
+            font-family: 'Crimson Text', serif;
+            font-size: 4rem;
+            float: left;
+            line-height: 0.8;
+            padding-right: 1rem;
+            padding-top: 0.5rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* Bees & Wasps Visual */
+        .nature-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .nature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 4px 20px var(--shadow);
+            transition: all 0.4s;
+        }
+
+        .nature-card:hover {
+            transform: scale(1.02);
+        }
+
+        .nature-emoji {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .nature-card h4 {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .nature-card .tag {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .tag-scarce {
+            background: #ffe8e0;
+            color: #c75b3a;
+        }
+
+        .tag-abundant {
+            background: #e0f0e0;
+            color: #5a9a5a;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--charcoal);
+            color: var(--cream);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-family: 'Crimson Text', serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-quote {
+            font-style: italic;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-meta {
+            font-size: 0.85rem;
+            opacity: 0.5;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
             40% { transform: translateX(-50%) translateY(-10px); }
             60% { transform: translateX(-50%) translateY(-5px); }
         }
 
-        /* Cards */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-            width: 100%;
-        }
-        .card {
-            background: var(--surface);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 1rem;
-            padding: 2rem;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-        .card.expanded {
-            grid-column: 1 / -1;
-            cursor: default;
-            background: var(--surface-light);
-        }
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        .card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-            color: var(--accent);
-        }
-        .card-role {
-            font-family: var(--font-ui);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-        }
-        .card-summary { font-size: 1rem; color: var(--text-muted); }
-        .card-full {
-            display: none;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            font-size: 1.05rem;
-            line-height: 1.7;
-        }
-        .card.expanded .card-full { display: block; }
-        .card.expanded .card-summary { display: none; }
-        .bandwidth-tag {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.4rem 0.8rem;
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-            border-radius: 999px;
-            font-family: var(--font-ui);
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        /* Two Column */
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-            margin-top: 2rem;
-        }
-        @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
-
-        /* Interactive Widgets */
-        .widget {
-            background: var(--surface);
-            border-radius: 1rem;
-            padding: 2rem;
-            border: 1px solid rgba(255,255,255,0.06);
-        }
-        .btn {
-            padding: 0.875rem 1.5rem;
-            border: 2px solid var(--accent);
-            background: transparent;
-            color: var(--accent);
-            font-family: var(--font-ui);
-            font-weight: 600;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1rem;
-        }
-        .btn:hover, .btn.active {
-            background: var(--accent);
-            color: var(--bg);
-            box-shadow: 0 0 20px var(--accent-glow);
-        }
-        .btn-group { display: flex; gap: 1rem; flex-wrap: wrap; margin: 1.5rem 0; }
-
-        /* Gauge */
-        .gauge-container { margin: 2rem 0; }
-        .gauge-label {
-            display: flex;
-            justify-content: space-between;
-            font-family: var(--font-ui);
-            font-size: 0.875rem;
-            color: var(--text-muted);
-            margin-bottom: 0.5rem;
-        }
-        .gauge-track {
-            height: 12px;
-            background: var(--surface-light);
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        .gauge-fill {
-            height: 100%;
-            border-radius: 6px;
-            transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
-            position: relative;
-        }
-        .gauge-fill::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            animation: shimmer 2s infinite;
-        }
-        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
-        /* Noise Section */
-        .noise-text {
-            transition: transform 0.1s;
-        }
-        .noise-text.rattle {
-            animation: rattle 0.25s infinite;
-        }
-        @keyframes rattle {
-            0% { transform: translate(0,0) rotate(0); }
-            20% { transform: translate(-1px, 1px) rotate(-0.2deg); }
-            40% { transform: translate(1px, -1px) rotate(0.2deg); }
-            60% { transform: translate(-1px, -1px) rotate(-0.1deg); }
-            80% { transform: translate(1px, 1px) rotate(0.1deg); }
-            100% { transform: translate(0,0) rotate(0); }
-        }
-        .train {
-            position: absolute;
-            bottom: 10%;
-            left: -100px;
-            font-size: 3rem;
+        /* Scroll Reveal */
+        .reveal {
             opacity: 0;
-            pointer-events: none;
-        }
-        .train.active {
-            animation: trainPass 4s linear;
-        }
-        @keyframes trainPass {
-            0% { left: -100px; opacity: 1; }
-            80% { opacity: 1; }
-            100% { left: 110%; opacity: 0; }
-        }
-        .thought-bubble {
-            position: absolute;
-            background: var(--surface-light);
-            padding: 0.5rem 1rem;
-            border-radius: 1rem;
-            font-family: var(--font-ui);
-            font-size: 0.8rem;
-            color: var(--danger);
-            opacity: 0;
-            pointer-events: none;
-            border: 1px solid var(--danger);
-        }
-        .thought-bubble.active {
-            animation: floatUp 3s ease-out forwards;
-        }
-        @keyframes floatUp {
-            0% { opacity: 0; transform: translateY(0) scale(0.8); }
-            20% { opacity: 1; transform: translateY(-20px) scale(1); }
-            100% { opacity: 0; transform: translateY(-80px) scale(0.9); }
+            transform: translateY(40px);
+            transition: all 0.8s ease;
         }
 
-        /* Mall Study */
-        .iq-big {
-            font-size: 5rem;
-            font-weight: 900;
-            font-family: var(--font-ui);
-            text-align: center;
-            margin: 1rem 0;
-            transition: color 0.5s;
-        }
-        .comparison-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(245, 158, 11, 0.1);
-            border: 1px solid var(--accent);
-            border-radius: 999px;
-            font-family: var(--font-ui);
-            font-size: 0.875rem;
-            margin-top: 1rem;
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        /* Heart-Flower Game */
-        .game-stage {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2rem;
-            min-height: 300px;
-            justify-content: center;
-        }
-        .stimulus {
-            font-size: 5rem;
-            transition: transform 0.2s;
-        }
-        .game-controls { display: flex; gap: 1rem; }
-        .game-btn {
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            border: 2px solid var(--text-muted);
-            background: var(--surface);
-            color: var(--text);
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-family: var(--font-ui);
-            transition: all 0.2s;
-        }
-        .game-btn:hover { border-color: var(--accent); color: var(--accent); }
-        .game-result {
-            font-family: var(--font-ui);
-            text-align: center;
-            margin-top: 1rem;
-        }
-        .accuracy-bar {
-            width: 100%;
-            max-width: 400px;
-            height: 24px;
-            background: var(--surface-light);
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 1rem auto;
-        }
-        .accuracy-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--danger), var(--accent));
-            transition: width 1s;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            padding-right: 0.5rem;
-            font-family: var(--font-ui);
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: #fff;
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .suitcase-container,
+            .comparison-grid,
+            .nature-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .quote-block {
+                padding: 3rem 2rem;
+            }
+
+            .comparison-section,
+            .suitcase-demo {
+                padding: 2rem 1.5rem;
+            }
         }
 
-        /* Harvest Slider */
-        .harvest-visual {
-            text-align: center;
-            margin: 2rem 0;
-        }
-        .harvest-emoji {
-            font-size: 6rem;
-            transition: all 0.5s;
-            display: inline-block;
-        }
-        .range-wrap { margin: 2rem 0; }
-        input[type=range] {
-            width: 100%;
-            -webkit-appearance: none;
-            height: 8px;
-            border-radius: 4px;
-            background: var(--surface-light);
-            outline: none;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
+        /* Reading Progress */
+        .reading-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
             background: var(--accent);
-            cursor: pointer;
-            box-shadow: 0 0 10px var(--accent-glow);
+            z-index: 1001;
+            transition: width 0.1s;
         }
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        .stat-box {
-            background: var(--surface-light);
-            padding: 1rem;
-            border-radius: 0.5rem;
-            text-align: center;
-        }
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 800;
-            font-family: var(--font-ui);
-            color: var(--accent);
-            transition: color 0.3s;
-        }
-        .stat-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-family: var(--font-ui);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-top: 0.25rem;
-        }
-
-        /* Tabs */
-        .tabs { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-        .tab {
-            padding: 0.75rem 1.25rem;
-            background: var(--surface);
-            border: 1px solid rgba(255,255,255,0.06);
-            color: var(--text-muted);
-            font-family: var(--font-ui);
-            cursor: pointer;
-            border-radius: 0.5rem;
-            transition: all 0.3s;
-        }
-        .tab.active {
-            background: var(--accent);
-            color: var(--bg);
-            border-color: var(--accent);
-            font-weight: 600;
-        }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Insight Cards */
-        .insight-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 3rem;
-        }
-        .insight-card {
-            background: var(--surface);
-            padding: 2rem;
-            border-radius: 1rem;
-            border: 1px solid rgba(255,255,255,0.06);
-            transition: all 0.3s;
-        }
-        .insight-card:hover {
-            border-color: var(--secondary);
-            transform: translateY(-4px);
-        }
-        .insight-number {
-            font-size: 2.5rem;
-            font-weight: 900;
-            color: var(--accent);
-            font-family: var(--font-ui);
-            margin-bottom: 0.5rem;
-        }
-        .insight-card h4 {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            color: var(--text);
-        }
-        .insight-card p {
-            font-size: 0.95rem;
-            color: var(--text-muted);
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-muted);
-            font-family: var(--font-ui);
-            font-size: 0.875rem;
-            border-top: 1px solid var(--surface-light);
-            margin-top: 4rem;
-        }
-
-        /* Utilities */
-        .text-center { text-align: center; }
-        .mb-2 { margin-bottom: 2rem; }
-        .accent { color: var(--accent); }
-        .danger { color: var(--danger); }
-        .secondary { color: var(--secondary); }
     </style>
 <base target="_blank">
 </head>
 <body>
 
-    <div class="bandwidth-container">
-        <div class="bandwidth-fill" id="bandwidthFill"></div>
-    </div>
+    <div class="reading-progress" id="readingProgress"></div>
 
-    <nav class="nav-dots" aria-label="Section navigation">
-        <div class="nav-dot active" data-target="hero"></div>
-        <div class="nav-dot" data-target="vignettes"></div>
-        <div class="nav-dot" data-target="bandwidth"></div>
-        <div class="nav-dot" data-target="noise"></div>
-        <div class="nav-dot" data-target="mall"></div>
-        <div class="nav-dot" data-target="executive"></div>
-        <div class="nav-dot" data-target="harvests"></div>
-        <div class="nav-dot" data-target="other"></div>
-        <div class="nav-dot" data-target="conclusion"></div>
+    <nav class="nav" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">Packing & Slack</a>
+            <ul class="nav-links">
+                <li><a href="#packing">Packing</a></li>
+                <li><a href="#tradeoffs">Trade-offs</a></li>
+                <li><a href="#slack">Slack</a></li>
+                <li><a href="#bees-wasps">Nature</a></li>
+                <li><a href="#room-to-fail">Room to Fail</a></li>
+                <li><a href="#conclusion">Conclusion</a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
     </nav>
 
-    <!-- HERO -->
-    <section id="hero" class="hero visible">
-        <h1>THE BANDWIDTH TAX</h1>
-        <p class="hero-sub">How scarcity captures the mind, depletes our mental resources, and reshapes the very capacity we need to escape it.</p>
-        <div class="scroll-hint">Scroll to explore ↓</div>
-    </section>
-
-    <!-- VIGNETTES -->
-    <section id="vignettes">
-        <h2 class="section-title">Three Faces of Scarcity</h2>
-        <p class="lead">These stories illustrate a central hypothesis: because the focus on scarcity is involuntary, it impedes our ability to focus on anything else. Scarcity in one walk of life means we have less attention, less mind, in the rest of life.</p>
-        
-        <div class="card-grid" id="vignetteGrid">
-            <div class="card" onclick="toggleCard(this)">
-                <div class="card-icon">💼</div>
-                <div class="card-role">The Executive</div>
-                <h3>The Pitch and the Game</h3>
-                <p class="card-summary">A last-minute sales pitch collides with a daughter's championship softball game. Even while cheering, the mind wanders back to work.</p>
-                <div class="card-full">
-                    <p>One of your biggest clients has informed you that it will be taking its business elsewhere. You convince the account manager to listen to one last pitch tomorrow. You cancel all meetings and put off all other tasks. One appointment cannot be avoided: your daughter's city championship softball game tonight.</p>
-                    <p class="pull-quote">"On the way to the game, your daughter realizes she forgot her lucky charm. You snap at her before turning around to pick it up."</p>
-                    <p>At the game, you cannot enjoy yourself. Your mind keeps turning to that presentation. Not that you can work on it now — you just cannot focus on the game. When your daughter occasionally catches a glimpse of you, she knows it. The jubilation of her team's win helps cover your mistakes, but your performance that evening would not put you in any parenting Hall of Fame.</p>
-                    <span class="bandwidth-tag">Bandwidth Tax: Parental Presence</span>
-                </div>
-            </div>
-
-            <div class="card" onclick="toggleCard(this)">
-                <div class="card-icon">🎓</div>
-                <div class="card-role">The Student</div>
-                <h3>Tuition and the Exam</h3>
-                <p class="card-summary">John patched together loans and scholarships to attend a prestigious college. Then two scholarships evaporated. With the exam looming, his mind is elsewhere.</p>
-                <div class="card-full">
-                    <p>John is putting himself through college. Though his parents saved for their kids' education, they did not save enough. By the time his turn came, the fund was meager and tuition was even higher. He patched together student loans, financial aid, and scholarships. It was messy, but somehow he made it work.</p>
-                    <p>Until now. Two scholarships that were to be automatically renewed have suddenly evaporated; the foundations were hit hard by the recession. How would he make tuition for next semester? The payment was due in less than a month. Could he afford another loan? Should he transfer to the local college?</p>
-                    <p class="pull-quote">"John just can't focus. He keeps thinking about what to do. Preoccupied, he misses a study group that he needed to attend."</p>
-                    <p>When the exam day arrives, he tries to focus, but his mind keeps going elsewhere. He misses some easy questions and is doubly upset: not only is he struggling with tuition; he is annoyed at his abysmal performance on the exam.</p>
-                    <span class="bandwidth-tag">Bandwidth Tax: Academic Focus</span>
-                </div>
-            </div>
-
-            <div class="card" onclick="toggleCard(this)">
-                <div class="card-icon">🍔</div>
-                <div class="card-role">The Manager</div>
-                <h3>The Unreliable Employee</h3>
-                <p class="card-summary">A fast-food manager sees low-wage workers as careless and snippy. But perhaps their minds are simply elsewhere — on the scarcity of making ends meet.</p>
-                <div class="card-full">
-                    <p>A manager of a fast-food burger shop laments his trouble with his low-wage employees. "They are just so unreliable," he says. Most of his time is spent cajoling them into behaving better with customers. "Put on a smile. Be friendly. When the customer is a jerk, don't get snippy."</p>
-                    <p>The rest of his time is spent dealing with careless mistakes. "When someone says they want medium fries, how hard is it to press the button that says 'fries'?" He is clearly frustrated. "Maybe it's that they just don't care. Maybe it's the education in this country. Maybe it's the way they were raised."</p>
-                    <p class="pull-quote">"We catch the low-income worker not when she is at home managing her finances but when she is at work serving food."</p>
-                    <p>The manager attributes the behavior to personality or upbringing. But these employees are not unskilled or uncaring. Their bandwidth is simply taxed by the persistent monetary concerns that scarcity imposes — concerns every bit as loud as a passing train.</p>
-                    <span class="bandwidth-tag">Bandwidth Tax: Professional Composure</span>
-                </div>
-            </div>
+    <header class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <span class="hero-eyebrow">The Psychology of Scarcity</span>
+            <h1>Packing and Slack</h1>
+            <p class="hero-subtitle">How scarcity changes the way we think, choose, and live — and why having less forces us to think harder about every decision we make.</p>
+            <a href="#packing" class="hero-cta">
+                Begin Reading
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 17l9.2-9.2M17 17V8H8"/>
+                </svg>
+            </a>
         </div>
-    </section>
-
-    <!-- BANDWIDTH DEFINITION -->
-    <section id="bandwidth">
-        <h2 class="section-title">What is Bandwidth?</h2>
-        <p class="lead">Psychologists use several fine distinctions to capture the idea of "less mind." We use the umbrella term <strong>bandwidth</strong> to cover them all. It measures our computational capacity — our ability to pay attention, make good decisions, stick with plans, and resist temptations.</p>
-        
-        <div class="two-col">
-            <div>
-                <p>Bandwidth correlates with everything from intelligence and SAT performance to impulse control and success on diets. This chapter makes a bold claim: by constantly drawing us back into the tunnel, scarcity taxes our bandwidth and inhibits our most fundamental capacities.</p>
-                <p>We can think of bandwidth as comprising two broad components:</p>
-            </div>
-            <div class="widget">
-                <div style="margin-bottom: 1.5rem;">
-                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-family:var(--font-ui); font-size:0.9rem;">
-                        <span style="color:var(--accent); font-weight:700;">Cognitive Capacity</span>
-                        <span style="color:var(--text-muted);">Fluid Intelligence</span>
-                    </div>
-                    <div class="gauge-track"><div class="gauge-fill" style="width:100%; background:linear-gradient(90deg, var(--accent), var(--secondary));"></div></div>
-                    <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.5rem;">The mechanisms underlying our ability to solve problems, retain information, and engage in logical reasoning.</p>
-                </div>
-                <div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-family:var(--font-ui); font-size:0.9rem;">
-                        <span style="color:var(--secondary); font-weight:700;">Executive Control</span>
-                        <span style="color:var(--text-muted);">Self-Regulation</span>
-                    </div>
-                    <div class="gauge-track"><div class="gauge-fill" style="width:100%; background:linear-gradient(90deg, var(--secondary), #34d399);"></div></div>
-                    <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.5rem;">Our ability to manage cognitive activities: planning, attention, initiating and inhibiting actions, and controlling impulses.</p>
-                </div>
-            </div>
+        <div class="scroll-indicator">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 5v14M5 12l7 7 7-7"/>
+            </svg>
         </div>
-    </section>
+    </header>
 
-    <!-- NOISE -->
-    <section id="noise">
-        <h2 class="section-title">It's Loud In Here</h2>
-        <p class="lead">The things that distract us need not come from outside. We often generate them for ourselves, and these internal distractions can disrupt our attention more than a physical train.</p>
-        
-        <div class="two-col">
-            <div id="noiseText" class="noise-text">
-                <p>Imagine sitting in an office near the railroad tracks. Trains rattle by several times an hour. They are not deafening, but they pull you away from what you were doing. The interruption is brief, but its effect lasts longer. You need time to refocus.</p>
-                <p>This mirrors the conditions of a school in New Haven located next to a noisy railroad line. Researchers found that sixth graders on the train side were a <strong class="accent">full year behind</strong> their counterparts on the quieter side. When the city installed noise pads, the difference disappeared.</p>
-                <p>Now picture yourself in a quiet office, but you are struggling with your mortgage. Your mind wanders: <em>Should we sell the second car? Should we take another loan?</em> These noisy trains of thought are every bit as hard to ignore. They arrive with even greater regularity and are every bit as uninvited.</p>
-                <p class="pull-quote">"These trains of thought rumble with personal relevance. The mortgage distraction lingers because it matters. It is a distraction precisely because it causes us to tunnel."</p>
-            </div>
-            <div class="widget text-center">
-                <div style="font-size:4rem; margin-bottom:1rem;">🚂</div>
-                <h3 style="font-family:var(--font-ui); margin-bottom:1rem;">Experience the Distraction</h3>
-                <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:1.5rem;">Toggle the switch to feel how external noise and internal scarcity disrupt focus.</p>
-                
-                <button class="btn" id="noiseToggle" onclick="toggleNoise()">Turn Noise ON</button>
-                
-                <div style="margin-top:2rem; font-family:var(--font-ui);">
-                    <div style="font-size:2rem; font-weight:800; color:var(--danger);" id="distractionCount">0</div>
-                    <div style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.1em;">Intrusive Thoughts</div>
-                </div>
-                
-                <div class="train" id="train">🚂💨</div>
-                <div class="thought-bubble" id="bubble1" style="top:40%; left:20%;">Sell the car?</div>
-                <div class="thought-bubble" id="bubble2" style="top:60%; right:20%;">Credit card due...</div>
-                <div class="thought-bubble" id="bubble3" style="top:30%; left:50%;">Can I make rent?</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- MALL STUDY -->
-    <section id="mall">
-        <h2 class="section-title">The Mall Study</h2>
-        <p class="lead">To test whether scarcity directly reduces cognitive capacity, researchers gave shoppers in a New Jersey mall the Raven's Progressive Matrices test — the most prominent measure of fluid intelligence.</p>
-        
-        <div class="widget">
-            <p style="margin-bottom:1rem;">First, subjects were presented with a hypothetical scenario. Click a scenario to see how it affected the rich and the poor.</p>
-            
-            <div class="btn-group">
-                <button class="btn active" onclick="setScenario('easy', this)">Easy Scenario ($300)</button>
-                <button class="btn" onclick="setScenario('hard', this)">Hard Scenario ($3,000)</button>
+    <section id="packing">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <span class="section-number">01 / The Metaphor</span>
+                <h2 class="section-title">The Suitcase Problem</h2>
+                <p class="section-intro">Imagine packing for a business trip. The size of your suitcase changes everything — not just what you bring, but how you think about what you bring.</p>
             </div>
 
-            <div class="two-col" style="margin-top:2rem;">
-                <div>
-                    <h3 style="font-family:var(--font-ui); margin-bottom:1rem; color:var(--text);">Well-Off Subjects</h3>
-                    <div class="gauge-container">
-                        <div class="gauge-label"><span>Effective IQ</span><span id="richIQ">100</span></div>
-                        <div class="gauge-track"><div class="gauge-fill" id="richBar" style="width:100%; background:var(--secondary);"></div></div>
+            <div class="suitcase-demo reveal">
+                <h3>Interactive Packing Simulation</h3>
+                <p style="text-align: center; color: var(--warm-gray); margin-bottom: 2rem; font-size: 0.95rem;">Click on a suitcase to see how scarcity changes packing strategy</p>
+                
+                <div class="suitcase-container">
+                    <div class="suitcase" id="largeSuitcase" onclick="selectSuitcase('large')">
+                        <h4><span class="suitcase-icon">🧳</span> Large Suitcase</h4>
+                        <p style="font-size: 0.9rem; color: var(--warm-gray); margin-bottom: 1rem;">Packed casually. Room to spare.</p>
+                        <div class="suitcase-items" id="largeItems"></div>
+                        <div class="suitcase-capacity">
+                            <div class="suitcase-capacity-fill large-fill" id="largeCapacity"></div>
+                        </div>
+                        <div class="capacity-label">
+                            <span>Capacity</span>
+                            <span id="largePercent">0%</span>
+                        </div>
                     </div>
-                    <p style="font-size:0.9rem; color:var(--text-muted); margin-top:0.5rem;">For the rich, both scenarios were manageable. They could pay out of savings or use a credit card. Their performance remained stable.</p>
-                </div>
-                <div>
-                    <h3 style="font-family:var(--font-ui); margin-bottom:1rem; color:var(--text);">Low-Income Subjects</h3>
-                    <div class="gauge-container">
-                        <div class="gauge-label"><span>Effective IQ</span><span id="poorIQ">100</span></div>
-                        <div class="gauge-track"><div class="gauge-fill" id="poorBar" style="width:100%; background:var(--accent);"></div></div>
-                    </div>
-                    <p style="font-size:0.9rem; color:var(--text-muted); margin-top:0.5rem;">For the poor, the $3,000 scenario triggered real financial anxiety. Coming up with $1,500 was hard. Their cognitive capacity dropped significantly.</p>
-                </div>
-            </div>
 
-            <div class="text-center" style="margin-top:2rem;">
-                <div class="iq-big" id="iqDrop">0</div>
-                <p style="font-family:var(--font-ui); color:var(--text-muted);">Point IQ drop for the poor in the hard scenario</p>
-                <div class="comparison-badge">
-                    <span>⚠️</span>
-                    <span>This effect is <strong>larger</strong> than the cognitive impact of pulling an all-nighter</span>
-                </div>
-            </div>
-            
-            <p style="margin-top:2rem; font-size:0.95rem; color:var(--text-muted);">
-                <strong class="accent">Why it matters:</strong> The drop corresponds to between 13 and 14 IQ points — enough to move a person from "average" to "borderline deficient" or from "average" to "superior" in the other direction. These are not differences between poor and rich people. They are differences in how the <em>same person</em> performs under different circumstances.
-            </p>
-        </div>
-    </section>
-
-    <!-- EXECUTIVE CONTROL -->
-    <section id="executive">
-        <h2 class="section-title">Executive Control</h2>
-        <p class="lead">If scarcity reduces bandwidth, it should also reduce self-control. Executive control underlies our ability to manage cognitive activities, resist impulses, and override automatic responses.</p>
-        
-        <div class="two-col">
-            <div>
-                <h3 style="font-family:var(--font-ui); margin-bottom:1rem;">The Marshmallow Test & Beyond</h3>
-                <p>In Walter Mischel's famous study, children who resisted the marshmallow did so by focusing their attention elsewhere. "Once you realize that willpower is just a matter of learning how to control your attention and thoughts," Mischel noted, "you can really begin to increase it."</p>
-                <p style="margin-top:1rem;">In a related experiment, subjects rehearsing a <strong>seven-digit number</strong> chose cake over fruit 50% more often than those rehearsing a two-digit number. When our mental bandwidth is occupied, we have less capacity to prevent automatic choices.</p>
-                <p style="margin-top:1rem;">In another study, subjects served a revolting chicken foot (claws intact) by a Chinese experimenter. Those with loaded minds blurted out rude comments despite their best intentions. A tax on bandwidth makes it harder to control our impulses.</p>
-            </div>
-            <div class="widget">
-                <h3 style="font-family:var(--font-ui); text-align:center; margin-bottom:1rem;">Heart & Flower Task</h3>
-                <p style="text-align:center; font-size:0.9rem; color:var(--text-muted); margin-bottom:1.5rem;">Press the <strong>same side</strong> as the heart, and the <strong>opposite side</strong> of the flower. First, try it with no load. Then try it under "scarcity load."</p>
-                
-                <div class="game-stage" id="gameStage">
-                    <div class="stimulus" id="stimulus">❤️</div>
-                    <div style="font-family:var(--font-ui); color:var(--text-muted); margin-bottom:1rem;" id="stimulusPos">Appears on: LEFT</div>
-                    <div class="game-controls">
-                        <button class="game-btn" onclick="gameResponse('left')">← Left</button>
-                        <button class="game-btn" onclick="gameResponse('right')">Right →</button>
+                    <div class="suitcase" id="smallSuitcase" onclick="selectSuitcase('small')">
+                        <h4><span class="suitcase-icon">🎒</span> Small Suitcase</h4>
+                        <p style="font-size: 0.9rem; color: var(--warm-gray); margin-bottom: 1rem;">Packed carefully. Every inch matters.</p>
+                        <div class="suitcase-items" id="smallItems"></div>
+                        <div class="suitcase-capacity">
+                            <div class="suitcase-capacity-fill small-fill" id="smallCapacity"></div>
+                        </div>
+                        <div class="capacity-label">
+                            <span>Capacity</span>
+                            <span id="smallPercent">0%</span>
+                        </div>
                     </div>
                 </div>
+
+                <div class="demo-controls">
+                    <button class="btn" onclick="packEssentials()">Pack Essentials</button>
+                    <button class="btn btn-secondary" onclick="packExtras()">Add Extras</button>
+                    <button class="btn btn-secondary" onclick="resetSuitcases()">Reset</button>
+                </div>
+
+                <div class="highlight-box" id="packingInsight" style="margin-top: 2rem; display: none;">
+                    <p id="insightText">Both suitcases impose limits, but only the small suitcase really feels like a problem.</p>
+                </div>
+            </div>
+
+            <div class="prose reveal">
+                <p>You are about to leave on a business trip. Imagine how you might pack a suitably large suitcase. You might start by putting in all the essentials — toiletries, business clothes, electronics. With room left over, you might add a few less essential items. You pack an umbrella in case it rains. You take a sweater in case it is cold. You pack your gym clothes and running shoes. Satisfied, you close the suitcase with some room to spare.</p>
                 
-                <div class="game-result" id="gameResult" style="display:none;">
-                    <div style="margin-bottom:0.5rem; font-weight:700;">Phase Complete</div>
-                    <div id="resultText"></div>
-                    <div class="accuracy-bar"><div class="accuracy-fill" id="accuracyFill" style="width:0%">0%</div></div>
-                    <button class="btn" style="margin-top:1rem;" onclick="resetGame()">Try Again</button>
+                <p>Now imagine instead packing a small suitcase for the same trip. As before, you might start by casually tossing in the bare essentials. But these already quickly fill the suitcase. You take everything out and pack again, this time more methodically. You carefully stack and arrange. You become creative in making room. You stuff socks and a phone charger inside your shoes and uncoil your belt and slide it along the suitcase edge.</p>
+            </div>
+
+            <div class="cards-grid reveal">
+                <div class="card">
+                    <div class="card-icon">⏱️</div>
+                    <h3>Time Suitcase</h3>
+                    <p>We have a time suitcase that must fit our work, leisure, and family time. When time is scarce, every hour requires careful accounting.</p>
                 </div>
+                <div class="card">
+                    <div class="card-icon">💰</div>
+                    <h3>Money Suitcase</h3>
+                    <p>We have a money suitcase into which we must fit our housing, clothing, and all our expenses. Small budgets make every purchase consequential.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🍽️</div>
+                    <h3>Calorie Suitcase</h3>
+                    <p>Some of us even have a self-imposed calorie suitcase into which we must fit all our meals. Diets make us calorie accountants.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box reveal">
+                <p>When scarcity focuses us, it also changes how we pack. It changes how we manage each dollar, each hour, or each calorie. It also leaves us with differently packed suitcases. The big suitcase is packed carelessly, with room to spare. The small suitcase is packed carefully and tightly.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="tradeoffs" style="background: white;">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <span class="section-number">02 / Decision Making</span>
+                <h2 class="section-title">Trade-off Thinking</h2>
+                <p class="section-intro">Scarcity forces us to recognize that putting in one item means some other item must come out. But when resources feel abundant, trade-offs disappear from our minds.</p>
+            </div>
+
+            <div class="quote-block reveal">
+                <p class="quote-text">The cost of one modern heavy bomber is this: a modern brick school in more than thirty cities. It is two electric power plants each serving a town of 60,000 people. It is two fine, fully equipped hospitals. It is some fifty miles of concrete highway.</p>
+                <p class="quote-author">— Dwight Eisenhower, 1953</p>
+            </div>
+
+            <div class="prose reveal">
+                <p>You are at a restaurant, having dinner with friends. The waiter describes the specials and then asks if you'd like to have a drink. You don't typically order a cocktail but something on the menu catches your eye. How do you decide whether to order it?</p>
                 
-                <div style="margin-top:1.5rem; text-align:center;">
-                    <label style="display:flex; align-items:center; justify-content:center; gap:0.5rem; font-family:var(--font-ui); font-size:0.9rem; cursor:pointer;">
-                        <input type="checkbox" id="loadToggle" onchange="toggleLoad()">
-                        <span>Apply Cognitive Load (Scarcity Mode)</span>
-                    </label>
-                </div>
+                <p>You may calculate how long before you'll need to drive. You may wait to see if any of your friends order drinks. You may even wonder whether you'll be splitting the bill. Or you may consider whether $10 is a reasonable price. What's notable, though, is the dog that didn't bark. There is one question you don't ask yourself: "If I buy this drink, what will I not buy instead?"</p>
             </div>
-        </div>
-        
-        <div class="widget" style="margin-top:2rem;">
-            <p style="font-size:1.05rem;">
-                <strong class="accent">The Result:</strong> In the mall study, after financially hard questions, poorer subjects' correct responses on the heart-flower task dropped from <strong>83%</strong> to <strong>63%</strong>. A small tickle of scarcity made them suddenly more impulsive. Beyond fluid intelligence, scarcity directly reduces executive control.
-            </p>
-        </div>
-    </section>
 
-    <!-- HARVESTS -->
-    <section id="harvests">
-        <h2 class="section-title">Harvests</h2>
-        <p class="lead">To see scarcity in the wild, researchers studied sugar cane farmers in India. Farmers get paid in one lump sum at harvest, making the same farmer rich after harvest and poor before it.</p>
-        
-        <div class="widget">
-            <div class="harvest-visual">
-                <div class="harvest-emoji" id="harvestEmoji">😰</div>
-                <div style="font-family:var(--font-ui); font-size:1.25rem; font-weight:700; margin-top:0.5rem;" id="harvestLabel">Pre-Harvest (Poor)</div>
-            </div>
-            
-            <div class="range-wrap">
-                <input type="range" min="0" max="100" value="0" id="harvestSlider" oninput="updateHarvest(this.value)">
-                <div style="display:flex; justify-content:space-between; font-family:var(--font-ui); font-size:0.75rem; color:var(--text-muted); margin-top:0.5rem;">
-                    <span>Pre-Harvest</span>
-                    <span>Post-Harvest</span>
+            <div class="comparison-section reveal">
+                <h3 style="text-align: center; font-family: 'Crimson Text', serif; margin-bottom: 0.5rem;">The Cocktail Problem</h3>
+                <p style="text-align: center; color: var(--warm-gray); margin-bottom: 2rem;">Toggle to see how context changes our thinking</p>
+                
+                <div class="comparison-toggle">
+                    <button class="toggle-btn active" onclick="toggleComparison('abundant')">Abundance Mindset</button>
+                    <button class="toggle-btn" onclick="toggleComparison('scarce')">Scarcity Mindset</button>
                 </div>
-            </div>
-            
-            <div class="stat-grid">
-                <div class="stat-box">
-                    <div class="stat-value" id="statPawned">78%</div>
-                    <div class="stat-label">Pawned Items</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value" id="statLoans">99%</div>
-                    <div class="stat-label">Took Loans</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value" id="statRaven">Baseline</div>
-                    <div class="stat-label">Raven's Score</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-value" id="statErrors">+15%</div>
-                    <div class="stat-label">Executive Errors</div>
-                </div>
-            </div>
-            
-            <div style="margin-top:1.5rem; padding:1rem; background:rgba(245,158,11,0.05); border-radius:0.5rem; border:1px solid rgba(245,158,11,0.2);">
-                <p style="font-size:0.95rem; color:var(--text-muted);">
-                    <strong class="accent">Key Finding:</strong> Post-harvest farmers got about <strong>25% more items correct</strong> on Raven's — equivalent to roughly <strong>9–10 IQ points</strong>. They were also <strong>11% slower</strong> and made <strong>15% more errors</strong> pre-harvest. This was not due to nutrition, harder work, or harvest anxiety. <strong>Poverty itself taxes the mind.</strong>
-                </p>
-            </div>
-        </div>
-    </section>
 
-    <!-- OTHER FORMS -->
-    <section id="other">
-        <h2 class="section-title">Other Forms of Scarcity</h2>
-        <p class="lead">The bandwidth tax is not limited to money. It appears wherever scarcity captures the mind — in dieting, in loneliness, and even in artificial games with limited resources.</p>
-        
-        <div class="tabs">
-            <div class="tab active" onclick="switchTab('dieting', this)">Dieting</div>
-            <div class="tab" onclick="switchTab('loneliness', this)">Loneliness</div>
-            <div class="tab" onclick="switchTab('artificial', this)">Artificial Scarcity</div>
-        </div>
-        
-        <div class="tab-content active" id="tab-dieting">
-            <div class="two-col">
-                <div>
-                    <p class="pull-quote">"While a tenth of my mind was devoted to school, and a tenth to my daughter, the other 70 percent was constantly focused on food — the calorie count of a grape, the filling bulk of popcorn."</p>
-                    <p>— Natalie Kusz, "The Fat Lady Sings"</p>
+                <div id="abundant-content" class="comparison-content active">
+                    <div class="comparison-grid">
+                        <div class="comparison-side">
+                            <span class="emoji">😌</span>
+                            <h4>No Trade-off Felt</h4>
+                            <p style="color: var(--warm-gray);">It feels as if you can buy this cocktail without giving up any other purchase. It feels as if there is no trade-off.</p>
+                            <ul>
+                                <li>$10 feels insignificant</li>
+                                <li>No mental accounting needed</li>
+                                <li>Decision is effortless</li>
+                                <li>"Why not?" mentality</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-side">
+                            <span class="emoji">💵</span>
+                            <h4>Where the Money Comes From</h4>
+                            <p style="color: var(--warm-gray);">Slack picks up the tab. The $10 comes from leftover space in your mental budget.</p>
+                            <ul>
+                                <li>From unallocated funds</li>
+                                <li>No sacrifice required</li>
+                                <li>Budget remains intact</li>
+                                <li>Purchase feels "free"</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <p>Dieters, when doing anything, should find they have fewer mental resources because they are partly preoccupied with food. Studies comparing dieters to nondieters find that people simply <strong>perform worse</strong> on a variety of cognitive tests when they are dieting.</p>
-                    <p style="margin-top:1rem;">These effects appear even when there is no weight loss, and physiological measures show that nutritional deficiencies are not the cause. While losing weight, you face a bandwidth tax. If you settle into a new equilibrium and no longer need to restrain eating, the tax disappears.</p>
+
+                <div id="scarce-content" class="comparison-content">
+                    <div class="comparison-grid">
+                        <div class="comparison-side">
+                            <span class="emoji">🤔</span>
+                            <h4>Trade-off Thinking Activated</h4>
+                            <p style="color: var(--warm-gray);">Those extra three hundred calories — or that $10 — must be accounted for. Something else must be given up.</p>
+                            <ul>
+                                <li>"What do I have to give up?"</li>
+                                <li>Every dollar is allocated</li>
+                                <li>Decision requires deliberation</li>
+                                <li>Opportunity cost is salient</li>
+                            </ul>
+                        </div>
+                        <div class="comparison-side">
+                            <span class="emoji">⚖️</span>
+                            <h4>The Real Cost</h4>
+                            <p style="color: var(--warm-gray);">For those on a tight budget, the $10 is just like the dieter's three hundred calories: the money spent must be accounted for.</p>
+                            <ul>
+                                <li>Forego dessert tomorrow</li>
+                                <li>Skip the bagel next morning</li>
+                                <li>Delay another purchase</li>
+                                <li>Real sacrifice is required</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="tab-content" id="tab-loneliness">
-            <div class="two-col">
-                <div>
-                    <h3 style="font-family:var(--font-ui); margin-bottom:1rem;">The Dichotic Listening Task</h3>
-                    <p>Subjects listen to two different sounds, one in each ear. Most people are right-ear dominant for language. When asked to track the right ear, the lonely and nonlonely do equally well.</p>
-                    <p style="margin-top:1rem;">But focusing on the <strong>nondominant left ear</strong> requires bandwidth. It requires executive control to override the natural urge. Here, the lonely did <strong>significantly worse</strong>. They were less effective at tuning out the right ear and listening to the left.</p>
+
+            <div class="stats-bar reveal">
+                <div class="stat">
+                    <span class="stat-number" data-target="75">0</span>
+                    <span class="stat-label">% of Poor Commuters<br>Report Trade-offs</span>
                 </div>
-                <div>
-                    <p>In another study, researchers randomly assigned subjects feedback suggesting they would be either socially well-adjusted or very lonely. After the information sank in, those who anticipated loneliness did much worse on Raven's tests.</p>
-                    <p style="margin-top:1rem;">Brain scans showed that anticipating loneliness <strong>reduced activation of executive control areas</strong>. When given chocolate-chip cookies, they ate roughly <strong class="danger">twice as many</strong>. Consistent with this, older adults who feel lonely consume substantially more fatty foods.</p>
+                <div class="stat">
+                    <span class="stat-number" data-target="40">0</span>
+                    <span class="stat-label">% of Wealthy Commuters<br>Report Trade-offs</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="65">0</span>
+                    <span class="stat-label">% of Poor Indians<br>Trade-off on Blenders</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="30">0</span>
+                    <span class="stat-label">% of Rich Indians<br>Trade-off on Blenders</span>
                 </div>
             </div>
-        </div>
-        
-        <div class="tab-content" id="tab-artificial">
-            <div class="two-col">
-                <div>
-                    <h3 style="font-family:var(--font-ui); margin-bottom:1rem;">The Angry Blueberries</h3>
-                    <p>In laboratory games where subjects were given fewer resources ("poor" players with fewer blueberries), the same pattern emerged. Even though the poor players played far shorter games, they were so focused on managing their limited resources that they had less bandwidth afterward.</p>
-                </div>
-                <div>
-                    <p>After the game, these "poor" subjects performed worse on the heart-flower executive control task. Like the dieters, the money-poor, and the lonely, the blueberry-poor subjects were taxed by scarcity. The effect is not about the specific domain — it is about the <strong>mindset of scarcity itself</strong>.</p>
-                </div>
+
+            <div class="prose reveal">
+                <p>Whether or not we think about trade-offs depends on the size of the item relative to our budget. The blender was a significant fraction of the budget for the poor but not for the rich. The TV, in contrast, was a significant expense even for the richer households in India. Put differently, the blender evoked scarcity for some, but the TV — because it would have been big relative to everyone's budget — evoked scarcity for all.</p>
             </div>
         </div>
     </section>
 
-    <!-- CONCLUSION -->
+    <section id="slack">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <span class="section-number">03 / The Concept</span>
+                <h2 class="section-title">Understanding Slack</h2>
+                <p class="section-intro">Slack is the space left untapped because of the way we pack. It is typical of large suitcases — and abundant budgets. It is the by-product of packing under abundance.</p>
+            </div>
+
+            <div class="prose reveal">
+                <p>The packing metaphor illustrates why scarcity creates trade-off thinking. We pack big suitcases loosely. Not every nook and cranny is filled. There is space left unused here and there. We call this space slack — the part of our budget that is left untapped because of the way we pack.</p>
+                
+                <p>Imagine that after having packed a large suitcase, you want to add an item. You can just throw it in. No item needs to come out. You do not need to rearrange the contents because the suitcase had extra room to begin with — it had slack. But with a smaller suitcase, adding something necessitates taking something out.</p>
+            </div>
+
+            <div class="cards-grid reveal">
+                <div class="card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #e0e8f0, #a0b8d0);">🕐</div>
+                    <h3>Slack in Time</h3>
+                    <p>On a not-too-busy week, we leave holes in our schedule. You leave a fifteen-minute window between meetings, where in busier times you would have squeezed in a quick phone call.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #e0f0e0, #90c090);">💳</div>
+                    <h3>Slack in Money</h3>
+                    <p>High-income shoppers are twice as likely to report that they do not track their spending because they "don't have to; [they] make enough money."</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #f0e0f0, #c0a0c0);">🎯</div>
+                    <h3>Intended vs. Natural</h3>
+                    <p>Intended slack is carefully budgeted room for the unexpected. Natural slack is the by-product of packing under abundance — space left unused without deliberate planning.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box reveal">
+                <p>During good times, we don't meticulously account for every dollar. We generally choose a house and a car that leave us a comfortable amount of room for everything else. We have a rough sense of what kind of restaurants we ought to patronize and how often, so we can stay broadly within our budget. This mindset is a feature of abundance, and slack is the result.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="bees-wasps" style="background: white;">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <span class="section-number">04 / Nature's Lesson</span>
+                <h2 class="section-title">Poor Bees and Rich Wasps</h2>
+                <p class="section-intro">Why do bees create such precise structures and wasps such messy ones? The answer reveals a deep truth about how scarcity shapes behavior.</p>
+            </div>
+
+            <div class="nature-comparison reveal">
+                <div class="nature-card">
+                    <span class="nature-emoji">🐝</span>
+                    <span class="tag tag-scarce">Scarce Resource: Wax</span>
+                    <h4>The Honeybee</h4>
+                    <p style="color: var(--warm-gray); font-size: 0.95rem; line-height: 1.7;">Each pound of wax requires eight pounds of honey, which requires more than ninety thousand individual bee trips. The bees create walls that meet at a remarkably precise 120 degrees, forming hexagons perfect to the eye.</p>
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--beige);">
+                        <p style="font-family: 'Crimson Text', serif; font-size: 1.1rem;"><strong>Builds with precision because waste is costly.</strong></p>
+                    </div>
+                </div>
+                <div class="nature-card">
+                    <span class="nature-emoji">🐝</span>
+                    <span class="tag tag-abundant">Abundant Resource: Mud</span>
+                    <h4>The Mud Dauber Wasp</h4>
+                    <p style="color: var(--warm-gray); font-size: 0.95rem; line-height: 1.7;">The wasps build their nests out of mud. The cells are roughly cylindrical, but they are plastered together erratically, with none of the precision of the hive.</p>
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--beige);">
+                        <p style="font-family: 'Crimson Text', serif; font-size: 1.1rem;"><strong>Builds sloppily because material is cheap.</strong></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="prose reveal">
+                <p>Something similar happens for the poor and the rich. Imagine that before packing a suitcase, you lay on the bed the items you want to take with you, with the most valuable items on the left and the least valuable ones on the right. For a three-day trip, the first pair of underwear would be on the far left; a fifth pair would be on the far right.</p>
+                
+                <p>You start putting the items in your suitcase starting with the most valuable, from left to right. You can pack quite a few items before your suitcase is full, by which point you'd be packing things you do not care much about, like the fifth pair of underwear. Unused room in the suitcases of the rich comes at the expense of items of little consequence. The suitcases of the poor get full while they are still packing items they very much need.</p>
+            </div>
+
+            <div class="highlight-box reveal">
+                <p>There is an almost economic logic to all this: the poor have less slack because they can afford less of it. Packing material — space in the suitcase — is cheap for the rich, like mud, but it is expensive for the poor, like wax. So the rich pack like wasps, casually, inefficiently, and with slack. And the poor pack like bees, carefully, and with no slack.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="what-we-buy">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <span class="section-number">05 / Consequences</span>
+                <h2 class="section-title">What We Buy With Slack</h2>
+                <p class="section-intro">Slack frees us from trade-offs. It licenses us to buy items that on their own, devoid of any other considerations, have some appeal. The result, of course, is inefficiency and waste.</p>
+            </div>
+
+            <div class="process-steps reveal">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h4>Cabinet Castaways</h4>
+                        <p>Kitchen cabinets across the United States are full of soups, jams, and canned food that have not been used for ages. Some estimates suggest that one in ten items bought in the grocery store is destined to become a cabinet castaway.</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h4>The Storage Economy</h4>
+                        <p>Over $12 billion is spent annually on self-storage, three times as much as is spent on music purchases. The United States has more than two billion square feet allocated to self-storage space.</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h4>Time Evaporation</h4>
+                        <p>When we have plenty of time, we loll around, and time evaporates. Minutes here and there add up to hours frittered away. We end up getting six hours of good use out of a sixteen-hour day.</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h4>The Paradox of Choice</h4>
+                        <p>When given two appealing alternatives instead of one, more people chose the original plan. Slack provides an easy way to avoid the burden of choosing — it allows you to say, "I'll take both."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quote-block reveal">
+                <p class="quote-text">A house is just a pile of stuff with a cover on it.</p>
+                <p class="quote-author">— George Carlin</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="room-to-fail" style="background: white;">
+        <div class="section-container">
+            <div class="section-header reveal">
+                <span class="section-number">06 / Hidden Value</span>
+                <h2 class="section-title">Room to Fail</h2>
+                <p class="section-intro">Slack not only absolves you of the need to make trade-offs. It means mistakes do not entail real sacrifice. It gives us room to maneuver, to reshuffle when we err.</p>
+            </div>
+
+            <div class="comparison-section reveal">
+                <h3 style="text-align: center; font-family: 'Crimson Text', serif; margin-bottom: 0.5rem;">The $200 Mistake</h3>
+                <p style="text-align: center; color: var(--warm-gray); margin-bottom: 2rem;">Same mistake, different consequences</p>
+                
+                <div class="comparison-grid">
+                    <div class="comparison-side" style="padding: 2rem; background: #f8f8f8; border-radius: 16px;">
+                        <span class="emoji" style="font-size: 3rem;">😅</span>
+                        <h4>Alex (Comfortable)</h4>
+                        <p style="color: var(--warm-gray); font-size: 0.9rem;">Financially comfortable. Has slack.</p>
+                        <div style="text-align: left; margin-top: 1.5rem;">
+                            <p style="margin-bottom: 1rem;"><strong>Reaction:</strong> "What a bad purchase!"</p>
+                            <p style="margin-bottom: 1rem;"><strong>Cost:</strong> Paid from leftover slack</p>
+                            <p style="margin-bottom: 1rem;"><strong>Consequence:</strong> Brushes it off easily</p>
+                            <p style="color: var(--accent); font-weight: 600;">The mistake is absorbed.</p>
+                        </div>
+                    </div>
+                    <div class="comparison-side" style="padding: 2rem; background: #fff5f5; border-radius: 16px;">
+                        <span class="emoji" style="font-size: 3rem;">😰</span>
+                        <h4>Ben (Tight Budget)</h4>
+                        <p style="color: var(--warm-gray); font-size: 0.9rem;">Tight for cash. No slack.</p>
+                        <div style="text-align: left; margin-top: 1.5rem;">
+                            <p style="margin-bottom: 1rem;"><strong>Reaction:</strong> "What a bad purchase!"</p>
+                            <p style="margin-bottom: 1rem;"><strong>Cost:</strong> Must sacrifice something planned</p>
+                            <p style="margin-bottom: 1rem;"><strong>Consequence:</strong> "Now I won't have the money to repair my car. That might make me late for work, which might lead to..."</p>
+                            <p style="color: var(--accent); font-weight: 600;">The mistake cascades.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-bar reveal" style="background: linear-gradient(135deg, #1a1a1a, #2d2d2d);">
+                <div class="stat">
+                    <span class="stat-number" data-target="10">0</span>
+                    <span class="stat-label">% Temptation Tax<br>for the Poorest</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="1">0</span>
+                    <span class="stat-label">% Temptation Tax<br>for the Wealthiest</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="55">0</span>
+                    <span class="stat-label">Days Average<br>Thesis Actually Took</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" data-target="34">0</span>
+                    <span class="stat-label">Days Students<br>Estimated</span>
+                </div>
+            </div>
+
+            <div class="prose reveal">
+                <p>The planning fallacy is common to many people, but not everybody experiences the same consequences from it. Suppose you have a project due at the end of the month. In reality the project requires forty hours of work, but you mistakenly think it will take only thirty, and you plan accordingly. As the deadline approaches, your error becomes clear. You are ten hours short.</p>
+                
+                <p>Suppose you are not terribly busy. The shortfall is nothing more than an annoyance. You look at your schedule and find ways to create time. There are a few commitments that can be easily moved around, a few to-dos that can be put off and, most important, you have empty spaces here and there in your calendar already. With a little jiggling, you're set.</p>
+                
+                <p>Suppose, instead, that you are already heavily committed this week. Now this is more than annoying. Like a wobbly Jenga tower, if you delay or move any one thing around, the whole structure will collapse. For the less busy person, slack absorbs the error, thus minimizing the consequences. The busy person, on the other hand, cannot shrug it off so easily. Each added hour must come at the expense of something else.</p>
+            </div>
+
+            <div class="highlight-box reveal">
+                <p>Scarcity not only raises the costs of error; it also provides more opportunity to err, to make misguided choices. It is harder to do things right, because many items — time commitments for the busy, expenses for the poor — must be carefully made to fit into a constrained budget.</p>
+            </div>
+        </div>
+    </section>
+
     <section id="conclusion">
-        <h2 class="section-title">What the Bandwidth Tax Means</h2>
-        <p class="lead">The bandwidth tax changes us in surprising and powerful ways. So much of what we attribute to talent or personality is actually predicated on cognitive capacity and executive control.</p>
-        
-        <div class="insight-grid">
-            <div class="insight-card">
-                <div class="insight-number">13–14</div>
-                <h4>IQ Points Lost</h4>
-                <p>Simply raising monetary concerns for the poor erodes cognitive performance more than being seriously sleep deprived.</p>
+        <div class="section-container">
+            <div class="section-header reveal">
+                <span class="section-number">07 / Synthesis</span>
+                <h2 class="section-title">Scarcity and Slack</h2>
+                <p class="section-intro">Physical limits and trade-offs are always there. But we do not experience them that way. The concept of slack cuts to the core of the psychology of scarcity.</p>
             </div>
-            <div class="insight-card">
-                <div class="insight-number">20%</div>
-                <h4>Executive Control Drop</h4>
-                <p>Correct responses on impulse-control tasks fell from 83% to 63% for the poor under financial stress.</p>
-            </div>
-            <div class="insight-card">
-                <div class="insight-number">1 Year</div>
-                <h4>Academic Impact</h4>
-                <p>Sixth graders on the noisy train side of a school were a full year behind their peers — until noise pads were installed.</p>
-            </div>
-        </div>
 
-        <div style="margin-top:3rem;">
-            <p class="pull-quote">"The problem is not the person but the context of scarcity."</p>
-            
-            <p>Imagine you are sitting at a computer unaware of background programs. As your browser crawls, you might think, <em>What a slow computer.</em> You confuse the processor loaded down by other tasks for one that is inherently slow. Similarly, it is easy to confuse a mind loaded by scarcity for one that is inherently less capable.</p>
-            
-            <p style="margin-top:1rem;">The restaurant manager attributes his employees' behavior to lack of skill or motivation. The harried sales manager, when she snaps at her daughter, looks like a bad parent. The financially strapped student who misses easy questions looks incapable or lazy. <strong>But these people are not unskilled or uncaring. They are heavily taxed.</strong></p>
-            
-            <p style="margin-top:1rem;">We must broaden our notion of scarcity. When we think of having very little, we focus on the physical implications: less time for fun, less money to spend. The bandwidth tax suggests there is another, perhaps more important, shortfall. <strong>Scarcity doesn't just lead us to overborrow or fail to invest. It leaves us handicapped. It makes us dumber. It makes us more impulsive.</strong> We must get by with less mind available — making life that much harder.</p>
-        </div>
+            <div class="cards-grid reveal">
+                <div class="card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #f0e8d0, #d4c9a0);">🧮</div>
+                    <h3>Mathematical Reality</h3>
+                    <p>Scarcity may create a logistically harder packing problem. The mind, challenged by the psychology that emerges from scarcity, may find itself needing to navigate a world that is computationally more complex.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #d0e0f0, #a0b8d0);">🧠</div>
+                    <h3>Psychological Reality</h3>
+                    <p>While actual limits and trade-offs are universal, the experience is not. A big suitcase does not just permit more room; it removes the feeling of scarcity entirely.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #e0d0f0, #b8a0d0);">✨</div>
+                    <h3>The Luxury of Slack</h3>
+                    <p>Slack is not just inefficiency; it is a mental luxury. Abundance affords us the luxury of packing poorly, the luxury of not having to think, as well as the luxury of not minding mistakes.</p>
+                </div>
+            </div>
 
-        <div class="text-center" style="margin-top:4rem;">
-            <div style="font-size:3rem; margin-bottom:1rem;">🧠</div>
-            <h3 style="font-family:var(--font-ui); color:var(--text-muted); font-weight:400;">Understanding the bandwidth tax is the first step toward designing contexts that preserve human capacity.</h3>
+            <div class="quote-block reveal" style="background: linear-gradient(135deg, #1a1a1a, #2d2d2d);">
+                <p class="quote-text">A man is rich in proportion to the number of things he can afford to let alone.</p>
+                <p class="quote-author">— Henry David Thoreau</p>
+            </div>
+
+            <div class="prose reveal" style="text-align: center; max-width: 700px; margin: 0 auto;">
+                <p>Having slack allows us the feeling of abundance. Slack is not just inefficiency; it is a mental luxury. Abundance does not just allow us to buy more goods. It affords us the luxury of packing poorly, the luxury of not having to think, as well as the luxury of not minding mistakes.</p>
+            </div>
         </div>
     </section>
 
-    <div class="footer">
-        <p>Interactive adaptation of <em>Scarcity: Why Having Too Little Means So Much</em> by Sendhil Mullainathan & Eldar Shafir</p>
-    </div>
+    <footer>
+        <div class="footer-content">
+            <h3 class="footer-title">Packing and Slack</h3>
+            <p class="footer-quote">"The big suitcase is packed carelessly, with room to spare. The small suitcase is packed carefully and tightly."</p>
+            <p class="footer-meta">Based on the psychology of scarcity • Interactive Edition</p>
+        </div>
+    </footer>
 
     <script>
-        // Intersection Observer for section animations
-        const sections = document.querySelectorAll('section');
-        const navDots = document.querySelectorAll('.nav-dot');
-        const bandwidthFill = document.getElementById('bandwidthFill');
-        
-        const sectionBandwidth = {
-            hero: 1,
-            vignettes: 0.85,
-            bandwidth: 0.9,
-            noise: 0.6,
-            mall: 0.45,
-            executive: 0.35,
-            harvests: 0.5,
-            other: 0.7,
-            conclusion: 1
+        // Reading Progress
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('readingProgress').style.width = scrolled + '%';
+        });
+
+        // Scroll Reveal
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
         };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    const id = entry.target.id;
+                    entry.target.classList.add('active');
                     
-                    // Update nav dots
-                    navDots.forEach(dot => {
-                        dot.classList.toggle('active', dot.dataset.target === id);
+                    // Animate numbers if this is a stats bar
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(num => {
+                        animateNumber(num);
                     });
-                    
-                    // Update bandwidth meter
-                    if (sectionBandwidth[id] !== undefined) {
-                        bandwidthFill.style.transform = `scaleX(${sectionBandwidth[id]})`;
-                    }
                 }
             });
-        }, { threshold: 0.4 });
+        }, observerOptions);
 
-        sections.forEach(section => observer.observe(section));
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        document.querySelectorAll('.stats-bar').forEach(el => observer.observe(el));
 
-        // Smooth scroll for nav dots
-        navDots.forEach(dot => {
-            dot.addEventListener('click', () => {
-                const target = document.getElementById(dot.dataset.target);
-                if (target) target.scrollIntoView({ behavior: 'smooth' });
+        // Number Animation
+        function animateNumber(element) {
+            const target = parseInt(element.getAttribute('data-target'));
+            const duration = 2000;
+            const start = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                const current = Math.floor(easeOut * target);
+                element.textContent = current;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    element.textContent = target;
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        // Suitcase Demo
+        const essentials = ['Toiletries', 'Business Clothes', 'Electronics', 'Underwear', 'Socks'];
+        const extras = ['Umbrella', 'Sweater', 'Gym Clothes', 'Running Shoes', 'Extra Shirt', 'Book', 'Snacks'];
+        
+        let largePacked = [];
+        let smallPacked = [];
+        const largeCapacity = 12;
+        const smallCapacity = 7;
+
+        function selectSuitcase(size) {
+            document.querySelectorAll('.suitcase').forEach(s => s.classList.remove('active'));
+            document.getElementById(size + 'Suitcase').classList.add('active');
+        }
+
+        function packEssentials() {
+            essentials.forEach((item, i) => {
+                setTimeout(() => {
+                    if (!largePacked.includes(item)) {
+                        largePacked.push(item);
+                        updateSuitcase('large');
+                    }
+                    if (!smallPacked.includes(item) && smallPacked.length < smallCapacity) {
+                        smallPacked.push(item);
+                        updateSuitcase('small');
+                    } else if (!smallPacked.includes(item)) {
+                        // Show trade-off for small suitcase
+                        showInsight('The small suitcase is already full! To add ' + item + ', something must come out. This is trade-off thinking in action.');
+                    }
+                }, i * 200);
             });
+        }
+
+        function packExtras() {
+            extras.forEach((item, i) => {
+                setTimeout(() => {
+                    if (largePacked.length < largeCapacity) {
+                        largePacked.push(item);
+                        updateSuitcase('large');
+                    }
+                    if (smallPacked.length < smallCapacity) {
+                        smallPacked.push(item);
+                        updateSuitcase('small');
+                    }
+                }, i * 150);
+            });
+            
+            setTimeout(() => {
+                showInsight('The large suitcase easily accommodates extras. The small suitcase forces hard choices — each new item requires deliberation.');
+            }, extras.length * 150 + 300);
+        }
+
+        function updateSuitcase(size) {
+            const container = document.getElementById(size + 'Items');
+            const capacity = document.getElementById(size + 'Capacity');
+            const percent = document.getElementById(size + 'Percent');
+            const items = size === 'large' ? largePacked : smallPacked;
+            const max = size === 'large' ? largeCapacity : smallCapacity;
+            
+            container.innerHTML = '';
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'item ' + (essentials.includes(item) ? 'essential' : 'extra');
+                div.textContent = item;
+                container.appendChild(div);
+            });
+            
+            const pct = Math.min((items.length / max) * 100, 100);
+            capacity.style.width = pct + '%';
+            percent.textContent = Math.round(pct) + '%';
+        }
+
+        function resetSuitcases() {
+            largePacked = [];
+            smallPacked = [];
+            updateSuitcase('large');
+            updateSuitcase('small');
+            document.getElementById('packingInsight').style.display = 'none';
+        }
+
+        function showInsight(text) {
+            const insight = document.getElementById('packingInsight');
+            const insightText = document.getElementById('insightText');
+            insightText.textContent = text;
+            insight.style.display = 'block';
+            insight.style.animation = 'fadeInUp 0.5s ease';
+        }
+
+        // Comparison Toggle
+        function toggleComparison(type) {
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.comparison-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(type + '-content').classList.add('active');
+        }
+
+        // Mobile Menu
+        function toggleMobileMenu() {
+            const nav = document.querySelector('.nav-links');
+            nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+            if (nav.style.display === 'flex') {
+                nav.style.position = 'absolute';
+                nav.style.top = '100%';
+                nav.style.left = '0';
+                nav.style.right = '0';
+                nav.style.flexDirection = 'column';
+                nav.style.background = 'rgba(250, 247, 242, 0.98)';
+                nav.style.padding = '2rem';
+                nav.style.borderBottom = '1px solid var(--beige)';
+                nav.style.gap = '1.5rem';
+            }
+        }
+
+        // Navbar scroll effect
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.08)';
+            } else {
+                navbar.style.boxShadow = 'none';
+            }
+            
+            lastScroll = currentScroll;
         });
 
-        // Vignette Cards
-        function toggleCard(card) {
-            const allCards = document.querySelectorAll('.card');
-            const isExpanded = card.classList.contains('expanded');
-            
-            allCards.forEach(c => {
-                c.classList.remove('expanded');
-                c.style.gridColumn = '';
-            });
-            
-            if (!isExpanded) {
-                card.classList.add('expanded');
-            }
-        }
-
-        // Noise Section
-        let noiseInterval;
-        let distractionCount = 0;
-        let noiseActive = false;
-        
-        function toggleNoise() {
-            const btn = document.getElementById('noiseToggle');
-            const text = document.getElementById('noiseText');
-            const train = document.getElementById('train');
-            const bubbles = document.querySelectorAll('.thought-bubble');
-            
-            noiseActive = !noiseActive;
-            
-            if (noiseActive) {
-                btn.textContent = 'Turn Noise OFF';
-                btn.classList.add('active');
-                text.classList.add('rattle');
-                
-                // Start train and bubbles
-                train.classList.add('active');
-                setTimeout(() => train.classList.remove('active'), 4000);
-                
-                noiseInterval = setInterval(() => {
-                    distractionCount++;
-                    document.getElementById('distractionCount').textContent = distractionCount;
-                    
-                    // Random bubble
-                    const bubble = bubbles[Math.floor(Math.random() * bubbles.length)];
-                    bubble.classList.remove('active');
-                    void bubble.offsetWidth; // reflow
-                    bubble.classList.add('active');
-                    
-                    // Train occasionally
-                    if (Math.random() > 0.7) {
-                        train.classList.remove('active');
-                        void train.offsetWidth;
-                        train.classList.add('active');
-                    }
-                }, 800);
-            } else {
-                btn.textContent = 'Turn Noise ON';
-                btn.classList.remove('active');
-                text.classList.remove('rattle');
-                clearInterval(noiseInterval);
-                bubbles.forEach(b => b.classList.remove('active'));
-            }
-        }
-
-        // Mall Study
-        function setScenario(type, btn) {
-            document.querySelectorAll('#mall .btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            const richIQ = document.getElementById('richIQ');
-            const poorIQ = document.getElementById('poorIQ');
-            const richBar = document.getElementById('richBar');
-            const poorBar = document.getElementById('poorBar');
-            const iqDrop = document.getElementById('iqDrop');
-            
-            if (type === 'easy') {
-                richIQ.textContent = '100';
-                poorIQ.textContent = '100';
-                richBar.style.width = '100%';
-                poorBar.style.width = '100%';
-                poorBar.style.background = 'var(--accent)';
-                iqDrop.textContent = '0';
-                iqDrop.style.color = 'var(--text)';
-            } else {
-                richIQ.textContent = '100';
-                poorIQ.textContent = '86';
-                richBar.style.width = '100%';
-                poorBar.style.width = '86%';
-                poorBar.style.background = 'var(--danger)';
-                iqDrop.textContent = '13-14';
-                iqDrop.style.color = 'var(--danger)';
-            }
-        }
-
-        // Heart-Flower Game
-        let gamePhase = 0;
-        let gameScore = 0;
-        let gameTotal = 0;
-        let gameLoad = false;
-        let currentStimulus = null;
-        
-        const stimuli = [
-            { symbol: '❤️', side: 'left', correct: 'left' },
-            { symbol: '🌸', side: 'right', correct: 'left' }, // opposite
-            { symbol: '❤️', side: 'right', correct: 'right' },
-            { symbol: '🌸', side: 'left', correct: 'right' }, // opposite
-            { symbol: '❤️', side: 'left', correct: 'left' }
-        ];
-        
-        function loadStimulus() {
-            if (gamePhase >= stimuli.length) {
-                showResults();
-                return;
-            }
-            currentStimulus = stimuli[gamePhase];
-            document.getElementById('stimulus').textContent = currentStimulus.symbol;
-            document.getElementById('stimulusPos').textContent = `Appears on: ${currentStimulus.side.toUpperCase()}`;
-            
-            if (gameLoad) {
-                // Add visual noise for scarcity mode
-                document.getElementById('stimulus').style.textShadow = '2px 2px 0px rgba(239,68,68,0.5)';
-            } else {
-                document.getElementById('stimulus').style.textShadow = 'none';
-            }
-        }
-        
-        function gameResponse(response) {
-            if (!currentStimulus || gamePhase >= stimuli.length) return;
-            
-            const correct = response === currentStimulus.correct;
-            if (correct) gameScore++;
-            gameTotal++;
-            gamePhase++;
-            
-            // Visual feedback
-            const stim = document.getElementById('stimulus');
-            stim.style.transform = 'scale(1.3)';
-            setTimeout(() => stim.style.transform = 'scale(1)', 200);
-            
-            loadStimulus();
-        }
-        
-        function showResults() {
-            document.getElementById('gameStage').style.display = 'none';
-            document.getElementById('gameResult').style.display = 'block';
-            
-            const accuracy = Math.round((gameScore / gameTotal) * 100);
-            const baseline = gameLoad ? 63 : 95; // Simulated typical results
-            const displayAcc = gameLoad ? Math.min(accuracy, 65) : Math.max(accuracy, 90);
-            
-            document.getElementById('resultText').innerHTML = 
-                `You got <strong>${gameScore}/${gameTotal}</strong> correct.<br>` +
-                `<span style="color:var(--text-muted); font-size:0.9rem;">` +
-                (gameLoad ? 'Under cognitive load, accuracy drops significantly.' : 'With full bandwidth, accuracy is high.') +
-                `</span>`;
-            
-            document.getElementById('accuracyFill').style.width = displayAcc + '%';
-            document.getElementById('accuracyFill').textContent = displayAcc + '%';
-        }
-        
-        function resetGame() {
-            gamePhase = 0;
-            gameScore = 0;
-            gameTotal = 0;
-            document.getElementById('gameStage').style.display = 'flex';
-            document.getElementById('gameResult').style.display = 'none';
-            document.getElementById('accuracyFill').style.width = '0%';
-            loadStimulus();
-        }
-        
-        function toggleLoad() {
-            gameLoad = document.getElementById('loadToggle').checked;
-            resetGame();
-        }
-        
-        // Initialize game
-        loadStimulus();
-
-        // Harvest Slider
-        function updateHarvest(val) {
-            const pct = val / 100;
-            const emoji = document.getElementById('harvestEmoji');
-            const label = document.getElementById('harvestLabel');
-            
-            // Interpolate values
-            const pawned = Math.round(78 - (74 * pct));
-            const loans = Math.round(99 - (86 * pct));
-            const raven = pct < 0.5 ? 'Baseline' : `+${Math.round(25 * ((pct-0.5)*2))}%`;
-            const errors = pct < 0.5 ? `+${Math.round(15 - (15 * pct * 2))}%` : 'Baseline';
-            const iq = Math.round(0 + (10 * pct));
-            
-            document.getElementById('statPawned').textContent = pawned + '%';
-            document.getElementById('statLoans').textContent = loans + '%';
-            document.getElementById('statRaven').textContent = raven;
-            document.getElementById('statErrors').textContent = errors;
-            
-            if (pct < 0.5) {
-                emoji.textContent = '😰';
-                label.textContent = 'Pre-Harvest (Poor)';
-                label.style.color = 'var(--danger)';
-            } else {
-                emoji.textContent = '😌';
-                label.textContent = 'Post-Harvest (Rich)';
-                label.style.color = 'var(--secondary)';
-            }
-        }
-
-        // Tabs
-        function switchTab(tabId, tabEl) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            
-            tabEl.classList.add('active');
-            document.getElementById('tab-' + tabId).classList.add('active');
-        }
+        // Initialize
+        resetSuitcases();
     </script>
 </body>
 </html>
