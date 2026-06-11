@@ -3,18 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Packing and Slack — The Psychology of Scarcity</title>
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>AHEAD — Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            --burgundy: #7B1F3F;
+            --burgundy-light: #9B2D4F;
+            --burgundy-dark: #5C152F;
             --cream: #FAF7F2;
-            --charcoal: #1a1a1a;
-            --warm-gray: #6b6560;
-            --accent: #c75b3a;
-            --accent-light: #e8a88c;
-            --beige: #e8e0d5;
-            --dark-beige: #d4c9ba;
-            --shadow: rgba(0,0,0,0.08);
+            --cream-dark: #F0EBE3;
+            --text: #2D1F23;
+            --text-light: #6B5B60;
+            --white: #FFFFFF;
+            --shadow: 0 4px 24px rgba(123, 31, 63, 0.08);
+            --shadow-lg: 0 12px 40px rgba(123, 31, 63, 0.15);
+            --radius: 16px;
+            --radius-sm: 12px;
         }
 
         * {
@@ -23,33 +28,28 @@
             box-sizing: border-box;
         }
 
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 80px;
-        }
-
         body {
             font-family: 'Inter', sans-serif;
             background: var(--cream);
-            color: var(--charcoal);
-            line-height: 1.7;
+            color: var(--text);
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Navigation */
-        .nav {
+        /* Header */
+        .header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(250, 247, 242, 0.95);
+            z-index: 100;
+            background: rgba(250, 247, 242, 0.92);
             backdrop-filter: blur(20px);
-            z-index: 1000;
-            border-bottom: 1px solid var(--beige);
+            border-bottom: 1px solid rgba(123, 31, 63, 0.08);
             transition: all 0.3s ease;
         }
 
-        .nav-container {
+        .header-content {
             max-width: 1200px;
             margin: 0 auto;
             padding: 1rem 2rem;
@@ -58,1476 +58,1531 @@
             align-items: center;
         }
 
-        .nav-logo {
-            font-family: 'Crimson Text', serif;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--charcoal);
-            text-decoration: none;
-            letter-spacing: -0.02em;
-        }
-
-        .nav-links {
+        .logo {
             display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--warm-gray);
-            font-size: 0.85rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            transition: color 0.3s;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent);
-            transition: width 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--charcoal);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.5rem;
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            padding: 6rem 2rem 4rem;
-            overflow: hidden;
-        }
-
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-
-        .hero-content {
-            max-width: 800px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-eyebrow {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.25em;
-            color: var(--accent);
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            display: block;
-            animation: fadeInUp 1s ease;
-        }
-
-        .hero h1 {
-            font-family: 'Crimson Text', serif;
-            font-size: clamp(2.5rem, 6vw, 5rem);
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.03em;
-            animation: fadeInUp 1s ease 0.2s both;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(1.1rem, 2vw, 1.35rem);
-            color: var(--warm-gray);
-            max-width: 600px;
-            margin: 0 auto 3rem;
-            font-weight: 300;
-            animation: fadeInUp 1s ease 0.4s both;
-        }
-
-        .hero-cta {
-            display: inline-flex;
             align-items: center;
             gap: 0.75rem;
-            background: var(--charcoal);
-            color: var(--cream);
-            padding: 1rem 2.5rem;
             text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--burgundy);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--burgundy);
+            letter-spacing: -0.5px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box input {
+            width: 240px;
+            padding: 0.6rem 1rem 0.6rem 2.5rem;
+            border: 1.5px solid rgba(123, 31, 63, 0.15);
+            border-radius: 100px;
+            background: var(--white);
+            font-family: inherit;
             font-size: 0.9rem;
-            font-weight: 500;
-            letter-spacing: 0.05em;
-            border-radius: 50px;
+            color: var(--text);
+            outline: none;
             transition: all 0.3s ease;
-            animation: fadeInUp 1s ease 0.6s both;
         }
 
-        .hero-cta:hover {
-            background: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(199, 91, 58, 0.3);
+        .search-box input:focus {
+            border-color: var(--burgundy);
+            box-shadow: 0 0 0 3px rgba(123, 31, 63, 0.1);
+            width: 280px;
         }
 
-        .scroll-indicator {
+        .search-box svg {
             position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 2s infinite;
+            left: 0.9rem;
+            width: 18px;
+            height: 18px;
+            color: var(--text-light);
+            pointer-events: none;
         }
 
-        .scroll-indicator svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--warm-gray);
-        }
-
-        /* Section Styles */
-        section {
-            padding: 6rem 2rem;
+        .cart-btn {
             position: relative;
-        }
-
-        .section-container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            margin-bottom: 3rem;
-        }
-
-        .section-number {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--accent);
-            font-weight: 700;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .section-title {
-            font-family: 'Crimson Text', serif;
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-        }
-
-        .section-intro {
-            font-size: 1.15rem;
-            color: var(--warm-gray);
-            max-width: 700px;
-            line-height: 1.8;
-        }
-
-        /* Interactive Suitcase Demo */
-        .suitcase-demo {
-            background: linear-gradient(135deg, #f5f0e8 0%, #e8e0d5 100%);
-            border-radius: 24px;
-            padding: 3rem;
-            margin: 3rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .suitcase-demo h3 {
-            font-family: 'Crimson Text', serif;
-            font-size: 1.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .suitcase-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .suitcase {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px var(--shadow);
-            cursor: pointer;
-            transition: all 0.4s ease;
-            border: 2px solid transparent;
-        }
-
-        .suitcase:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
-        }
-
-        .suitcase.active {
-            border-color: var(--accent);
-        }
-
-        .suitcase h4 {
-            font-family: 'Crimson Text', serif;
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .suitcase-icon {
-            font-size: 1.5rem;
-        }
-
-        .suitcase-items {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            min-height: 120px;
-            align-content: flex-start;
-        }
-
-        .item {
-            padding: 0.4rem 0.8rem;
-            background: var(--cream);
-            border-radius: 20px;
-            font-size: 0.8rem;
-            border: 1px solid var(--beige);
-            transition: all 0.3s;
-            animation: popIn 0.4s ease;
-        }
-
-        .item.essential {
-            background: #e8f4e8;
-            border-color: #b8d4b8;
-        }
-
-        .item.extra {
-            background: #fff3e0;
-            border-color: #e0c8a0;
-        }
-
-        .item.removed {
-            opacity: 0.3;
-            text-decoration: line-through;
-        }
-
-        .suitcase-capacity {
-            margin-top: 1.5rem;
-            height: 8px;
-            background: var(--beige);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .suitcase-capacity-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: all 0.6s ease;
-            width: 0%;
-        }
-
-        .large-fill { background: #7cb87c; }
-        .small-fill { background: var(--accent); }
-
-        .capacity-label {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 0.5rem;
-            font-size: 0.8rem;
-            color: var(--warm-gray);
-        }
-
-        .demo-controls {
-            text-align: center;
-            margin-top: 1.5rem;
-        }
-
-        .btn {
-            background: var(--charcoal);
-            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--burgundy);
             border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
+            color: white;
             cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: all 0.3s;
-            margin: 0 0.5rem;
-        }
-
-        .btn:hover {
-            background: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--charcoal);
-            border: 1px solid var(--dark-beige);
-        }
-
-        .btn-secondary:hover {
-            background: var(--beige);
-        }
-
-        /* Quote Block */
-        .quote-block {
-            background: var(--charcoal);
-            color: var(--cream);
-            padding: 4rem 3rem;
-            border-radius: 20px;
-            margin: 4rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .quote-block::before {
-            content: '"';
-            position: absolute;
-            top: -2rem;
-            left: 1rem;
-            font-family: 'Crimson Text', serif;
-            font-size: 12rem;
-            opacity: 0.1;
-            line-height: 1;
-        }
-
-        .quote-text {
-            font-family: 'Crimson Text', serif;
-            font-size: clamp(1.3rem, 3vw, 1.8rem);
-            line-height: 1.6;
-            font-style: italic;
-            position: relative;
-            z-index: 1;
-        }
-
-        .quote-author {
-            margin-top: 1.5rem;
-            font-size: 0.9rem;
-            opacity: 0.7;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* Cards Grid */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 2.5rem;
-            box-shadow: 0 4px 20px var(--shadow);
-            transition: all 0.4s ease;
-            border: 1px solid var(--beige);
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        .card-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--accent-light), var(--accent));
-            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
         }
 
-        .card h3 {
-            font-family: 'Crimson Text', serif;
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
+        .cart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: var(--burgundy-light);
         }
 
-        .card p {
-            color: var(--warm-gray);
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-
-        /* Interactive Comparison */
-        .comparison-section {
-            background: white;
-            border-radius: 24px;
-            padding: 3rem;
-            margin: 3rem 0;
-            box-shadow: 0 4px 30px var(--shadow);
-        }
-
-        .comparison-toggle {
-            display: flex;
-            justify-content: center;
-            gap: 0;
-            margin-bottom: 3rem;
-            background: var(--cream);
-            padding: 0.5rem;
-            border-radius: 12px;
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .toggle-btn {
-            padding: 0.75rem 2rem;
-            border: none;
-            background: transparent;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.3s;
-            color: var(--warm-gray);
-        }
-
-        .toggle-btn.active {
-            background: white;
-            color: var(--charcoal);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        }
-
-        .comparison-content {
-            display: none;
-        }
-
-        .comparison-content.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: start;
-        }
-
-        .comparison-side {
-            text-align: center;
-        }
-
-        .comparison-side .emoji {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .comparison-side h4 {
-            font-family: 'Crimson Text', serif;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .comparison-side ul {
-            list-style: none;
-            text-align: left;
-            margin-top: 1.5rem;
-        }
-
-        .comparison-side li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--beige);
-            position: relative;
-            padding-left: 1.5rem;
-        }
-
-        .comparison-side li::before {
-            content: '→';
+        .cart-count {
             position: absolute;
-            left: 0;
-            color: var(--accent);
-        }
-
-        /* Stats Bar */
-        .stats-bar {
-            display: flex;
-            justify-content: space-around;
-            padding: 3rem 2rem;
-            background: var(--charcoal);
-            color: var(--cream);
-            border-radius: 20px;
-            margin: 3rem 0;
-            flex-wrap: wrap;
-            gap: 2rem;
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-family: 'Crimson Text', serif;
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--accent-light);
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            opacity: 0.8;
-            margin-top: 0.5rem;
-        }
-
-        /* Timeline / Process */
-        .process-steps {
-            margin: 3rem 0;
-            position: relative;
-        }
-
-        .process-step {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .process-step::before {
-            content: '';
-            position: absolute;
-            left: 24px;
-            top: 60px;
-            bottom: -3rem;
-            width: 2px;
-            background: var(--beige);
-        }
-
-        .process-step:last-child::before {
-            display: none;
-        }
-
-        .step-number {
-            width: 50px;
-            height: 50px;
-            background: var(--charcoal);
+            top: -4px;
+            right: -4px;
+            background: #E85D4E;
             color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 2px solid var(--cream);
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .cart-count.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Hero */
+        .hero {
+            margin-top: 80px;
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(123, 31, 63, 0.08);
+            color: var(--burgundy);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
             font-weight: 700;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .step-content h4 {
-            font-family: 'Crimson Text', serif;
-            font-size: 1.3rem;
+            color: var(--burgundy);
             margin-bottom: 0.5rem;
-            margin-top: 0.5rem;
+            letter-spacing: -1px;
         }
 
-        .step-content p {
-            color: var(--warm-gray);
-            line-height: 1.7;
-        }
-
-        /* Highlight Box */
-        .highlight-box {
-            background: linear-gradient(135deg, #fff8f0, #fff0e0);
-            border-left: 4px solid var(--accent);
-            padding: 2rem;
-            border-radius: 0 16px 16px 0;
-            margin: 2rem 0;
-        }
-
-        .highlight-box p {
-            font-family: 'Crimson Text', serif;
-            font-size: 1.2rem;
-            line-height: 1.7;
-            color: var(--charcoal);
-        }
-
-        /* Text Content Styling */
-        .prose {
+        .hero p {
+            color: var(--text-light);
             font-size: 1.1rem;
-            line-height: 1.9;
-            color: var(--charcoal);
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
         }
 
-        .prose p {
+        /* Main Toggle */
+        .main-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem auto;
+            max-width: 400px;
+            padding: 0.4rem;
+            background: var(--cream-dark);
+            border-radius: 100px;
+            width: fit-content;
+        }
+
+        .main-toggle button {
+            padding: 0.75rem 2rem;
+            border: none;
+            background: transparent;
+            color: var(--text-light);
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .main-toggle button.active {
+            background: var(--burgundy);
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .main-toggle button:not(.active):hover {
+            color: var(--burgundy);
+        }
+
+        /* Sub Categories */
+        .sub-categories {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            padding: 0 2rem;
+            max-width: 1200px;
+            margin: 0 auto 2rem;
+        }
+
+        .sub-categories button {
+            padding: 0.5rem 1.25rem;
+            border: 1.5px solid rgba(123, 31, 63, 0.12);
+            background: var(--white);
+            color: var(--text-light);
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .sub-categories button:hover {
+            border-color: var(--burgundy);
+            color: var(--burgundy);
+            transform: translateY(-1px);
+        }
+
+        .sub-categories button.active {
+            background: var(--burgundy);
+            color: white;
+            border-color: var(--burgundy);
+            box-shadow: 0 4px 12px rgba(123, 31, 63, 0.2);
+        }
+
+        /* Menu Grid */
+        .menu-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 4rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            color: var(--burgundy);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, rgba(123, 31, 63, 0.2), transparent);
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .menu-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(123, 31, 63, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .menu-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--burgundy), var(--burgundy-light));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .menu-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-category {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--burgundy-light);
+            margin-bottom: 0.5rem;
+            opacity: 0.8;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .card-description {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+            flex: 1;
+        }
+
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .temp-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.2rem 0.6rem;
+            background: rgba(123, 31, 63, 0.06);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--burgundy);
+        }
+
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(123, 31, 63, 0.06);
+        }
+
+        .card-price {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--burgundy);
+        }
+
+        .add-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--burgundy);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 1.25rem;
+            line-height: 1;
+        }
+
+        .add-btn:hover {
+            background: var(--burgundy-light);
+            transform: scale(1.1);
+        }
+
+        .add-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Cart Drawer */
+        .cart-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(45, 31, 35, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cart-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            max-width: 420px;
+            background: var(--white);
+            z-index: 201;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+        }
+
+        .cart-drawer.open {
+            transform: translateX(0);
+        }
+
+        .cart-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(123, 31, 63, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--burgundy);
+        }
+
+        .close-cart {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--cream);
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .close-cart:hover {
+            background: var(--cream-dark);
+            transform: rotate(90deg);
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem 2rem;
+        }
+
+        .cart-empty {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-light);
+        }
+
+        .cart-empty svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .cart-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(123, 31, 63, 0.06);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .cart-item-category {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(123, 31, 63, 0.15);
+            background: white;
+            color: var(--burgundy);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .qty-btn:hover {
+            background: var(--burgundy);
+            color: white;
+            border-color: var(--burgundy);
+        }
+
+        .cart-item-price {
+            font-weight: 700;
+            color: var(--burgundy);
+            font-size: 0.95rem;
+        }
+
+        .remove-item {
+            color: #E85D4E;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-decoration: underline;
+            padding: 0;
+            margin-top: 0.5rem;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .remove-item:hover {
+            opacity: 1;
+        }
+
+        .cart-footer {
+            padding: 1.5rem 2rem 2rem;
+            border-top: 1px solid rgba(123, 31, 63, 0.08);
+            background: var(--cream);
+        }
+
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .cart-total-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .cart-total-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--burgundy);
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--burgundy);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .checkout-btn:hover {
+            background: var(--burgundy-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .checkout-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--burgundy-dark);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow-lg);
+            animation: toastUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            pointer-events: auto;
+            min-width: 280px;
+        }
+
+        @keyframes toastUp {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .toast.hide {
+            animation: toastDown 0.3s ease forwards;
+        }
+
+        @keyframes toastDown {
+            to { opacity: 0; transform: translateY(10px) scale(0.95); }
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(45, 31, 35, 0.5);
+            backdrop-filter: blur(6px);
+            z-index: 250;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius);
+            max-width: 480px;
+            width: 100%;
+            padding: 2rem;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-overlay.open .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--burgundy);
+            margin-bottom: 0.25rem;
+        }
+
+        .modal-category {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .modal-description {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1.25rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid rgba(123, 31, 63, 0.08);
+        }
+
+        .modal-price {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--burgundy);
             margin-bottom: 1.5rem;
         }
 
-        .prose p:first-child::first-letter {
-            font-family: 'Crimson Text', serif;
-            font-size: 4rem;
-            float: left;
-            line-height: 0.8;
-            padding-right: 1rem;
-            padding-top: 0.5rem;
-            font-weight: 700;
-            color: var(--accent);
+        .modal-options {
+            margin-bottom: 1.5rem;
         }
 
-        /* Bees & Wasps Visual */
-        .nature-comparison {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-
-        .nature-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2.5rem;
-            text-align: center;
-            box-shadow: 0 4px 20px var(--shadow);
-            transition: all 0.4s;
-        }
-
-        .nature-card:hover {
-            transform: scale(1.02);
-        }
-
-        .nature-emoji {
-            font-size: 5rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .nature-card h4 {
-            font-family: 'Crimson Text', serif;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .nature-card .tag {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        .option-label {
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
+            display: block;
+            font-size: 0.9rem;
         }
 
-        .tag-scarce {
-            background: #ffe8e0;
-            color: #c75b3a;
+        .option-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
-        .tag-abundant {
-            background: #e0f0e0;
-            color: #5a9a5a;
+        .option-btn {
+            padding: 0.6rem 1.2rem;
+            border: 1.5px solid rgba(123, 31, 63, 0.15);
+            background: white;
+            border-radius: 100px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text);
         }
 
-        /* Footer */
-        footer {
-            background: var(--charcoal);
-            color: var(--cream);
-            padding: 4rem 2rem;
-            text-align: center;
+        .option-btn:hover {
+            border-color: var(--burgundy);
         }
 
-        .footer-content {
-            max-width: 600px;
-            margin: 0 auto;
+        .option-btn.active {
+            background: var(--burgundy);
+            color: white;
+            border-color: var(--burgundy);
         }
 
-        .footer-title {
-            font-family: 'Crimson Text', serif;
-            font-size: 2rem;
-            margin-bottom: 1rem;
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
         }
 
-        .footer-quote {
-            font-style: italic;
-            opacity: 0.8;
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
+        .modal-actions button {
+            flex: 1;
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .footer-meta {
-            font-size: 0.85rem;
-            opacity: 0.5;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+        .modal-cancel {
+            background: var(--cream);
+            border: none;
+            color: var(--text);
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .modal-cancel:hover {
+            background: var(--cream-dark);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .modal-add {
+            background: var(--burgundy);
+            border: none;
+            color: white;
         }
 
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-            40% { transform: translateX(-50%) translateY(-10px); }
-            60% { transform: translateX(-50%) translateY(-5px); }
-        }
-
-        /* Scroll Reveal */
-        .reveal {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s ease;
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
+        .modal-add:hover {
+            background: var(--burgundy-light);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
+            .header-content {
+                padding: 1rem;
             }
 
-            .mobile-menu-btn {
-                display: block;
+            .search-box input {
+                width: 140px;
             }
 
-            .suitcase-container,
-            .comparison-grid,
-            .nature-comparison {
+            .search-box input:focus {
+                width: 160px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .menu-grid {
                 grid-template-columns: 1fr;
             }
 
-            .stats-bar {
-                flex-direction: column;
+            .cart-drawer {
+                max-width: 100%;
             }
 
-            section {
-                padding: 4rem 1.5rem;
+            .sub-categories {
+                padding: 0 1rem;
             }
 
-            .quote-block {
-                padding: 3rem 2rem;
-            }
-
-            .comparison-section,
-            .suitcase-demo {
-                padding: 2rem 1.5rem;
+            .menu-section {
+                padding: 0 1rem 3rem;
             }
         }
 
-        /* Reading Progress */
-        .reading-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 3px;
-            background: var(--accent);
-            z-index: 1001;
-            transition: width 0.1s;
+        /* Animations */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .menu-card {
+            animation: fadeUp 0.5s ease backwards;
+        }
+
+        .menu-card:nth-child(1) { animation-delay: 0.05s; }
+        .menu-card:nth-child(2) { animation-delay: 0.1s; }
+        .menu-card:nth-child(3) { animation-delay: 0.15s; }
+        .menu-card:nth-child(4) { animation-delay: 0.2s; }
+        .menu-card:nth-child(5) { animation-delay: 0.25s; }
+        .menu-card:nth-child(6) { animation-delay: 0.3s; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--cream);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(123, 31, 63, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(123, 31, 63, 0.4);
+        }
+
+        .hidden {
+            display: none !important;
         }
     </style>
-<base target="_blank">
 </head>
 <body>
 
-    <div class="reading-progress" id="readingProgress"></div>
-
-    <nav class="nav" id="navbar">
-        <div class="nav-container">
-            <a href="#" class="nav-logo">Packing & Slack</a>
-            <ul class="nav-links">
-                <li><a href="#packing">Packing</a></li>
-                <li><a href="#tradeoffs">Trade-offs</a></li>
-                <li><a href="#slack">Slack</a></li>
-                <li><a href="#bees-wasps">Nature</a></li>
-                <li><a href="#room-to-fail">Room to Fail</a></li>
-                <li><a href="#conclusion">Conclusion</a></li>
-            </ul>
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-            </button>
-        </div>
-    </nav>
-
-    <header class="hero">
-        <div class="hero-bg"></div>
-        <div class="hero-content">
-            <span class="hero-eyebrow">The Psychology of Scarcity</span>
-            <h1>Packing and Slack</h1>
-            <p class="hero-subtitle">How scarcity changes the way we think, choose, and live — and why having less forces us to think harder about every decision we make.</p>
-            <a href="#packing" class="hero-cta">
-                Begin Reading
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M7 17l9.2-9.2M17 17V8H8"/>
-                </svg>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <div class="logo-icon">A</div>
+                <span class="logo-text">ahead</span>
             </a>
-        </div>
-        <div class="scroll-indicator">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 5v14M5 12l7 7 7-7"/>
-            </svg>
+            <div class="header-actions">
+                <div class="search-box">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" id="searchInput" placeholder="Search menu...">
+                </div>
+                <button class="cart-btn" onclick="toggleCart()">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+            </div>
         </div>
     </header>
 
-    <section id="packing">
-        <div class="section-container">
-            <div class="section-header reveal">
-                <span class="section-number">01 / The Metaphor</span>
-                <h2 class="section-title">The Suitcase Problem</h2>
-                <p class="section-intro">Imagine packing for a business trip. The size of your suitcase changes everything — not just what you bring, but how you think about what you bring.</p>
-            </div>
-
-            <div class="suitcase-demo reveal">
-                <h3>Interactive Packing Simulation</h3>
-                <p style="text-align: center; color: var(--warm-gray); margin-bottom: 2rem; font-size: 0.95rem;">Click on a suitcase to see how scarcity changes packing strategy</p>
-                
-                <div class="suitcase-container">
-                    <div class="suitcase" id="largeSuitcase" onclick="selectSuitcase('large')">
-                        <h4><span class="suitcase-icon">🧳</span> Large Suitcase</h4>
-                        <p style="font-size: 0.9rem; color: var(--warm-gray); margin-bottom: 1rem;">Packed casually. Room to spare.</p>
-                        <div class="suitcase-items" id="largeItems"></div>
-                        <div class="suitcase-capacity">
-                            <div class="suitcase-capacity-fill large-fill" id="largeCapacity"></div>
-                        </div>
-                        <div class="capacity-label">
-                            <span>Capacity</span>
-                            <span id="largePercent">0%</span>
-                        </div>
-                    </div>
-
-                    <div class="suitcase" id="smallSuitcase" onclick="selectSuitcase('small')">
-                        <h4><span class="suitcase-icon">🎒</span> Small Suitcase</h4>
-                        <p style="font-size: 0.9rem; color: var(--warm-gray); margin-bottom: 1rem;">Packed carefully. Every inch matters.</p>
-                        <div class="suitcase-items" id="smallItems"></div>
-                        <div class="suitcase-capacity">
-                            <div class="suitcase-capacity-fill small-fill" id="smallCapacity"></div>
-                        </div>
-                        <div class="capacity-label">
-                            <span>Capacity</span>
-                            <span id="smallPercent">0%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="demo-controls">
-                    <button class="btn" onclick="packEssentials()">Pack Essentials</button>
-                    <button class="btn btn-secondary" onclick="packExtras()">Add Extras</button>
-                    <button class="btn btn-secondary" onclick="resetSuitcases()">Reset</button>
-                </div>
-
-                <div class="highlight-box" id="packingInsight" style="margin-top: 2rem; display: none;">
-                    <p id="insightText">Both suitcases impose limits, but only the small suitcase really feels like a problem.</p>
-                </div>
-            </div>
-
-            <div class="prose reveal">
-                <p>You are about to leave on a business trip. Imagine how you might pack a suitably large suitcase. You might start by putting in all the essentials — toiletries, business clothes, electronics. With room left over, you might add a few less essential items. You pack an umbrella in case it rains. You take a sweater in case it is cold. You pack your gym clothes and running shoes. Satisfied, you close the suitcase with some room to spare.</p>
-                
-                <p>Now imagine instead packing a small suitcase for the same trip. As before, you might start by casually tossing in the bare essentials. But these already quickly fill the suitcase. You take everything out and pack again, this time more methodically. You carefully stack and arrange. You become creative in making room. You stuff socks and a phone charger inside your shoes and uncoil your belt and slide it along the suitcase edge.</p>
-            </div>
-
-            <div class="cards-grid reveal">
-                <div class="card">
-                    <div class="card-icon">⏱️</div>
-                    <h3>Time Suitcase</h3>
-                    <p>We have a time suitcase that must fit our work, leisure, and family time. When time is scarce, every hour requires careful accounting.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">💰</div>
-                    <h3>Money Suitcase</h3>
-                    <p>We have a money suitcase into which we must fit our housing, clothing, and all our expenses. Small budgets make every purchase consequential.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🍽️</div>
-                    <h3>Calorie Suitcase</h3>
-                    <p>Some of us even have a self-imposed calorie suitcase into which we must fit all our meals. Diets make us calorie accountants.</p>
-                </div>
-            </div>
-
-            <div class="highlight-box reveal">
-                <p>When scarcity focuses us, it also changes how we pack. It changes how we manage each dollar, each hour, or each calorie. It also leaves us with differently packed suitcases. The big suitcase is packed carelessly, with room to spare. The small suitcase is packed carefully and tightly.</p>
-            </div>
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-badge">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            Serving all day
         </div>
+        <h1>Our Menu</h1>
+        <p>Handcrafted beverages and freshly baked bread, made with care for every moment of your day.</p>
     </section>
 
-    <section id="tradeoffs" style="background: white;">
-        <div class="section-container">
-            <div class="section-header reveal">
-                <span class="section-number">02 / Decision Making</span>
-                <h2 class="section-title">Trade-off Thinking</h2>
-                <p class="section-intro">Scarcity forces us to recognize that putting in one item means some other item must come out. But when resources feel abundant, trade-offs disappear from our minds.</p>
-            </div>
+    <!-- Main Toggle -->
+    <div class="main-toggle">
+        <button class="active" onclick="setMainTab('beverages')" id="tab-beverages">Beverages</button>
+        <button onclick="setMainTab('bread')" id="tab-bread">Bread</button>
+    </div>
 
-            <div class="quote-block reveal">
-                <p class="quote-text">The cost of one modern heavy bomber is this: a modern brick school in more than thirty cities. It is two electric power plants each serving a town of 60,000 people. It is two fine, fully equipped hospitals. It is some fifty miles of concrete highway.</p>
-                <p class="quote-author">— Dwight Eisenhower, 1953</p>
-            </div>
+    <!-- Sub Categories -->
+    <div class="sub-categories" id="subCategories">
+        <button class="active" onclick="setSubCategory('all')">All</button>
+        <button onclick="setSubCategory('regular')">Regular</button>
+        <button onclick="setSubCategory('fine')">Fine Ahead</button>
+        <button onclick="setSubCategory('filter')">Filter</button>
+        <button onclick="setSubCategory('matcha')">Matcha</button>
+        <button onclick="setSubCategory('signature')">Signature</button>
+        <button onclick="setSubCategory('alternative')">Alternative</button>
+        <button onclick="setSubCategory('fresh')">Fresh</button>
+    </div>
 
-            <div class="prose reveal">
-                <p>You are at a restaurant, having dinner with friends. The waiter describes the specials and then asks if you'd like to have a drink. You don't typically order a cocktail but something on the menu catches your eye. How do you decide whether to order it?</p>
-                
-                <p>You may calculate how long before you'll need to drive. You may wait to see if any of your friends order drinks. You may even wonder whether you'll be splitting the bill. Or you may consider whether $10 is a reasonable price. What's notable, though, is the dog that didn't bark. There is one question you don't ask yourself: "If I buy this drink, what will I not buy instead?"</p>
-            </div>
-
-            <div class="comparison-section reveal">
-                <h3 style="text-align: center; font-family: 'Crimson Text', serif; margin-bottom: 0.5rem;">The Cocktail Problem</h3>
-                <p style="text-align: center; color: var(--warm-gray); margin-bottom: 2rem;">Toggle to see how context changes our thinking</p>
-                
-                <div class="comparison-toggle">
-                    <button class="toggle-btn active" onclick="toggleComparison('abundant')">Abundance Mindset</button>
-                    <button class="toggle-btn" onclick="toggleComparison('scarce')">Scarcity Mindset</button>
-                </div>
-
-                <div id="abundant-content" class="comparison-content active">
-                    <div class="comparison-grid">
-                        <div class="comparison-side">
-                            <span class="emoji">😌</span>
-                            <h4>No Trade-off Felt</h4>
-                            <p style="color: var(--warm-gray);">It feels as if you can buy this cocktail without giving up any other purchase. It feels as if there is no trade-off.</p>
-                            <ul>
-                                <li>$10 feels insignificant</li>
-                                <li>No mental accounting needed</li>
-                                <li>Decision is effortless</li>
-                                <li>"Why not?" mentality</li>
-                            </ul>
-                        </div>
-                        <div class="comparison-side">
-                            <span class="emoji">💵</span>
-                            <h4>Where the Money Comes From</h4>
-                            <p style="color: var(--warm-gray);">Slack picks up the tab. The $10 comes from leftover space in your mental budget.</p>
-                            <ul>
-                                <li>From unallocated funds</li>
-                                <li>No sacrifice required</li>
-                                <li>Budget remains intact</li>
-                                <li>Purchase feels "free"</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="scarce-content" class="comparison-content">
-                    <div class="comparison-grid">
-                        <div class="comparison-side">
-                            <span class="emoji">🤔</span>
-                            <h4>Trade-off Thinking Activated</h4>
-                            <p style="color: var(--warm-gray);">Those extra three hundred calories — or that $10 — must be accounted for. Something else must be given up.</p>
-                            <ul>
-                                <li>"What do I have to give up?"</li>
-                                <li>Every dollar is allocated</li>
-                                <li>Decision requires deliberation</li>
-                                <li>Opportunity cost is salient</li>
-                            </ul>
-                        </div>
-                        <div class="comparison-side">
-                            <span class="emoji">⚖️</span>
-                            <h4>The Real Cost</h4>
-                            <p style="color: var(--warm-gray);">For those on a tight budget, the $10 is just like the dieter's three hundred calories: the money spent must be accounted for.</p>
-                            <ul>
-                                <li>Forego dessert tomorrow</li>
-                                <li>Skip the bagel next morning</li>
-                                <li>Delay another purchase</li>
-                                <li>Real sacrifice is required</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stats-bar reveal">
-                <div class="stat">
-                    <span class="stat-number" data-target="75">0</span>
-                    <span class="stat-label">% of Poor Commuters<br>Report Trade-offs</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number" data-target="40">0</span>
-                    <span class="stat-label">% of Wealthy Commuters<br>Report Trade-offs</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number" data-target="65">0</span>
-                    <span class="stat-label">% of Poor Indians<br>Trade-off on Blenders</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number" data-target="30">0</span>
-                    <span class="stat-label">% of Rich Indians<br>Trade-off on Blenders</span>
-                </div>
-            </div>
-
-            <div class="prose reveal">
-                <p>Whether or not we think about trade-offs depends on the size of the item relative to our budget. The blender was a significant fraction of the budget for the poor but not for the rich. The TV, in contrast, was a significant expense even for the richer households in India. Put differently, the blender evoked scarcity for some, but the TV — because it would have been big relative to everyone's budget — evoked scarcity for all.</p>
-            </div>
-        </div>
+    <!-- Menu Section -->
+    <section class="menu-section" id="menuSection">
+        <div class="menu-grid" id="menuGrid"></div>
     </section>
 
-    <section id="slack">
-        <div class="section-container">
-            <div class="section-header reveal">
-                <span class="section-number">03 / The Concept</span>
-                <h2 class="section-title">Understanding Slack</h2>
-                <p class="section-intro">Slack is the space left untapped because of the way we pack. It is typical of large suitcases — and abundant budgets. It is the by-product of packing under abundance.</p>
-            </div>
-
-            <div class="prose reveal">
-                <p>The packing metaphor illustrates why scarcity creates trade-off thinking. We pack big suitcases loosely. Not every nook and cranny is filled. There is space left unused here and there. We call this space slack — the part of our budget that is left untapped because of the way we pack.</p>
-                
-                <p>Imagine that after having packed a large suitcase, you want to add an item. You can just throw it in. No item needs to come out. You do not need to rearrange the contents because the suitcase had extra room to begin with — it had slack. But with a smaller suitcase, adding something necessitates taking something out.</p>
-            </div>
-
-            <div class="cards-grid reveal">
-                <div class="card">
-                    <div class="card-icon" style="background: linear-gradient(135deg, #e0e8f0, #a0b8d0);">🕐</div>
-                    <h3>Slack in Time</h3>
-                    <p>On a not-too-busy week, we leave holes in our schedule. You leave a fifteen-minute window between meetings, where in busier times you would have squeezed in a quick phone call.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon" style="background: linear-gradient(135deg, #e0f0e0, #90c090);">💳</div>
-                    <h3>Slack in Money</h3>
-                    <p>High-income shoppers are twice as likely to report that they do not track their spending because they "don't have to; [they] make enough money."</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon" style="background: linear-gradient(135deg, #f0e0f0, #c0a0c0);">🎯</div>
-                    <h3>Intended vs. Natural</h3>
-                    <p>Intended slack is carefully budgeted room for the unexpected. Natural slack is the by-product of packing under abundance — space left unused without deliberate planning.</p>
-                </div>
-            </div>
-
-            <div class="highlight-box reveal">
-                <p>During good times, we don't meticulously account for every dollar. We generally choose a house and a car that leave us a comfortable amount of room for everything else. We have a rough sense of what kind of restaurants we ought to patronize and how often, so we can stay broadly within our budget. This mindset is a feature of abundance, and slack is the result.</p>
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h2>Your Order</h2>
+            <button class="close-cart" onclick="toggleCart()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                <p>Your cart is empty</p>
+                <p style="font-size: 0.85rem; margin-top: 0.5rem;">Add some items to get started</p>
             </div>
         </div>
-    </section>
-
-    <section id="bees-wasps" style="background: white;">
-        <div class="section-container">
-            <div class="section-header reveal">
-                <span class="section-number">04 / Nature's Lesson</span>
-                <h2 class="section-title">Poor Bees and Rich Wasps</h2>
-                <p class="section-intro">Why do bees create such precise structures and wasps such messy ones? The answer reveals a deep truth about how scarcity shapes behavior.</p>
+        <div class="cart-footer">
+            <div class="cart-total-row">
+                <span class="cart-total-label">Total</span>
+                <span class="cart-total-value" id="cartTotal">Rp 0</span>
             </div>
+            <button class="checkout-btn" id="checkoutBtn" disabled onclick="checkout()">Place Order</button>
+        </div>
+    </div>
 
-            <div class="nature-comparison reveal">
-                <div class="nature-card">
-                    <span class="nature-emoji">🐝</span>
-                    <span class="tag tag-scarce">Scarce Resource: Wax</span>
-                    <h4>The Honeybee</h4>
-                    <p style="color: var(--warm-gray); font-size: 0.95rem; line-height: 1.7;">Each pound of wax requires eight pounds of honey, which requires more than ninety thousand individual bee trips. The bees create walls that meet at a remarkably precise 120 degrees, forming hexagons perfect to the eye.</p>
-                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--beige);">
-                        <p style="font-family: 'Crimson Text', serif; font-size: 1.1rem;"><strong>Builds with precision because waste is costly.</strong></p>
-                    </div>
-                </div>
-                <div class="nature-card">
-                    <span class="nature-emoji">🐝</span>
-                    <span class="tag tag-abundant">Abundant Resource: Mud</span>
-                    <h4>The Mud Dauber Wasp</h4>
-                    <p style="color: var(--warm-gray); font-size: 0.95rem; line-height: 1.7;">The wasps build their nests out of mud. The cells are roughly cylindrical, but they are plastered together erratically, with none of the precision of the hive.</p>
-                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--beige);">
-                        <p style="font-family: 'Crimson Text', serif; font-size: 1.1rem;"><strong>Builds sloppily because material is cheap.</strong></p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="prose reveal">
-                <p>Something similar happens for the poor and the rich. Imagine that before packing a suitcase, you lay on the bed the items you want to take with you, with the most valuable items on the left and the least valuable ones on the right. For a three-day trip, the first pair of underwear would be on the far left; a fifth pair would be on the far right.</p>
-                
-                <p>You start putting the items in your suitcase starting with the most valuable, from left to right. You can pack quite a few items before your suitcase is full, by which point you'd be packing things you do not care much about, like the fifth pair of underwear. Unused room in the suitcases of the rich comes at the expense of items of little consequence. The suitcases of the poor get full while they are still packing items they very much need.</p>
-            </div>
-
-            <div class="highlight-box reveal">
-                <p>There is an almost economic logic to all this: the poor have less slack because they can afford less of it. Packing material — space in the suitcase — is cheap for the rich, like mud, but it is expensive for the poor, like wax. So the rich pack like wasps, casually, inefficiently, and with slack. And the poor pack like bees, carefully, and with no slack.</p>
+    <!-- Item Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+        <div class="modal" onclick="event.stopPropagation()">
+            <h3 id="modalTitle">Item Name</h3>
+            <div class="modal-category" id="modalCategory">Category</div>
+            <div class="modal-description" id="modalDescription"></div>
+            <div class="modal-price" id="modalPrice">Rp 0</div>
+            <div class="modal-options" id="modalOptions"></div>
+            <div class="modal-actions">
+                <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-add" onclick="confirmAddToCart()">Add to Cart</button>
             </div>
         </div>
-    </section>
+    </div>
 
-    <section id="what-we-buy">
-        <div class="section-container">
-            <div class="section-header reveal">
-                <span class="section-number">05 / Consequences</span>
-                <h2 class="section-title">What We Buy With Slack</h2>
-                <p class="section-intro">Slack frees us from trade-offs. It licenses us to buy items that on their own, devoid of any other considerations, have some appeal. The result, of course, is inefficiency and waste.</p>
-            </div>
-
-            <div class="process-steps reveal">
-                <div class="process-step">
-                    <div class="step-number">1</div>
-                    <div class="step-content">
-                        <h4>Cabinet Castaways</h4>
-                        <p>Kitchen cabinets across the United States are full of soups, jams, and canned food that have not been used for ages. Some estimates suggest that one in ten items bought in the grocery store is destined to become a cabinet castaway.</p>
-                    </div>
-                </div>
-                <div class="process-step">
-                    <div class="step-number">2</div>
-                    <div class="step-content">
-                        <h4>The Storage Economy</h4>
-                        <p>Over $12 billion is spent annually on self-storage, three times as much as is spent on music purchases. The United States has more than two billion square feet allocated to self-storage space.</p>
-                    </div>
-                </div>
-                <div class="process-step">
-                    <div class="step-number">3</div>
-                    <div class="step-content">
-                        <h4>Time Evaporation</h4>
-                        <p>When we have plenty of time, we loll around, and time evaporates. Minutes here and there add up to hours frittered away. We end up getting six hours of good use out of a sixteen-hour day.</p>
-                    </div>
-                </div>
-                <div class="process-step">
-                    <div class="step-number">4</div>
-                    <div class="step-content">
-                        <h4>The Paradox of Choice</h4>
-                        <p>When given two appealing alternatives instead of one, more people chose the original plan. Slack provides an easy way to avoid the burden of choosing — it allows you to say, "I'll take both."</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="quote-block reveal">
-                <p class="quote-text">A house is just a pile of stuff with a cover on it.</p>
-                <p class="quote-author">— George Carlin</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="room-to-fail" style="background: white;">
-        <div class="section-container">
-            <div class="section-header reveal">
-                <span class="section-number">06 / Hidden Value</span>
-                <h2 class="section-title">Room to Fail</h2>
-                <p class="section-intro">Slack not only absolves you of the need to make trade-offs. It means mistakes do not entail real sacrifice. It gives us room to maneuver, to reshuffle when we err.</p>
-            </div>
-
-            <div class="comparison-section reveal">
-                <h3 style="text-align: center; font-family: 'Crimson Text', serif; margin-bottom: 0.5rem;">The $200 Mistake</h3>
-                <p style="text-align: center; color: var(--warm-gray); margin-bottom: 2rem;">Same mistake, different consequences</p>
-                
-                <div class="comparison-grid">
-                    <div class="comparison-side" style="padding: 2rem; background: #f8f8f8; border-radius: 16px;">
-                        <span class="emoji" style="font-size: 3rem;">😅</span>
-                        <h4>Alex (Comfortable)</h4>
-                        <p style="color: var(--warm-gray); font-size: 0.9rem;">Financially comfortable. Has slack.</p>
-                        <div style="text-align: left; margin-top: 1.5rem;">
-                            <p style="margin-bottom: 1rem;"><strong>Reaction:</strong> "What a bad purchase!"</p>
-                            <p style="margin-bottom: 1rem;"><strong>Cost:</strong> Paid from leftover slack</p>
-                            <p style="margin-bottom: 1rem;"><strong>Consequence:</strong> Brushes it off easily</p>
-                            <p style="color: var(--accent); font-weight: 600;">The mistake is absorbed.</p>
-                        </div>
-                    </div>
-                    <div class="comparison-side" style="padding: 2rem; background: #fff5f5; border-radius: 16px;">
-                        <span class="emoji" style="font-size: 3rem;">😰</span>
-                        <h4>Ben (Tight Budget)</h4>
-                        <p style="color: var(--warm-gray); font-size: 0.9rem;">Tight for cash. No slack.</p>
-                        <div style="text-align: left; margin-top: 1.5rem;">
-                            <p style="margin-bottom: 1rem;"><strong>Reaction:</strong> "What a bad purchase!"</p>
-                            <p style="margin-bottom: 1rem;"><strong>Cost:</strong> Must sacrifice something planned</p>
-                            <p style="margin-bottom: 1rem;"><strong>Consequence:</strong> "Now I won't have the money to repair my car. That might make me late for work, which might lead to..."</p>
-                            <p style="color: var(--accent); font-weight: 600;">The mistake cascades.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stats-bar reveal" style="background: linear-gradient(135deg, #1a1a1a, #2d2d2d);">
-                <div class="stat">
-                    <span class="stat-number" data-target="10">0</span>
-                    <span class="stat-label">% Temptation Tax<br>for the Poorest</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number" data-target="1">0</span>
-                    <span class="stat-label">% Temptation Tax<br>for the Wealthiest</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number" data-target="55">0</span>
-                    <span class="stat-label">Days Average<br>Thesis Actually Took</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-number" data-target="34">0</span>
-                    <span class="stat-label">Days Students<br>Estimated</span>
-                </div>
-            </div>
-
-            <div class="prose reveal">
-                <p>The planning fallacy is common to many people, but not everybody experiences the same consequences from it. Suppose you have a project due at the end of the month. In reality the project requires forty hours of work, but you mistakenly think it will take only thirty, and you plan accordingly. As the deadline approaches, your error becomes clear. You are ten hours short.</p>
-                
-                <p>Suppose you are not terribly busy. The shortfall is nothing more than an annoyance. You look at your schedule and find ways to create time. There are a few commitments that can be easily moved around, a few to-dos that can be put off and, most important, you have empty spaces here and there in your calendar already. With a little jiggling, you're set.</p>
-                
-                <p>Suppose, instead, that you are already heavily committed this week. Now this is more than annoying. Like a wobbly Jenga tower, if you delay or move any one thing around, the whole structure will collapse. For the less busy person, slack absorbs the error, thus minimizing the consequences. The busy person, on the other hand, cannot shrug it off so easily. Each added hour must come at the expense of something else.</p>
-            </div>
-
-            <div class="highlight-box reveal">
-                <p>Scarcity not only raises the costs of error; it also provides more opportunity to err, to make misguided choices. It is harder to do things right, because many items — time commitments for the busy, expenses for the poor — must be carefully made to fit into a constrained budget.</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="conclusion">
-        <div class="section-container">
-            <div class="section-header reveal">
-                <span class="section-number">07 / Synthesis</span>
-                <h2 class="section-title">Scarcity and Slack</h2>
-                <p class="section-intro">Physical limits and trade-offs are always there. But we do not experience them that way. The concept of slack cuts to the core of the psychology of scarcity.</p>
-            </div>
-
-            <div class="cards-grid reveal">
-                <div class="card">
-                    <div class="card-icon" style="background: linear-gradient(135deg, #f0e8d0, #d4c9a0);">🧮</div>
-                    <h3>Mathematical Reality</h3>
-                    <p>Scarcity may create a logistically harder packing problem. The mind, challenged by the psychology that emerges from scarcity, may find itself needing to navigate a world that is computationally more complex.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon" style="background: linear-gradient(135deg, #d0e0f0, #a0b8d0);">🧠</div>
-                    <h3>Psychological Reality</h3>
-                    <p>While actual limits and trade-offs are universal, the experience is not. A big suitcase does not just permit more room; it removes the feeling of scarcity entirely.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon" style="background: linear-gradient(135deg, #e0d0f0, #b8a0d0);">✨</div>
-                    <h3>The Luxury of Slack</h3>
-                    <p>Slack is not just inefficiency; it is a mental luxury. Abundance affords us the luxury of packing poorly, the luxury of not having to think, as well as the luxury of not minding mistakes.</p>
-                </div>
-            </div>
-
-            <div class="quote-block reveal" style="background: linear-gradient(135deg, #1a1a1a, #2d2d2d);">
-                <p class="quote-text">A man is rich in proportion to the number of things he can afford to let alone.</p>
-                <p class="quote-author">— Henry David Thoreau</p>
-            </div>
-
-            <div class="prose reveal" style="text-align: center; max-width: 700px; margin: 0 auto;">
-                <p>Having slack allows us the feeling of abundance. Slack is not just inefficiency; it is a mental luxury. Abundance does not just allow us to buy more goods. It affords us the luxury of packing poorly, the luxury of not having to think, as well as the luxury of not minding mistakes.</p>
-            </div>
-        </div>
-    </section>
-
-    <footer>
-        <div class="footer-content">
-            <h3 class="footer-title">Packing and Slack</h3>
-            <p class="footer-quote">"The big suitcase is packed carelessly, with room to spare. The small suitcase is packed carefully and tightly."</p>
-            <p class="footer-meta">Based on the psychology of scarcity • Interactive Edition</p>
-        </div>
-    </footer>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // Reading Progress
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('readingProgress').style.width = scrolled + '%';
-        });
-
-        // Scroll Reveal
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+        // Menu Data with Descriptions
+        const menuData = {
+            beverages: [
+                { 
+                    id: 'b1', 
+                    category: 'Regular', 
+                    name: 'Black', 
+                    price: 33, 
+                    temps: ['H', 'I'],
+                    description: 'A clean, bold cup of our house blend. Pure coffee character with notes of dark chocolate and caramel.'
+                },
+                { 
+                    id: 'b2', 
+                    category: 'Regular', 
+                    name: 'Magic', 
+                    price: 38, 
+                    temps: [],
+                    description: 'A Melbourne-style double ristretto with silky steamed milk. Intense, sweet, and perfectly balanced.'
+                },
+                { 
+                    id: 'b3', 
+                    category: 'Regular', 
+                    name: 'Latte', 
+                    price: 38, 
+                    temps: ['H', 'I'],
+                    description: 'Smooth espresso topped with velvety steamed milk. Comfort in a cup, crafted for everyday moments.'
+                },
+                { 
+                    id: 'b4', 
+                    category: 'Fine Ahead', 
+                    name: 'Fine Latte', 
+                    price: 43, 
+                    temps: [], 
+                    note: 'Made with our house milk blend',
+                    description: 'Our signature latte elevated with a proprietary blend of milks for extraordinary creaminess and depth.'
+                },
+                { 
+                    id: 'b5', 
+                    category: 'Fine Ahead', 
+                    name: 'Fine Double', 
+                    price: 43, 
+                    temps: [], 
+                    note: 'Made with our house milk blend',
+                    description: 'Double shot intensity meets our house milk blend. Rich, robust, and unapologetically bold.'
+                },
+                { 
+                    id: 'b6', 
+                    category: 'Filter', 
+                    name: 'Regular', 
+                    price: 38, 
+                    temps: ['H', 'I'],
+                    description: 'Single-origin pour-over highlighting the bean\'s terroir. Bright, nuanced, and ever-changing.'
+                },
+                { 
+                    id: 'b7', 
+                    category: 'House Matcha', 
+                    name: 'Super Matcha', 
+                    price: 50, 
+                    temps: ['H', 'I'],
+                    description: 'Ceremonial-grade matcha whisked to perfection. Earthy, umami-rich, and energizing.'
+                },
+                { 
+                    id: 'b8', 
+                    category: 'House Matcha', 
+                    name: 'Matcha Jasmine', 
+                    price: 50, 
+                    temps: [],
+                    description: 'Vibrant matcha meets fragrant jasmine. A floral, creamy union of two timeless traditions.'
+                },
+                { 
+                    id: 'b9', 
+                    category: 'House Matcha', 
+                    name: 'Matcha Klepon', 
+                    price: 50, 
+                    temps: [],
+                    description: 'Inspired by the Indonesian sweet treat — matcha with pandan and gula melaka notes. Nostalgic and unique.'
+                },
+                { 
+                    id: 'b10', 
+                    category: 'Signature', 
+                    name: 'Elder Coffee Cream', 
+                    price: 40, 
+                    temps: [],
+                    description: 'Espresso topped with elderflower-infused cold cream. Floral, creamy, and unexpectedly refreshing.'
+                },
+                { 
+                    id: 'b11', 
+                    category: 'Signature', 
+                    name: 'Hazelnut Praline', 
+                    price: 40, 
+                    temps: [],
+                    description: 'Espresso with house-made hazelnut praline. Nutty, buttery sweetness with a sophisticated finish.'
+                },
+                { 
+                    id: 'b12', 
+                    category: 'Signature', 
+                    name: 'Cereal Latte', 
+                    price: 38, 
+                    temps: [],
+                    description: 'Latte infused with toasted cereal milk. Childhood nostalgia meets specialty coffee craft.'
+                },
+                { 
+                    id: 'b13', 
+                    category: 'Signature', 
+                    name: 'Cranberry Espresso', 
+                    price: 38, 
+                    temps: [],
+                    description: 'Bright espresso cut with cranberry reduction. Tart, fruity, and beautifully complex.'
+                },
+                { 
+                    id: 'b14', 
+                    category: 'Alternative', 
+                    name: 'Chocolate Jasmine', 
+                    price: 48, 
+                    temps: ['H', 'I'],
+                    description: 'Single-origin chocolate steeped with jasmine tea. Luxurious, aromatic, and deeply comforting.'
+                },
+                { 
+                    id: 'b15', 
+                    category: 'Alternative', 
+                    name: 'Chrysant Passion Jelly', 
+                    price: 33, 
+                    temps: [],
+                    description: 'Chrysanthemum tea with passion fruit and house jelly. Floral, tropical, and playfully textured.'
+                },
+                { 
+                    id: 'b16', 
+                    category: 'Alternative', 
+                    name: 'Hibiscus Passion Jelly', 
+                    price: 33, 
+                    temps: [],
+                    description: 'Tart hibiscus meets sweet passion fruit jelly. Vibrant crimson, refreshingly tangy.'
+                },
+                { 
+                    id: 'b17', 
+                    category: 'Fresh', 
+                    name: 'Green Silk', 
+                    price: 38, 
+                    temps: [],
+                    description: 'A silky blend of cucumber, mint, and green apple. Clean, crisp, and revitalizing.'
+                },
+                { 
+                    id: 'b18', 
+                    category: 'Fresh', 
+                    name: 'Summer Ginger', 
+                    price: 38, 
+                    temps: [],
+                    description: 'Fiery ginger with citrus and honey. A zesty kick that warms from within.'
+                },
+                { 
+                    id: 'b19', 
+                    category: 'Fresh', 
+                    name: 'Berry Basil Melonade', 
+                    price: 38, 
+                    temps: [],
+                    description: 'Seasonal berries, fresh basil, and melon. Herbaceous, fruity, and summer in a glass.'
+                }
+            ],
+            bread: [
+                { 
+                    id: 'br1', 
+                    category: 'Mochi Bread', 
+                    name: 'Ogura', 
+                    price: 28, 
+                    temps: [],
+                    description: 'Chewy mochi bread filled with sweet red bean paste. A Japanese-Indonesian comfort classic.'
+                },
+                { 
+                    id: 'br2', 
+                    category: 'Mochi Bread', 
+                    name: 'Choco', 
+                    price: 30, 
+                    temps: [],
+                    description: 'Soft mochi bread with a molten Belgian chocolate center. Gooey, rich, and irresistible.'
+                },
+                { 
+                    id: 'br3', 
+                    category: 'Mochi Bread', 
+                    name: 'Matcha', 
+                    price: 30, 
+                    temps: [],
+                    description: 'Mochi bread with premium matcha filling. Earthy sweetness in every chewy bite.'
+                },
+                { 
+                    id: 'br4', 
+                    category: 'Shiopan', 
+                    name: 'Original', 
+                    price: 23, 
+                    temps: [],
+                    description: 'Japanese salted butter roll. Simple, pillowy, and perfectly savory-sweet.'
+                },
+                { 
+                    id: 'br5', 
+                    category: 'Shiopan', 
+                    name: 'Garlic Butter', 
+                    price: 25, 
+                    temps: [],
+                    description: 'Shiopan loaded with roasted garlic butter. Aromatic, savory, and utterly addictive.'
+                },
+                { 
+                    id: 'br6', 
+                    category: 'Shiopan', 
+                    name: 'Chocolate', 
+                    price: 28, 
+                    temps: [],
+                    description: 'Salted butter roll with dark chocolate chunks. The sweet-savety balance perfected.'
+                },
+                { 
+                    id: 'br7', 
+                    category: 'Shiopan', 
+                    name: 'Cranberry Cheese', 
+                    price: 28, 
+                    temps: [],
+                    description: 'Tart cranberry and cream cheese stuffed shiopan. Fruity, tangy, and creamy.'
+                },
+                { 
+                    id: 'br8', 
+                    category: 'Shiopan', 
+                    name: 'Beef Floss', 
+                    price: 29, 
+                    temps: [],
+                    description: 'Fluffy shiopan topped with savory beef floss. A beloved Southeast Asian bakery staple.'
+                },
+                { 
+                    id: 'br9', 
+                    category: 'Cinnamon Roll', 
+                    name: 'Lemon Curd', 
+                    price: 28, 
+                    temps: [],
+                    description: 'Swirled cinnamon bun with bright lemon curd filling. Citrusy, spicy, and sunshine-filled.'
+                },
+                { 
+                    id: 'br10', 
+                    category: 'Cinnamon Roll', 
+                    name: 'Pistachio', 
+                    price: 30, 
+                    temps: [],
+                    description: 'Cinnamon roll with pistachio cream and crushed nuts. Nutty, fragrant, and indulgent.'
+                },
+                { 
+                    id: 'br11', 
+                    category: 'Cinnamon Roll', 
+                    name: 'Tiramisu', 
+                    price: 30, 
+                    temps: [],
+                    description: 'Coffee-soaked cinnamon roll with mascarpone cream. Dessert and breakfast, merged.'
+                },
+                { 
+                    id: 'br12', 
+                    category: 'Babka Slices', 
+                    name: 'Cranberry Cheese', 
+                    price: 28, 
+                    temps: [],
+                    description: 'Twisted brioche with cranberry and cream cheese ripple. Tart, rich, and beautifully swirled.'
+                },
+                { 
+                    id: 'br13', 
+                    category: 'Babka Slices', 
+                    name: 'Garlic Cheese', 
+                    price: 28, 
+                    temps: [],
+                    description: 'Savory babka with roasted garlic and melted cheese. Comfort food, reimagined.'
+                },
+                { 
+                    id: 'br14', 
+                    category: 'Babka Slices', 
+                    name: 'Choco Peanut', 
+                    price: 30, 
+                    temps: [],
+                    description: 'Chocolate babka with crunchy peanut brittle. Decadent, nutty, and texturally satisfying.'
+                },
+                { 
+                    id: 'br15', 
+                    category: 'Ciabatta', 
+                    name: 'Fillet O Fish', 
+                    price: 35, 
+                    temps: [],
+                    description: 'Crispy fish fillet with tartar sauce on toasted ciabatta. Crunchy, creamy, and satisfying.'
+                },
+                { 
+                    id: 'br16', 
+                    category: 'Ciabatta', 
+                    name: 'Spicy Chicken Honey', 
+                    price: 35, 
+                    temps: [],
+                    description: 'Spicy glazed chicken with honey drizzle on ciabatta. Sweet heat in every bite.'
+                }
+            ]
         };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    
-                    // Animate numbers if this is a stats bar
-                    const statNumbers = entry.target.querySelectorAll('.stat-number');
-                    statNumbers.forEach(num => {
-                        animateNumber(num);
-                    });
-                }
-            });
-        }, observerOptions);
+        const subCategories = {
+            beverages: ['All', 'Regular', 'Fine Ahead', 'Filter', 'House Matcha', 'Signature', 'Alternative', 'Fresh'],
+            bread: ['All', 'Mochi Bread', 'Shiopan', 'Cinnamon Roll', 'Babka Slices', 'Ciabatta']
+        };
 
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-        document.querySelectorAll('.stats-bar').forEach(el => observer.observe(el));
+        // State
+        let currentMainTab = 'beverages';
+        let currentSubCategory = 'All';
+        let cart = [];
+        let selectedItem = null;
+        let selectedTemp = null;
 
-        // Number Animation
-        function animateNumber(element) {
-            const target = parseInt(element.getAttribute('data-target'));
-            const duration = 2000;
-            const start = performance.now();
-            
-            function update(currentTime) {
-                const elapsed = currentTime - start;
-                const progress = Math.min(elapsed / duration, 1);
-                const easeOut = 1 - Math.pow(1 - progress, 3);
-                const current = Math.floor(easeOut * target);
-                element.textContent = current;
-                
-                if (progress < 1) {
-                    requestAnimationFrame(update);
-                } else {
-                    element.textContent = target;
-                }
-            }
-            
-            requestAnimationFrame(update);
-        }
-
-        // Suitcase Demo
-        const essentials = ['Toiletries', 'Business Clothes', 'Electronics', 'Underwear', 'Socks'];
-        const extras = ['Umbrella', 'Sweater', 'Gym Clothes', 'Running Shoes', 'Extra Shirt', 'Book', 'Snacks'];
-        
-        let largePacked = [];
-        let smallPacked = [];
-        const largeCapacity = 12;
-        const smallCapacity = 7;
-
-        function selectSuitcase(size) {
-            document.querySelectorAll('.suitcase').forEach(s => s.classList.remove('active'));
-            document.getElementById(size + 'Suitcase').classList.add('active');
-        }
-
-        function packEssentials() {
-            essentials.forEach((item, i) => {
-                setTimeout(() => {
-                    if (!largePacked.includes(item)) {
-                        largePacked.push(item);
-                        updateSuitcase('large');
-                    }
-                    if (!smallPacked.includes(item) && smallPacked.length < smallCapacity) {
-                        smallPacked.push(item);
-                        updateSuitcase('small');
-                    } else if (!smallPacked.includes(item)) {
-                        // Show trade-off for small suitcase
-                        showInsight('The small suitcase is already full! To add ' + item + ', something must come out. This is trade-off thinking in action.');
-                    }
-                }, i * 200);
-            });
-        }
-
-        function packExtras() {
-            extras.forEach((item, i) => {
-                setTimeout(() => {
-                    if (largePacked.length < largeCapacity) {
-                        largePacked.push(item);
-                        updateSuitcase('large');
-                    }
-                    if (smallPacked.length < smallCapacity) {
-                        smallPacked.push(item);
-                        updateSuitcase('small');
-                    }
-                }, i * 150);
-            });
-            
-            setTimeout(() => {
-                showInsight('The large suitcase easily accommodates extras. The small suitcase forces hard choices — each new item requires deliberation.');
-            }, extras.length * 150 + 300);
-        }
-
-        function updateSuitcase(size) {
-            const container = document.getElementById(size + 'Items');
-            const capacity = document.getElementById(size + 'Capacity');
-            const percent = document.getElementById(size + 'Percent');
-            const items = size === 'large' ? largePacked : smallPacked;
-            const max = size === 'large' ? largeCapacity : smallCapacity;
-            
-            container.innerHTML = '';
-            items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'item ' + (essentials.includes(item) ? 'essential' : 'extra');
-                div.textContent = item;
-                container.appendChild(div);
-            });
-            
-            const pct = Math.min((items.length / max) * 100, 100);
-            capacity.style.width = pct + '%';
-            percent.textContent = Math.round(pct) + '%';
-        }
-
-        function resetSuitcases() {
-            largePacked = [];
-            smallPacked = [];
-            updateSuitcase('large');
-            updateSuitcase('small');
-            document.getElementById('packingInsight').style.display = 'none';
-        }
-
-        function showInsight(text) {
-            const insight = document.getElementById('packingInsight');
-            const insightText = document.getElementById('insightText');
-            insightText.textContent = text;
-            insight.style.display = 'block';
-            insight.style.animation = 'fadeInUp 0.5s ease';
-        }
-
-        // Comparison Toggle
-        function toggleComparison(type) {
-            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.comparison-content').forEach(content => content.classList.remove('active'));
-            
-            event.target.classList.add('active');
-            document.getElementById(type + '-content').classList.add('active');
-        }
-
-        // Mobile Menu
-        function toggleMobileMenu() {
-            const nav = document.querySelector('.nav-links');
-            nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
-            if (nav.style.display === 'flex') {
-                nav.style.position = 'absolute';
-                nav.style.top = '100%';
-                nav.style.left = '0';
-                nav.style.right = '0';
-                nav.style.flexDirection = 'column';
-                nav.style.background = 'rgba(250, 247, 242, 0.98)';
-                nav.style.padding = '2rem';
-                nav.style.borderBottom = '1px solid var(--beige)';
-                nav.style.gap = '1.5rem';
-            }
-        }
-
-        // Navbar scroll effect
-        let lastScroll = 0;
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            const currentScroll = window.pageYOffset;
-            
-            if (currentScroll > 100) {
-                navbar.style.boxShadow = '0 2px 20px rgba(0,0,0,0.08)';
-            } else {
-                navbar.style.boxShadow = 'none';
-            }
-            
-            lastScroll = currentScroll;
-        });
+        // DOM Elements
+        const menuGrid = document.getElementById('menuGrid');
+        const subCategoriesEl = document.getElementById('subCategories');
+        const searchInput = document.getElementById('searchInput');
+        const cartCount = document.getElementById('cartCount');
+        const cartItems = document.getElementById('cartItems');
+        const cartTotal = document.getElementById('cartTotal');
+        const checkoutBtn = document.getElementById('checkoutBtn');
 
         // Initialize
-        resetSuitcases();
+        function init() {
+            renderSubCategories();
+            renderMenu();
+            
+            searchInput.addEventListener('input', (e) => {
+                renderMenu(e.target.value);
+            });
+        }
+
+        // Render Sub Categories
+        function renderSubCategories() {
+            const categories = subCategories[currentMainTab];
+            subCategoriesEl.innerHTML = categories.map(cat => `
+                <button class="${cat === currentSubCategory ? 'active' : ''}" onclick="setSubCategory('${cat}')">${cat}</button>
+            `).join('');
+        }
+
+        // Set Main Tab
+        function setMainTab(tab) {
+            currentMainTab = tab;
+            currentSubCategory = 'All';
+            
+            document.getElementById('tab-beverages').classList.toggle('active', tab === 'beverages');
+            document.getElementById('tab-bread').classList.toggle('active', tab === 'bread');
+            
+            renderSubCategories();
+            renderMenu(searchInput.value);
+        }
+
+        // Set Sub Category
+        function setSubCategory(category) {
+            currentSubCategory = category;
+            renderSubCategories();
+            renderMenu(searchInput.value);
+        }
+
+        // Render Menu
+        function renderMenu(searchTerm = '') {
+            const items = menuData[currentMainTab];
+            const filtered = items.filter(item => {
+                const matchesCategory = currentSubCategory === 'All' || item.category === currentSubCategory;
+                const matchesSearch = !searchTerm || 
+                    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    item.description.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                menuGrid.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: var(--text-light);">
+                        <svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 1rem; opacity: 0.3;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">No items found</p>
+                        <p>Try adjusting your search or category filter</p>
+                    </div>
+                `;
+                return;
+            }
+
+            menuGrid.innerHTML = filtered.map((item, index) => `
+                <div class="menu-card" style="animation-delay: ${index * 0.05}s" onclick="openItemModal('${item.id}')">
+                    <div class="card-category">${item.category}</div>
+                    <div class="card-title">${item.name}</div>
+                    <div class="card-description">${item.description}</div>
+                    <div class="card-meta">
+                        ${item.temps.includes('H') ? '<span class="temp-badge">Hot</span>' : ''}
+                        ${item.temps.includes('I') ? '<span class="temp-badge">Iced</span>' : ''}
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-price">Rp ${item.price}k</span>
+                        <button class="add-btn" onclick="event.stopPropagation(); quickAdd('${item.id}')">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Quick Add
+        function quickAdd(itemId) {
+            const allItems = [...menuData.beverages, ...menuData.bread];
+            const item = allItems.find(i => i.id === itemId);
+            
+            if (item.temps.length > 0) {
+                openItemModal(itemId);
+                return;
+            }
+            
+            addToCart(itemId);
+        }
+
+        // Open Item Modal
+        function openItemModal(itemId) {
+            const allItems = [...menuData.beverages, ...menuData.bread];
+            selectedItem = allItems.find(i => i.id === itemId);
+            selectedTemp = selectedItem.temps.length > 0 ? selectedItem.temps[0] : null;
+            
+            document.getElementById('modalTitle').textContent = selectedItem.name;
+            document.getElementById('modalCategory').textContent = selectedItem.category;
+            document.getElementById('modalDescription').textContent = selectedItem.description;
+            document.getElementById('modalPrice').textContent = `Rp ${selectedItem.price}k`;
+            
+            const optionsEl = document.getElementById('modalOptions');
+            if (selectedItem.temps.length > 0) {
+                optionsEl.innerHTML = `
+                    <label class="option-label">Temperature</label>
+                    <div class="option-group">
+                        ${selectedItem.temps.map(temp => `
+                            <button class="option-btn ${selectedTemp === temp ? 'active' : ''}" onclick="selectTemp('${temp}')">${temp === 'H' ? 'Hot' : 'Iced'}</button>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                optionsEl.innerHTML = '';
+            }
+            
+            document.getElementById('modalOverlay').classList.add('open');
+        }
+
+        function selectTemp(temp) {
+            selectedTemp = temp;
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => {
+                btn.classList.toggle('active', btn.textContent === (temp === 'H' ? 'Hot' : 'Iced'));
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('open');
+            selectedItem = null;
+            selectedTemp = null;
+        }
+
+        function confirmAddToCart() {
+            if (!selectedItem) return;
+            addToCart(selectedItem.id, selectedTemp);
+            closeModal();
+        }
+
+        // Add to Cart
+        function addToCart(itemId, temp = null) {
+            const allItems = [...menuData.beverages, ...menuData.bread];
+            const item = allItems.find(i => i.id === itemId);
+            const cartId = temp ? `${itemId}-${temp}` : itemId;
+            
+            const existing = cart.find(c => c.cartId === cartId);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({
+                    cartId,
+                    id: itemId,
+                    name: item.name,
+                    category: item.category,
+                    price: item.price,
+                    temp: temp,
+                    qty: 1
+                });
+            }
+            
+            updateCart();
+            showToast(`Added ${item.name}${temp ? ` (${temp === 'H' ? 'Hot' : 'Iced'})` : ''} to cart`);
+        }
+
+        // Update Cart UI
+        function updateCart() {
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            
+            cartCount.textContent = totalQty;
+            cartCount.classList.toggle('active', totalQty > 0);
+            cartTotal.textContent = `Rp ${totalPrice}k`;
+            checkoutBtn.disabled = cart.length === 0;
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div class="cart-empty">
+                        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                        <p>Your cart is empty</p>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Add some items to get started</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-title">${item.name}</div>
+                        <div class="cart-item-category">${item.category}${item.temp ? ` • ${item.temp === 'H' ? 'Hot' : 'Iced'}` : ''}</div>
+                        <div class="cart-item-controls">
+                            <button class="qty-btn" onclick="updateQty('${item.cartId}', -1)">−</button>
+                            <span style="font-weight: 600; min-width: 20px; text-align: center;">${item.qty}</span>
+                            <button class="qty-btn" onclick="updateQty('${item.cartId}', 1)">+</button>
+                        </div>
+                        <button class="remove-item" onclick="removeItem('${item.cartId}')">Remove</button>
+                    </div>
+                    <div class="cart-item-price">Rp ${item.price * item.qty}k</div>
+                </div>
+            `).join('');
+        }
+
+        function updateQty(cartId, delta) {
+            const item = cart.find(c => c.cartId === cartId);
+            if (!item) return;
+            
+            item.qty += delta;
+            if (item.qty <= 0) {
+                cart = cart.filter(c => c.cartId !== cartId);
+            }
+            updateCart();
+        }
+
+        function removeItem(cartId) {
+            cart = cart.filter(c => c.cartId !== cartId);
+            updateCart();
+        }
+
+        // Toggle Cart
+        function toggleCart() {
+            document.getElementById('cartOverlay').classList.toggle('open');
+            document.getElementById('cartDrawer').classList.toggle('open');
+        }
+
+        // Checkout
+        function checkout() {
+            if (cart.length === 0) return;
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const itemCount = cart.reduce((sum, item) => sum + item.qty, 0);
+            
+            showToast(`Order placed! ${itemCount} items • Rp ${total}k`, 3000);
+            cart = [];
+            updateCart();
+            toggleCart();
+        }
+
+        // Toast
+        function showToast(message, duration = 2500) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                ${message}
+            `;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+
+        // Initialize app
+        init();
     </script>
 </body>
 </html>
