@@ -1,1275 +1,1517 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Education Paradox — Flip Book</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #1a1918;
-  --book-bg: #2a2825;
-  --page: #faf8f5;
-  --page-shadow: #e8e4de;
-  --ink: #1a1a1a;
-  --ink-2: #4a4a4a;
-  --ink-3: #8a8a8a;
-  --accent: #c41e3a;
-  --accent-light: #e85d75;
-  --gold: #b8860b;
-  --gold-light: #d4a843;
-  --border: #e0dcd6;
-  --border-dark: #3a3835;
-  --spine: #1e1c1a;
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-html, body {
-  height: 100%;
-  overflow: hidden;
-  font-family: 'Source Sans 3', sans-serif;
-  background: var(--bg);
-  color: var(--ink);
-  -webkit-font-smoothing: antialiased;
-}
-
-/* === BOOK CONTAINER === */
-.book-scene {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  perspective: 2000px;
-  padding: 20px;
-}
-
-.book {
-  width: 900px;
-  height: 600px;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.book.open {
-  transform: translateX(50%);
-}
-
-@media (max-width: 950px) {
-  .book { width: 100%; max-width: 900px; height: 70vh; min-height: 500px; }
-  .book.open { transform: translateX(0); }
-}
-
-@media (max-width: 600px) {
-  .book { height: 85vh; }
-}
-
-/* === PAGE BASE === */
-.page {
-  position: absolute;
-  width: 50%;
-  height: 100%;
-  top: 0;
-  background: var(--page);
-  transform-style: preserve-3d;
-  transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
-  transform-origin: left center;
-  box-shadow: 
-    inset 0 0 60px rgba(0,0,0,0.05),
-    0 0 20px rgba(0,0,0,0.3);
-  overflow: hidden;
-}
-
-.page::before {
-  content: '';
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 40px;
-  background: linear-gradient(90deg, rgba(0,0,0,0.08), transparent);
-  z-index: 10;
-  pointer-events: none;
-}
-
-.page.right::before {
-  left: 0;
-  background: linear-gradient(90deg, rgba(0,0,0,0.12), transparent);
-}
-
-.page.left::before {
-  right: 0;
-  background: linear-gradient(270deg, rgba(0,0,0,0.08), transparent);
-}
-
-.page.left { left: 0; border-radius: 4px 0 0 4px; }
-.page.right { left: 50%; border-radius: 0 4px 4px 0; }
-
-/* Flipped state */
-.page.flipped {
-  transform: rotateY(-180deg);
-}
-
-/* Front and back of each page */
-.page-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 40px 36px;
-}
-
-.page-face::-webkit-scrollbar { width: 4px; }
-.page-face::-webkit-scrollbar-track { background: transparent; }
-.page-face::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-.page-face.front { transform: rotateY(0deg); }
-.page-face.back { transform: rotateY(180deg); }
-
-/* Page number */
-.page-num {
-  position: absolute;
-  bottom: 20px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--ink-3);
-  z-index: 5;
-}
-.page-face.front .page-num { right: 30px; }
-.page-face.back .page-num { left: 30px; }
-
-/* === COVER PAGE === */
-.cover-page {
-  background: linear-gradient(145deg, #1e1c1a 0%, #2a2825 50%, #1e1c1a 100%);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.cover-page::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: 
-    radial-gradient(ellipse at 30% 20%, rgba(196,30,58,0.15) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 80%, rgba(184,134,11,0.1) 0%, transparent 50%);
-}
-
-.cover-ornament {
-  width: 60px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  margin: 0 auto 24px;
-}
-
-.cover-page h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 2.8rem;
-  font-weight: 900;
-  color: #f5f2ed;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-  margin-bottom: 8px;
-  position: relative;
-  z-index: 1;
-}
-
-.cover-page h1 span {
-  display: block;
-  background: linear-gradient(135deg, var(--accent-light), var(--gold-light));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.cover-sub {
-  font-size: 0.95rem;
-  color: #9a9690;
-  max-width: 280px;
-  line-height: 1.5;
-  margin-bottom: 40px;
-  position: relative;
-  z-index: 1;
-  font-weight: 300;
-}
-
-.cover-meta-flip {
-  display: flex;
-  gap: 32px;
-  justify-content: center;
-  position: relative;
-  z-index: 1;
-}
-.cover-meta-flip div {
-  text-align: center;
-}
-.cover-meta-flip .n {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: var(--gold-light);
-  line-height: 1;
-}
-.cover-meta-flip .l {
-  font-size: 9px;
-  color: #6a6660;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-top: 4px;
-}
-
-.cover-hint {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 11px;
-  color: #6a6660;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  animation: pulse 2s ease-in-out infinite;
-  z-index: 1;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 0.5; }
-  50% { opacity: 1; }
-}
-
-/* === BACK COVER === */
-.back-cover {
-  background: linear-gradient(145deg, #1e1c1a, #2a2825);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: #9a9690;
-}
-.back-cover h3 {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.4rem;
-  color: #f5f2ed;
-  margin-bottom: 12px;
-}
-.back-cover p {
-  font-size: 13px;
-  max-width: 280px;
-  text-align: center;
-  line-height: 1.6;
-  margin-bottom: 24px;
-}
-
-/* === CONTENT STYLING === */
-.chapter-title-flip {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.6rem;
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  margin-bottom: 12px;
-}
-
-.chapter-num-flip {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 8px;
-}
-
-.chapter-lede-flip {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.95rem;
-  font-style: italic;
-  color: var(--ink-3);
-  line-height: 1.5;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border);
-}
-
-.dialogue-flip {
-  margin-bottom: 16px;
-}
-
-.speaker-row-flip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
-}
-
-.speaker-avatar-flip {
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Playfair Display', serif;
-  font-size: 11px;
-  font-weight: 700;
-  color: #fff;
-  flex-shrink: 0;
-}
-.speaker-a .speaker-avatar-flip { background: linear-gradient(135deg, var(--accent), var(--accent-light)); }
-.speaker-b .speaker-avatar-flip { background: linear-gradient(135deg, var(--gold), var(--gold-light)); }
-
-.speaker-name-flip {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-.speaker-a .speaker-name-flip { color: var(--accent); }
-.speaker-b .speaker-name-flip { color: var(--gold); }
-
-.dialogue-text-flip {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.88rem;
-  line-height: 1.7;
-  color: var(--ink-2);
-}
-.dialogue-text-flip strong {
-  font-weight: 700;
-  color: var(--ink);
-}
-.dialogue-text-flip em {
-  font-style: italic;
-  color: var(--accent);
-}
-
-/* Insight box */
-.insight-flip {
-  background: linear-gradient(135deg, #f5f2ed, #faf8f5);
-  border-radius: 10px;
-  padding: 16px;
-  margin: 16px 0;
-  border: 1px solid var(--border);
-  position: relative;
-}
-.insight-flip::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--gold));
-  border-radius: 10px 10px 0 0;
-}
-.insight-flip h4 {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin-bottom: 6px;
-  color: var(--ink);
-}
-.insight-flip p {
-  font-size: 0.82rem;
-  color: var(--ink-2);
-  line-height: 1.6;
-}
-
-/* Stats */
-.stats-flip {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin: 12px 0;
-}
-.stat-flip {
-  background: #f5f2ed;
-  border-radius: 8px;
-  padding: 10px;
-  text-align: center;
-  border: 1px solid var(--border);
-}
-.stat-flip .n {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.3rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--accent), var(--gold));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  line-height: 1;
-  margin-bottom: 4px;
-}
-.stat-flip .l {
-  font-size: 9px;
-  color: var(--ink-3);
-  line-height: 1.3;
-}
-
-/* Quote */
-.quote-flip {
-  margin: 16px 0;
-  padding: 14px 16px;
-  background: #f5f2ed;
-  border-radius: 8px;
-  border-left: 3px solid var(--gold);
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  font-size: 0.92rem;
-  line-height: 1.5;
-  color: var(--ink);
-}
-.quote-flip .auth {
-  font-style: normal;
-  font-size: 10px;
-  color: var(--ink-3);
-  margin-top: 8px;
-  font-family: 'Source Sans 3', sans-serif;
-}
-
-/* Table */
-.table-flip {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 11px;
-  margin: 12px 0;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-}
-.table-flip th {
-  background: #f0ece6;
-  padding: 8px 10px;
-  text-align: left;
-  font-size: 9px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--ink-3);
-  border-bottom: 1px solid var(--border);
-}
-.table-flip td {
-  padding: 8px 10px;
-  border-bottom: 1px solid var(--border);
-  color: var(--ink-2);
-}
-.table-flip tr:last-child td { border-bottom: none; }
-
-/* Timeline */
-.timeline-flip {
-  position: relative;
-  padding-left: 18px;
-  margin: 12px 0;
-}
-.timeline-flip::before {
-  content: '';
-  position: absolute;
-  left: 4px; top: 4px; bottom: 4px;
-  width: 2px;
-  background: linear-gradient(180deg, var(--accent), var(--gold));
-  border-radius: 1px;
-}
-.timeline-item-flip {
-  position: relative;
-  margin-bottom: 12px;
-  padding-left: 14px;
-}
-.timeline-item-flip::before {
-  content: '';
-  position: absolute;
-  left: -16px; top: 3px;
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--page);
-  border: 2px solid var(--accent);
-}
-.timeline-item-flip .y {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--accent);
-}
-.timeline-item-flip .t {
-  font-size: 11px;
-  color: var(--ink-2);
-  line-height: 1.5;
-}
-
-/* Flip cards */
-.flip-grid-flip {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin: 12px 0;
-}
-.flip-card-flip {
-  perspective: 600px;
-  height: 100px;
-  cursor: pointer;
-}
-.flip-inner-flip {
-  position: relative;
-  width: 100%; height: 100%;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-}
-.flip-card-flip.flipped .flip-inner-flip { transform: rotateY(180deg); }
-.flip-front-flip, .flip-back-flip {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  border-radius: 8px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-.flip-front-flip {
-  background: linear-gradient(145deg, #f5f2ed, #faf8f5);
-  border: 1px solid var(--border);
-}
-.flip-front-flip h4 {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.8rem;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-.flip-front-flip p {
-  font-size: 9px;
-  color: var(--ink-3);
-}
-.flip-hint-flip {
-  font-size: 8px;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 6px;
-}
-.flip-back-flip {
-  background: #f5f2ed;
-  border: 1px solid var(--border);
-  transform: rotateY(180deg);
-}
-.flip-back-flip p {
-  font-size: 10px;
-  color: var(--ink-2);
-  line-height: 1.5;
-}
-
-/* Poll */
-.poll-flip {
-  background: #f5f2ed;
-  border-radius: 10px;
-  padding: 14px;
-  margin: 12px 0;
-  border: 1px solid var(--border);
-}
-.poll-q-flip {
-  font-family: 'Playfair Display', serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-.poll-opt-flip {
-  padding: 6px 10px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  margin-bottom: 4px;
-  cursor: pointer;
-  font-size: 11px;
-  transition: all 0.2s;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.poll-opt-flip:hover { border-color: var(--accent); }
-.poll-opt-flip.sel { background: var(--accent-muted); border-color: var(--accent); color: var(--accent); font-weight: 600; }
-.poll-opt-flip .chk {
-  width: 14px; height: 14px;
-  border: 1.5px solid var(--border);
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-left: 8px;
-}
-.poll-opt-flip.sel .chk { background: var(--accent); border-color: var(--accent); }
-.poll-res-flip { display: none; margin-top: 8px; }
-.poll-res-flip.show { display: block; }
-.res-bar-flip { margin-bottom: 6px; }
-.res-bar-flip .rl { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 2px; }
-.res-bar-flip .rt { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-.res-bar-flip .rf { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold)); width: 0%; transition: width 1s; }
-
-/* Divider */
-.divider-flip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 20px 0;
-  gap: 12px;
-}
-.divider-flip .dl { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
-.divider-flip .dd { width: 4px; height: 4px; background: var(--accent); border-radius: 50%; opacity: 0.4; }
-
-/* === CONTROLS === */
-.controls {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 12px;
-  z-index: 100;
-  background: rgba(26,25,24,0.9);
-  backdrop-filter: blur(10px);
-  padding: 10px 20px;
-  border-radius: 50px;
-  border: 1px solid var(--border-dark);
-}
-
-.ctrl-btn {
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--border-dark);
-  background: transparent;
-  color: #9a9690;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  transition: all 0.25s;
-}
-.ctrl-btn:hover {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent);
-}
-.ctrl-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-.ctrl-btn:disabled:hover {
-  background: transparent;
-  color: #9a9690;
-  border-color: var(--border-dark);
-}
-
-.page-indicator {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 8px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 12px;
-  color: #9a9690;
-}
-.page-indicator .current { color: var(--gold-light); font-weight: 600; }
-
-/* Mobile hint */
-.swipe-hint {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 11px;
-  color: #6a6660;
-  letter-spacing: 1px;
-  opacity: 0;
-  transition: opacity 0.5s;
-  pointer-events: none;
-  z-index: 50;
-}
-.swipe-hint.show { opacity: 1; }
-
-@media (max-width: 600px) {
-  .page-face { padding: 24px 20px; }
-  .chapter-title-flip { font-size: 1.3rem; }
-  .cover-page h1 { font-size: 2rem; }
-  .flip-grid-flip { grid-template-columns: 1fr; }
-  .stats-flip { grid-template-columns: 1fr; }
-  .swipe-hint.show { opacity: 1; }
-}
-
-/* Print */
-@media print {
-  .controls, .swipe-hint { display: none !important; }
-  .book { transform: none !important; }
-  .page { position: relative !important; transform: none !important; width: 100% !important; left: auto !important; page-break-after: always; }
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Franklin Barbecue MasterClass — Interactive Guide</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --smoke: #1a1a1a;
+            --ember: #c44536;
+            --char: #2d2d2d;
+            --ash: #8a8a8a;
+            --cream: #f5f0e8;
+            --gold: #d4a574;
+            --bark: #5c3a21;
+            --flame: #e85d04;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--smoke);
+            color: var(--cream);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+        .smoke-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; opacity: 0.03;
+            background: radial-gradient(ellipse at 20% 80%, rgba(200,200,200,0.3) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 20%, rgba(180,180,180,0.2) 0%, transparent 50%);
+            animation: smokeDrift 20s ease-in-out infinite;
+        }
+        @keyframes smokeDrift {
+            0%, 100% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(30px,-20px) scale(1.1); }
+            66% { transform: translate(-20px,30px) scale(0.95); }
+        }
+        .nav-bar {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: rgba(26,26,26,0.95); backdrop-filter: blur(20px);
+            z-index: 1000; padding: 1rem 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid rgba(212,165,116,0.1);
+            flex-wrap: wrap; gap: 1rem;
+        }
+        .nav-logo {
+            font-family: 'Playfair Display', serif; font-size: 1.4rem;
+            font-weight: 700; color: var(--gold); letter-spacing: 2px;
+        }
+        .nav-links { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+        .nav-link {
+            padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.75rem;
+            font-weight: 500; color: var(--ash); text-decoration: none;
+            transition: all 0.3s; cursor: pointer; border: 1px solid transparent;
+            background: none;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--gold); background: rgba(212,165,116,0.1);
+            border-color: rgba(212,165,116,0.2);
+        }
+        .hero {
+            min-height: 100vh; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center;
+            padding: 6rem 2rem 4rem; position: relative;
+            background: linear-gradient(180deg, var(--smoke) 0%, var(--char) 100%);
+        }
+        .hero-content { position: relative; z-index: 2; max-width: 800px; }
+        .hero-badge {
+            display: inline-block; padding: 0.4rem 1.2rem;
+            border: 1px solid var(--gold); color: var(--gold);
+            font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase;
+            margin-bottom: 2rem; border-radius: 30px;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 900;
+            line-height: 1.1; margin-bottom: 1.5rem; color: var(--cream);
+        }
+        .hero h1 span { color: var(--gold); }
+        .hero-quote {
+            font-size: 1.1rem; color: var(--ash); max-width: 600px;
+            margin: 0 auto 3rem; font-style: italic; line-height: 1.8;
+        }
+        .hero-cta {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 1rem 2.5rem; background: var(--ember); color: white;
+            text-decoration: none; border-radius: 50px; font-weight: 600;
+            font-size: 0.95rem; transition: all 0.3s; cursor: pointer; border: none;
+        }
+        .hero-cta:hover {
+            background: var(--flame); transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(232,93,4,0.3);
+        }
+        .section {
+            padding: 5rem 2rem; max-width: 1200px; margin: 0 auto;
+            position: relative; display: none;
+        }
+        .section.active { display: block; }
+        .section-header { text-align: center; margin-bottom: 3rem; }
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem); color: var(--gold); margin-bottom: 0.5rem;
+        }
+        .section-header p { color: var(--ash); font-size: 1rem; }
+        .card-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;
+        }
+        .card {
+            background: var(--char); border-radius: 16px; padding: 2rem;
+            border: 1px solid rgba(212,165,116,0.08); transition: all 0.3s; cursor: pointer;
+        }
+        .card:hover {
+            border-color: rgba(212,165,116,0.2); transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        .card-icon {
+            width: 50px; height: 50px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin-bottom: 1rem; background: rgba(196,69,54,0.1);
+        }
+        .card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--cream); }
+        .card p { font-size: 0.9rem; color: var(--ash); line-height: 1.6; }
+        .interactive-module {
+            background: var(--char); border-radius: 20px; padding: 2.5rem;
+            margin-bottom: 2rem; border: 1px solid rgba(212,165,116,0.1);
+        }
+        .module-title {
+            font-family: 'Playfair Display', serif; font-size: 1.5rem;
+            color: var(--gold); margin-bottom: 1.5rem;
+            display: flex; align-items: center; gap: 0.75rem;
+        }
+        .fire-simulator {
+            background: linear-gradient(180deg, #0d0d0d 0%, #1a0a00 100%);
+            border-radius: 16px; padding: 2rem; position: relative; overflow: hidden;
+        }
+        .fire-visual {
+            height: 200px; border-radius: 12px; position: relative;
+            display: flex; align-items: flex-end; justify-content: center;
+            padding-bottom: 1rem; transition: all 0.5s;
+            background: linear-gradient(to top, #333 0%, #1a1a1a 100%);
+        }
+        .fire-logs {
+            display: flex; gap: 0.5rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap;
+        }
+        .log-btn {
+            padding: 0.8rem 1.5rem; border-radius: 10px;
+            border: 1px solid rgba(212,165,116,0.2); background: rgba(255,255,255,0.05);
+            color: var(--cream); cursor: pointer; transition: all 0.2s; font-size: 0.85rem;
+        }
+        .log-btn:hover { background: rgba(212,165,116,0.1); }
+        .log-btn.active { background: var(--ember); border-color: var(--ember); }
+        .fire-readout {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem;
+        }
+        .readout-item { text-align: center; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 10px; }
+        .readout-value { font-size: 1.8rem; font-weight: 700; color: var(--gold); }
+        .readout-label { font-size: 0.75rem; color: var(--ash); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.25rem; }
+        .timeline-container { position: relative; padding-left: 3rem; }
+        .timeline-line { position: absolute; left: 1rem; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--ember), var(--gold)); }
+        .timeline-item {
+            position: relative; padding: 1.5rem; background: rgba(255,255,255,0.03);
+            border-radius: 12px; margin-bottom: 1rem; cursor: pointer;
+            transition: all 0.3s; border: 1px solid transparent;
+        }
+        .timeline-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(212,165,116,0.15); }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -2.4rem; top: 1.8rem;
+            width: 12px; height: 12px; border-radius: 50%; background: var(--gold);
+            border: 3px solid var(--smoke);
+        }
+        .timeline-time { font-size: 0.8rem; color: var(--ember); font-weight: 600; margin-bottom: 0.25rem; }
+        .timeline-title { font-weight: 600; color: var(--cream); margin-bottom: 0.25rem; }
+        .timeline-desc { font-size: 0.85rem; color: var(--ash); }
+        .timeline-detail {
+            display: none; margin-top: 1rem; padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem;
+            color: var(--ash); line-height: 1.7;
+        }
+        .timeline-item.expanded .timeline-detail { display: block; }
+        .quiz-container { max-width: 700px; margin: 0 auto; }
+        .quiz-question {
+            background: rgba(255,255,255,0.03); border-radius: 16px;
+            padding: 2rem; margin-bottom: 1.5rem; border: 1px solid rgba(212,165,116,0.08);
+        }
+        .quiz-question h4 { font-size: 1.1rem; color: var(--cream); margin-bottom: 1.5rem; line-height: 1.5; }
+        .quiz-options { display: flex; flex-direction: column; gap: 0.75rem; }
+        .quiz-option {
+            padding: 1rem 1.25rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.02); color: var(--cream); cursor: pointer;
+            transition: all 0.2s; text-align: left; font-size: 0.9rem;
+        }
+        .quiz-option:hover { border-color: var(--gold); background: rgba(212,165,116,0.05); }
+        .quiz-option.correct { background: rgba(39,174,96,0.15); border-color: #27ae60; }
+        .quiz-option.wrong { background: rgba(231,76,60,0.15); border-color: #e74c3c; }
+        .quiz-option:disabled { cursor: not-allowed; opacity: 0.7; }
+        .quiz-feedback {
+            margin-top: 1rem; padding: 1rem; border-radius: 10px;
+            display: none; font-size: 0.9rem; line-height: 1.6;
+        }
+        .quiz-feedback.show { display: block; }
+        .quiz-feedback.correct { background: rgba(39,174,96,0.1); color: #2ecc71; }
+        .quiz-feedback.wrong { background: rgba(231,76,60,0.1); color: #e74c3c; }
+        .checklist { list-style: none; }
+        .checklist li {
+            padding: 1rem 1.5rem; margin-bottom: 0.5rem; background: rgba(255,255,255,0.03);
+            border-radius: 10px; display: flex; align-items: center; gap: 1rem;
+            cursor: pointer; transition: all 0.2s; border: 1px solid transparent;
+        }
+        .checklist li:hover { background: rgba(255,255,255,0.05); }
+        .checklist li.checked { border-color: rgba(39,174,96,0.3); background: rgba(39,174,96,0.05); }
+        .check-box {
+            width: 22px; height: 22px; border: 2px solid var(--ash);
+            border-radius: 6px; display: flex; align-items: center;
+            justify-content: center; flex-shrink: 0; transition: all 0.2s;
+        }
+        .checklist li.checked .check-box { background: #27ae60; border-color: #27ae60; }
+        .check-box::after { content: '✓'; color: white; font-size: 0.8rem; opacity: 0; }
+        .checklist li.checked .check-box::after { opacity: 1; }
+        .check-text { font-size: 0.9rem; color: var(--cream); }
+        .checklist li.checked .check-text { text-decoration: line-through; opacity: 0.6; }
+        .progress-wrap { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: rgba(212,165,116,0.1); z-index: 1001; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--ember), var(--gold)); width: 0%; transition: width 0.3s; }
+        .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+        .tab-btn {
+            padding: 0.75rem 1.5rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
+            background: transparent; color: var(--ash); cursor: pointer;
+            transition: all 0.2s; font-size: 0.85rem; font-weight: 500;
+        }
+        .tab-btn:hover { color: var(--cream); }
+        .tab-btn.active { background: var(--ember); color: white; border-color: var(--ember); }
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+        .anatomy-container { position: relative; background: var(--smoke); border-radius: 16px; padding: 2rem; text-align: center; }
+        .anatomy-svg { max-width: 500px; width: 100%; margin: 0 auto; }
+        .anatomy-part { cursor: pointer; transition: all 0.3s; }
+        .anatomy-part:hover { opacity: 0.8; }
+        .anatomy-part.active { stroke: var(--gold); stroke-width: 3; }
+        .anatomy-info {
+            margin-top: 1.5rem; padding: 1.5rem; background: rgba(255,255,255,0.03);
+            border-radius: 12px; min-height: 100px; color: var(--ash); line-height: 1.7;
+        }
+        .quote-block {
+            border-left: 3px solid var(--gold); padding-left: 1.5rem;
+            margin: 2rem 0; font-style: italic; color: var(--ash);
+            font-size: 1.05rem; line-height: 1.8;
+        }
+        .quote-block cite {
+            display: block; margin-top: 0.5rem; font-style: normal;
+            color: var(--gold); font-size: 0.85rem;
+        }
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem; margin: 3rem 0;
+        }
+        .stat-item { text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; }
+        .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--gold); font-family: 'Playfair Display', serif; }
+        .stat-label { font-size: 0.8rem; color: var(--ash); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.25rem; }
+        .compare-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
+        .compare-table th, .compare-table td { padding: 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .compare-table th { color: var(--gold); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+        .compare-table td { color: var(--ash); font-size: 0.9rem; }
+        .compare-table tr:hover td { color: var(--cream); background: rgba(255,255,255,0.02); }
+        .calc-input { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .calc-input label { min-width: 120px; font-size: 0.9rem; color: var(--ash); }
+        .calc-input input, .calc-input select {
+            padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05); color: var(--cream); font-size: 0.9rem; width: 150px;
+        }
+        .calc-result {
+            background: rgba(212,165,116,0.05); border: 1px solid rgba(212,165,116,0.15);
+            border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem;
+        }
+        .calc-result h4 { color: var(--gold); margin-bottom: 0.75rem; }
+        .calc-result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .calc-result-item { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .smoke-indicator {
+            display: flex; align-items: center; gap: 1rem; padding: 1rem;
+            background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 0.75rem;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .smoke-indicator:hover { background: rgba(255,255,255,0.06); }
+        .smoke-color { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.1); }
+        .smoke-info h4 { font-size: 0.95rem; color: var(--cream); margin-bottom: 0.15rem; }
+        .smoke-info p { font-size: 0.8rem; color: var(--ash); }
+        .footer { text-align: center; padding: 4rem 2rem; border-top: 1px solid rgba(212,165,116,0.1); color: var(--ash); font-size: 0.85rem; }
+        .footer a { color: var(--gold); text-decoration: none; }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero { padding-top: 5rem; }
+            .fire-readout { grid-template-columns: 1fr; }
+            .timeline-container { padding-left: 2rem; }
+            .timeline-item::before { left: -1.9rem; }
+            .calc-input { flex-direction: column; align-items: flex-start; }
+            .calc-input input, .calc-input select { width: 100%; }
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--smoke); }
+        ::-webkit-scrollbar-thumb { background: var(--bark); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+        .fade-in { animation: fadeIn 0.6s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 <base target="_blank">
 </head>
 <body>
+    <div class="smoke-bg"></div>
+    <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
 
-<div class="swipe-hint" id="swipeHint">← Swipe or click arrows to flip pages →</div>
-
-<div class="book-scene">
-  <div class="book" id="book">
-
-    <!-- PAGE 1: Front Cover (right side when closed) -->
-    <div class="page right" id="page0" style="z-index: 10;">
-      <div class="page-face front cover-page">
-        <div class="cover-ornament"></div>
-        <h1>The Education<span>Paradox</span></h1>
-        <p class="cover-sub">A candid conversation about Indonesia's education crisis, generational mental health, and the path to Golden Indonesia 2045</p>
-        <div class="cover-meta-flip">
-          <div><div class="n">9</div><div class="l">Chapters</div></div>
-          <div><div class="n">280M</div><div class="l">Population</div></div>
-          <div><div class="n">2045</div><div class="l">Vision</div></div>
+    <nav class="nav-bar">
+        <div class="nav-logo">🔥 FRANKLIN BBQ</div>
+        <div class="nav-links">
+            <button class="nav-link active" onclick="showSection('home')">Home</button>
+            <button class="nav-link" onclick="showSection('fire')">Fire</button>
+            <button class="nav-link" onclick="showSection('brisket')">Brisket</button>
+            <button class="nav-link" onclick="showSection('ribs')">Ribs</button>
+            <button class="nav-link" onclick="showSection('pork')">Pork Butt</button>
+            <button class="nav-link" onclick="showSection('grilling')">Grilling</button>
+            <button class="nav-link" onclick="showSection('wood')">Wood</button>
+            <button class="nav-link" onclick="showSection('tools')">Tools</button>
+            <button class="nav-link" onclick="showSection('history')">History</button>
+            <button class="nav-link" onclick="showSection('quiz')">Quiz</button>
         </div>
-        <div class="cover-hint">Click next to open</div>
-      </div>
-      <div class="page-face back">
-        <div class="chapter-num-flip">Chapter One</div>
-        <h2 class="chapter-title-flip">The Education Crisis</h2>
-        <p class="chapter-lede-flip">When 88% of households lack a university graduate, and 93% of voters never held a bachelor's degree, the foundation of a nation's future rests on fragile ground.</p>
+    </nav>
 
-        <div class="dialogue-flip speaker-a">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">A</div>
-            <span class="speaker-name-flip">Speaker A</span>
-          </div>
-          <div class="dialogue-text-flip">
-            If we look at Indonesia, <strong>88% of all households</strong> — the heads of household — don't have a single university degree. <strong>93% of the electorate</strong> who vote or choose leaders don't have a bachelor's degree or higher. So if we hope for the ecosystem at home that you described earlier — if the parents in 88% of households don't have a university education, don't have a concept of what noble education looks like — it's difficult to expect that a culture of reading, a culture of storytelling, can emerge.
-          </div>
-        </div>
-
-        <div class="stats-flip">
-          <div class="stat-flip"><div class="n">88%</div><div class="l">Households without degree</div></div>
-          <div class="stat-flip"><div class="n">93%</div><div class="l">Voters without S1+</div></div>
-          <div class="stat-flip"><div class="n">3.36M</div><div class="l">Total teachers</div></div>
-          <div class="stat-flip"><div class="n">IDR 2M</div><div class="l">Avg teacher salary</div></div>
-        </div>
-
-        <div class="page-num">2</div>
-      </div>
-    </div>
-
-    <!-- PAGE 2: Chapter 1 cont + Chapter 2 start -->
-    <div class="page right" id="page1" style="z-index: 9;">
-      <div class="page-face front">
-        <div class="dialogue-flip speaker-b">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">B</div>
-            <span class="speaker-name-flip">Speaker B</span>
-          </div>
-          <div class="dialogue-text-flip">
-            I think within the bounds of intuition, perhaps the <em>only way to disrupt education</em> is through schools. And in schools, it must be ensured that those who teach are of quality. Right? And often we focus on curriculum, often we focus on technology, but we lack — forgive me — focus on <strong>teacher quality</strong>. Right? And I have a conviction that if a teacher is great at storytelling, they are more capable — even if they don't understand physics — they are more capable of converting their students into physicists. Right? Compared to someone who understands physics but can't tell a story.
-          </div>
-        </div>
-
-        <div class="insight-flip">
-          <h4>💡 The Storyteller Hypothesis</h4>
-          <p>A teacher who masters storytelling can inspire students to become physicists, even if the teacher doesn't fully grasp physics themselves. The power of narrative transcends subject matter expertise.</p>
-        </div>
-
-        <div class="dialogue-flip speaker-a">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">A</div>
-            <span class="speaker-name-flip">Speaker A</span>
-          </div>
-          <div class="dialogue-text-flip">
-            There are smart people who can't teach, but there are ordinary people who can teach, and their children become smart. I can also mention several names of my teachers — how they actually didn't master the dimensions that well, but <strong>they were very good at storytelling</strong>. And they cultivated imagination, not formulation. I agree — memorization is not important. What's important is <em>imagining</em>.
-          </div>
-        </div>
-
-        <div class="page-num">3</div>
-      </div>
-      <div class="page-face back">
-        <div class="chapter-num-flip">Chapter Two</div>
-        <h2 class="chapter-title-flip">Teachers as Nation Builders</h2>
-        <p class="chapter-lede-flip">The chicken-and-egg dilemma: raise salaries first, or find quality teachers first?</p>
-
-        <div class="dialogue-flip speaker-b">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">B</div>
-            <span class="speaker-name-flip">Speaker B</span>
-          </div>
-          <div class="dialogue-text-flip">
-            School is the key for us. Someone on TikTok said school is just <em>unemployment with lecture-style packaging</em>. Actually, school doesn't make us smart. School gives us a mindset, and I really agree — a proper school is determined by <strong>teacher quality</strong>. And teacher quality is determined by <strong>salary</strong>. And this is like a vicious cycle. If we want proper teacher quality, we have to raise salaries so teachers know, "Oh, so being a teacher pays well."
-          </div>
-        </div>
-
-        <div class="dialogue-flip speaker-a">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">A</div>
-            <span class="speaker-name-flip">Speaker A</span>
-          </div>
-          <div class="dialogue-text-flip">
-            This becomes a cycle that I think is a bit... like a chicken-and-egg problem, Sir. Do we raise teacher salaries first, or do we not look for quality teachers first? <em>Can be done simultaneously, Doctor.</em> Educating quality teachers takes time. This is a chicken-and-egg problem for me. I think <strong>salaries must be raised first</strong>.
-          </div>
-        </div>
-
-        <div class="page-num">4</div>
-      </div>
-    </div>
-
-    <!-- PAGE 3: Chapter 2 cont + Chapter 3 -->
-    <div class="page right" id="page2" style="z-index: 8;">
-      <div class="page-face front">
-        <div class="quote-flip">
-          There is sugar, there are ants. There are dodol ants, there are non-dodol ants. We'll filter them out later. But if we don't raise salaries, the ants won't come — they'll go to McKinsey, Citibank, Amazon.
-          <div class="auth">— On market forces and teacher recruitment</div>
-        </div>
-
-        <div class="insight-flip">
-          <h4>🔄 The Vicious Cycle</h4>
-          <p>Low salaries → poor teacher quality → weak student outcomes → low national productivity → inability to fund education → low salaries. Breaking this cycle requires intervention at the salary level first.</p>
-        </div>
-
-        <div class="dialogue-flip speaker-b">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">B</div>
-            <span class="speaker-name-flip">Speaker B</span>
-          </div>
-          <div class="dialogue-text-flip">
-            I really agree with Sir, our income must rise first so that as teachers and educators, they have more budget to improve their <strong>lifelong learning</strong>. Right? If we offer this salary, will the ants come? Yes. There is sugar, there are ants. We'll filter them out later. But if we don't raise it, the ants won't come — they'll go to McKinsey, Citibank, Amazon.
-          </div>
-        </div>
-
-        <div class="page-num">5</div>
-      </div>
-      <div class="page-face back">
-        <div class="chapter-num-flip">Chapter Three</div>
-        <h2 class="chapter-title-flip">The Storyteller's Edge</h2>
-        <p class="chapter-lede-flip">Why Indian CEOs dominate Silicon Valley — and what Indonesia can learn from the power of narrative.</p>
-
-        <div class="dialogue-flip speaker-a">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">A</div>
-            <span class="speaker-name-flip">Speaker A</span>
-          </div>
-          <div class="dialogue-text-flip">
-            Can you imagine if the CEO of Microsoft was named <strong>Bambang</strong>? If the CEO of Google was named <strong>Komeng</strong>? That would be terrifying, Sir. That would be more nationalistic. Because the value that can be poured into Indonesia by them or the diaspora — if I line up people from countries A, B, C, D, E, and then there's India — their cognition is all the same. But <strong>the ones who can tell stories the best are Indians</strong>. That's the reason why they become CEOs and gain trust. Because they can tell stories.
-          </div>
-        </div>
-
-        <div class="flip-grid-flip">
-          <div class="flip-card-flip" onclick="this.classList.toggle('flipped')">
-            <div class="flip-inner-flip">
-              <div class="flip-front-flip">
-                <h4>🎭 Narrative Advantage</h4>
-                <p>Why storytelling beats raw intelligence</p>
-                <span class="flip-hint-flip">Click to reveal</span>
-              </div>
-              <div class="flip-back-flip">
-                <p>People with high cognition who can tell stories gain trust and leadership positions. Raw intelligence without narrative ability remains invisible.</p>
-              </div>
+    <!-- HOME / HERO -->
+    <section id="home" class="section active">
+        <div class="hero">
+            <div class="hero-content">
+                <div class="hero-badge">Aaron Franklin MasterClass</div>
+                <h1>The Art of <span>Texas Barbecue</span></h1>
+                <p class="hero-quote">"It's just a piece of meat and it's just fire. Nothing special, but it's the journey of how you get to the end and then it's the conversations that you get to have at the end of it. That's kind of barbecue for me."</p>
+                <button class="hero-cta" onclick="showSection('fire')">Start Your Journey →</button>
             </div>
-          </div>
-          <div class="flip-card-flip" onclick="this.classList.toggle('flipped')">
-            <div class="flip-inner-flip">
-              <div class="flip-front-flip">
-                <h4>🌍 Diaspora Power</h4>
-                <p>The hidden economic engine</p>
-                <span class="flip-hint-flip">Click to reveal</span>
-              </div>
-              <div class="flip-back-flip">
-                <p>When diaspora talent reaches CEO positions, they create massive investment flows back to their homeland.</p>
-              </div>
+        </div>
+
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Hour Brisket Cook</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">255°</div>
+                    <div class="stat-label">Target Temperature</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">16</div>
+                    <div class="stat-label">Mesh Pepper</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">¼"</div>
+                    <div class="stat-label">Fat Cap Thickness</div>
+                </div>
             </div>
-          </div>
+
+            <div class="section-header">
+                <h2>What You'll Learn</h2>
+                <p>Core techniques from the Franklin Barbecue playbook</p>
+            </div>
+
+            <div class="card-grid">
+                <div class="card" onclick="showSection('fire')">
+                    <div class="card-icon">🔥</div>
+                    <h3>Fire Management</h3>
+                    <p>Build, maintain, and read fires. Learn clean combustion, airflow principles, and the art of proactive fire tending.</p>
+                </div>
+                <div class="card" onclick="showSection('brisket')">
+                    <div class="card-icon">🥩</div>
+                    <h3>Brisket Mastery</h3>
+                    <p>Trim, season, cook, wrap, rest, and slice the mother of all Texas barbecue cuts. The complete 12-hour journey.</p>
+                </div>
+                <div class="card" onclick="showSection('ribs')">
+                    <div class="card-icon">🍖</div>
+                    <h3>Spare Ribs</h3>
+                    <p>Trim St. Louis style, manage the 3-hour unwrapped phase, wrap with sauce, and feel for perfect tenderness.</p>
+                </div>
+                <div class="card" onclick="showSection('pork')">
+                    <div class="card-icon">🐷</div>
+                    <h3>Pork Butt</h3>
+                    <p>The forgiving beginner's cook. Heavy seasoning, 8-hour smoke, foil wrap, and pull-apart tenderness at 203°F.</p>
+                </div>
+                <div class="card" onclick="showSection('grilling')">
+                    <div class="card-icon">⚡</div>
+                    <h3>Hot & Fast Grilling</h3>
+                    <p>Direct heat techniques for steaks and vegetables. Two-zone cooking, texture reading, and live-fire intuition.</p>
+                </div>
+                <div class="card" onclick="showSection('wood')">
+                    <div class="card-icon">🌳</div>
+                    <h3>Wood & Smoke</h3>
+                    <p>Post oak selection, density reading, moisture content, and understanding clean vs. dirty smoke by sight and smell.</p>
+                </div>
+            </div>
+
+            <div class="quote-block">
+                "You really only learn how to make good barbecue by making bad barbecue. Definitely don't invite a lot of friends over for your first brisket."
+                <cite>— Aaron Franklin</cite>
+            </div>
+        </div>
+    </section>
+
+    <!-- FIRE SECTION -->
+    <section id="fire" class="section">
+        <div class="section-header">
+            <h2>🔥 Fire Management</h2>
+            <p>The foundation of all barbecue — learn to build, read, and tend your fire</p>
         </div>
 
-        <div class="page-num">6</div>
-      </div>
-    </div>
-
-    <!-- PAGE 4: Chapter 3 cont + Chapter 4 -->
-    <div class="page right" id="page3" style="z-index: 7;">
-      <div class="page-face front">
-        <div class="dialogue-flip speaker-b">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">B</div>
-            <span class="speaker-name-flip">Speaker B</span>
-          </div>
-          <div class="dialogue-text-flip">
-            Can you imagine if in school, the teachers taught like your parents? Wow, there would be millions of Tirtas. All ambitious. And then to pesantrens, to synagogues, to mosques, to churches, to cafes — the discussions, the dialectics would be of quality, like you debating with your father about buying a car. <strong>Perfectionism, superlatives are prioritized.</strong> How to be the best? So what's discussed are ideas, not events, not people — ideas, brainstorming. If that's done in social institutions — that becomes <em>nation building</em>.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">Interactive Fire Simulator</div>
+            <div class="fire-simulator">
+                <div class="fire-visual" id="fireVisual">
+                    <span style="color: white; font-size: 0.9rem; opacity: 0.7;">Select a log type to see the fire behavior</span>
+                </div>
+                <div class="fire-logs">
+                    <button class="log-btn" onclick="setFire('dense')">Dense Oak Log</button>
+                    <button class="log-btn" onclick="setFire('light')">Light/Dry Log</button>
+                    <button class="log-btn" onclick="setFire('green')">Green Wood</button>
+                    <button class="log-btn" onclick="setFire('small')">Small Kindling</button>
+                </div>
+                <div class="fire-readout">
+                    <div class="readout-item">
+                        <div class="readout-value" id="tempVal">—</div>
+                        <div class="readout-label">Firebox Temp</div>
+                    </div>
+                    <div class="readout-item">
+                        <div class="readout-value" id="smokeVal">—</div>
+                        <div class="readout-label">Smoke Quality</div>
+                    </div>
+                    <div class="readout-item">
+                        <div class="readout-value" id="timeVal">—</div>
+                        <div class="readout-label">Burn Duration</div>
+                    </div>
+                </div>
+                <div id="fireAdvice" style="margin-top: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 10px; font-size: 0.9rem; color: var(--ash); display: none;"></div>
+            </div>
         </div>
 
-        <div class="divider-flip"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
+        <div class="interactive-module">
+            <div class="module-title">🌫️ Smoke Color Guide</div>
+            <p style="color: var(--ash); margin-bottom: 1rem; font-size: 0.9rem;">Click each type to learn what it means and how to fix it.</p>
 
-        <div class="chapter-num-flip">Chapter Four</div>
-        <h2 class="chapter-title-flip">Global Benchmarks</h2>
-        <p class="chapter-lede-flip">What Singapore, South Korea, and China teach us about valuing educators.</p>
-
-        <div class="dialogue-flip speaker-a">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">A</div>
-            <span class="speaker-name-flip">Speaker A</span>
-          </div>
-          <div class="dialogue-text-flip">
-            I look at countries that are great in education — Singapore and South Korea and China. But in South Korea, they roundly <strong>compensate teachers as if they worked at Amazon, Disney</strong>, and so on. And second, social status. So when a child just graduates, they report to their mother or father in the village, "Ma, Pa, I got four offers here, here, here, here. But I chose to be a teacher at Seoul National University."
-          </div>
+            <div class="smoke-indicator" onclick="showSmokeDetail('white')">
+                <div class="smoke-color" style="background: #e8e8e8;"></div>
+                <div class="smoke-info">
+                    <h4>White / Steamy Smoke</h4>
+                    <p>Fresh wood starting to catch — water vapor evaporating</p>
+                </div>
+            </div>
+            <div class="smoke-indicator" onclick="showSmokeDetail('blue')">
+                <div class="smoke-color" style="background: #4a90d9;"></div>
+                <div class="smoke-info">
+                    <h4>Thin Blue Smoke</h4>
+                    <p>Perfect clean combustion — the holy grail of barbecue</p>
+                </div>
+            </div>
+            <div class="smoke-indicator" onclick="showSmokeDetail('brown')">
+                <div class="smoke-color" style="background: #8b4513;"></div>
+                <div class="smoke-info">
+                    <h4>Brown / Billowy Smoke</h4>
+                    <p>Incomplete combustion — creosote forming, bitter flavors</p>
+                </div>
+            </div>
+            <div class="smoke-indicator" onclick="showSmokeDetail('black')">
+                <div class="smoke-color" style="background: #1a1a1a;"></div>
+                <div class="smoke-info">
+                    <h4>Black Smoke</h4>
+                    <p>Starved of oxygen — choked fire, acrid and ruined meat</p>
+                </div>
+            </div>
+            <div id="smokeDetail" style="margin-top: 1rem; padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; display: none; font-size: 0.9rem; color: var(--ash); line-height: 1.7;"></div>
         </div>
 
-        <div class="page-num">7</div>
-      </div>
-      <div class="page-face back">
-        <table class="table-flip">
-          <thead><tr><th>Country</th><th>Recruitment</th><th>Compensation</th></tr></thead>
-          <tbody>
-            <tr><td><strong>South Korea</strong></td><td>Top 5% of graduates</td><td>Comparable to Amazon/Disney</td></tr>
-            <tr><td><strong>Singapore</strong></td><td>Top 20% of graduates</td><td>Competitive with private sector</td></tr>
-            <tr><td><strong>Indonesia</strong></td><td>No selective threshold</td><td>Below minimum wage (IDR 2M)</td></tr>
-            <tr><td><strong>OECD Avg</strong></td><td>Merit-based</td><td>75-150% of GDP per capita</td></tr>
-          </tbody>
-        </table>
-
-        <div class="dialogue-flip speaker-b">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">B</div>
-            <span class="speaker-name-flip">Speaker B</span>
-          </div>
-          <div class="dialogue-text-flip">
-            Difficult, Sir. And that's Korea because they recruit people from the <strong>top 5%</strong> from all of higher education to teach anywhere — kindergarten, elementary, junior high, senior high, up to university. In Singapore, they recruit the <strong>top 20%</strong> to teach. I don't see us being able to be really great if we don't take a stance like that.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">⏱️ Fire Tending Timeline</div>
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">0:00 — Start</div>
+                    <div class="timeline-title">Build the Foundation</div>
+                    <div class="timeline-desc">Log cabin style with 1" gaps for airflow</div>
+                    <div class="timeline-detail">
+                        Use one dense log in the middle surrounded by smaller dry splits. Space wood about 1 inch apart. Place oily butcher paper 3 inches from the back. Light and watch. Within 30 minutes you should reach 275-300°F. This is a great time to season your meat.
+                    </div>
+                </div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">0:30 — First Hour</div>
+                    <div class="timeline-title">Watch the Smoke Stack</div>
+                    <div class="timeline-desc">Learn to read airflow and combustion stage</div>
+                    <div class="timeline-detail">
+                        Fresh logs always smoke initially. Watch for flames intertwining between logs. You should see smoke actually exiting the smokestack. Give it a blow if needed. The fire should pull air through naturally — you cannot push air on a fire, but you can pull it.
+                    </div>
+                </div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">Every 10-15 min</div>
+                    <div class="timeline-title">Add One Log at a Time</div>
+                    <div class="timeline-desc">Proactive fire management beats reactive</div>
+                    <div class="timeline-detail">
+                        Time your log additions so the new log catches right as the previous one starts declining. Listen for popping and cracking — that tells you the wood is burning rapidly. A heavy log will steam moisture out audibly. If temps drop too low, use a dry light piece. If too high, lay a log flat to restrict airflow underneath.
+                    </div>
+                </div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">As Needed</div>
+                    <div class="timeline-title">Rake Coals & Reset</div>
+                    <div class="timeline-desc">Break down ash, rebuild coal bed</div>
+                    <div class="timeline-detail">
+                        When a big fire burns down, get in with a shovel. Rake out coals, break down the coal bed. Blackened logs that have burned complete can be buried in coals. Logs that haven't burned complete should be turned sideways and given air channels underneath. Pre-warm incoming air by keeping coals toward the back of the firebox in cold weather.
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="timeline-flip">
-          <div class="timeline-item-flip"><div class="y">2024</div><div class="t">Indonesia's PISA scores remain stagnant — 25% reading proficiency.</div></div>
-          <div class="timeline-item-flip"><div class="y">2025</div><div class="t">President Prabowo announces 100% salary increase for teachers.</div></div>
-          <div class="timeline-item-flip"><div class="y">2045</div><div class="t">Golden Indonesia vision — but without quality teachers, only a fraction will benefit.</div></div>
+        <div class="interactive-module">
+            <div class="module-title">✅ Fire Management Checklist</div>
+            <ul class="checklist" id="fireChecklist">
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Use seasoned post oak, aged 1-2 years</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Build log cabin with 1" air gaps</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Start with oily butcher paper or grape seed oil</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Keep firebox door open in good weather</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Never choke fire by shutting door completely</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Add logs proactively, not reactively</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Aim for thin blue smoke (clean combustion)</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Maintain cooker within 5° of target</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Listen for popping = rapid burn; steaming = moisture</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Rake coals and reset when fire burns down</span></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- BRISKET SECTION -->
+    <section id="brisket" class="section">
+        <div class="section-header">
+            <h2>🥩 The Brisket Cook</h2>
+            <p>The mother of all Texas barbecue — a complete 12-hour journey</p>
         </div>
 
-        <div class="page-num">8</div>
-      </div>
-    </div>
-
-    <!-- PAGE 5: Chapter 5 -->
-    <div class="page right" id="page4" style="z-index: 6;">
-      <div class="page-face front">
-        <div class="chapter-num-flip">Chapter Five</div>
-        <h2 class="chapter-title-flip">Mental Health Across Generations</h2>
-        <p class="chapter-lede-flip">The same anxiety, different expressions. Gen X bottles it up. Gen Z broadcasts it. Millennials pretend it doesn't exist.</p>
-
-        <div class="dialogue-flip speaker-a">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">A</div>
-            <span class="speaker-name-flip">Speaker A</span>
-          </div>
-          <div class="dialogue-text-flip">
-            If we say like what Jonathan Haidt said — <em>The Anxious Generation</em> — which promotes the hypothesis that this is connected with too much online activity and too little offline activity. Yes, that's aligned with medical papers, Sir. Technology functions as a double-edged sword. On the positive side, it will make us reach the highest level of innovation. But the negative impact is that our activities in the technology world are longer than in the surrounding world.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">📋 Cook Planner Calculator</div>
+            <div class="calc-input">
+                <label>Dinner Time:</label>
+                <select id="dinnerTime" onchange="calcBrisket()">
+                    <option value="17">5:00 PM</option>
+                    <option value="18" selected>6:00 PM</option>
+                    <option value="19">7:00 PM</option>
+                    <option value="12">12:00 PM (Lunch)</option>
+                </select>
+            </div>
+            <div class="calc-input">
+                <label>Cook Temp:</label>
+                <select id="cookTemp" onchange="calcBrisket()">
+                    <option value="255" selected>255°F (Standard)</option>
+                    <option value="275">275°F (Faster)</option>
+                    <option value="225">225°F (Low & Slow)</option>
+                </select>
+            </div>
+            <div class="calc-input">
+                <label>Brisket Size:</label>
+                <select id="brisketSize" onchange="calcBrisket()">
+                    <option value="12" selected>12-14 lbs (Standard)</option>
+                    <option value="10">10-12 lbs (Small)</option>
+                    <option value="15">15-18 lbs (Large)</option>
+                </select>
+            </div>
+            <div class="calc-result" id="brisketPlan">
+                <h4>Your Cook Plan</h4>
+                <div class="calc-result-grid" id="planOutput"></div>
+            </div>
         </div>
 
-        <div class="dialogue-flip speaker-b">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">B</div>
-            <span class="speaker-name-flip">Speaker B</span>
-          </div>
-          <div class="dialogue-text-flip">
-            Why is Gen Z more vocal about expressing their mental health? Because throughout their lives, they've mostly been exposed to technology. Accustomed to expressing themselves on social media. And the worst was the pandemic in 2020 — Gen Z was in their productive years. Online education that ultimately made their online screen time high and ultimately made <strong>the highest thing anxiety</strong>, Sir. Anxiety.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">🥩 Brisket Anatomy</div>
+            <p style="color: var(--ash); margin-bottom: 1rem; font-size: 0.9rem;">Click on each part to learn its role in the cook.</p>
+            <div class="anatomy-container">
+                <svg class="anatomy-svg" viewBox="0 0 400 250">
+                    <path id="flat" class="anatomy-part" d="M 50 120 Q 80 100 150 95 Q 220 90 280 100 Q 320 110 340 130 Q 350 150 340 170 Q 320 190 280 195 Q 220 200 150 195 Q 80 190 50 170 Q 40 150 50 120 Z" 
+                          fill="rgba(196,69,54,0.3)" stroke="var(--gold)" stroke-width="2"
+                          onclick="showAnatomy('flat')"/>
+                    <path id="point" class="anatomy-part" d="M 280 100 Q 320 80 360 85 Q 390 90 395 120 Q 400 150 390 180 Q 380 200 350 205 Q 320 210 300 200 Q 280 190 280 170 Q 280 150 280 130 Q 280 110 280 100 Z" 
+                          fill="rgba(212,165,116,0.3)" stroke="var(--gold)" stroke-width="2"
+                          onclick="showAnatomy('point')"/>
+                    <path id="fatcap" class="anatomy-part" d="M 45 115 Q 75 95 145 90 Q 215 85 275 95 Q 315 105 335 125 Q 345 145 335 165" 
+                          fill="none" stroke="#d4a574" stroke-width="8" stroke-linecap="round"
+                          onclick="showAnatomy('fatcap')"/>
+                    <path id="seam" class="anatomy-part" d="M 275 95 Q 285 130 285 170 Q 285 190 295 200" 
+                          fill="none" stroke="#8b6914" stroke-width="4" stroke-dasharray="5,5"
+                          onclick="showAnatomy('seam')"/>
+                    <text x="150" y="150" fill="var(--cream)" font-size="14" text-anchor="middle" opacity="0.5">Click regions to explore</text>
+                </svg>
+                <div class="anatomy-info" id="anatomyInfo">
+                    <p style="color: var(--ash); font-style: italic;">Click on a part of the brisket diagram above to learn about its characteristics and how to handle it during the cook.</p>
+                </div>
+            </div>
         </div>
 
-        <div class="page-num">9</div>
-      </div>
-      <div class="page-face back">
-        <table class="table-flip">
-          <thead><tr><th>Generation</th><th>Anxiety Source</th><th>Defense</th></tr></thead>
-          <tbody>
-            <tr><td><strong>Gen X</strong> (1965-80)</td><td>Uncertainty, job insecurity</td><td>Bottling up (mendem)</td></tr>
-            <tr><td><strong>Millennials</strong> (81-96)</td><td>Career pressure</td><td>Denial, "I'm fine"</td></tr>
-            <tr><td><strong>Gen Z</strong> (97-2012)</td><td>Social media pressure</td><td>Open online expression</td></tr>
-          </tbody>
-        </table>
+        <div class="interactive-module">
+            <div class="module-title">📊 The 12-Hour Timeline</div>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('trim')">Trim & Season</button>
+                <button class="tab-btn" onclick="showTab('cook1')">Hours 0-3</button>
+                <button class="tab-btn" onclick="showTab('cook2')">Hours 3-8</button>
+                <button class="tab-btn" onclick="showTab('stall')">The Stall</button>
+                <button class="tab-btn" onclick="showTab('wrap')">Wrap & Finish</button>
+                <button class="tab-btn" onclick="showTab('rest')">Rest & Slice</button>
+            </div>
 
-        <div class="dialogue-flip speaker-a">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">A</div>
-            <span class="speaker-name-flip">Speaker A</span>
-          </div>
-          <div class="dialogue-text-flip">
-            So anxiety is actually developing across <strong>two generations</strong>, Sir. This is a plot twist. The WHO stated that losses due to mental health in companies are very high — nearly trillions of dollars. Both are anxious but <strong>anxious about different things</strong>. If Gen X is anxious about uncertainty, unpredictability in the future, houses getting more expensive, and Gen Z is anxious about career paths. So what's the ending of this anxiety, Sir? <strong>Lowering quality of life.</strong>
-          </div>
+            <div id="trim" class="tab-panel active">
+                <h4 style="color: var(--gold); margin-bottom: 1rem;">Trimming & Seasoning</h4>
+                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
+                    <li>Keep brisket cold — warm fat is sticky and hard to trim</li>
+                    <li>Remove the deckle (where carcass was split) — it won't render</li>
+                    <li>Trim sides to aerodynamic curves — no sharp edges that will dry out</li>
+                    <li>Leave ¼ inch of soft, pillowy fat (not hard waxy fat)</li>
+                    <li>Remove thick seam fat between flat and point (won't render)</li>
+                    <li>Season: 50/50 kosher salt + 16 mesh black pepper by volume</li>
+                    <li>Light mustard slather as glue — you won't taste it after 12 hours</li>
+                    <li>Season presentation side (fat side up) most carefully</li>
+                    <li>Let temper 30-45 minutes before putting on cooker</li>
+                </ul>
+            </div>
+            <div id="cook1" class="tab-panel">
+                <h4 style="color: var(--gold); margin-bottom: 1rem;">Hours 0-3: Foundation</h4>
+                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
+                    <li>Start cooker at 255°F — ease into it, don't shock the meat</li>
+                    <li>Place point toward fire (more fat = more protection)</li>
+                    <li>Use water pan to keep moisture in cook chamber</li>
+                    <li>First 3 hours: do NOT open lid — let bark begin to form</li>
+                    <li>Watch smokestack for clean, thin smoke</li>
+                    <li>At 3-hour mark: first check — look for edge drying, bark formation</li>
+                    <li>Spritz edges with apple cider vinegar if looking dry</li>
+                </ul>
+            </div>
+            <div id="cook2" class="tab-panel">
+                <h4 style="color: var(--gold); margin-bottom: 1rem;">Hours 3-8: Building Bark</h4>
+                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
+                    <li>Check every hour — spritz dry spots specifically</li>
+                    <li>Bump temps to 265°F around hour 5 if bark is forming well</li>
+                    <li>Look for mahogany color, fat beginning to render</li>
+                    <li>Brisket will shrink significantly — this is normal</li>
+                    <li>Edges should not be black or crispy — if so, temps too high</li>
+                    <li>Internal temp will climb steadily toward 160°F</li>
+                    <li>Start planning wrap materials (butcher paper) around hour 7</li>
+                </ul>
+            </div>
+            <div id="stall" class="tab-panel">
+                <h4 style="color: var(--gold); margin-bottom: 1rem;">The Stall (160-170°F internal)</h4>
+                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
+                    <li>Muscle tightens and squeezes out moisture (evaporative cooling)</li>
+                    <li>Surface gets very wet — this is normal and temporary</li>
+                    <li>Bump cooker to 280°F+ to push through — moisture protects from burning</li>
+                    <li>Can last 1-3 hours — don't panic, it's part of the process</li>
+                    <li>Once surface dries and bark looks crusty, you're through the stall</li>
+                    <li>Wrap RIGHT at the end of the stall — not before, not long after</li>
+                </ul>
+            </div>
+            <div id="wrap" class="tab-panel">
+                <h4 style="color: var(--gold); margin-bottom: 1rem;">Wrap & Finish (Hours 8-12)</h4>
+                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
+                    <li>Use pink butcher paper (not foil — too "pot roasty")</li>
+                    <li>Double-layer the bottom where juices will collect</li>
+                    <li>Wrap tight — conform to brisket shape, no loose bag</li>
+                    <li>Put back on cooker, point toward fire</li>
+                    <li>Cook at 275-285°F wrapped</li>
+                    <li>Internal target: 200-205°F, but FEEL trumps temperature</li>
+                    <li>Pick up with towel — should feel like "a bag of melted butter"</li>
+                    <li>Flat should fall over your fingers when lifted</li>
+                </ul>
+            </div>
+            <div id="rest" class="tab-panel">
+                <h4 style="color: var(--gold); margin-bottom: 1rem;">Rest & Slice</h4>
+                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
+                    <li>Rest wrapped until internal temp drops to 140-150°F (about 45 min)</li>
+                    <li>DO NOT put in cooler while hot — carries over too far</li>
+                    <li>Unwrap — save all juices on cutting board</li>
+                    <li>Separate flat from point along the seam</li>
+                    <li>Slice flat against grain, pencil-thick (¼ inch)</li>
+                    <li>Slice point perpendicular, slightly thicker</li>
+                    <li>Every slice should have bark, fat, meat, salt, pepper</li>
+                    <li>Serve immediately — brisket oxidizes quickly once cut</li>
+                </ul>
+            </div>
         </div>
 
-        <div class="insight-flip">
-          <h4>🧠 The Hormonal Cascade</h4>
-          <p>Anxiety is heavily influenced by cortisol and adrenaline. When cortisol rises, it increases insulin resistance. Our sympathetic nervous system stays elevated — we're "ready" all the time. Blood sugar rises, blood pressure rises, leading to stroke and heart disease.</p>
+        <div class="interactive-module">
+            <div class="module-title">🧂 Rub Calculator</div>
+            <div class="calc-input">
+                <label>Brisket Weight (lbs):</label>
+                <input type="number" id="brisketWeight" value="12" min="1" max="20" onchange="calcRub()">
+            </div>
+            <div class="calc-result" id="rubResult">
+                <div class="calc-result-grid" id="rubOutput"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RIBS SECTION -->
+    <section id="ribs" class="section">
+        <div class="section-header">
+            <h2>🍖 Spare Ribs</h2>
+            <p>Intermediate cook — finicky but rewarding</p>
         </div>
 
-        <div class="page-num">10</div>
-      </div>
-    </div>
-
-    <!-- PAGE 6: Chapter 6 -->
-    <div class="page right" id="page5" style="z-index: 5;">
-      <div class="page-face front">
-        <div class="chapter-num-flip">Chapter Six</div>
-        <h2 class="chapter-title-flip">The Screen Time Epidemic</h2>
-        <p class="chapter-lede-flip">Nine hours a day. More than sleep. More than a workday. The new normal that is anything but normal.</p>
-
-        <div class="stats-flip">
-          <div class="stat-flip"><div class="n">9 hrs</div><div class="l">Daily screen time (Gen Z)</div></div>
-          <div class="stat-flip"><div class="n">46%</div><div class="l">Gen Z with mental health diagnosis</div></div>
-          <div class="stat-flip"><div class="n">78%</div><div class="l">Feel addicted to social media</div></div>
-          <div class="stat-flip"><div class="n">2.5x</div><div class="l">Anxiety risk (4+ hrs screen)</div></div>
+        <div class="interactive-module">
+            <div class="module-title">📋 Ribs Cook Plan</div>
+            <div class="calc-result">
+                <div class="calc-result-grid">
+                    <div class="calc-result-item"><span>Total Cook Time:</span><strong>~6 hours</strong></div>
+                    <div class="calc-result-item"><span>Unwrapped Phase:</span><strong>3 hours at 270°F</strong></div>
+                    <div class="calc-result-item"><span>Wrapped Phase:</span><strong>2 hours in foil with sauce</strong></div>
+                    <div class="calc-result-item"><span>Final Set:</span><strong>30-45 min rest</strong></div>
+                    <div class="calc-result-item"><span>Rub Ratio:</span><strong>2:1 pepper to salt</strong></div>
+                    <div class="calc-result-item"><span>Target Feel:</span><strong>Bend test — almost falling off bone</strong></div>
+                </div>
+            </div>
         </div>
 
-        <div class="dialogue-flip speaker-b">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">B</div>
-            <span class="speaker-name-flip">Speaker B</span>
-          </div>
-          <div class="dialogue-text-flip">
-            Millennials are the most rebellious, the most vocal. They are, I think, my generation is the most <em>tough</em> and the most stubborn. So they feel fine. Oh, relax. What's this? So the generation now is weak, they say. I was raised tough. Yeah, that's my generation. I don't deny that.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">🔪 Trimming Spare Ribs</div>
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">Step 1</div>
+                    <div class="timeline-title">Remove the Sternum</div>
+                    <div class="timeline-desc">Cut off the cartilage breast bone for even cooking</div>
+                    <div class="timeline-detail">
+                        The sternum is the bone at the wide end. Cut it off completely — it gets in the way when feeling for tenderness later. Use a sharp chef's knife and cut through the cartilage. This also helps the rack cook more evenly.
+                    </div>
+                </div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">Step 2</div>
+                    <div class="timeline-title">Square the Rack</div>
+                    <div class="timeline-desc">Create uniform thickness for even airflow</div>
+                    <div class="timeline-detail">
+                        Trim the edges to create a uniform rectangular shape. Round off corners so air flows over smoothly (Franklin calls this making it look like a "little Maserati"). Remove the skirt (flap of meat on the bone side) — it cooks unevenly and slides off.
+                    </div>
+                </div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">Step 3</div>
+                    <div class="timeline-title">The Membrane Decision</div>
+                    <div class="timeline-desc">Franklin leaves it on — here's why</div>
+                    <div class="timeline-detail">
+                        Most people remove the membrane. Franklin leaves it on because: (1) at the restaurant it would take hours to remove from hundreds of racks, (2) it allows slight overcooking while maintaining structural integrity, (3) rub penetrates through it anyway, and (4) it protects the meat from drying. Make your own choice.
+                    </div>
+                </div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">Step 4</div>
+                    <div class="timeline-title">Check for Bones</div>
+                    <div class="timeline-desc">Feel for chipped bone fragments</div>
+                    <div class="timeline-detail">
+                        Run your fingers along the bones. If the processor sawed too fast, bone chips can splinter off. You don't want anyone biting into a bone shard. Remove any sharp fragments. Also check for "shiners" — ribs where the meat has been cut so thin you can see the bone through it. Avoid these at the store.
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="page-num">11</div>
-      </div>
-      <div class="page-face back">
-        <div class="dialogue-flip speaker-a">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">A</div>
-            <span class="speaker-name-flip">Speaker A</span>
-          </div>
-          <div class="dialogue-text-flip">
-            So for netizen friends, you can check this education. One of your factors is if you use iPhone — check settings, check screen time, check your <strong>top three apps</strong>. I tested this on Mr. Sandiaga: "Sir, TikTok." Mr. Sandiaga's number one was Zoom. Wah, there are meetings. That was immediately checkmated. Wait, Tirta. Zoom, how many hours? 2 hours 43 minutes. So it turns out he at that age spends his time on meetings. His life is meetings. Number two was WhatsApp. Three was finance. Only at number four was social media, then it was revealed.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">🧂 Seasoning Technique</div>
+            <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
+                <li>2 parts pepper to 1 part salt (opposite of brisket — ribs are thinner)</li>
+                <li>Add paprika for color — gives a nice mahogany red</li>
+                <li>Light mustard slather — just enough to make tacky, not wet</li>
+                <li>Season parallel to the bones (typewriter motion)</li>
+                <li>Hold shaker 8-10 inches high for even distribution</li>
+                <li>Pat down gently — don't rub it in aggressively</li>
+                <li>Add extra pepper on fatty patches (smoke sticks better to pepper than fat)</li>
+                <li>Put extra salt on membrane side for tongue-first salt hit</li>
+            </ul>
         </div>
 
-        <div class="poll-flip">
-          <div class="poll-q-flip">What is your top app by screen time?</div>
-          <div class="poll-opt-flip" onclick="this.classList.toggle('sel')"><span>Social Media (TikTok, Instagram)</span><span class="chk"></span></div>
-          <div class="poll-opt-flip" onclick="this.classList.toggle('sel')"><span>Work/Communication (Zoom, WhatsApp)</span><span class="chk"></span></div>
-          <div class="poll-opt-flip" onclick="this.classList.toggle('sel')"><span>Entertainment (YouTube, Netflix)</span><span class="chk"></span></div>
-          <div class="poll-opt-flip" onclick="this.classList.toggle('sel')"><span>Learning/Reading (News, Books)</span><span class="chk"></span></div>
+        <div class="interactive-module">
+            <div class="module-title">✅ Ribs Checklist</div>
+            <ul class="checklist" id="ribsChecklist">
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Buy full spare ribs with good marbling (avoid "enhanced" with salt water)</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Remove sternum and square the rack</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Remove skirt meat from bone side</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Check for bone chips and shiners</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Light mustard slather</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">2:1 pepper to salt, plus paprika</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Cook 3 hours unwrapped at 270°F</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Spritz every hour after first hour</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Sauce both sides, let set 10 min</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Wrap tight in foil, double-layer over bones</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Cook 2 more hours wrapped</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Feel for tenderness — bend test over fingers</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Rest 30-40 minutes before cutting</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Pour saved juices over ribs before serving</span></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- PORK BUTT SECTION -->
+    <section id="pork" class="section">
+        <div class="section-header">
+            <h2>🐷 Pork Butt</h2>
+            <p>The forgiving beginner's cook — hard to mess up</p>
         </div>
 
-        <div class="dialogue-flip speaker-b">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">B</div>
-            <span class="speaker-name-flip">Speaker B</span>
-          </div>
-          <div class="dialogue-text-flip">
-            So for friends, if you want to reduce NCT, <strong>limit social media gadget screen time</strong>. Because on social media, everyone can become anyone. Our persona can be arranged. But for young people, we're searching for identity. So they think — oh, tomorrow to be successful I have to be like that. Anxiety.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">📋 Pork Butt Planner</div>
+            <div class="calc-input">
+                <label>Dinner Time:</label>
+                <select id="porkDinner" onchange="calcPork()">
+                    <option value="17">5:00 PM</option>
+                    <option value="18" selected>6:00 PM</option>
+                    <option value="19">7:00 PM</option>
+                </select>
+            </div>
+            <div class="calc-result" id="porkPlan">
+                <div class="calc-result-grid" id="porkOutput"></div>
+            </div>
         </div>
 
-        <div class="page-num">12</div>
-      </div>
-    </div>
-
-    <!-- PAGE 7: Chapters 7-8 -->
-    <div class="page right" id="page6" style="z-index: 4;">
-      <div class="page-face front">
-        <div class="chapter-num-flip">Chapter Seven</div>
-        <h2 class="chapter-title-flip">Critical Thinking & Polarization</h2>
-        <p class="chapter-lede-flip">When opinion replaces fact, and difference becomes enmity. The postmodern condition of a nation that stopped reading.</p>
-
-        <div class="dialogue-flip speaker-a">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">A</div>
-            <span class="speaker-name-flip">Speaker A</span>
-          </div>
-          <div class="dialogue-text-flip">
-            So something as simple as why myths and facts, health myths and hoaxes are believed — <strong>because they can't think critically</strong>. Where children now, because they don't read books, because they're not too factual, it's easier for them to have opinions. And if they have opinions, of course they inevitably can't distinguish between opinion and fact. And that's very real, and this correlates with the cultivation of <strong>conversation polarization</strong>. There's an echo chamber on the right, there's an echo chamber on the left. They can't intersect or interact or communicate. Because from the start they were taught that different opinions are wrong. So they can't accept variation, diversification of difference, so finally — oh, you're different from me, you're wrong, you're my enemy.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">🧂 Heavy Seasoning Method</div>
+            <div class="quote-block">
+                "For pork butt, since it's all going to get pulled apart anyway, I feel pretty good about using a lot of mustard or hot sauce, putting a good slather on there. The more seasoning on the outside, the better it mixes in later."
+                <cite>— Aaron Franklin</cite>
+            </div>
+            <table class="compare-table">
+                <tr><th>Cut</th><th>Salt: Pepper</th><th>Paprika</th><th>Mustard</th><th>Why</th></tr>
+                <tr><td>Brisket</td><td>1:1</td><td>No</td><td>Light glue</td><td>Want to taste beef and smoke</td></tr>
+                <tr><td>Pork Butt</td><td>1:1</td><td>Yes (color)</td><td>Heavy slather</td><td>Gets pulled and mixed together</td></tr>
+                <tr><td>Ribs</td><td>1:2 (more pepper)</td><td>Yes (color)</td><td>Light</td><td>Thin meat, pepper for bark texture</td></tr>
+            </table>
         </div>
 
-        <div class="insight-flip">
-          <h4>⚖️ The Echo Chamber Trap</h4>
-          <p>When children are taught that differing opinions are "wrong," they grow into adults who cannot tolerate diversity of thought. Critical thinking must be cultivated from elementary school.</p>
+        <div class="interactive-module">
+            <div class="module-title">⏱️ The Cook Timeline</div>
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('pork1')">Prep & Season</button>
+                <button class="tab-btn" onclick="showTab('pork2')">Hours 3-8</button>
+                <button class="tab-btn" onclick="showTab('pork3')">Wrap & Finish</button>
+            </div>
+            <div id="pork1" class="tab-panel active">
+                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
+                    <li>Buy bone-in pork butt (shoulder blade bone) — bone slides out when done</li>
+                    <li>Minimal trimming — leave fat cap, remove only excessive hard fat</li>
+                    <li>Heavy mustard slather — much more than brisket or ribs</li>
+                    <li>Equal parts salt and pepper, plus paprika for color</li>
+                    <li>Season VERY heavily — interior meat is bland, needs exterior flavor to mix in</li>
+                    <li>Place fat side up (heat comes from top on Franklin's cookers)</li>
+                    <li>Cook at 270°F — forgiving temperature</li>
+                </ul>
+            </div>
+            <div id="pork2" class="tab-panel">
+                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
+                    <li>Start spritzing at hour 3 with apple cider vinegar</li>
+                    <li>Spritz every hour until wrap</li>
+                    <li>Use sweeping motion — don't mist (evaporates) or blast (knocks off bark)</li>
+                    <li>Watch for fat cap to split — this is your visual wrap cue</li>
+                    <li>Edges should not be crispy or black</li>
+                    <li>Internal temp is irrelevant for wrap decision — go by bark and fat split</li>
+                </ul>
+            </div>
+            <div id="pork3" class="tab-panel">
+                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
+                    <li>Wrap tight in foil, shiny side in (dull side out absorbs heat)</li>
+                    <li>Double-layer the foil for strength</li>
+                    <li>Cook 1.5-2 more hours until internal temp ~203°F</li>
+                    <li>FEEL is more important than temp — should feel like "bag of melted butter"</li>
+                    <li>Rest 45-60 minutes wrapped</li>
+                    <li>Pull apart with hands (or tongs if too hot)</li>
+                    <li>Mix bark flakes back into meat</li>
+                    <li>Save juices from foil — pour over pulled pork</li>
+                </ul>
+            </div>
         </div>
 
-        <div class="page-num">13</div>
-      </div>
-      <div class="page-face back">
-        <div class="dialogue-flip speaker-b">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">B</div>
-            <span class="speaker-name-flip">Speaker B</span>
-          </div>
-          <div class="dialogue-text-flip">
-            And for a country with a population of 280 million, we have to think about how we can compete with China, with India, right? And they don't hold back. When they send people to universities, the best in the world — from Indonesia, only <strong>8,500</strong>. China sends hundreds of thousands to England. Indonesia only <strong>4,000</strong>. Yes, they could send them to UGM, to ITB, to Undip and so on. But they pursue innovation, and innovation and technology — yes, there's still a lot in Europe and America.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">✅ Pork Butt Checklist</div>
+            <ul class="checklist" id="porkChecklist">
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Buy bone-in pork butt (shoulder blade bone)</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Minimal trimming — leave fat cap on</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Heavy mustard slather all over</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Equal parts salt & pepper, plus paprika</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Cook at 270°F for ~8 hours unwrapped</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Spritz with cider vinegar every hour from hour 3</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Wrap when fat cap splits (visual cue)</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Finish 1.5-2 hours wrapped until 203°F</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Rest 45-60 minutes before pulling</span></li>
+                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Bone should slide out cleanly when done</span></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- GRILLING SECTION -->
+    <section id="grilling" class="section">
+        <div class="section-header">
+            <h2>⚡ Hot & Fast Grilling</h2>
+            <p>Direct fire cooking for steaks, vegetables, and quick meals</p>
         </div>
 
-        <div class="divider-flip"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
-
-        <div class="chapter-num-flip">Chapter Eight</div>
-        <h2 class="chapter-title-flip">Brain Circulation</h2>
-        <p class="chapter-lede-flip">Not brain drain — brain linkage. Why Indonesia's best talent should aim for the top.</p>
-
-        <div class="dialogue-flip speaker-a">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">A</div>
-            <span class="speaker-name-flip">Speaker A</span>
-          </div>
-          <div class="dialogue-text-flip">
-            Because what we sell now, we are now selling on average are still raw goods or semi-finished goods. Second, we actually become the basket size for foreign companies. We are only considered as a basket size number, "Wow, Indonesia 280 million, just sell sachet soap, definitely profit." But we forget to look that we also have a market outside. And the only way is through school abroad.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">🔥 Two-Zone Setup</div>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-icon">🔴</div>
+                    <h3>Hot Zone</h3>
+                    <p>Directly over coals/wood. For searing, charring, and developing crust. Use for initial contact and final finishing.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🟡</div>
+                    <h3>Safety Zone</h3>
+                    <p>Indirect heat, off to the side. For tempering cold meat, slowing down cooks, and managing flare-ups.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🪵</div>
+                    <h3>Wood Chunk</h3>
+                    <p>Place a dense oak log on the hot zone. It provides smoke flavor and creates a natural divider between zones.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🌡️</div>
+                    <h3>Charcoal Chimney</h3>
+                    <p>Start with natural briquettes. Let them ash over completely. Dump and create your zones immediately.</p>
+                </div>
+            </div>
         </div>
 
-        <div class="page-num">14</div>
-      </div>
-    </div>
-
-    <!-- PAGE 8: Chapter 8 cont + Chapter 9 -->
-    <div class="page right" id="page7" style="z-index: 3;">
-      <div class="page-face front">
-        <div class="dialogue-flip speaker-b">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">B</div>
-            <span class="speaker-name-flip">Speaker B</span>
-          </div>
-          <div class="dialogue-text-flip">
-            If Google or Microsoft comes here led by Bambang and Komeng, they think to make investments with huge amounts, not trivial. What? Right. Really agree. And that which I often convey in the context of brain circulation or brain linkage, not brain drain. It's okay they go there to seek knowledge, build careers and during 10, 20, 30 years. But if they can reach the peak. Yes, I've also said this before, but that needs to be scaled so that Indonesians can master the world. Right. But that won't happen if the IQ is 78.9. If PISA is number 69 out of 81. If they can't tell stories like you. So this problem is no longer micro, right? Very macro.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">🥩 Steak Technique</div>
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">Prep</div>
+                    <div class="timeline-title">Temper & Season</div>
+                    <div class="timeline-desc">15-20 min out of fridge, grape seed oil, light salt</div>
+                    <div class="timeline-detail">
+                        Small steaks don't need long tempering. Use grape seed oil (high smoke point, inexpensive). Light salt now — you'll salt again after cooking. Don't overseason before the fire.
+                    </div>
+                </div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">Sear</div>
+                    <div class="timeline-title">High Heat Contact</div>
+                    <div class="timeline-desc">Place on hot zone, flip frequently</div>
+                    <div class="timeline-detail">
+                        The old "flip once" rule is silly. Flip constantly to even out the cook. Move to safety zone if cooking too fast. Look for meat fibers tightening and surface drying. Use oil to soften dry spots.
+                    </div>
+                </div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">Feel</div>
+                    <div class="timeline-title">Trust Your Fingers</div>
+                    <div class="timeline-desc">No thermometer — squeeze and learn</div>
+                    <div class="timeline-detail">
+                        The thumb-palm test is wrong — everyone's hands are different. Every steak is different. The ONLY way to learn is to pull, cut, check, and remember. Over time you develop muscle memory for medium-rare vs medium.
+                    </div>
+                </div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">Rest</div>
+                    <div class="timeline-title">Let It Settle</div>
+                    <div class="timeline-desc">5-10 minutes, reabsorbs moisture</div>
+                    <div class="timeline-detail">
+                        If you cut immediately, steam escapes = moisture loss. Let it cool slightly. The fibers relax and reabsorb juices. Slice against the grain for tenderness. Finish with flaky salt.
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="dialogue-flip speaker-a">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">A</div>
-            <span class="speaker-name-flip">Speaker A</span>
-          </div>
-          <div class="dialogue-text-flip">
-            And if we have one or two CEOs in international companies, the brand trust from global trust is high, Sir. And will invite trust that Indonesian human resources are not inferior. Yes. And we lack that. That's why I include those who yesterday agreed that people are already outside, okay it's fine. But you prove something outside. Yes. Build a career to the highest. That will become a figure like in doctors, wow cool. Finally more and more people are motivated to go to Japan. The most to Japan, Sir. Ready.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">🥦 Broccolini / Vegetables</div>
+            <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
+                <li>Use a cooling rack turned upside-down over the chimney</li>
+                <li>Keep stalks over direct flame, crowns on the cooler edge</li>
+                <li>Oil, salt, then char quickly — keep moving constantly</li>
+                <li>Stalks need more heat and time; crowns need quick blistering</li>
+                <li>Remove when stalks are slightly soft with charred blisters</li>
+                <li>This two-zone thinking directly applies to brisket (flat vs point)</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- WOOD SECTION -->
+    <section id="wood" class="section">
+        <div class="section-header">
+            <h2>🌳 Wood & Smoke</h2>
+            <p>The primary flavor of barbecue — understanding your fuel</p>
         </div>
 
-        <div class="page-num">15</div>
-      </div>
-      <div class="page-face back">
-        <div class="chapter-num-flip">Chapter Nine</div>
-        <h2 class="chapter-title-flip">Golden Indonesia 2045</h2>
-        <p class="chapter-lede-flip">The golden generation will only be golden for a few if we don't fix the foundation today.</p>
-
-        <div class="dialogue-flip speaker-a">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">A</div>
-            <span class="speaker-name-flip">Speaker A</span>
-          </div>
-          <div class="dialogue-text-flip">
-            So nation building earlier is appropriate, Sir, because my PhD took a topic about people knowledge, knowledge people management. The only way to increase the capability of the Indonesian generation in 2045 is by increasing the capability of human resources as human capital. With human capital rising, the human development index rises, then GDP will also rise. But if we — and the shortest way, I really agree, is that the golden generation will happen in 2045 which is the generation of my children, the alpha children. If our generation's school education is indeed difficult to get teacher salary increases and quality teachers, then 2045 will only be enjoyed by a handful of people again. Yes. And it's like if we as marketing, the basket size is big but the conversion will be small. So indeed 2045 will be achieved but maybe at 0.05%. So only a handful of human resources will break through that capability, those who have privilege.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">🪵 Wood Types by Region</div>
+            <table class="compare-table">
+                <tr><th>Wood Type</th><th>Region</th><th>Flavor Profile</th><th>Best For</th></tr>
+                <tr><td><strong>Post Oak</strong></td><td>Central Texas</td><td>Sweet, vanilla, mild</td><td>Brisket (12+ hr cooks)</td></tr>
+                <tr><td>Hickory</td><td>Southeast/Midwest</td><td>Bacon-like, strong</td><td>Pork, ribs</td></tr>
+                <tr><td>Mesquite</td><td>South Texas/Mexico</td><td>Intense, earthy</td><td>Grilling (short cooks)</td></tr>
+                <tr><td>Pecan</td><td>East Texas</td><td>Nutty, mild</td><td>All-purpose</td></tr>
+                <tr><td>Fruit Woods</td><td>Various</td><td>Sweet, subtle</td><td>Poultry, fish</td></tr>
+            </table>
+            <div class="quote-block">
+                "Post oak really only grows around central Texas. It's a white oak with less tannic acid than any other oak. At high temperatures, the wood fibers break down with vanilla flavors — similar to wine barrels and bourbon."
+                <cite>— Aaron Franklin</cite>
+            </div>
         </div>
 
-        <div class="page-num">16</div>
-      </div>
-    </div>
-
-    <!-- PAGE 9: Chapter 9 cont + Back Cover -->
-    <div class="page right" id="page8" style="z-index: 2;">
-      <div class="page-face front">
-        <div class="insight-flip">
-          <h4>🌟 The 2045 Equation</h4>
-          <p>Human capital capability rises, Human Development Index rises, GDP rises. But this only works if the golden generation receives quality education. Without it, 2045 becomes a celebration for the privileged 0.05% — those with parents like Speaker A's, who provided proper education, debate, and critical thinking at home. The rest remain trapped in a cycle of raw commodity exports and low-value labor.</p>
+        <div class="interactive-module">
+            <div class="module-title">📏 The Wood Selection Game</div>
+            <p style="color: var(--ash); margin-bottom: 1rem; font-size: 0.9rem;">Franklin plays a mental game when selecting each log. Click to learn the strategy.</p>
+            <div class="card-grid">
+                <div class="card" onclick="showWoodDetail('junky')">
+                    <div class="card-icon">🪵</div>
+                    <h3>Junky / Light Wood</h3>
+                    <p>Feels like an empty milk carton. Sawdusty, flaky. Use for starting fires only.</p>
+                </div>
+                <div class="card" onclick="showWoodDetail('dense')">
+                    <div class="card-icon">🪨</div>
+                    <h3>Dense / Heavy Wood</h3>
+                    <p>Surprisingly heavy, solid center. Great for early cook when you want clean flavors.</p>
+                </div>
+                <div class="card" onclick="showWoodDetail('wedge')">
+                    <div class="card-icon">🔺</div>
+                    <h3>Wedge Shaped</h3>
+                    <p>Perfect for round fireboxes. Wedge against the side, roll in when ready.</p>
+                </div>
+                <div class="card" onclick="showWoodDetail('small')">
+                    <div class="card-icon">🌿</div>
+                    <h3>Small Splits</h3>
+                    <p>Quick catch, fast burn. Use for small cookers or quick temp boosts.</p>
+                </div>
+            </div>
+            <div id="woodDetail" style="margin-top: 1.5rem; padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; display: none; color: var(--ash); line-height: 1.7;"></div>
         </div>
 
-        <div class="dialogue-flip speaker-b">
-          <div class="speaker-row-flip">
-            <div class="speaker-avatar-flip">B</div>
-            <span class="speaker-name-flip">Speaker B</span>
-          </div>
-          <div class="dialogue-text-flip">
-            And for a country with a population of 280 million, we have to think about how we can compete with China, with India, right? And they don't hold back. When they send people to universities, the best in the world — from Indonesia, only <strong>8,500</strong>. China sends hundreds of thousands to England. Indonesia only <strong>4,000</strong>. Yes, they could send them to UGM, to ITB, to Undip and so on. But they pursue innovation, and innovation and technology — yes, there's still a lot in Europe and America, and now it's starting to show in Japan, Taiwan, South Korea, and China. But in Southeast Asia, I see the ones most thirsty for knowledge first were Singapore, now Vietnam. Vietnam, and the easiest way we see foreign students or the most foreign students in South Korea used to be China, now it's Vietnam. Because they see it's cheaper to go to Korea than to America, cheaper than to Europe, cheaper than to Japan, cheaper than to China. And the technology innovation is great. Learn there. Because innovation is something that will become the future.
-          </div>
+        <div class="interactive-module">
+            <div class="module-title">⚠️ Wood Quality Guide</div>
+            <div class="smoke-indicator" onclick="showWoodQuality('green')">
+                <div class="smoke-color" style="background: #4a7c59;"></div>
+                <div class="smoke-info">
+                    <h4>Green Wood (Fresh Cut)</h4>
+                    <p>Too much moisture — won't reach clean combustion, smolders, bitter smoke</p>
+                </div>
+            </div>
+            <div class="smoke-indicator" onclick="showWoodQuality('perfect')">
+                <div class="smoke-color" style="background: #d4a574;"></div>
+                <div class="smoke-info">
+                    <h4>Seasoned (1-2 Years)</h4>
+                    <p>The sweet spot — moisture mostly gone, structure intact, predictable burn</p>
+                </div>
+            </div>
+            <div class="smoke-indicator" onclick="showWoodQuality('rotten')">
+                <div class="smoke-color" style="background: #5c3a21;"></div>
+                <div class="smoke-info">
+                    <h4>Overly Dry / Rotten</h4>
+                    <p>Decomposed too much — nothing left to burn, no flavor, turns to dust</p>
+                </div>
+            </div>
+            <div id="woodQualityDetail" style="margin-top: 1rem; padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; display: none; color: var(--ash); line-height: 1.7;"></div>
+        </div>
+    </section>
+
+    <!-- TOOLS SECTION -->
+    <section id="tools" class="section">
+        <div class="section-header">
+            <h2>🔧 Equipment & Setup</h2>
+            <p>Understanding your cooker and essential tools</p>
         </div>
 
-        <div class="quote-flip">
-          The only way to disrupt education is through schools. And in schools, it must be ensured that those who teach are of quality. A teacher who is great at storytelling can convert students into physicists, even if they don't understand physics themselves.
-          <div class="auth">— The central thesis of this dialogue</div>
+        <div class="interactive-module">
+            <div class="module-title">🔥 Offset Cooker Anatomy</div>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-icon">📦</div>
+                    <h3>Firebox</h3>
+                    <p>Should be long enough to build a fire "back" from the cook chamber. Round fireboxes are ideal for log placement. No dampers — control with door position.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🌪️</div>
+                    <h3>Cook Chamber</h3>
+                    <p>Single grate preferred (no dripping between shelves). Heat hits a baffle plate, curls like a tornado, creating chaotic convection that dries the bark.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🌫️</div>
+                    <h3>Smoke Stack</h3>
+                    <p>Massive airflow = massive vacuum. No damper on stack. Watch the smoke to guide your fire — it's your most important instrument.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🌡️</div>
+                    <h3>Thermometer</h3>
+                    <p>One gauge at the hottest spot (near the firebox end) is enough. It's a loose guide — watch the smoke, watch the meat, feel the fire.</p>
+                </div>
+            </div>
         </div>
 
-        <div class="page-num">17</div>
-      </div>
-      <div class="page-face back back-cover">
-        <div class="cover-ornament"></div>
-        <h3 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:#f5f2ed;margin-bottom:12px;">The Education Paradox</h3>
-        <p style="font-size:13px;color:#9a9690;max-width:260px;text-align:center;line-height:1.6;margin-bottom:24px;">A translated and curated dialogue exploring Indonesia's most pressing challenges: education reform, generational mental health, and the path to becoming a developed nation by 2045.</p>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6a6660;letter-spacing:2px;text-transform:uppercase;">End of Book</div>
-      </div>
-    </div>
+        <div class="interactive-module">
+            <div class="module-title">🛠️ Essential Tools</div>
+            <table class="compare-table">
+                <tr><th>Tool</th><th>Franklin's Choice</th><th>Why</th></tr>
+                <tr><td>Trimming Knife</td><td>Curved boning knife</td><td>Curve helps get into seams; flexible tip, rigid spine</td></tr>
+                <tr><td>Slicing Knife</td><td>12" serrated bread knife ($25)</td><td>Long enough for full strokes; doesn't crush meat</td></tr>
+                <tr><td>Fire Tongs</td><td>Heavy-duty pair</td><td>For grates, charcoal, moving logs</td></tr>
+                <tr><td>Meat Tongs</td><td>Separate lighter pair</td><td>Never cross-contaminate with fire tools</td></tr>
+                <tr><td>Shovel</td><td>Small fire shovel</td><td>Raking coals, building channels for airflow</td></tr>
+                <tr><td>Thermometer</td><td>Instant-read probe</td><td>For pork butt and carry-over temps only</td></tr>
+                <tr><td>Spritz Bottle</td><td>Any spray bottle</td><td>Apple cider vinegar for spritzing</td></tr>
+                <tr><td>Shaker</td><td>Grocery store shaker</td><td>Even salt/pepper distribution; pivot technique</td></tr>
+                <tr><td>Towels</td><td>Clean kitchen towels</td><td>For handling hot meat — better than gloves for feeling texture</td></tr>
+            </table>
+        </div>
 
-  </div><!-- /book -->
-</div><!-- /book-scene -->
+        <div class="interactive-module">
+            <div class="module-title">🔧 Cheap Cooker Mods</div>
+            <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
+                <li><strong>Baffle plate:</strong> Add a piece of metal (old license plate works) to deflect heat from going straight up the stack</li>
+                <li><strong>Thermometer relocation:</strong> Drill hole, add threaded fitting at grate level — not on the lid</li>
+                <li><strong>Seal leaks:</strong> High-temp gasket around doors to control airflow</li>
+                <li><strong>Extend smokestack:</strong> Taller stack = stronger draft = better airflow</li>
+                <li><strong>Tuning plates:</strong> Add adjustable plates under grate to even out hot spots</li>
+                <li><strong>Charcoal basket:</strong> For smaller cookers, contains coals and improves airflow</li>
+            </ul>
+        </div>
+    </section>
 
-<!-- Controls -->
-<div class="controls">
-  <button class="ctrl-btn" id="btnPrev" onclick="flipPrev()" disabled>←</button>
-  <div class="page-indicator">
-    <span class="current" id="currPage">Cover</span>
-    <span>/</span>
-    <span>18</span>
-  </div>
-  <button class="ctrl-btn" id="btnNext" onclick="flipNext()">→</button>
-</div>
+    <!-- HISTORY SECTION -->
+    <section id="history" class="section">
+        <div class="section-header">
+            <h2>📚 History & Philosophy</h2>
+            <p>Where Texas barbecue comes from and why it matters</p>
+        </div>
 
-<script>
-let currentPage = 0;
-const totalPages = 9;
-const book = document.getElementById('book');
-const currDisplay = document.getElementById('currPage');
-const btnPrev = document.getElementById('btnPrev');
-const btnNext = document.getElementById('btnNext');
-const swipeHint = document.getElementById('swipeHint');
+        <div class="interactive-module">
+            <div class="module-title">🕰️ Central Texas Barbecue Timeline</div>
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">Early 1900s</div>
+                    <div class="timeline-title">German & Czech Markets</div>
+                    <div class="timeline-desc">Immigrants bring butcher shops and meat markets to Central Texas</div>
+                    <div class="timeline-detail">
+                        German and Czech immigrants settled in Central Texas and opened small grocery stores and meat markets. They butchered cows in the back. Before refrigeration, unsold meat had to be cooked or it would spoil. They dug brick pits in the ground — fires on one end, grates on the other, stacks to draw smoke. This is the origin of "pit" barbecue.
+                    </div>
+                </div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">Post-WWII</div>
+                    <div class="timeline-title">The Boom Years</div>
+                    <div class="timeline-desc">Returning veterans open joints; 1948 is a magic year</div>
+                    <div class="timeline-detail">
+                        Military men returned with a little money and needed work. Many opened barbecue joints in the late 1940s. Look at any historic Texas barbecue joint — odds are it opened in 1948. They started as markets with smokehouses in back. The meat was whatever didn't sell that week: hind quarters, fore quarters, tenderloins, not specifically brisket yet.
+                    </div>
+                </div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">1950s</div>
+                    <div class="timeline-title">Boxed Beef Revolution</div>
+                    <div class="timeline-desc">Refrigerated trucks and processing plants change everything</div>
+                    <div class="timeline-detail">
+                        Before the 1950s, markets bought whole animals and broke them down. With boxed beef and refrigerated transport, they could order specific cuts. Brisket was cheap and tough — perfect for slow smoking. By the 1960s, brisket had become THE Texas barbecue cut. It was never prestigious; it was what you cooked because you had to.
+                    </div>
+                </div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">Traditional Meal</div>
+                    <div class="timeline-title">Meat, Bread, Pickles, Onion</div>
+                    <div class="timeline-desc">The German market heritage on a plate</div>
+                    <div class="timeline-detail">
+                        The classic sides — white bread, pickles, sliced onion, maybe tomato or cheese — all came from the grocery store side of the business. You'd go in the back, buy smoked meat, then go up front and get a loaf of bread, a jar of pickles, an onion. Eat it in the parking lot with your pocket knife. No sauce needed if the meat was good.
+                    </div>
+                </div>
+                <div class="timeline-item" onclick="toggleDetail(this)">
+                    <div class="timeline-time">Today</div>
+                    <div class="timeline-title">Franklin Barbecue & The New School</div>
+                    <div class="timeline-desc">Precision, passion, and the line around the block</div>
+                    <div class="timeline-detail">
+                        Aaron Franklin started with a $99 offset smoker in his backyard in 2009. Through obsessive fire management, precise trimming, and relentless attention to detail, Franklin Barbecue became a destination. The line is part of the experience. Aaron still believes you learn by making bad barbecue first — and that the fire, not the meat, is what matters most.
+                    </div>
+                </div>
+            </div>
+        </div>
 
-// Show swipe hint briefly
-setTimeout(() => swipeHint.classList.add('show'), 1000);
-setTimeout(() => swipeHint.classList.remove('show'), 5000);
+        <div class="interactive-module">
+            <div class="module-title">💭 Franklin's Philosophy</div>
+            <div class="quote-block">
+                "It's just fire. So just play around with fire. That's fun. You don't really have to be well-read or well-learned on any of this stuff. You're probably going to prove yourself wrong at some point. I know I have."
+                <cite>— Aaron Franklin</cite>
+            </div>
+            <div class="quote-block">
+                "You really only learn how to make good barbecue by making bad barbecue. Definitely don't invite a lot of friends over for your first brisket."
+                <cite>— Aaron Franklin</cite>
+            </div>
+            <div class="quote-block">
+                "What you're really doing is getting flavor from the fire. That's why Central Texas barbecue tastes like Central Texas barbecue — it's because of the wood."
+                <cite>— Aaron Franklin</cite>
+            </div>
+            <div class="quote-block">
+                "I feel incredibly honored to be able to run a restaurant that people line up for hours and hours and hours. It's just a piece of meat and it's just fire. Nothing special, but it's the journey of how you get to the end."
+                <cite>— Aaron Franklin</cite>
+            </div>
+        </div>
+    </section>
 
-function updateControls() {
-  btnPrev.disabled = currentPage === 0;
-  btnNext.disabled = currentPage === totalPages;
+    <!-- QUIZ SECTION -->
+    <section id="quiz" class="section">
+        <div class="section-header">
+            <h2>🎯 Knowledge Check</h2>
+            <p>Test your understanding of Franklin's barbecue principles</p>
+        </div>
 
-  const labels = ['Cover', '2-3', '4-5', '6-7', '8-9', '10-11', '12-13', '14-15', '16-17', 'Back'];
-  currDisplay.textContent = labels[currentPage] || currentPage;
-}
+        <div class="quiz-container">
+            <div class="quiz-question" id="q1">
+                <h4>1. What is the ideal thickness of fat to leave on a trimmed brisket?</h4>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q1')">½ inch — more is better for moisture</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q1')">¼ inch — pillowy soft fat only</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q1')">⅛ inch — trim it all off</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q1')">1 inch — traditional Texas style</button>
+                </div>
+                <div class="quiz-feedback" id="f1"></div>
+            </div>
 
-function flipNext() {
-  if (currentPage >= totalPages) return;
+            <div class="quiz-question" id="q2">
+                <h4>2. What does "thin blue smoke" indicate?</h4>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q2')">The fire is too hot and dangerous</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q2')">You need to add more wood immediately</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q2')">Clean combustion at 600-680°F — ideal flavor</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q2')">The meat is burning</button>
+                </div>
+                <div class="quiz-feedback" id="f2"></div>
+            </div>
 
-  const page = document.getElementById('page' + currentPage);
-  page.classList.add('flipped');
+            <div class="quiz-question" id="q3">
+                <h4>3. Why does Franklin prefer butcher paper over foil for wrapping brisket?</h4>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q3')">It's cheaper and easier to find</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q3')">Foil is too "pot roasty" — paper breathes better</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q3')">Paper adds flavor to the meat</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q3')">Foil is only for competition barbecue</button>
+                </div>
+                <div class="quiz-feedback" id="f3"></div>
+            </div>
 
-  // Move flipped page to left side visually
-  setTimeout(() => {
-    page.style.zIndex = 20 + currentPage;
-  }, 100);
+            <div class="quiz-question" id="q4">
+                <h4>4. What is "the stall" and how do you handle it?</h4>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q4')">The smoker stops working — add charcoal</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q4')">The meat is done — pull it immediately</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q4')">Evaporative cooling at 160-170°F — bump temps to push through</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q4')">Open the smoker to cool it down</button>
+                </div>
+                <div class="quiz-feedback" id="f4"></div>
+            </div>
 
-  currentPage++;
-  updateControls();
-}
+            <div class="quiz-question" id="q5">
+                <h4>5. What is the proper salt-to-pepper ratio for brisket rub?</h4>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q5')">50/50 by volume — kosher salt and 16 mesh pepper</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q5')">2:1 pepper to salt (like ribs)</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q5')">Just salt — pepper is too strong</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q5')">3:1 salt to pepper for thick cuts</button>
+                </div>
+                <div class="quiz-feedback" id="f5"></div>
+            </div>
 
-function flipPrev() {
-  if (currentPage <= 0) return;
+            <div class="quiz-question" id="q6">
+                <h4>6. Why should you NOT put a hot brisket in a cooler to rest?</h4>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q6')">It will get too cold and dry out</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q6')">It insulates and carries over too far, overcooking</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q6')">Coolers are not food-safe</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q6')">The plastic will melt</button>
+                </div>
+                <div class="quiz-feedback" id="f6"></div>
+            </div>
 
-  currentPage--;
-  const page = document.getElementById('page' + currentPage);
-  page.classList.remove('flipped');
+            <div class="quiz-question" id="q7">
+                <h4>7. What is the visual cue that a pork butt is ready to wrap?</h4>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q7')">Internal temp reaches 165°F</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q7')">The fat cap splits open</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q7')">The bark is black and crispy</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q7')">It has been exactly 6 hours</button>
+                </div>
+                <div class="quiz-feedback" id="f7"></div>
+            </div>
 
-  setTimeout(() => {
-    page.style.zIndex = 10 - currentPage;
-  }, 100);
+            <div class="quiz-question" id="q8">
+                <h4>8. What makes Central Texas barbecue taste like Central Texas?</h4>
+                <div class="quiz-options">
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q8')">The special dry rub with 11 secret spices</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q8')">The mesquite wood used exclusively</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q8')">Post oak — a white oak with less tannic acid, sweeter flavor</button>
+                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q8')">The limestone water in the area</button>
+                </div>
+                <div class="quiz-feedback" id="f8"></div>
+            </div>
+        </div>
 
-  updateControls();
-}
+        <div class="interactive-module" style="text-align: center; margin-top: 2rem;">
+            <div id="quizScore" style="font-size: 1.2rem; color: var(--gold); font-weight: 600;"></div>
+        </div>
+    </section>
 
-// Keyboard navigation
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight' || e.key === ' ') flipNext();
-  if (e.key === 'ArrowLeft') flipPrev();
-});
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Based on Aaron Franklin's MasterClass on Texas-Style Barbecue</p>
+        <p style="margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.6;">Interactive educational application • Not affiliated with Franklin Barbecue or MasterClass</p>
+    </footer>
 
-// Touch/swipe support
-let touchStartX = 0;
-document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
-document.addEventListener('touchend', e => {
-  const diff = touchStartX - e.changedTouches[0].screenX;
-  if (Math.abs(diff) > 50) {
-    diff > 0 ? flipNext() : flipPrev();
-  }
-});
+    <script>
+        // Navigation
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            // Find the nav link that matches and activate it
+            document.querySelectorAll('.nav-link').forEach(l => {
+                if(l.getAttribute('onclick') && l.getAttribute('onclick').includes("'" + id + "'")) {
+                    l.classList.add('active');
+                }
+            });
+            window.scrollTo(0, 0);
+        }
 
-updateControls();
-</script>
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('progressBar').style.width = (winScroll / height) * 100 + '%';
+        });
 
+        // Fire simulator
+        const fireData = {
+            dense: { temp: '275°F', smoke: 'Clean → White initial', time: '40-60 min', color: 'linear-gradient(to top, #ff6b35 0%, #f7931e 40%, transparent 70%)', advice: 'Dense oak has moisture to burn out. It will smolder initially, then catch and provide steady, long-lasting heat. Great for the middle of a fire foundation or when you need 30-40 minutes of stable temps.' },
+            light: { temp: '300°F+', smoke: 'Quick blue', time: '10-15 min', color: 'linear-gradient(to top, #ff4500 0%, #ff6b35 30%, transparent 60%)', advice: 'Light, dry wood catches fast and burns hot. Use to quickly raise temps or start a fire. Will die fast — have your next log ready. Good for small cookers where you need responsive temperature control.' },
+            green: { temp: '200°F', smoke: 'Thick white/brown', time: 'Unpredictable', color: 'linear-gradient(to top, #666 0%, #999 50%, transparent 80%)', advice: 'Green wood has too much moisture. It will smolder, produce dirty smoke, and struggle to reach clean combustion. The moisture must boil off before the wood can properly burn. Avoid for cooking — only use if you have no alternative and give it extra air.' },
+            small: { temp: '250°F', smoke: 'Clean but brief', time: '5-10 min', color: 'linear-gradient(to top, #ff8c42 0%, #ffb347 30%, transparent 60%)', advice: 'Small splits are perfect for maintaining steady temps on small cookers. They burn quickly and cleanly. You will need to add them frequently (every 10-15 minutes) but you get very precise control. Ideal for the final hours of a cook.' }
+        };
+
+        function setFire(type) {
+            const data = fireData[type];
+            document.getElementById('fireVisual').style.background = data.color;
+            document.getElementById('tempVal').textContent = data.temp;
+            document.getElementById('smokeVal').textContent = data.smoke;
+            document.getElementById('timeVal').textContent = data.time;
+            document.getElementById('fireAdvice').style.display = 'block';
+            document.getElementById('fireAdvice').textContent = data.advice;
+            document.querySelectorAll('.log-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Smoke detail
+        const smokeDetails = {
+            white: 'White smoke is mostly water vapor. When you first add a log, it will always produce white smoke as the moisture in the wood heats up and evaporates. This is normal and temporary. Wait 5-10 minutes for the log to catch and the smoke to clear. If white smoke persists, the wood may be too green or the fire too cold.',
+            blue: 'Thin blue smoke is the holy grail. It indicates the fire is burning at 600-680°F with complete combustion. The smoke is actually becoming more water vapor than particulate matter. This imparts clean, transparent flavor that does not overpower the meat.',
+            brown: 'Brown, billowy smoke means incomplete combustion. The fire is starved of oxygen or the wood is too wet/dense. Creosote and other oil-soluble compounds are forming. This will deposit bitter, acrid flavors on the meat. If you see this, add air, use drier wood, or let the existing log burn more completely before adding another.',
+            black: 'Black smoke means the fire is severely oxygen-starved. This is the worst possible scenario. The meat will taste like an ashtray and the bitter flavor can ruin your palate for a day. Open the firebox door immediately, add air, and remove any smothering logs. Never choke a fire to control temperature.'
+        };
+
+        function showSmokeDetail(type) {
+            document.getElementById('smokeDetail').style.display = 'block';
+            document.getElementById('smokeDetail').textContent = smokeDetails[type];
+        }
+
+        // Timeline toggle
+        function toggleDetail(item) {
+            item.classList.toggle('expanded');
+        }
+
+        // Checklist toggle
+        function toggleCheck(item) {
+            item.classList.toggle('checked');
+        }
+
+        // Tab system
+        function showTab(id) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Anatomy
+        const anatomyInfo = {
+            flat: '<strong style="color:var(--gold)">The Flat (Lean)</strong><br><br>The leaner muscle that sits over the rib cage. It is thinner, cooks faster, and is prone to drying out. This is where your "lean" slices come from. It has less intramuscular fat, so it relies on the fat cap on top and careful spritzing to stay moist. The grain runs in one direction — always slice against it.',
+            point: '<strong style="color:var(--gold)">The Point (Moist/Fatty)</strong><br><br>The thicker, fattier muscle that sits on top of the flat. It has heavy marbling and more connective tissue. This is where burnt ends come from. It can handle more heat and longer cooking. The grain runs perpendicular to the flat, so you rotate 90 degrees when slicing.',
+            fatcap: '<strong style="color:var(--gold)">The Fat Cap</strong><br><br>The layer of fat on top (actually the bottom when the brisket is on the cow). Franklin trims to 1/4 inch of soft, pillowy fat. Hard, waxy fat will not render and tastes bad. Soft fat melts into the meat during the cook. On Franklin's cookers, the fat cap goes UP because the heat comes from the top.',
+            seam: '<strong style="color:var(--gold)">Seam Fat</strong><br><br>The fat between the flat and point muscles. It is thick, hard, and will not render during the cook. Franklin removes most of it during trimming because it creates a greasy, unappetizing layer in the final slice. Leave just enough for structural integrity so the point does not collapse.'
+        };
+
+        function showAnatomy(part) {
+            document.getElementById('anatomyInfo').innerHTML = anatomyInfo[part];
+            document.querySelectorAll('.anatomy-part').forEach(p => p.classList.remove('active'));
+            document.getElementById(part).classList.add('active');
+        }
+
+        // Brisket calculator
+        function calcBrisket() {
+            const dinner = parseInt(document.getElementById('dinnerTime').value);
+            const temp = parseInt(document.getElementById('cookTemp').value);
+            const size = parseInt(document.getElementById('brisketSize').value);
+
+            let cookTime = size === 15 ? 14 : size === 10 ? 10 : 12;
+            let wrapTime = 8;
+            let restTime = 1;
+
+            if (temp === 275) { cookTime -= 1; wrapTime -= 1; }
+            if (temp === 225) { cookTime += 2; wrapTime += 1; }
+
+            const onTime = dinner - cookTime - restTime;
+            const wrapTimeActual = onTime + wrapTime;
+
+            const formatTime = (h) => {
+                const ampm = h >= 12 ? 'PM' : 'AM';
+                const hr = h > 12 ? h - 12 : h === 0 ? 12 : h;
+                return hr + ':00 ' + ampm;
+            };
+
+            document.getElementById('planOutput').innerHTML = 
+                '<div class="calc-result-item"><span>Go on cooker:</span><strong style="color:var(--gold)">' + formatTime(onTime) + '</strong></div>' +
+                '<div class="calc-result-item"><span>Wrap at:</span><strong style="color:var(--gold)">' + formatTime(wrapTimeActual) + '</strong></div>' +
+                '<div class="calc-result-item"><span>Pull at:</span><strong style="color:var(--gold)">' + formatTime(dinner - restTime) + '</strong></div>' +
+                '<div class="calc-result-item"><span>Serve at:</span><strong style="color:var(--gold)">' + formatTime(dinner) + '</strong></div>' +
+                '<div class="calc-result-item"><span>Total cook:</span><strong>' + cookTime + ' hours</strong></div>' +
+                '<div class="calc-result-item"><span>Target temp:</span><strong>' + temp + '°F</strong></div>';
+        }
+        calcBrisket();
+
+        // Rub calculator
+        function calcRub() {
+            const weight = parseInt(document.getElementById('brisketWeight').value) || 12;
+            const salt = (weight * 0.5).toFixed(1);
+            const pepper = (weight * 0.5).toFixed(1);
+            const mustard = (weight * 0.3).toFixed(1);
+
+            document.getElementById('rubOutput').innerHTML = 
+                '<div class="calc-result-item"><span>Kosher Salt:</span><strong>' + salt + ' tbsp</strong></div>' +
+                '<div class="calc-result-item"><span>16 Mesh Pepper:</span><strong>' + pepper + ' tbsp</strong></div>' +
+                '<div class="calc-result-item"><span>Yellow Mustard:</span><strong>' + mustard + ' tbsp</strong></div>' +
+                '<div class="calc-result-item"><span>Ratio:</span><strong>1:1 by volume</strong></div>';
+        }
+        calcRub();
+
+        // Pork calculator
+        function calcPork() {
+            const dinner = parseInt(document.getElementById('porkDinner').value);
+            const onTime = dinner - 10 - 1;
+            const wrapTime = onTime + 8;
+
+            const formatTime = (h) => {
+                const ampm = h >= 12 ? 'PM' : 'AM';
+                const hr = h > 12 ? h - 12 : h === 0 ? 12 : h;
+                return hr + ':00 ' + ampm;
+            };
+
+            document.getElementById('porkOutput').innerHTML = 
+                '<div class="calc-result-item"><span>Go on cooker:</span><strong style="color:var(--gold)">' + formatTime(onTime) + '</strong></div>' +
+                '<div class="calc-result-item"><span>Wrap at:</span><strong style="color:var(--gold)">' + formatTime(wrapTime) + '</strong></div>' +
+                '<div class="calc-result-item"><span>Pull at:</span><strong style="color:var(--gold)">' + formatTime(dinner - 1) + '</strong></div>' +
+                '<div class="calc-result-item"><span>Serve at:</span><strong style="color:var(--gold)">' + formatTime(dinner) + '</strong></div>' +
+                '<div class="calc-result-item"><span>Smoke temp:</span><strong>270°F</strong></div>' +
+                '<div class="calc-result-item"><span>Target internal:</span><strong>203°F</strong></div>';
+        }
+        calcPork();
+
+        // Wood detail
+        const woodDetails = {
+            junky: '<strong>Junky Wood:</strong> This is your firestarter material. It is light, flaky, sawdusty — maybe from a tree that had beetle damage or water rot. It burns fast and irregularly. Perfect for building your initial coal bed because the meat is not on yet. Never use this once food is in the smoker — it produces unpredictable smoke.',
+            dense: '<strong>Dense Wood:</strong> The heavy log that surprises you when you pick it up. It has a solid core and will burn for 40-60 minutes. Use this when you need stability — early in the cook when you want clean flavors, or when you need a 30-minute break. It will smolder at first, then catch and provide steady heat. Time it to catch right as your previous log fades.',
+            wedge: '<strong>Wedge Wood:</strong> The strategic piece. Its shape lets you wedge it against the round wall of the firebox, holding it above the coals until you are ready. When you need heat, just roll it in. This is how you "pre-stage" logs without having them actively smoke. Great for maintaining rhythm without babysitting.',
+            small: '<strong>Small Splits:</strong> These are your precision tools. They catch in seconds, burn hot for 10-15 minutes, and let you dial in exact temperatures. On a small backyard cooker, these are essential — a big log would overshoot your temps and take forever to settle. You will use more of them, but you will have better control.'
+        };
+
+        function showWoodDetail(type) {
+            document.getElementById('woodDetail').style.display = 'block';
+            document.getElementById('woodDetail').innerHTML = woodDetails[type];
+        }
+
+        // Wood quality
+        const woodQuality = {
+            green: '<strong>Green Wood (Avoid):</strong> Freshly cut, straight off the tree. The moisture content is too high — the wood has to boil out its own water before it can reach combustion temperature. This produces thick, white, steamy smoke that never clears up. The meat will taste bitter and ashy. If you must use it, split it very small and give it maximum airflow. But really — find aged wood.',
+            perfect: '<strong>Seasoned Wood (Ideal):</strong> Aged 1-2 years in Texas climate. The moisture has evaporated naturally, but the wood structure is still intact. When you pick it up, it feels noticeably lighter than fresh-cut but still solid. It will catch within a few minutes, burn with thin blue smoke, and provide predictable heat curves. This is what Franklin uses exclusively at the restaurant.',
+            rotten: '<strong>Overly Dry/Rotted (Avoid):</strong> If it has been sitting in a backyard for 6 years, it is decomposed. It will feel unnaturally light, crumble in your hands, and turn to sawdust when split. There is nothing left to burn — no flavor compounds, no structure. It will flare and die instantly. Good for starting fires only, if that.'
+        };
+
+        function showWoodQuality(type) {
+            document.getElementById('woodQualityDetail').style.display = 'block';
+            document.getElementById('woodQualityDetail').innerHTML = woodQuality[type];
+        }
+
+        // Quiz
+        const quizAnswers = {
+            q1: { correct: 1, feedback: 'Correct! Franklin trims to 1/4 inch of soft, pillowy fat. Any more and it will not render properly, leaving waxy, unpleasant fat on the finished slice. The fat should melt between your fingers when raw.' },
+            q2: { correct: 2, feedback: 'Correct! Thin blue smoke appears at 600-680°F combustion temperatures. It is mostly water vapor and clean combustion byproducts, imparting transparent flavor that does not overpower the meat.' },
+            q3: { correct: 1, feedback: 'Correct! Foil creates a steam environment that makes the bark soggy and the meat "pot roasty." Butcher paper breathes, allowing some moisture escape while still protecting the meat. It soaks up grease and forms a protective barrier.' },
+            q4: { correct: 2, feedback: 'Correct! The stall is evaporative cooling — the meat sweats at 160-170°F, cooling itself. Bump your cooker temp to 280°F+ to push through. The moisture on the surface protects from burning during this phase.' },
+            q5: { correct: 0, feedback: 'Correct! 50/50 by volume (not weight) of kosher salt and 16 mesh black pepper. The granule sizes match so they distribute evenly in the shaker. 16 mesh means it fits through a 1/16 inch screen.' },
+            q6: { correct: 1, feedback: 'Correct! A cooler insulates the hot meat, causing carryover cooking to continue far too long. The brisket will overcook and become mushy. Rest on the counter until internal temp drops to 140-150°F.' },
+            q7: { correct: 1, feedback: 'Correct! The fat cap splitting is the visual cue that enough bark has formed and the connective tissue is breaking down. Internal temperature is just a guideline — the fat split tells you the meat is ready for the steam phase.' },
+            q8: { correct: 2, feedback: 'Correct! Post oak is a white oak with less tannic acid than other oaks, giving it a sweeter, more vanilla-like flavor when burned at high heat. It grows almost exclusively in Central Texas and parts of the South.' }
+        };
+
+        let score = 0;
+        let answered = 0;
+
+        function checkAnswer(btn, isCorrect, qid) {
+            const question = document.getElementById(qid);
+            const options = question.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById('f' + qid.slice(1));
+            const data = quizAnswers[qid];
+
+            if (question.dataset.answered) return;
+            question.dataset.answered = 'true';
+            answered++;
+
+            options.forEach(function(opt, idx) {
+                opt.disabled = true;
+                if (idx === data.correct) opt.classList.add('correct');
+                else if (opt === btn && !isCorrect) opt.classList.add('wrong');
+            });
+
+            if (isCorrect) score++;
+
+            feedback.classList.add('show');
+            feedback.classList.add(isCorrect ? 'correct' : 'wrong');
+            feedback.textContent = (isCorrect ? '✓ ' : '✗ ') + data.feedback;
+
+            if (answered === 8) {
+                document.getElementById('quizScore').textContent = 'Score: ' + score + '/8 — ' + (score >= 6 ? 'Pitmaster in training! 🔥' : 'Keep studying the fire! 📚');
+            }
+        }
+    </script>
 </body>
 </html>
