@@ -1,1588 +1,1275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AHEAD — Menu</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --burgundy: #7B1F3F;
-            --burgundy-light: #9B2D4F;
-            --burgundy-dark: #5C152F;
-            --cream: #FAF7F2;
-            --cream-dark: #F0EBE3;
-            --text: #2D1F23;
-            --text-light: #6B5B60;
-            --white: #FFFFFF;
-            --shadow: 0 4px 24px rgba(123, 31, 63, 0.08);
-            --shadow-lg: 0 12px 40px rgba(123, 31, 63, 0.15);
-            --radius: 16px;
-            --radius-sm: 12px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--cream);
-            color: var(--text);
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Header */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            background: rgba(250, 247, 242, 0.92);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(123, 31, 63, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--burgundy);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .logo-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--burgundy);
-            letter-spacing: -0.5px;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .search-box {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-box input {
-            width: 240px;
-            padding: 0.6rem 1rem 0.6rem 2.5rem;
-            border: 1.5px solid rgba(123, 31, 63, 0.15);
-            border-radius: 100px;
-            background: var(--white);
-            font-family: inherit;
-            font-size: 0.9rem;
-            color: var(--text);
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .search-box input:focus {
-            border-color: var(--burgundy);
-            box-shadow: 0 0 0 3px rgba(123, 31, 63, 0.1);
-            width: 280px;
-        }
-
-        .search-box svg {
-            position: absolute;
-            left: 0.9rem;
-            width: 18px;
-            height: 18px;
-            color: var(--text-light);
-            pointer-events: none;
-        }
-
-        .cart-btn {
-            position: relative;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--burgundy);
-            border: none;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow);
-        }
-
-        .cart-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-            background: var(--burgundy-light);
-        }
-
-        .cart-count {
-            position: absolute;
-            top: -4px;
-            right: -4px;
-            background: #E85D4E;
-            color: white;
-            font-size: 0.7rem;
-            font-weight: 700;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid var(--cream);
-            opacity: 0;
-            transform: scale(0);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .cart-count.active {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-        /* Hero */
-        .hero {
-            margin-top: 80px;
-            padding: 3rem 2rem 2rem;
-            text-align: center;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(123, 31, 63, 0.08);
-            color: var(--burgundy);
-            border-radius: 100px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1.25rem;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: var(--burgundy);
-            margin-bottom: 0.5rem;
-            letter-spacing: -1px;
-        }
-
-        .hero p {
-            color: var(--text-light);
-            font-size: 1.1rem;
-            max-width: 500px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        /* Main Toggle */
-        .main-toggle {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin: 2rem auto;
-            max-width: 400px;
-            padding: 0.4rem;
-            background: var(--cream-dark);
-            border-radius: 100px;
-            width: fit-content;
-        }
-
-        .main-toggle button {
-            padding: 0.75rem 2rem;
-            border: none;
-            background: transparent;
-            color: var(--text-light);
-            font-family: inherit;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border-radius: 100px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .main-toggle button.active {
-            background: var(--burgundy);
-            color: white;
-            box-shadow: var(--shadow);
-        }
-
-        .main-toggle button:not(.active):hover {
-            color: var(--burgundy);
-        }
-
-        /* Sub Categories */
-        .sub-categories {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            padding: 0 2rem;
-            max-width: 1200px;
-            margin: 0 auto 2rem;
-        }
-
-        .sub-categories button {
-            padding: 0.5rem 1.25rem;
-            border: 1.5px solid rgba(123, 31, 63, 0.12);
-            background: var(--white);
-            color: var(--text-light);
-            font-family: inherit;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border-radius: 100px;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .sub-categories button:hover {
-            border-color: var(--burgundy);
-            color: var(--burgundy);
-            transform: translateY(-1px);
-        }
-
-        .sub-categories button.active {
-            background: var(--burgundy);
-            color: white;
-            border-color: var(--burgundy);
-            box-shadow: 0 4px 12px rgba(123, 31, 63, 0.2);
-        }
-
-        /* Menu Grid */
-        .menu-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem 4rem;
-        }
-
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.75rem;
-            color: var(--burgundy);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .section-title::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(to right, rgba(123, 31, 63, 0.2), transparent);
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .menu-card {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            border: 1px solid rgba(123, 31, 63, 0.06);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .menu-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--burgundy), var(--burgundy-light));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .menu-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .menu-card:hover::before {
-            opacity: 1;
-        }
-
-        .card-category {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--burgundy-light);
-            margin-bottom: 0.5rem;
-            opacity: 0.8;
-        }
-
-        .card-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 0.5rem;
-            line-height: 1.3;
-        }
-
-        .card-description {
-            font-size: 0.85rem;
-            color: var(--text-light);
-            line-height: 1.5;
-            margin-bottom: 0.75rem;
-            flex: 1;
-        }
-
-        .card-meta {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .temp-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            padding: 0.2rem 0.6rem;
-            background: rgba(123, 31, 63, 0.06);
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--burgundy);
-        }
-
-        .card-footer {
-            margin-top: auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(123, 31, 63, 0.06);
-        }
-
-        .card-price {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--burgundy);
-        }
-
-        .add-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--burgundy);
-            border: none;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            font-size: 1.25rem;
-            line-height: 1;
-        }
-
-        .add-btn:hover {
-            background: var(--burgundy-light);
-            transform: scale(1.1);
-        }
-
-        .add-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Cart Drawer */
-        .cart-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(45, 31, 35, 0.4);
-            backdrop-filter: blur(4px);
-            z-index: 200;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .cart-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .cart-drawer {
-            position: fixed;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            max-width: 420px;
-            background: var(--white);
-            z-index: 201;
-            transform: translateX(100%);
-            transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
-            display: flex;
-            flex-direction: column;
-            box-shadow: -10px 0 40px rgba(0,0,0,0.1);
-        }
-
-        .cart-drawer.open {
-            transform: translateX(0);
-        }
-
-        .cart-header {
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid rgba(123, 31, 63, 0.08);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .cart-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: var(--burgundy);
-        }
-
-        .close-cart {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: var(--cream);
-            color: var(--text);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .close-cart:hover {
-            background: var(--cream-dark);
-            transform: rotate(90deg);
-        }
-
-        .cart-items {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1.5rem 2rem;
-        }
-
-        .cart-empty {
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--text-light);
-        }
-
-        .cart-empty svg {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 1rem;
-            opacity: 0.3;
-        }
-
-        .cart-item {
-            display: flex;
-            gap: 1rem;
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(123, 31, 63, 0.06);
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .cart-item-info {
-            flex: 1;
-        }
-
-        .cart-item-title {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .cart-item-category {
-            font-size: 0.8rem;
-            color: var(--text-light);
-            margin-bottom: 0.5rem;
-        }
-
-        .cart-item-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .qty-btn {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            border: 1.5px solid rgba(123, 31, 63, 0.15);
-            background: white;
-            color: var(--burgundy);
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-        }
-
-        .qty-btn:hover {
-            background: var(--burgundy);
-            color: white;
-            border-color: var(--burgundy);
-        }
-
-        .cart-item-price {
-            font-weight: 700;
-            color: var(--burgundy);
-            font-size: 0.95rem;
-        }
-
-        .remove-item {
-            color: #E85D4E;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 0.8rem;
-            text-decoration: underline;
-            padding: 0;
-            margin-top: 0.5rem;
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
-
-        .remove-item:hover {
-            opacity: 1;
-        }
-
-        .cart-footer {
-            padding: 1.5rem 2rem 2rem;
-            border-top: 1px solid rgba(123, 31, 63, 0.08);
-            background: var(--cream);
-        }
-
-        .cart-total-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.25rem;
-        }
-
-        .cart-total-label {
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .cart-total-value {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--burgundy);
-        }
-
-        .checkout-btn {
-            width: 100%;
-            padding: 1rem;
-            background: var(--burgundy);
-            color: white;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow);
-        }
-
-        .checkout-btn:hover {
-            background: var(--burgundy-light);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .checkout-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Toast */
-        .toast-container {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 300;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            pointer-events: none;
-        }
-
-        .toast {
-            background: var(--burgundy-dark);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: var(--radius-sm);
-            font-weight: 500;
-            font-size: 0.9rem;
-            box-shadow: var(--shadow-lg);
-            animation: toastUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            pointer-events: auto;
-            min-width: 280px;
-        }
-
-        @keyframes toastUp {
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .toast.hide {
-            animation: toastDown 0.3s ease forwards;
-        }
-
-        @keyframes toastDown {
-            to { opacity: 0; transform: translateY(10px) scale(0.95); }
-        }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(45, 31, 35, 0.5);
-            backdrop-filter: blur(6px);
-            z-index: 250;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .modal-overlay.open {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal {
-            background: var(--white);
-            border-radius: var(--radius);
-            max-width: 480px;
-            width: 100%;
-            padding: 2rem;
-            transform: scale(0.9) translateY(20px);
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .modal-overlay.open .modal {
-            transform: scale(1) translateY(0);
-        }
-
-        .modal h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
-            color: var(--burgundy);
-            margin-bottom: 0.25rem;
-        }
-
-        .modal-category {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-
-        .modal-description {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 1.25rem;
-            padding-bottom: 1.25rem;
-            border-bottom: 1px solid rgba(123, 31, 63, 0.08);
-        }
-
-        .modal-price {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--burgundy);
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-options {
-            margin-bottom: 1.5rem;
-        }
-
-        .option-label {
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            display: block;
-            font-size: 0.9rem;
-        }
-
-        .option-group {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .option-btn {
-            padding: 0.6rem 1.2rem;
-            border: 1.5px solid rgba(123, 31, 63, 0.15);
-            background: white;
-            border-radius: 100px;
-            font-family: inherit;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: var(--text);
-        }
-
-        .option-btn:hover {
-            border-color: var(--burgundy);
-        }
-
-        .option-btn.active {
-            background: var(--burgundy);
-            color: white;
-            border-color: var(--burgundy);
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .modal-actions button {
-            flex: 1;
-            padding: 1rem;
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .modal-cancel {
-            background: var(--cream);
-            border: none;
-            color: var(--text);
-        }
-
-        .modal-cancel:hover {
-            background: var(--cream-dark);
-        }
-
-        .modal-add {
-            background: var(--burgundy);
-            border: none;
-            color: white;
-        }
-
-        .modal-add:hover {
-            background: var(--burgundy-light);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header-content {
-                padding: 1rem;
-            }
-
-            .search-box input {
-                width: 140px;
-            }
-
-            .search-box input:focus {
-                width: 160px;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .menu-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .cart-drawer {
-                max-width: 100%;
-            }
-
-            .sub-categories {
-                padding: 0 1rem;
-            }
-
-            .menu-section {
-                padding: 0 1rem 3rem;
-            }
-        }
-
-        /* Animations */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .menu-card {
-            animation: fadeUp 0.5s ease backwards;
-        }
-
-        .menu-card:nth-child(1) { animation-delay: 0.05s; }
-        .menu-card:nth-child(2) { animation-delay: 0.1s; }
-        .menu-card:nth-child(3) { animation-delay: 0.15s; }
-        .menu-card:nth-child(4) { animation-delay: 0.2s; }
-        .menu-card:nth-child(5) { animation-delay: 0.25s; }
-        .menu-card:nth-child(6) { animation-delay: 0.3s; }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--cream);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(123, 31, 63, 0.2);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(123, 31, 63, 0.4);
-        }
-
-        .hidden {
-            display: none !important;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Education Paradox — Flip Book</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #1a1918;
+  --book-bg: #2a2825;
+  --page: #faf8f5;
+  --page-shadow: #e8e4de;
+  --ink: #1a1a1a;
+  --ink-2: #4a4a4a;
+  --ink-3: #8a8a8a;
+  --accent: #c41e3a;
+  --accent-light: #e85d75;
+  --gold: #b8860b;
+  --gold-light: #d4a843;
+  --border: #e0dcd6;
+  --border-dark: #3a3835;
+  --spine: #1e1c1a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === BOOK CONTAINER === */
+.book-scene {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 2000px;
+  padding: 20px;
+}
+
+.book {
+  width: 900px;
+  height: 600px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.book.open {
+  transform: translateX(50%);
+}
+
+@media (max-width: 950px) {
+  .book { width: 100%; max-width: 900px; height: 70vh; min-height: 500px; }
+  .book.open { transform: translateX(0); }
+}
+
+@media (max-width: 600px) {
+  .book { height: 85vh; }
+}
+
+/* === PAGE BASE === */
+.page {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  top: 0;
+  background: var(--page);
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+  transform-origin: left center;
+  box-shadow: 
+    inset 0 0 60px rgba(0,0,0,0.05),
+    0 0 20px rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+
+.page::before {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 40px;
+  background: linear-gradient(90deg, rgba(0,0,0,0.08), transparent);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.page.right::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0.12), transparent);
+}
+
+.page.left::before {
+  right: 0;
+  background: linear-gradient(270deg, rgba(0,0,0,0.08), transparent);
+}
+
+.page.left { left: 0; border-radius: 4px 0 0 4px; }
+.page.right { left: 50%; border-radius: 0 4px 4px 0; }
+
+/* Flipped state */
+.page.flipped {
+  transform: rotateY(-180deg);
+}
+
+/* Front and back of each page */
+.page-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 40px 36px;
+}
+
+.page-face::-webkit-scrollbar { width: 4px; }
+.page-face::-webkit-scrollbar-track { background: transparent; }
+.page-face::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+.page-face.front { transform: rotateY(0deg); }
+.page-face.back { transform: rotateY(180deg); }
+
+/* Page number */
+.page-num {
+  position: absolute;
+  bottom: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-3);
+  z-index: 5;
+}
+.page-face.front .page-num { right: 30px; }
+.page-face.back .page-num { left: 30px; }
+
+/* === COVER PAGE === */
+.cover-page {
+  background: linear-gradient(145deg, #1e1c1a 0%, #2a2825 50%, #1e1c1a 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cover-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 30% 20%, rgba(196,30,58,0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(184,134,11,0.1) 0%, transparent 50%);
+}
+
+.cover-ornament {
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto 24px;
+}
+
+.cover-page h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #f5f2ed;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.cover-page h1 span {
+  display: block;
+  background: linear-gradient(135deg, var(--accent-light), var(--gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cover-sub {
+  font-size: 0.95rem;
+  color: #9a9690;
+  max-width: 280px;
+  line-height: 1.5;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
+  font-weight: 300;
+}
+
+.cover-meta-flip {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+.cover-meta-flip div {
+  text-align: center;
+}
+.cover-meta-flip .n {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  line-height: 1;
+}
+.cover-meta-flip .l {
+  font-size: 9px;
+  color: #6a6660;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 4px;
+}
+
+.cover-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: #6a6660;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  animation: pulse 2s ease-in-out infinite;
+  z-index: 1;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* === BACK COVER === */
+.back-cover {
+  background: linear-gradient(145deg, #1e1c1a, #2a2825);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #9a9690;
+}
+.back-cover h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  color: #f5f2ed;
+  margin-bottom: 12px;
+}
+.back-cover p {
+  font-size: 13px;
+  max-width: 280px;
+  text-align: center;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* === CONTENT STYLING === */
+.chapter-title-flip {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+
+.chapter-num-flip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.chapter-lede-flip {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--ink-3);
+  line-height: 1.5;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.dialogue-flip {
+  margin-bottom: 16px;
+}
+
+.speaker-row-flip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.speaker-avatar-flip {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.speaker-a .speaker-avatar-flip { background: linear-gradient(135deg, var(--accent), var(--accent-light)); }
+.speaker-b .speaker-avatar-flip { background: linear-gradient(135deg, var(--gold), var(--gold-light)); }
+
+.speaker-name-flip {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.speaker-a .speaker-name-flip { color: var(--accent); }
+.speaker-b .speaker-name-flip { color: var(--gold); }
+
+.dialogue-text-flip {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+.dialogue-text-flip strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+.dialogue-text-flip em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+/* Insight box */
+.insight-flip {
+  background: linear-gradient(135deg, #f5f2ed, #faf8f5);
+  border-radius: 10px;
+  padding: 16px;
+  margin: 16px 0;
+  border: 1px solid var(--border);
+  position: relative;
+}
+.insight-flip::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  border-radius: 10px 10px 0 0;
+}
+.insight-flip h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+.insight-flip p {
+  font-size: 0.82rem;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+/* Stats */
+.stats-flip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 12px 0;
+}
+.stat-flip {
+  background: #f5f2ed;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+.stat-flip .n {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-flip .l {
+  font-size: 9px;
+  color: var(--ink-3);
+  line-height: 1.3;
+}
+
+/* Quote */
+.quote-flip {
+  margin: 16px 0;
+  padding: 14px 16px;
+  background: #f5f2ed;
+  border-radius: 8px;
+  border-left: 3px solid var(--gold);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.quote-flip .auth {
+  font-style: normal;
+  font-size: 10px;
+  color: var(--ink-3);
+  margin-top: 8px;
+  font-family: 'Source Sans 3', sans-serif;
+}
+
+/* Table */
+.table-flip {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  margin: 12px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.table-flip th {
+  background: #f0ece6;
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--border);
+}
+.table-flip td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--ink-2);
+}
+.table-flip tr:last-child td { border-bottom: none; }
+
+/* Timeline */
+.timeline-flip {
+  position: relative;
+  padding-left: 18px;
+  margin: 12px 0;
+}
+.timeline-flip::before {
+  content: '';
+  position: absolute;
+  left: 4px; top: 4px; bottom: 4px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent), var(--gold));
+  border-radius: 1px;
+}
+.timeline-item-flip {
+  position: relative;
+  margin-bottom: 12px;
+  padding-left: 14px;
+}
+.timeline-item-flip::before {
+  content: '';
+  position: absolute;
+  left: -16px; top: 3px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--page);
+  border: 2px solid var(--accent);
+}
+.timeline-item-flip .y {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+.timeline-item-flip .t {
+  font-size: 11px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+
+/* Flip cards */
+.flip-grid-flip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 12px 0;
+}
+.flip-card-flip {
+  perspective: 600px;
+  height: 100px;
+  cursor: pointer;
+}
+.flip-inner-flip {
+  position: relative;
+  width: 100%; height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+.flip-card-flip.flipped .flip-inner-flip { transform: rotateY(180deg); }
+.flip-front-flip, .flip-back-flip {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.flip-front-flip {
+  background: linear-gradient(145deg, #f5f2ed, #faf8f5);
+  border: 1px solid var(--border);
+}
+.flip-front-flip h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.flip-front-flip p {
+  font-size: 9px;
+  color: var(--ink-3);
+}
+.flip-hint-flip {
+  font-size: 8px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 6px;
+}
+.flip-back-flip {
+  background: #f5f2ed;
+  border: 1px solid var(--border);
+  transform: rotateY(180deg);
+}
+.flip-back-flip p {
+  font-size: 10px;
+  color: var(--ink-2);
+  line-height: 1.5;
+}
+
+/* Poll */
+.poll-flip {
+  background: #f5f2ed;
+  border-radius: 10px;
+  padding: 14px;
+  margin: 12px 0;
+  border: 1px solid var(--border);
+}
+.poll-q-flip {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.poll-opt-flip {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.poll-opt-flip:hover { border-color: var(--accent); }
+.poll-opt-flip.sel { background: var(--accent-muted); border-color: var(--accent); color: var(--accent); font-weight: 600; }
+.poll-opt-flip .chk {
+  width: 14px; height: 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+.poll-opt-flip.sel .chk { background: var(--accent); border-color: var(--accent); }
+.poll-res-flip { display: none; margin-top: 8px; }
+.poll-res-flip.show { display: block; }
+.res-bar-flip { margin-bottom: 6px; }
+.res-bar-flip .rl { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 2px; }
+.res-bar-flip .rt { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.res-bar-flip .rf { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold)); width: 0%; transition: width 1s; }
+
+/* Divider */
+.divider-flip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  gap: 12px;
+}
+.divider-flip .dl { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
+.divider-flip .dd { width: 4px; height: 4px; background: var(--accent); border-radius: 50%; opacity: 0.4; }
+
+/* === CONTROLS === */
+.controls {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 12px;
+  z-index: 100;
+  background: rgba(26,25,24,0.9);
+  backdrop-filter: blur(10px);
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1px solid var(--border-dark);
+}
+
+.ctrl-btn {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-dark);
+  background: transparent;
+  color: #9a9690;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.25s;
+}
+.ctrl-btn:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.ctrl-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.ctrl-btn:disabled:hover {
+  background: transparent;
+  color: #9a9690;
+  border-color: var(--border-dark);
+}
+
+.page-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: #9a9690;
+}
+.page-indicator .current { color: var(--gold-light); font-weight: 600; }
+
+/* Mobile hint */
+.swipe-hint {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: #6a6660;
+  letter-spacing: 1px;
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+  z-index: 50;
+}
+.swipe-hint.show { opacity: 1; }
+
+@media (max-width: 600px) {
+  .page-face { padding: 24px 20px; }
+  .chapter-title-flip { font-size: 1.3rem; }
+  .cover-page h1 { font-size: 2rem; }
+  .flip-grid-flip { grid-template-columns: 1fr; }
+  .stats-flip { grid-template-columns: 1fr; }
+  .swipe-hint.show { opacity: 1; }
+}
+
+/* Print */
+@media print {
+  .controls, .swipe-hint { display: none !important; }
+  .book { transform: none !important; }
+  .page { position: relative !important; transform: none !important; width: 100% !important; left: auto !important; page-break-after: always; }
+}
+</style>
+<base target="_blank">
 </head>
 <body>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <a href="#" class="logo">
-                <div class="logo-icon">A</div>
-                <span class="logo-text">ahead</span>
-            </a>
-            <div class="header-actions">
-                <div class="search-box">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                    <input type="text" id="searchInput" placeholder="Search menu...">
-                </div>
-                <button class="cart-btn" onclick="toggleCart()">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
-                    <span class="cart-count" id="cartCount">0</span>
-                </button>
-            </div>
-        </div>
-    </header>
+<div class="swipe-hint" id="swipeHint">← Swipe or click arrows to flip pages →</div>
 
-    <!-- Hero -->
-    <section class="hero">
-        <div class="hero-badge">
-            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-            Serving all day
-        </div>
-        <h1>Our Menu</h1>
-        <p>Handcrafted beverages and freshly baked bread, made with care for every moment of your day.</p>
-    </section>
+<div class="book-scene">
+  <div class="book" id="book">
 
-    <!-- Main Toggle -->
-    <div class="main-toggle">
-        <button class="active" onclick="setMainTab('beverages')" id="tab-beverages">Beverages</button>
-        <button onclick="setMainTab('bread')" id="tab-bread">Bread</button>
+    <!-- PAGE 1: Front Cover (right side when closed) -->
+    <div class="page right" id="page0" style="z-index: 10;">
+      <div class="page-face front cover-page">
+        <div class="cover-ornament"></div>
+        <h1>The Education<span>Paradox</span></h1>
+        <p class="cover-sub">A candid conversation about Indonesia's education crisis, generational mental health, and the path to Golden Indonesia 2045</p>
+        <div class="cover-meta-flip">
+          <div><div class="n">9</div><div class="l">Chapters</div></div>
+          <div><div class="n">280M</div><div class="l">Population</div></div>
+          <div><div class="n">2045</div><div class="l">Vision</div></div>
+        </div>
+        <div class="cover-hint">Click next to open</div>
+      </div>
+      <div class="page-face back">
+        <div class="chapter-num-flip">Chapter One</div>
+        <h2 class="chapter-title-flip">The Education Crisis</h2>
+        <p class="chapter-lede-flip">When 88% of households lack a university graduate, and 93% of voters never held a bachelor's degree, the foundation of a nation's future rests on fragile ground.</p>
+
+        <div class="dialogue-flip speaker-a">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">A</div>
+            <span class="speaker-name-flip">Speaker A</span>
+          </div>
+          <div class="dialogue-text-flip">
+            If we look at Indonesia, <strong>88% of all households</strong> — the heads of household — don't have a single university degree. <strong>93% of the electorate</strong> who vote or choose leaders don't have a bachelor's degree or higher. So if we hope for the ecosystem at home that you described earlier — if the parents in 88% of households don't have a university education, don't have a concept of what noble education looks like — it's difficult to expect that a culture of reading, a culture of storytelling, can emerge.
+          </div>
+        </div>
+
+        <div class="stats-flip">
+          <div class="stat-flip"><div class="n">88%</div><div class="l">Households without degree</div></div>
+          <div class="stat-flip"><div class="n">93%</div><div class="l">Voters without S1+</div></div>
+          <div class="stat-flip"><div class="n">3.36M</div><div class="l">Total teachers</div></div>
+          <div class="stat-flip"><div class="n">IDR 2M</div><div class="l">Avg teacher salary</div></div>
+        </div>
+
+        <div class="page-num">2</div>
+      </div>
     </div>
 
-    <!-- Sub Categories -->
-    <div class="sub-categories" id="subCategories">
-        <button class="active" onclick="setSubCategory('all')">All</button>
-        <button onclick="setSubCategory('regular')">Regular</button>
-        <button onclick="setSubCategory('fine')">Fine Ahead</button>
-        <button onclick="setSubCategory('filter')">Filter</button>
-        <button onclick="setSubCategory('matcha')">Matcha</button>
-        <button onclick="setSubCategory('signature')">Signature</button>
-        <button onclick="setSubCategory('alternative')">Alternative</button>
-        <button onclick="setSubCategory('fresh')">Fresh</button>
+    <!-- PAGE 2: Chapter 1 cont + Chapter 2 start -->
+    <div class="page right" id="page1" style="z-index: 9;">
+      <div class="page-face front">
+        <div class="dialogue-flip speaker-b">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">B</div>
+            <span class="speaker-name-flip">Speaker B</span>
+          </div>
+          <div class="dialogue-text-flip">
+            I think within the bounds of intuition, perhaps the <em>only way to disrupt education</em> is through schools. And in schools, it must be ensured that those who teach are of quality. Right? And often we focus on curriculum, often we focus on technology, but we lack — forgive me — focus on <strong>teacher quality</strong>. Right? And I have a conviction that if a teacher is great at storytelling, they are more capable — even if they don't understand physics — they are more capable of converting their students into physicists. Right? Compared to someone who understands physics but can't tell a story.
+          </div>
+        </div>
+
+        <div class="insight-flip">
+          <h4>💡 The Storyteller Hypothesis</h4>
+          <p>A teacher who masters storytelling can inspire students to become physicists, even if the teacher doesn't fully grasp physics themselves. The power of narrative transcends subject matter expertise.</p>
+        </div>
+
+        <div class="dialogue-flip speaker-a">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">A</div>
+            <span class="speaker-name-flip">Speaker A</span>
+          </div>
+          <div class="dialogue-text-flip">
+            There are smart people who can't teach, but there are ordinary people who can teach, and their children become smart. I can also mention several names of my teachers — how they actually didn't master the dimensions that well, but <strong>they were very good at storytelling</strong>. And they cultivated imagination, not formulation. I agree — memorization is not important. What's important is <em>imagining</em>.
+          </div>
+        </div>
+
+        <div class="page-num">3</div>
+      </div>
+      <div class="page-face back">
+        <div class="chapter-num-flip">Chapter Two</div>
+        <h2 class="chapter-title-flip">Teachers as Nation Builders</h2>
+        <p class="chapter-lede-flip">The chicken-and-egg dilemma: raise salaries first, or find quality teachers first?</p>
+
+        <div class="dialogue-flip speaker-b">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">B</div>
+            <span class="speaker-name-flip">Speaker B</span>
+          </div>
+          <div class="dialogue-text-flip">
+            School is the key for us. Someone on TikTok said school is just <em>unemployment with lecture-style packaging</em>. Actually, school doesn't make us smart. School gives us a mindset, and I really agree — a proper school is determined by <strong>teacher quality</strong>. And teacher quality is determined by <strong>salary</strong>. And this is like a vicious cycle. If we want proper teacher quality, we have to raise salaries so teachers know, "Oh, so being a teacher pays well."
+          </div>
+        </div>
+
+        <div class="dialogue-flip speaker-a">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">A</div>
+            <span class="speaker-name-flip">Speaker A</span>
+          </div>
+          <div class="dialogue-text-flip">
+            This becomes a cycle that I think is a bit... like a chicken-and-egg problem, Sir. Do we raise teacher salaries first, or do we not look for quality teachers first? <em>Can be done simultaneously, Doctor.</em> Educating quality teachers takes time. This is a chicken-and-egg problem for me. I think <strong>salaries must be raised first</strong>.
+          </div>
+        </div>
+
+        <div class="page-num">4</div>
+      </div>
     </div>
 
-    <!-- Menu Section -->
-    <section class="menu-section" id="menuSection">
-        <div class="menu-grid" id="menuGrid"></div>
-    </section>
+    <!-- PAGE 3: Chapter 2 cont + Chapter 3 -->
+    <div class="page right" id="page2" style="z-index: 8;">
+      <div class="page-face front">
+        <div class="quote-flip">
+          There is sugar, there are ants. There are dodol ants, there are non-dodol ants. We'll filter them out later. But if we don't raise salaries, the ants won't come — they'll go to McKinsey, Citibank, Amazon.
+          <div class="auth">— On market forces and teacher recruitment</div>
+        </div>
 
-    <!-- Cart Drawer -->
-    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
-    <div class="cart-drawer" id="cartDrawer">
-        <div class="cart-header">
-            <h2>Your Order</h2>
-            <button class="close-cart" onclick="toggleCart()">
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
+        <div class="insight-flip">
+          <h4>🔄 The Vicious Cycle</h4>
+          <p>Low salaries → poor teacher quality → weak student outcomes → low national productivity → inability to fund education → low salaries. Breaking this cycle requires intervention at the salary level first.</p>
         </div>
-        <div class="cart-items" id="cartItems">
-            <div class="cart-empty">
-                <svg fill="currentColor" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-                <p>Your cart is empty</p>
-                <p style="font-size: 0.85rem; margin-top: 0.5rem;">Add some items to get started</p>
+
+        <div class="dialogue-flip speaker-b">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">B</div>
+            <span class="speaker-name-flip">Speaker B</span>
+          </div>
+          <div class="dialogue-text-flip">
+            I really agree with Sir, our income must rise first so that as teachers and educators, they have more budget to improve their <strong>lifelong learning</strong>. Right? If we offer this salary, will the ants come? Yes. There is sugar, there are ants. We'll filter them out later. But if we don't raise it, the ants won't come — they'll go to McKinsey, Citibank, Amazon.
+          </div>
+        </div>
+
+        <div class="page-num">5</div>
+      </div>
+      <div class="page-face back">
+        <div class="chapter-num-flip">Chapter Three</div>
+        <h2 class="chapter-title-flip">The Storyteller's Edge</h2>
+        <p class="chapter-lede-flip">Why Indian CEOs dominate Silicon Valley — and what Indonesia can learn from the power of narrative.</p>
+
+        <div class="dialogue-flip speaker-a">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">A</div>
+            <span class="speaker-name-flip">Speaker A</span>
+          </div>
+          <div class="dialogue-text-flip">
+            Can you imagine if the CEO of Microsoft was named <strong>Bambang</strong>? If the CEO of Google was named <strong>Komeng</strong>? That would be terrifying, Sir. That would be more nationalistic. Because the value that can be poured into Indonesia by them or the diaspora — if I line up people from countries A, B, C, D, E, and then there's India — their cognition is all the same. But <strong>the ones who can tell stories the best are Indians</strong>. That's the reason why they become CEOs and gain trust. Because they can tell stories.
+          </div>
+        </div>
+
+        <div class="flip-grid-flip">
+          <div class="flip-card-flip" onclick="this.classList.toggle('flipped')">
+            <div class="flip-inner-flip">
+              <div class="flip-front-flip">
+                <h4>🎭 Narrative Advantage</h4>
+                <p>Why storytelling beats raw intelligence</p>
+                <span class="flip-hint-flip">Click to reveal</span>
+              </div>
+              <div class="flip-back-flip">
+                <p>People with high cognition who can tell stories gain trust and leadership positions. Raw intelligence without narrative ability remains invisible.</p>
+              </div>
             </div>
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total-row">
-                <span class="cart-total-label">Total</span>
-                <span class="cart-total-value" id="cartTotal">Rp 0</span>
+          </div>
+          <div class="flip-card-flip" onclick="this.classList.toggle('flipped')">
+            <div class="flip-inner-flip">
+              <div class="flip-front-flip">
+                <h4>🌍 Diaspora Power</h4>
+                <p>The hidden economic engine</p>
+                <span class="flip-hint-flip">Click to reveal</span>
+              </div>
+              <div class="flip-back-flip">
+                <p>When diaspora talent reaches CEO positions, they create massive investment flows back to their homeland.</p>
+              </div>
             </div>
-            <button class="checkout-btn" id="checkoutBtn" disabled onclick="checkout()">Place Order</button>
+          </div>
         </div>
+
+        <div class="page-num">6</div>
+      </div>
     </div>
 
-    <!-- Item Modal -->
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
-        <div class="modal" onclick="event.stopPropagation()">
-            <h3 id="modalTitle">Item Name</h3>
-            <div class="modal-category" id="modalCategory">Category</div>
-            <div class="modal-description" id="modalDescription"></div>
-            <div class="modal-price" id="modalPrice">Rp 0</div>
-            <div class="modal-options" id="modalOptions"></div>
-            <div class="modal-actions">
-                <button class="modal-cancel" onclick="closeModal()">Cancel</button>
-                <button class="modal-add" onclick="confirmAddToCart()">Add to Cart</button>
-            </div>
+    <!-- PAGE 4: Chapter 3 cont + Chapter 4 -->
+    <div class="page right" id="page3" style="z-index: 7;">
+      <div class="page-face front">
+        <div class="dialogue-flip speaker-b">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">B</div>
+            <span class="speaker-name-flip">Speaker B</span>
+          </div>
+          <div class="dialogue-text-flip">
+            Can you imagine if in school, the teachers taught like your parents? Wow, there would be millions of Tirtas. All ambitious. And then to pesantrens, to synagogues, to mosques, to churches, to cafes — the discussions, the dialectics would be of quality, like you debating with your father about buying a car. <strong>Perfectionism, superlatives are prioritized.</strong> How to be the best? So what's discussed are ideas, not events, not people — ideas, brainstorming. If that's done in social institutions — that becomes <em>nation building</em>.
+          </div>
         </div>
+
+        <div class="divider-flip"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
+
+        <div class="chapter-num-flip">Chapter Four</div>
+        <h2 class="chapter-title-flip">Global Benchmarks</h2>
+        <p class="chapter-lede-flip">What Singapore, South Korea, and China teach us about valuing educators.</p>
+
+        <div class="dialogue-flip speaker-a">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">A</div>
+            <span class="speaker-name-flip">Speaker A</span>
+          </div>
+          <div class="dialogue-text-flip">
+            I look at countries that are great in education — Singapore and South Korea and China. But in South Korea, they roundly <strong>compensate teachers as if they worked at Amazon, Disney</strong>, and so on. And second, social status. So when a child just graduates, they report to their mother or father in the village, "Ma, Pa, I got four offers here, here, here, here. But I chose to be a teacher at Seoul National University."
+          </div>
+        </div>
+
+        <div class="page-num">7</div>
+      </div>
+      <div class="page-face back">
+        <table class="table-flip">
+          <thead><tr><th>Country</th><th>Recruitment</th><th>Compensation</th></tr></thead>
+          <tbody>
+            <tr><td><strong>South Korea</strong></td><td>Top 5% of graduates</td><td>Comparable to Amazon/Disney</td></tr>
+            <tr><td><strong>Singapore</strong></td><td>Top 20% of graduates</td><td>Competitive with private sector</td></tr>
+            <tr><td><strong>Indonesia</strong></td><td>No selective threshold</td><td>Below minimum wage (IDR 2M)</td></tr>
+            <tr><td><strong>OECD Avg</strong></td><td>Merit-based</td><td>75-150% of GDP per capita</td></tr>
+          </tbody>
+        </table>
+
+        <div class="dialogue-flip speaker-b">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">B</div>
+            <span class="speaker-name-flip">Speaker B</span>
+          </div>
+          <div class="dialogue-text-flip">
+            Difficult, Sir. And that's Korea because they recruit people from the <strong>top 5%</strong> from all of higher education to teach anywhere — kindergarten, elementary, junior high, senior high, up to university. In Singapore, they recruit the <strong>top 20%</strong> to teach. I don't see us being able to be really great if we don't take a stance like that.
+          </div>
+        </div>
+
+        <div class="timeline-flip">
+          <div class="timeline-item-flip"><div class="y">2024</div><div class="t">Indonesia's PISA scores remain stagnant — 25% reading proficiency.</div></div>
+          <div class="timeline-item-flip"><div class="y">2025</div><div class="t">President Prabowo announces 100% salary increase for teachers.</div></div>
+          <div class="timeline-item-flip"><div class="y">2045</div><div class="t">Golden Indonesia vision — but without quality teachers, only a fraction will benefit.</div></div>
+        </div>
+
+        <div class="page-num">8</div>
+      </div>
     </div>
 
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
+    <!-- PAGE 5: Chapter 5 -->
+    <div class="page right" id="page4" style="z-index: 6;">
+      <div class="page-face front">
+        <div class="chapter-num-flip">Chapter Five</div>
+        <h2 class="chapter-title-flip">Mental Health Across Generations</h2>
+        <p class="chapter-lede-flip">The same anxiety, different expressions. Gen X bottles it up. Gen Z broadcasts it. Millennials pretend it doesn't exist.</p>
 
-    <script>
-        // Menu Data with Descriptions
-        const menuData = {
-            beverages: [
-                { 
-                    id: 'b1', 
-                    category: 'Regular', 
-                    name: 'Black', 
-                    price: 33, 
-                    temps: ['H', 'I'],
-                    description: 'A clean, bold cup of our house blend. Pure coffee character with notes of dark chocolate and caramel.'
-                },
-                { 
-                    id: 'b2', 
-                    category: 'Regular', 
-                    name: 'Magic', 
-                    price: 38, 
-                    temps: [],
-                    description: 'A Melbourne-style double ristretto with silky steamed milk. Intense, sweet, and perfectly balanced.'
-                },
-                { 
-                    id: 'b3', 
-                    category: 'Regular', 
-                    name: 'Latte', 
-                    price: 38, 
-                    temps: ['H', 'I'],
-                    description: 'Smooth espresso topped with velvety steamed milk. Comfort in a cup, crafted for everyday moments.'
-                },
-                { 
-                    id: 'b4', 
-                    category: 'Fine Ahead', 
-                    name: 'Fine Latte', 
-                    price: 43, 
-                    temps: [], 
-                    note: 'Made with our house milk blend',
-                    description: 'Our signature latte elevated with a proprietary blend of milks for extraordinary creaminess and depth.'
-                },
-                { 
-                    id: 'b5', 
-                    category: 'Fine Ahead', 
-                    name: 'Fine Double', 
-                    price: 43, 
-                    temps: [], 
-                    note: 'Made with our house milk blend',
-                    description: 'Double shot intensity meets our house milk blend. Rich, robust, and unapologetically bold.'
-                },
-                { 
-                    id: 'b6', 
-                    category: 'Filter', 
-                    name: 'Regular', 
-                    price: 38, 
-                    temps: ['H', 'I'],
-                    description: 'Single-origin pour-over highlighting the bean\'s terroir. Bright, nuanced, and ever-changing.'
-                },
-                { 
-                    id: 'b7', 
-                    category: 'House Matcha', 
-                    name: 'Super Matcha', 
-                    price: 50, 
-                    temps: ['H', 'I'],
-                    description: 'Ceremonial-grade matcha whisked to perfection. Earthy, umami-rich, and energizing.'
-                },
-                { 
-                    id: 'b8', 
-                    category: 'House Matcha', 
-                    name: 'Matcha Jasmine', 
-                    price: 50, 
-                    temps: [],
-                    description: 'Vibrant matcha meets fragrant jasmine. A floral, creamy union of two timeless traditions.'
-                },
-                { 
-                    id: 'b9', 
-                    category: 'House Matcha', 
-                    name: 'Matcha Klepon', 
-                    price: 50, 
-                    temps: [],
-                    description: 'Inspired by the Indonesian sweet treat — matcha with pandan and gula melaka notes. Nostalgic and unique.'
-                },
-                { 
-                    id: 'b10', 
-                    category: 'Signature', 
-                    name: 'Elder Coffee Cream', 
-                    price: 40, 
-                    temps: [],
-                    description: 'Espresso topped with elderflower-infused cold cream. Floral, creamy, and unexpectedly refreshing.'
-                },
-                { 
-                    id: 'b11', 
-                    category: 'Signature', 
-                    name: 'Hazelnut Praline', 
-                    price: 40, 
-                    temps: [],
-                    description: 'Espresso with house-made hazelnut praline. Nutty, buttery sweetness with a sophisticated finish.'
-                },
-                { 
-                    id: 'b12', 
-                    category: 'Signature', 
-                    name: 'Cereal Latte', 
-                    price: 38, 
-                    temps: [],
-                    description: 'Latte infused with toasted cereal milk. Childhood nostalgia meets specialty coffee craft.'
-                },
-                { 
-                    id: 'b13', 
-                    category: 'Signature', 
-                    name: 'Cranberry Espresso', 
-                    price: 38, 
-                    temps: [],
-                    description: 'Bright espresso cut with cranberry reduction. Tart, fruity, and beautifully complex.'
-                },
-                { 
-                    id: 'b14', 
-                    category: 'Alternative', 
-                    name: 'Chocolate Jasmine', 
-                    price: 48, 
-                    temps: ['H', 'I'],
-                    description: 'Single-origin chocolate steeped with jasmine tea. Luxurious, aromatic, and deeply comforting.'
-                },
-                { 
-                    id: 'b15', 
-                    category: 'Alternative', 
-                    name: 'Chrysant Passion Jelly', 
-                    price: 33, 
-                    temps: [],
-                    description: 'Chrysanthemum tea with passion fruit and house jelly. Floral, tropical, and playfully textured.'
-                },
-                { 
-                    id: 'b16', 
-                    category: 'Alternative', 
-                    name: 'Hibiscus Passion Jelly', 
-                    price: 33, 
-                    temps: [],
-                    description: 'Tart hibiscus meets sweet passion fruit jelly. Vibrant crimson, refreshingly tangy.'
-                },
-                { 
-                    id: 'b17', 
-                    category: 'Fresh', 
-                    name: 'Green Silk', 
-                    price: 38, 
-                    temps: [],
-                    description: 'A silky blend of cucumber, mint, and green apple. Clean, crisp, and revitalizing.'
-                },
-                { 
-                    id: 'b18', 
-                    category: 'Fresh', 
-                    name: 'Summer Ginger', 
-                    price: 38, 
-                    temps: [],
-                    description: 'Fiery ginger with citrus and honey. A zesty kick that warms from within.'
-                },
-                { 
-                    id: 'b19', 
-                    category: 'Fresh', 
-                    name: 'Berry Basil Melonade', 
-                    price: 38, 
-                    temps: [],
-                    description: 'Seasonal berries, fresh basil, and melon. Herbaceous, fruity, and summer in a glass.'
-                }
-            ],
-            bread: [
-                { 
-                    id: 'br1', 
-                    category: 'Mochi Bread', 
-                    name: 'Ogura', 
-                    price: 28, 
-                    temps: [],
-                    description: 'Chewy mochi bread filled with sweet red bean paste. A Japanese-Indonesian comfort classic.'
-                },
-                { 
-                    id: 'br2', 
-                    category: 'Mochi Bread', 
-                    name: 'Choco', 
-                    price: 30, 
-                    temps: [],
-                    description: 'Soft mochi bread with a molten Belgian chocolate center. Gooey, rich, and irresistible.'
-                },
-                { 
-                    id: 'br3', 
-                    category: 'Mochi Bread', 
-                    name: 'Matcha', 
-                    price: 30, 
-                    temps: [],
-                    description: 'Mochi bread with premium matcha filling. Earthy sweetness in every chewy bite.'
-                },
-                { 
-                    id: 'br4', 
-                    category: 'Shiopan', 
-                    name: 'Original', 
-                    price: 23, 
-                    temps: [],
-                    description: 'Japanese salted butter roll. Simple, pillowy, and perfectly savory-sweet.'
-                },
-                { 
-                    id: 'br5', 
-                    category: 'Shiopan', 
-                    name: 'Garlic Butter', 
-                    price: 25, 
-                    temps: [],
-                    description: 'Shiopan loaded with roasted garlic butter. Aromatic, savory, and utterly addictive.'
-                },
-                { 
-                    id: 'br6', 
-                    category: 'Shiopan', 
-                    name: 'Chocolate', 
-                    price: 28, 
-                    temps: [],
-                    description: 'Salted butter roll with dark chocolate chunks. The sweet-savety balance perfected.'
-                },
-                { 
-                    id: 'br7', 
-                    category: 'Shiopan', 
-                    name: 'Cranberry Cheese', 
-                    price: 28, 
-                    temps: [],
-                    description: 'Tart cranberry and cream cheese stuffed shiopan. Fruity, tangy, and creamy.'
-                },
-                { 
-                    id: 'br8', 
-                    category: 'Shiopan', 
-                    name: 'Beef Floss', 
-                    price: 29, 
-                    temps: [],
-                    description: 'Fluffy shiopan topped with savory beef floss. A beloved Southeast Asian bakery staple.'
-                },
-                { 
-                    id: 'br9', 
-                    category: 'Cinnamon Roll', 
-                    name: 'Lemon Curd', 
-                    price: 28, 
-                    temps: [],
-                    description: 'Swirled cinnamon bun with bright lemon curd filling. Citrusy, spicy, and sunshine-filled.'
-                },
-                { 
-                    id: 'br10', 
-                    category: 'Cinnamon Roll', 
-                    name: 'Pistachio', 
-                    price: 30, 
-                    temps: [],
-                    description: 'Cinnamon roll with pistachio cream and crushed nuts. Nutty, fragrant, and indulgent.'
-                },
-                { 
-                    id: 'br11', 
-                    category: 'Cinnamon Roll', 
-                    name: 'Tiramisu', 
-                    price: 30, 
-                    temps: [],
-                    description: 'Coffee-soaked cinnamon roll with mascarpone cream. Dessert and breakfast, merged.'
-                },
-                { 
-                    id: 'br12', 
-                    category: 'Babka Slices', 
-                    name: 'Cranberry Cheese', 
-                    price: 28, 
-                    temps: [],
-                    description: 'Twisted brioche with cranberry and cream cheese ripple. Tart, rich, and beautifully swirled.'
-                },
-                { 
-                    id: 'br13', 
-                    category: 'Babka Slices', 
-                    name: 'Garlic Cheese', 
-                    price: 28, 
-                    temps: [],
-                    description: 'Savory babka with roasted garlic and melted cheese. Comfort food, reimagined.'
-                },
-                { 
-                    id: 'br14', 
-                    category: 'Babka Slices', 
-                    name: 'Choco Peanut', 
-                    price: 30, 
-                    temps: [],
-                    description: 'Chocolate babka with crunchy peanut brittle. Decadent, nutty, and texturally satisfying.'
-                },
-                { 
-                    id: 'br15', 
-                    category: 'Ciabatta', 
-                    name: 'Fillet O Fish', 
-                    price: 35, 
-                    temps: [],
-                    description: 'Crispy fish fillet with tartar sauce on toasted ciabatta. Crunchy, creamy, and satisfying.'
-                },
-                { 
-                    id: 'br16', 
-                    category: 'Ciabatta', 
-                    name: 'Spicy Chicken Honey', 
-                    price: 35, 
-                    temps: [],
-                    description: 'Spicy glazed chicken with honey drizzle on ciabatta. Sweet heat in every bite.'
-                }
-            ]
-        };
+        <div class="dialogue-flip speaker-a">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">A</div>
+            <span class="speaker-name-flip">Speaker A</span>
+          </div>
+          <div class="dialogue-text-flip">
+            If we say like what Jonathan Haidt said — <em>The Anxious Generation</em> — which promotes the hypothesis that this is connected with too much online activity and too little offline activity. Yes, that's aligned with medical papers, Sir. Technology functions as a double-edged sword. On the positive side, it will make us reach the highest level of innovation. But the negative impact is that our activities in the technology world are longer than in the surrounding world.
+          </div>
+        </div>
 
-        const subCategories = {
-            beverages: ['All', 'Regular', 'Fine Ahead', 'Filter', 'House Matcha', 'Signature', 'Alternative', 'Fresh'],
-            bread: ['All', 'Mochi Bread', 'Shiopan', 'Cinnamon Roll', 'Babka Slices', 'Ciabatta']
-        };
+        <div class="dialogue-flip speaker-b">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">B</div>
+            <span class="speaker-name-flip">Speaker B</span>
+          </div>
+          <div class="dialogue-text-flip">
+            Why is Gen Z more vocal about expressing their mental health? Because throughout their lives, they've mostly been exposed to technology. Accustomed to expressing themselves on social media. And the worst was the pandemic in 2020 — Gen Z was in their productive years. Online education that ultimately made their online screen time high and ultimately made <strong>the highest thing anxiety</strong>, Sir. Anxiety.
+          </div>
+        </div>
 
-        // State
-        let currentMainTab = 'beverages';
-        let currentSubCategory = 'All';
-        let cart = [];
-        let selectedItem = null;
-        let selectedTemp = null;
+        <div class="page-num">9</div>
+      </div>
+      <div class="page-face back">
+        <table class="table-flip">
+          <thead><tr><th>Generation</th><th>Anxiety Source</th><th>Defense</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Gen X</strong> (1965-80)</td><td>Uncertainty, job insecurity</td><td>Bottling up (mendem)</td></tr>
+            <tr><td><strong>Millennials</strong> (81-96)</td><td>Career pressure</td><td>Denial, "I'm fine"</td></tr>
+            <tr><td><strong>Gen Z</strong> (97-2012)</td><td>Social media pressure</td><td>Open online expression</td></tr>
+          </tbody>
+        </table>
 
-        // DOM Elements
-        const menuGrid = document.getElementById('menuGrid');
-        const subCategoriesEl = document.getElementById('subCategories');
-        const searchInput = document.getElementById('searchInput');
-        const cartCount = document.getElementById('cartCount');
-        const cartItems = document.getElementById('cartItems');
-        const cartTotal = document.getElementById('cartTotal');
-        const checkoutBtn = document.getElementById('checkoutBtn');
+        <div class="dialogue-flip speaker-a">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">A</div>
+            <span class="speaker-name-flip">Speaker A</span>
+          </div>
+          <div class="dialogue-text-flip">
+            So anxiety is actually developing across <strong>two generations</strong>, Sir. This is a plot twist. The WHO stated that losses due to mental health in companies are very high — nearly trillions of dollars. Both are anxious but <strong>anxious about different things</strong>. If Gen X is anxious about uncertainty, unpredictability in the future, houses getting more expensive, and Gen Z is anxious about career paths. So what's the ending of this anxiety, Sir? <strong>Lowering quality of life.</strong>
+          </div>
+        </div>
 
-        // Initialize
-        function init() {
-            renderSubCategories();
-            renderMenu();
-            
-            searchInput.addEventListener('input', (e) => {
-                renderMenu(e.target.value);
-            });
-        }
+        <div class="insight-flip">
+          <h4>🧠 The Hormonal Cascade</h4>
+          <p>Anxiety is heavily influenced by cortisol and adrenaline. When cortisol rises, it increases insulin resistance. Our sympathetic nervous system stays elevated — we're "ready" all the time. Blood sugar rises, blood pressure rises, leading to stroke and heart disease.</p>
+        </div>
 
-        // Render Sub Categories
-        function renderSubCategories() {
-            const categories = subCategories[currentMainTab];
-            subCategoriesEl.innerHTML = categories.map(cat => `
-                <button class="${cat === currentSubCategory ? 'active' : ''}" onclick="setSubCategory('${cat}')">${cat}</button>
-            `).join('');
-        }
+        <div class="page-num">10</div>
+      </div>
+    </div>
 
-        // Set Main Tab
-        function setMainTab(tab) {
-            currentMainTab = tab;
-            currentSubCategory = 'All';
-            
-            document.getElementById('tab-beverages').classList.toggle('active', tab === 'beverages');
-            document.getElementById('tab-bread').classList.toggle('active', tab === 'bread');
-            
-            renderSubCategories();
-            renderMenu(searchInput.value);
-        }
+    <!-- PAGE 6: Chapter 6 -->
+    <div class="page right" id="page5" style="z-index: 5;">
+      <div class="page-face front">
+        <div class="chapter-num-flip">Chapter Six</div>
+        <h2 class="chapter-title-flip">The Screen Time Epidemic</h2>
+        <p class="chapter-lede-flip">Nine hours a day. More than sleep. More than a workday. The new normal that is anything but normal.</p>
 
-        // Set Sub Category
-        function setSubCategory(category) {
-            currentSubCategory = category;
-            renderSubCategories();
-            renderMenu(searchInput.value);
-        }
+        <div class="stats-flip">
+          <div class="stat-flip"><div class="n">9 hrs</div><div class="l">Daily screen time (Gen Z)</div></div>
+          <div class="stat-flip"><div class="n">46%</div><div class="l">Gen Z with mental health diagnosis</div></div>
+          <div class="stat-flip"><div class="n">78%</div><div class="l">Feel addicted to social media</div></div>
+          <div class="stat-flip"><div class="n">2.5x</div><div class="l">Anxiety risk (4+ hrs screen)</div></div>
+        </div>
 
-        // Render Menu
-        function renderMenu(searchTerm = '') {
-            const items = menuData[currentMainTab];
-            const filtered = items.filter(item => {
-                const matchesCategory = currentSubCategory === 'All' || item.category === currentSubCategory;
-                const matchesSearch = !searchTerm || 
-                    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    item.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    item.description.toLowerCase().includes(searchTerm.toLowerCase());
-                return matchesCategory && matchesSearch;
-            });
+        <div class="dialogue-flip speaker-b">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">B</div>
+            <span class="speaker-name-flip">Speaker B</span>
+          </div>
+          <div class="dialogue-text-flip">
+            Millennials are the most rebellious, the most vocal. They are, I think, my generation is the most <em>tough</em> and the most stubborn. So they feel fine. Oh, relax. What's this? So the generation now is weak, they say. I was raised tough. Yeah, that's my generation. I don't deny that.
+          </div>
+        </div>
 
-            if (filtered.length === 0) {
-                menuGrid.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: var(--text-light);">
-                        <svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 1rem; opacity: 0.3;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">No items found</p>
-                        <p>Try adjusting your search or category filter</p>
-                    </div>
-                `;
-                return;
-            }
+        <div class="page-num">11</div>
+      </div>
+      <div class="page-face back">
+        <div class="dialogue-flip speaker-a">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">A</div>
+            <span class="speaker-name-flip">Speaker A</span>
+          </div>
+          <div class="dialogue-text-flip">
+            So for netizen friends, you can check this education. One of your factors is if you use iPhone — check settings, check screen time, check your <strong>top three apps</strong>. I tested this on Mr. Sandiaga: "Sir, TikTok." Mr. Sandiaga's number one was Zoom. Wah, there are meetings. That was immediately checkmated. Wait, Tirta. Zoom, how many hours? 2 hours 43 minutes. So it turns out he at that age spends his time on meetings. His life is meetings. Number two was WhatsApp. Three was finance. Only at number four was social media, then it was revealed.
+          </div>
+        </div>
 
-            menuGrid.innerHTML = filtered.map((item, index) => `
-                <div class="menu-card" style="animation-delay: ${index * 0.05}s" onclick="openItemModal('${item.id}')">
-                    <div class="card-category">${item.category}</div>
-                    <div class="card-title">${item.name}</div>
-                    <div class="card-description">${item.description}</div>
-                    <div class="card-meta">
-                        ${item.temps.includes('H') ? '<span class="temp-badge">Hot</span>' : ''}
-                        ${item.temps.includes('I') ? '<span class="temp-badge">Iced</span>' : ''}
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-price">Rp ${item.price}k</span>
-                        <button class="add-btn" onclick="event.stopPropagation(); quickAdd('${item.id}')">+</button>
-                    </div>
-                </div>
-            `).join('');
-        }
+        <div class="poll-flip">
+          <div class="poll-q-flip">What is your top app by screen time?</div>
+          <div class="poll-opt-flip" onclick="this.classList.toggle('sel')"><span>Social Media (TikTok, Instagram)</span><span class="chk"></span></div>
+          <div class="poll-opt-flip" onclick="this.classList.toggle('sel')"><span>Work/Communication (Zoom, WhatsApp)</span><span class="chk"></span></div>
+          <div class="poll-opt-flip" onclick="this.classList.toggle('sel')"><span>Entertainment (YouTube, Netflix)</span><span class="chk"></span></div>
+          <div class="poll-opt-flip" onclick="this.classList.toggle('sel')"><span>Learning/Reading (News, Books)</span><span class="chk"></span></div>
+        </div>
 
-        // Quick Add
-        function quickAdd(itemId) {
-            const allItems = [...menuData.beverages, ...menuData.bread];
-            const item = allItems.find(i => i.id === itemId);
-            
-            if (item.temps.length > 0) {
-                openItemModal(itemId);
-                return;
-            }
-            
-            addToCart(itemId);
-        }
+        <div class="dialogue-flip speaker-b">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">B</div>
+            <span class="speaker-name-flip">Speaker B</span>
+          </div>
+          <div class="dialogue-text-flip">
+            So for friends, if you want to reduce NCT, <strong>limit social media gadget screen time</strong>. Because on social media, everyone can become anyone. Our persona can be arranged. But for young people, we're searching for identity. So they think — oh, tomorrow to be successful I have to be like that. Anxiety.
+          </div>
+        </div>
 
-        // Open Item Modal
-        function openItemModal(itemId) {
-            const allItems = [...menuData.beverages, ...menuData.bread];
-            selectedItem = allItems.find(i => i.id === itemId);
-            selectedTemp = selectedItem.temps.length > 0 ? selectedItem.temps[0] : null;
-            
-            document.getElementById('modalTitle').textContent = selectedItem.name;
-            document.getElementById('modalCategory').textContent = selectedItem.category;
-            document.getElementById('modalDescription').textContent = selectedItem.description;
-            document.getElementById('modalPrice').textContent = `Rp ${selectedItem.price}k`;
-            
-            const optionsEl = document.getElementById('modalOptions');
-            if (selectedItem.temps.length > 0) {
-                optionsEl.innerHTML = `
-                    <label class="option-label">Temperature</label>
-                    <div class="option-group">
-                        ${selectedItem.temps.map(temp => `
-                            <button class="option-btn ${selectedTemp === temp ? 'active' : ''}" onclick="selectTemp('${temp}')">${temp === 'H' ? 'Hot' : 'Iced'}</button>
-                        `).join('')}
-                    </div>
-                `;
-            } else {
-                optionsEl.innerHTML = '';
-            }
-            
-            document.getElementById('modalOverlay').classList.add('open');
-        }
+        <div class="page-num">12</div>
+      </div>
+    </div>
 
-        function selectTemp(temp) {
-            selectedTemp = temp;
-            const buttons = document.querySelectorAll('.option-btn');
-            buttons.forEach(btn => {
-                btn.classList.toggle('active', btn.textContent === (temp === 'H' ? 'Hot' : 'Iced'));
-            });
-        }
+    <!-- PAGE 7: Chapters 7-8 -->
+    <div class="page right" id="page6" style="z-index: 4;">
+      <div class="page-face front">
+        <div class="chapter-num-flip">Chapter Seven</div>
+        <h2 class="chapter-title-flip">Critical Thinking & Polarization</h2>
+        <p class="chapter-lede-flip">When opinion replaces fact, and difference becomes enmity. The postmodern condition of a nation that stopped reading.</p>
 
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('open');
-            selectedItem = null;
-            selectedTemp = null;
-        }
+        <div class="dialogue-flip speaker-a">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">A</div>
+            <span class="speaker-name-flip">Speaker A</span>
+          </div>
+          <div class="dialogue-text-flip">
+            So something as simple as why myths and facts, health myths and hoaxes are believed — <strong>because they can't think critically</strong>. Where children now, because they don't read books, because they're not too factual, it's easier for them to have opinions. And if they have opinions, of course they inevitably can't distinguish between opinion and fact. And that's very real, and this correlates with the cultivation of <strong>conversation polarization</strong>. There's an echo chamber on the right, there's an echo chamber on the left. They can't intersect or interact or communicate. Because from the start they were taught that different opinions are wrong. So they can't accept variation, diversification of difference, so finally — oh, you're different from me, you're wrong, you're my enemy.
+          </div>
+        </div>
 
-        function confirmAddToCart() {
-            if (!selectedItem) return;
-            addToCart(selectedItem.id, selectedTemp);
-            closeModal();
-        }
+        <div class="insight-flip">
+          <h4>⚖️ The Echo Chamber Trap</h4>
+          <p>When children are taught that differing opinions are "wrong," they grow into adults who cannot tolerate diversity of thought. Critical thinking must be cultivated from elementary school.</p>
+        </div>
 
-        // Add to Cart
-        function addToCart(itemId, temp = null) {
-            const allItems = [...menuData.beverages, ...menuData.bread];
-            const item = allItems.find(i => i.id === itemId);
-            const cartId = temp ? `${itemId}-${temp}` : itemId;
-            
-            const existing = cart.find(c => c.cartId === cartId);
-            if (existing) {
-                existing.qty++;
-            } else {
-                cart.push({
-                    cartId,
-                    id: itemId,
-                    name: item.name,
-                    category: item.category,
-                    price: item.price,
-                    temp: temp,
-                    qty: 1
-                });
-            }
-            
-            updateCart();
-            showToast(`Added ${item.name}${temp ? ` (${temp === 'H' ? 'Hot' : 'Iced'})` : ''} to cart`);
-        }
+        <div class="page-num">13</div>
+      </div>
+      <div class="page-face back">
+        <div class="dialogue-flip speaker-b">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">B</div>
+            <span class="speaker-name-flip">Speaker B</span>
+          </div>
+          <div class="dialogue-text-flip">
+            And for a country with a population of 280 million, we have to think about how we can compete with China, with India, right? And they don't hold back. When they send people to universities, the best in the world — from Indonesia, only <strong>8,500</strong>. China sends hundreds of thousands to England. Indonesia only <strong>4,000</strong>. Yes, they could send them to UGM, to ITB, to Undip and so on. But they pursue innovation, and innovation and technology — yes, there's still a lot in Europe and America.
+          </div>
+        </div>
 
-        // Update Cart UI
-        function updateCart() {
-            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            
-            cartCount.textContent = totalQty;
-            cartCount.classList.toggle('active', totalQty > 0);
-            cartTotal.textContent = `Rp ${totalPrice}k`;
-            checkoutBtn.disabled = cart.length === 0;
-            
-            if (cart.length === 0) {
-                cartItems.innerHTML = `
-                    <div class="cart-empty">
-                        <svg fill="currentColor" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
-                        <p>Your cart is empty</p>
-                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Add some items to get started</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            cartItems.innerHTML = cart.map(item => `
-                <div class="cart-item">
-                    <div class="cart-item-info">
-                        <div class="cart-item-title">${item.name}</div>
-                        <div class="cart-item-category">${item.category}${item.temp ? ` • ${item.temp === 'H' ? 'Hot' : 'Iced'}` : ''}</div>
-                        <div class="cart-item-controls">
-                            <button class="qty-btn" onclick="updateQty('${item.cartId}', -1)">−</button>
-                            <span style="font-weight: 600; min-width: 20px; text-align: center;">${item.qty}</span>
-                            <button class="qty-btn" onclick="updateQty('${item.cartId}', 1)">+</button>
-                        </div>
-                        <button class="remove-item" onclick="removeItem('${item.cartId}')">Remove</button>
-                    </div>
-                    <div class="cart-item-price">Rp ${item.price * item.qty}k</div>
-                </div>
-            `).join('');
-        }
+        <div class="divider-flip"><div class="dl"></div><div class="dd"></div><div class="dl"></div></div>
 
-        function updateQty(cartId, delta) {
-            const item = cart.find(c => c.cartId === cartId);
-            if (!item) return;
-            
-            item.qty += delta;
-            if (item.qty <= 0) {
-                cart = cart.filter(c => c.cartId !== cartId);
-            }
-            updateCart();
-        }
+        <div class="chapter-num-flip">Chapter Eight</div>
+        <h2 class="chapter-title-flip">Brain Circulation</h2>
+        <p class="chapter-lede-flip">Not brain drain — brain linkage. Why Indonesia's best talent should aim for the top.</p>
 
-        function removeItem(cartId) {
-            cart = cart.filter(c => c.cartId !== cartId);
-            updateCart();
-        }
+        <div class="dialogue-flip speaker-a">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">A</div>
+            <span class="speaker-name-flip">Speaker A</span>
+          </div>
+          <div class="dialogue-text-flip">
+            Because what we sell now, we are now selling on average are still raw goods or semi-finished goods. Second, we actually become the basket size for foreign companies. We are only considered as a basket size number, "Wow, Indonesia 280 million, just sell sachet soap, definitely profit." But we forget to look that we also have a market outside. And the only way is through school abroad.
+          </div>
+        </div>
 
-        // Toggle Cart
-        function toggleCart() {
-            document.getElementById('cartOverlay').classList.toggle('open');
-            document.getElementById('cartDrawer').classList.toggle('open');
-        }
+        <div class="page-num">14</div>
+      </div>
+    </div>
 
-        // Checkout
-        function checkout() {
-            if (cart.length === 0) return;
-            
-            const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
-            const itemCount = cart.reduce((sum, item) => sum + item.qty, 0);
-            
-            showToast(`Order placed! ${itemCount} items • Rp ${total}k`, 3000);
-            cart = [];
-            updateCart();
-            toggleCart();
-        }
+    <!-- PAGE 8: Chapter 8 cont + Chapter 9 -->
+    <div class="page right" id="page7" style="z-index: 3;">
+      <div class="page-face front">
+        <div class="dialogue-flip speaker-b">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">B</div>
+            <span class="speaker-name-flip">Speaker B</span>
+          </div>
+          <div class="dialogue-text-flip">
+            If Google or Microsoft comes here led by Bambang and Komeng, they think to make investments with huge amounts, not trivial. What? Right. Really agree. And that which I often convey in the context of brain circulation or brain linkage, not brain drain. It's okay they go there to seek knowledge, build careers and during 10, 20, 30 years. But if they can reach the peak. Yes, I've also said this before, but that needs to be scaled so that Indonesians can master the world. Right. But that won't happen if the IQ is 78.9. If PISA is number 69 out of 81. If they can't tell stories like you. So this problem is no longer micro, right? Very macro.
+          </div>
+        </div>
 
-        // Toast
-        function showToast(message, duration = 2500) {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                ${message}
-            `;
-            container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.classList.add('hide');
-                setTimeout(() => toast.remove(), 300);
-            }, duration);
-        }
+        <div class="dialogue-flip speaker-a">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">A</div>
+            <span class="speaker-name-flip">Speaker A</span>
+          </div>
+          <div class="dialogue-text-flip">
+            And if we have one or two CEOs in international companies, the brand trust from global trust is high, Sir. And will invite trust that Indonesian human resources are not inferior. Yes. And we lack that. That's why I include those who yesterday agreed that people are already outside, okay it's fine. But you prove something outside. Yes. Build a career to the highest. That will become a figure like in doctors, wow cool. Finally more and more people are motivated to go to Japan. The most to Japan, Sir. Ready.
+          </div>
+        </div>
 
-        // Initialize app
-        init();
-    </script>
+        <div class="page-num">15</div>
+      </div>
+      <div class="page-face back">
+        <div class="chapter-num-flip">Chapter Nine</div>
+        <h2 class="chapter-title-flip">Golden Indonesia 2045</h2>
+        <p class="chapter-lede-flip">The golden generation will only be golden for a few if we don't fix the foundation today.</p>
+
+        <div class="dialogue-flip speaker-a">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">A</div>
+            <span class="speaker-name-flip">Speaker A</span>
+          </div>
+          <div class="dialogue-text-flip">
+            So nation building earlier is appropriate, Sir, because my PhD took a topic about people knowledge, knowledge people management. The only way to increase the capability of the Indonesian generation in 2045 is by increasing the capability of human resources as human capital. With human capital rising, the human development index rises, then GDP will also rise. But if we — and the shortest way, I really agree, is that the golden generation will happen in 2045 which is the generation of my children, the alpha children. If our generation's school education is indeed difficult to get teacher salary increases and quality teachers, then 2045 will only be enjoyed by a handful of people again. Yes. And it's like if we as marketing, the basket size is big but the conversion will be small. So indeed 2045 will be achieved but maybe at 0.05%. So only a handful of human resources will break through that capability, those who have privilege.
+          </div>
+        </div>
+
+        <div class="page-num">16</div>
+      </div>
+    </div>
+
+    <!-- PAGE 9: Chapter 9 cont + Back Cover -->
+    <div class="page right" id="page8" style="z-index: 2;">
+      <div class="page-face front">
+        <div class="insight-flip">
+          <h4>🌟 The 2045 Equation</h4>
+          <p>Human capital capability rises, Human Development Index rises, GDP rises. But this only works if the golden generation receives quality education. Without it, 2045 becomes a celebration for the privileged 0.05% — those with parents like Speaker A's, who provided proper education, debate, and critical thinking at home. The rest remain trapped in a cycle of raw commodity exports and low-value labor.</p>
+        </div>
+
+        <div class="dialogue-flip speaker-b">
+          <div class="speaker-row-flip">
+            <div class="speaker-avatar-flip">B</div>
+            <span class="speaker-name-flip">Speaker B</span>
+          </div>
+          <div class="dialogue-text-flip">
+            And for a country with a population of 280 million, we have to think about how we can compete with China, with India, right? And they don't hold back. When they send people to universities, the best in the world — from Indonesia, only <strong>8,500</strong>. China sends hundreds of thousands to England. Indonesia only <strong>4,000</strong>. Yes, they could send them to UGM, to ITB, to Undip and so on. But they pursue innovation, and innovation and technology — yes, there's still a lot in Europe and America, and now it's starting to show in Japan, Taiwan, South Korea, and China. But in Southeast Asia, I see the ones most thirsty for knowledge first were Singapore, now Vietnam. Vietnam, and the easiest way we see foreign students or the most foreign students in South Korea used to be China, now it's Vietnam. Because they see it's cheaper to go to Korea than to America, cheaper than to Europe, cheaper than to Japan, cheaper than to China. And the technology innovation is great. Learn there. Because innovation is something that will become the future.
+          </div>
+        </div>
+
+        <div class="quote-flip">
+          The only way to disrupt education is through schools. And in schools, it must be ensured that those who teach are of quality. A teacher who is great at storytelling can convert students into physicists, even if they don't understand physics themselves.
+          <div class="auth">— The central thesis of this dialogue</div>
+        </div>
+
+        <div class="page-num">17</div>
+      </div>
+      <div class="page-face back back-cover">
+        <div class="cover-ornament"></div>
+        <h3 style="font-family:'Playfair Display',serif;font-size:1.6rem;color:#f5f2ed;margin-bottom:12px;">The Education Paradox</h3>
+        <p style="font-size:13px;color:#9a9690;max-width:260px;text-align:center;line-height:1.6;margin-bottom:24px;">A translated and curated dialogue exploring Indonesia's most pressing challenges: education reform, generational mental health, and the path to becoming a developed nation by 2045.</p>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#6a6660;letter-spacing:2px;text-transform:uppercase;">End of Book</div>
+      </div>
+    </div>
+
+  </div><!-- /book -->
+</div><!-- /book-scene -->
+
+<!-- Controls -->
+<div class="controls">
+  <button class="ctrl-btn" id="btnPrev" onclick="flipPrev()" disabled>←</button>
+  <div class="page-indicator">
+    <span class="current" id="currPage">Cover</span>
+    <span>/</span>
+    <span>18</span>
+  </div>
+  <button class="ctrl-btn" id="btnNext" onclick="flipNext()">→</button>
+</div>
+
+<script>
+let currentPage = 0;
+const totalPages = 9;
+const book = document.getElementById('book');
+const currDisplay = document.getElementById('currPage');
+const btnPrev = document.getElementById('btnPrev');
+const btnNext = document.getElementById('btnNext');
+const swipeHint = document.getElementById('swipeHint');
+
+// Show swipe hint briefly
+setTimeout(() => swipeHint.classList.add('show'), 1000);
+setTimeout(() => swipeHint.classList.remove('show'), 5000);
+
+function updateControls() {
+  btnPrev.disabled = currentPage === 0;
+  btnNext.disabled = currentPage === totalPages;
+
+  const labels = ['Cover', '2-3', '4-5', '6-7', '8-9', '10-11', '12-13', '14-15', '16-17', 'Back'];
+  currDisplay.textContent = labels[currentPage] || currentPage;
+}
+
+function flipNext() {
+  if (currentPage >= totalPages) return;
+
+  const page = document.getElementById('page' + currentPage);
+  page.classList.add('flipped');
+
+  // Move flipped page to left side visually
+  setTimeout(() => {
+    page.style.zIndex = 20 + currentPage;
+  }, 100);
+
+  currentPage++;
+  updateControls();
+}
+
+function flipPrev() {
+  if (currentPage <= 0) return;
+
+  currentPage--;
+  const page = document.getElementById('page' + currentPage);
+  page.classList.remove('flipped');
+
+  setTimeout(() => {
+    page.style.zIndex = 10 - currentPage;
+  }, 100);
+
+  updateControls();
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') flipNext();
+  if (e.key === 'ArrowLeft') flipPrev();
+});
+
+// Touch/swipe support
+let touchStartX = 0;
+document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
+document.addEventListener('touchend', e => {
+  const diff = touchStartX - e.changedTouches[0].screenX;
+  if (Math.abs(diff) > 50) {
+    diff > 0 ? flipNext() : flipPrev();
+  }
+});
+
+updateControls();
+</script>
+
 </body>
 </html>
