@@ -4,1514 +4,1951 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Franklin Barbecue MasterClass — Interactive Guide</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --smoke: #1a1a1a;
-            --ember: #c44536;
-            --char: #2d2d2d;
-            --ash: #8a8a8a;
-            --cream: #f5f0e8;
-            --gold: #d4a574;
-            --bark: #5c3a21;
-            --flame: #e85d04;
+            --ember: #c75b39;
+            --ember-light: #e87a54;
+            --ember-dark: #a04020;
+            --charcoal: #1a1a1a;
+            --smoke: #2d2d2d;
+            --ash: #4a4a4a;
+            --paper: #f5f0e8;
+            --cream: #faf7f2;
+            --wood: #8b6914;
+            --wood-light: #b8943c;
+            --success: #4a7c59;
+            --warning: #d4a843;
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--smoke);
-            color: var(--cream);
-            line-height: 1.7;
+            background: var(--charcoal);
+            color: var(--paper);
+            line-height: 1.6;
             overflow-x: hidden;
         }
-        .smoke-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 0; opacity: 0.03;
-            background: radial-gradient(ellipse at 20% 80%, rgba(200,200,200,0.3) 0%, transparent 50%),
-                        radial-gradient(ellipse at 80% 20%, rgba(180,180,180,0.2) 0%, transparent 50%);
-            animation: smokeDrift 20s ease-in-out infinite;
-        }
-        @keyframes smokeDrift {
-            0%, 100% { transform: translate(0,0) scale(1); }
-            33% { transform: translate(30px,-20px) scale(1.1); }
-            66% { transform: translate(-20px,30px) scale(0.95); }
-        }
-        .nav-bar {
-            position: fixed; top: 0; left: 0; right: 0;
-            background: rgba(26,26,26,0.95); backdrop-filter: blur(20px);
-            z-index: 1000; padding: 1rem 2rem;
-            display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid rgba(212,165,116,0.1);
-            flex-wrap: wrap; gap: 1rem;
-        }
-        .nav-logo {
-            font-family: 'Playfair Display', serif; font-size: 1.4rem;
-            font-weight: 700; color: var(--gold); letter-spacing: 2px;
-        }
-        .nav-links { display: flex; gap: 0.3rem; flex-wrap: wrap; }
-        .nav-link {
-            padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.75rem;
-            font-weight: 500; color: var(--ash); text-decoration: none;
-            transition: all 0.3s; cursor: pointer; border: 1px solid transparent;
-            background: none;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: var(--gold); background: rgba(212,165,116,0.1);
-            border-color: rgba(212,165,116,0.2);
-        }
+
         .hero {
-            min-height: 100vh; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; text-align: center;
-            padding: 6rem 2rem 4rem; position: relative;
-            background: linear-gradient(180deg, var(--smoke) 0%, var(--char) 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #1a0a05 0%, #2d1810 50%, #1a1a1a 100%);
+            position: relative;
+            overflow: hidden;
         }
-        .hero-content { position: relative; z-index: 2; max-width: 800px; }
-        .hero-badge {
-            display: inline-block; padding: 0.4rem 1.2rem;
-            border: 1px solid var(--gold); color: var(--gold);
-            font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase;
-            margin-bottom: 2rem; border-radius: 30px;
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%23c75b39" stroke-width="0.3" opacity="0.1"/></svg>');
+            background-size: 80px 80px;
+            animation: drift 20s linear infinite;
         }
+
+        @keyframes drift {
+            0% { background-position: 0 0; }
+            100% { background-position: 80px 80px; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            padding: 2rem;
+        }
+
         .hero h1 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 900;
-            line-height: 1.1; margin-bottom: 1.5rem; color: var(--cream);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            color: var(--paper);
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            text-shadow: 0 4px 20px rgba(199, 91, 57, 0.3);
         }
-        .hero h1 span { color: var(--gold); }
+
+        .hero .subtitle {
+            font-size: 1.3rem;
+            color: var(--ember-light);
+            font-weight: 300;
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
         .hero-quote {
-            font-size: 1.1rem; color: var(--ash); max-width: 600px;
-            margin: 0 auto 3rem; font-style: italic; line-height: 1.8;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            color: rgba(245, 240, 232, 0.8);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+            line-height: 1.8;
+            border-left: 3px solid var(--ember);
+            padding-left: 2rem;
+            text-align: left;
         }
-        .hero-cta {
-            display: inline-flex; align-items: center; gap: 0.5rem;
-            padding: 1rem 2.5rem; background: var(--ember); color: white;
-            text-decoration: none; border-radius: 50px; font-weight: 600;
-            font-size: 0.95rem; transition: all 0.3s; cursor: pointer; border: none;
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            cursor: pointer;
         }
-        .hero-cta:hover {
-            background: var(--flame); transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(232,93,4,0.3);
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(10px); }
         }
+
+        .scroll-indicator svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--ember-light);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(199, 91, 57, 0.2);
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .nav-bar.visible { transform: translateY(0); }
+
+        .nav-bar .logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: var(--ember-light);
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--paper);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--ember);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--ember-light); }
+        .nav-links a:hover::after { width: 100%; }
+
         .section {
-            padding: 5rem 2rem; max-width: 1200px; margin: 0 auto;
-            position: relative; display: none;
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        .section.active { display: block; }
-        .section-header { text-align: center; margin-bottom: 3rem; }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
         .section-header h2 {
             font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 4vw, 3rem); color: var(--gold); margin-bottom: 0.5rem;
+            font-size: clamp(2rem, 5vw, 3rem);
+            color: var(--paper);
+            margin-bottom: 0.5rem;
         }
-        .section-header p { color: var(--ash); font-size: 1rem; }
-        .card-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;
+
+        .section-number {
+            display: inline-block;
+            background: var(--ember);
+            color: var(--paper);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            line-height: 40px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
         }
+
+        .section-header p {
+            color: var(--ash);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
         .card {
-            background: var(--char); border-radius: 16px; padding: 2rem;
-            border: 1px solid rgba(212,165,116,0.08); transition: all 0.3s; cursor: pointer;
+            background: var(--smoke);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(199, 91, 57, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
         }
+
         .card:hover {
-            border-color: rgba(212,165,116,0.2); transform: translateY(-4px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transform: translateY(-8px);
+            border-color: var(--ember);
+            box-shadow: 0 20px 40px rgba(199, 91, 57, 0.15);
         }
-        .card-icon {
-            width: 50px; height: 50px; border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; margin-bottom: 1rem; background: rgba(196,69,54,0.1);
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
         }
-        .card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--cream); }
-        .card p { font-size: 0.9rem; color: var(--ash); line-height: 1.6; }
-        .interactive-module {
-            background: var(--char); border-radius: 20px; padding: 2.5rem;
-            margin-bottom: 2rem; border: 1px solid rgba(212,165,116,0.1);
+
+        .card-body {
+            padding: 1.5rem;
         }
-        .module-title {
-            font-family: 'Playfair Display', serif; font-size: 1.5rem;
-            color: var(--gold); margin-bottom: 1.5rem;
-            display: flex; align-items: center; gap: 0.75rem;
+
+        .card-tag {
+            display: inline-block;
+            background: var(--ember-dark);
+            color: var(--paper);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
         }
-        .fire-simulator {
-            background: linear-gradient(180deg, #0d0d0d 0%, #1a0a00 100%);
-            border-radius: 16px; padding: 2rem; position: relative; overflow: hidden;
+
+        .card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--paper);
+            margin-bottom: 0.5rem;
         }
-        .fire-visual {
-            height: 200px; border-radius: 12px; position: relative;
-            display: flex; align-items: flex-end; justify-content: center;
-            padding-bottom: 1rem; transition: all 0.5s;
-            background: linear-gradient(to top, #333 0%, #1a1a1a 100%);
+
+        .card p {
+            color: var(--ash);
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
-        .fire-logs {
-            display: flex; gap: 0.5rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap;
+
+        .card-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .log-btn {
-            padding: 0.8rem 1.5rem; border-radius: 10px;
-            border: 1px solid rgba(212,165,116,0.2); background: rgba(255,255,255,0.05);
-            color: var(--cream); cursor: pointer; transition: all 0.2s; font-size: 0.85rem;
+
+        .card-time {
+            color: var(--wood-light);
+            font-size: 0.85rem;
+            font-weight: 500;
         }
-        .log-btn:hover { background: rgba(212,165,116,0.1); }
-        .log-btn.active { background: var(--ember); border-color: var(--ember); }
-        .fire-readout {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem;
+
+        .card-arrow {
+            color: var(--ember);
+            transition: transform 0.3s;
         }
-        .readout-item { text-align: center; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 10px; }
-        .readout-value { font-size: 1.8rem; font-weight: 700; color: var(--gold); }
-        .readout-label { font-size: 0.75rem; color: var(--ash); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.25rem; }
-        .timeline-container { position: relative; padding-left: 3rem; }
-        .timeline-line { position: absolute; left: 1rem; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--ember), var(--gold)); }
+
+        .card:hover .card-arrow {
+            transform: translateX(5px);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: var(--smoke);
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(199, 91, 57, 0.2);
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .modal-header h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--paper);
+            font-size: 2rem;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--paper);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .modal-close:hover {
+            background: rgba(199, 91, 57, 0.2);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-body h3 {
+            font-family: 'Playfair Display', serif;
+            color: var(--ember-light);
+            font-size: 1.5rem;
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .modal-body h3:first-child { margin-top: 0; }
+
+        .modal-body p, .modal-body li {
+            color: rgba(245, 240, 232, 0.85);
+            line-height: 1.8;
+            margin-bottom: 0.75rem;
+        }
+
+        .modal-body ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-box {
+            background: rgba(199, 91, 57, 0.1);
+            border-left: 4px solid var(--ember);
+            padding: 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            font-style: italic;
+            color: var(--paper);
+        }
+
+        .tip-box {
+            background: rgba(74, 124, 89, 0.15);
+            border-left: 4px solid var(--success);
+            padding: 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .tip-box strong {
+            color: var(--success);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-box {
+            background: rgba(212, 168, 67, 0.15);
+            border-left: 4px solid var(--warning);
+            padding: 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box strong {
+            color: var(--warning);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--ember), var(--wood));
+        }
+
         .timeline-item {
-            position: relative; padding: 1.5rem; background: rgba(255,255,255,0.03);
-            border-radius: 12px; margin-bottom: 1rem; cursor: pointer;
-            transition: all 0.3s; border: 1px solid transparent;
+            position: relative;
+            padding-bottom: 2rem;
         }
-        .timeline-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(212,165,116,0.15); }
+
         .timeline-item::before {
-            content: ''; position: absolute; left: -2.4rem; top: 1.8rem;
-            width: 12px; height: 12px; border-radius: 50%; background: var(--gold);
-            border: 3px solid var(--smoke);
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--ember);
+            border: 3px solid var(--charcoal);
+            transform: translateX(-5px);
         }
-        .timeline-time { font-size: 0.8rem; color: var(--ember); font-weight: 600; margin-bottom: 0.25rem; }
-        .timeline-title { font-weight: 600; color: var(--cream); margin-bottom: 0.25rem; }
-        .timeline-desc { font-size: 0.85rem; color: var(--ash); }
-        .timeline-detail {
-            display: none; margin-top: 1rem; padding-top: 1rem;
-            border-top: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem;
-            color: var(--ash); line-height: 1.7;
+
+        .timeline-item h4 {
+            color: var(--ember-light);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
         }
-        .timeline-item.expanded .timeline-detail { display: block; }
-        .quiz-container { max-width: 700px; margin: 0 auto; }
-        .quiz-question {
-            background: rgba(255,255,255,0.03); border-radius: 16px;
-            padding: 2rem; margin-bottom: 1.5rem; border: 1px solid rgba(212,165,116,0.08);
+
+        .timeline-item p {
+            color: var(--ash);
+            font-size: 0.95rem;
         }
-        .quiz-question h4 { font-size: 1.1rem; color: var(--cream); margin-bottom: 1.5rem; line-height: 1.5; }
-        .quiz-options { display: flex; flex-direction: column; gap: 0.75rem; }
-        .quiz-option {
-            padding: 1rem 1.25rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.02); color: var(--cream); cursor: pointer;
-            transition: all 0.2s; text-align: left; font-size: 0.9rem;
+
+        .checklist {
+            list-style: none;
+            padding: 0;
         }
-        .quiz-option:hover { border-color: var(--gold); background: rgba(212,165,116,0.05); }
-        .quiz-option.correct { background: rgba(39,174,96,0.15); border-color: #27ae60; }
-        .quiz-option.wrong { background: rgba(231,76,60,0.15); border-color: #e74c3c; }
-        .quiz-option:disabled { cursor: not-allowed; opacity: 0.7; }
-        .quiz-feedback {
-            margin-top: 1rem; padding: 1rem; border-radius: 10px;
-            display: none; font-size: 0.9rem; line-height: 1.6;
-        }
-        .quiz-feedback.show { display: block; }
-        .quiz-feedback.correct { background: rgba(39,174,96,0.1); color: #2ecc71; }
-        .quiz-feedback.wrong { background: rgba(231,76,60,0.1); color: #e74c3c; }
-        .checklist { list-style: none; }
+
         .checklist li {
-            padding: 1rem 1.5rem; margin-bottom: 0.5rem; background: rgba(255,255,255,0.03);
-            border-radius: 10px; display: flex; align-items: center; gap: 1rem;
-            cursor: pointer; transition: all 0.2s; border: 1px solid transparent;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
         }
-        .checklist li:hover { background: rgba(255,255,255,0.05); }
-        .checklist li.checked { border-color: rgba(39,174,96,0.3); background: rgba(39,174,96,0.05); }
-        .check-box {
-            width: 22px; height: 22px; border: 2px solid var(--ash);
-            border-radius: 6px; display: flex; align-items: center;
-            justify-content: center; flex-shrink: 0; transition: all 0.2s;
+
+        .checklist li:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(199, 91, 57, 0.2);
         }
-        .checklist li.checked .check-box { background: #27ae60; border-color: #27ae60; }
-        .check-box::after { content: '✓'; color: white; font-size: 0.8rem; opacity: 0; }
-        .checklist li.checked .check-box::after { opacity: 1; }
-        .check-text { font-size: 0.9rem; color: var(--cream); }
-        .checklist li.checked .check-text { text-decoration: line-through; opacity: 0.6; }
-        .progress-wrap { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: rgba(212,165,116,0.1); z-index: 1001; }
-        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--ember), var(--gold)); width: 0%; transition: width 0.3s; }
-        .tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
+
+        .checklist li.checked {
+            background: rgba(74, 124, 89, 0.1);
+            border-color: var(--success);
+        }
+
+        .checklist li.checked .check-circle {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .checklist li.checked .check-circle::after {
+            content: '✓';
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .check-circle {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--ash);
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            margin-top: 2px;
+        }
+
+        .checklist-text {
+            flex: 1;
+        }
+
+        .checklist-text strong {
+            color: var(--paper);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .checklist-text span {
+            color: var(--ash);
+            font-size: 0.9rem;
+        }
+
+        .temp-gauge {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            margin: 1rem 0;
+        }
+
+        .temp-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--ember);
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .temp-label {
+            color: var(--ash);
+            font-size: 0.9rem;
+        }
+
+        .temp-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .temp-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .temp-fill.low { background: linear-gradient(90deg, #4a7c59, #6ba37a); }
+        .temp-fill.medium { background: linear-gradient(90deg, #d4a843, #e8c76a); }
+        .temp-fill.high { background: linear-gradient(90deg, #c75b39, #e87a54); }
+
+        .progress-tracker {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+        }
+
+        .progress-step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+            z-index: 0;
+        }
+
+        .progress-step:last-child::after { display: none; }
+
+        .progress-step.active::after {
+            background: linear-gradient(90deg, var(--ember), var(--wood));
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--smoke);
+            border: 2px solid var(--ash);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            position: relative;
+            z-index: 1;
+            font-weight: 700;
+            color: var(--ash);
+            transition: all 0.3s;
+        }
+
+        .progress-step.active .step-circle {
+            background: var(--ember);
+            border-color: var(--ember);
+            color: var(--paper);
+        }
+
+        .progress-step.completed .step-circle {
+            background: var(--success);
+            border-color: var(--success);
+            color: var(--paper);
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            color: var(--ash);
+            font-weight: 500;
+        }
+
+        .progress-step.active .step-label {
+            color: var(--ember-light);
+        }
+
+        .calculator {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .calc-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .calc-row:last-child { border-bottom: none; }
+
+        .calc-label {
+            color: var(--ash);
+        }
+
+        .calc-value {
+            font-weight: 700;
+            color: var(--paper);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 0.5rem;
+        }
+
         .tab-btn {
-            padding: 0.75rem 1.5rem; border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);
-            background: transparent; color: var(--ash); cursor: pointer;
-            transition: all 0.2s; font-size: 0.85rem; font-weight: 500;
+            background: none;
+            border: none;
+            color: var(--ash);
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
         }
-        .tab-btn:hover { color: var(--cream); }
-        .tab-btn.active { background: var(--ember); color: white; border-color: var(--ember); }
-        .tab-panel { display: none; }
-        .tab-panel.active { display: block; }
-        .anatomy-container { position: relative; background: var(--smoke); border-radius: 16px; padding: 2rem; text-align: center; }
-        .anatomy-svg { max-width: 500px; width: 100%; margin: 0 auto; }
-        .anatomy-part { cursor: pointer; transition: all 0.3s; }
-        .anatomy-part:hover { opacity: 0.8; }
-        .anatomy-part.active { stroke: var(--gold); stroke-width: 3; }
-        .anatomy-info {
-            margin-top: 1.5rem; padding: 1.5rem; background: rgba(255,255,255,0.03);
-            border-radius: 12px; min-height: 100px; color: var(--ash); line-height: 1.7;
+
+        .tab-btn:hover {
+            color: var(--paper);
+            background: rgba(255,255,255,0.05);
         }
-        .quote-block {
-            border-left: 3px solid var(--gold); padding-left: 1.5rem;
-            margin: 2rem 0; font-style: italic; color: var(--ash);
-            font-size: 1.05rem; line-height: 1.8;
+
+        .tab-btn.active {
+            color: var(--paper);
+            background: var(--ember);
         }
-        .quote-block cite {
-            display: block; margin-top: 0.5rem; font-style: normal;
-            color: var(--gold); font-size: 0.85rem;
+
+        .tab-content {
+            display: none;
         }
-        .stats-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem; margin: 3rem 0;
+
+        .tab-content.active { display: block; }
+
+        .footer {
+            text-align: center;
+            padding: 4rem 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 4rem;
         }
-        .stat-item { text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; }
-        .stat-number { font-size: 2.5rem; font-weight: 700; color: var(--gold); font-family: 'Playfair Display', serif; }
-        .stat-label { font-size: 0.8rem; color: var(--ash); text-transform: uppercase; letter-spacing: 1px; margin-top: 0.25rem; }
-        .compare-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; }
-        .compare-table th, .compare-table td { padding: 1rem; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .compare-table th { color: var(--gold); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-        .compare-table td { color: var(--ash); font-size: 0.9rem; }
-        .compare-table tr:hover td { color: var(--cream); background: rgba(255,255,255,0.02); }
-        .calc-input { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
-        .calc-input label { min-width: 120px; font-size: 0.9rem; color: var(--ash); }
-        .calc-input input, .calc-input select {
-            padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);
-            background: rgba(255,255,255,0.05); color: var(--cream); font-size: 0.9rem; width: 150px;
+
+        .footer p {
+            color: var(--ash);
+            font-size: 0.9rem;
         }
-        .calc-result {
-            background: rgba(212,165,116,0.05); border: 1px solid rgba(212,165,116,0.15);
-            border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem;
+
+        .footer .quote {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--paper);
+            max-width: 600px;
+            margin: 0 auto 1rem;
         }
-        .calc-result h4 { color: var(--gold); margin-bottom: 0.75rem; }
-        .calc-result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
-        .calc-result-item { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .smoke-indicator {
-            display: flex; align-items: center; gap: 1rem; padding: 1rem;
-            background: rgba(255,255,255,0.03); border-radius: 10px; margin-bottom: 0.75rem;
-            cursor: pointer; transition: all 0.2s;
+
+        .search-box {
+            max-width: 500px;
+            margin: 0 auto 3rem;
+            position: relative;
         }
-        .smoke-indicator:hover { background: rgba(255,255,255,0.06); }
-        .smoke-color { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.1); }
-        .smoke-info h4 { font-size: 0.95rem; color: var(--cream); margin-bottom: 0.15rem; }
-        .smoke-info p { font-size: 0.8rem; color: var(--ash); }
-        .footer { text-align: center; padding: 4rem 2rem; border-top: 1px solid rgba(212,165,116,0.1); color: var(--ash); font-size: 0.85rem; }
-        .footer a { color: var(--gold); text-decoration: none; }
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem 1.5rem 1rem 3rem;
+            background: var(--smoke);
+            border: 1px solid rgba(199, 91, 57, 0.2);
+            border-radius: 50px;
+            color: var(--paper);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--ember);
+            box-shadow: 0 0 20px rgba(199, 91, 57, 0.1);
+        }
+
+        .search-box input::placeholder {
+            color: var(--ash);
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            stroke: var(--ash);
+            width: 20px;
+            height: 20px;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--ash);
+            padding: 0.5rem 1.25rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--ember);
+            border-color: var(--ember);
+            color: var(--paper);
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         @media (max-width: 768px) {
             .nav-links { display: none; }
-            .hero { padding-top: 5rem; }
-            .fire-readout { grid-template-columns: 1fr; }
-            .timeline-container { padding-left: 2rem; }
-            .timeline-item::before { left: -1.9rem; }
-            .calc-input { flex-direction: column; align-items: flex-start; }
-            .calc-input input, .calc-input select { width: 100%; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .progress-tracker { flex-wrap: wrap; gap: 1rem; }
+            .progress-step::after { display: none; }
+            .temp-gauge { flex-direction: column; text-align: center; }
         }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--smoke); }
-        ::-webkit-scrollbar-thumb { background: var(--bark); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
-        .fade-in { animation: fadeIn 0.6s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 <base target="_blank">
 </head>
 <body>
-    <div class="smoke-bg"></div>
-    <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
-
-    <nav class="nav-bar">
-        <div class="nav-logo">🔥 FRANKLIN BBQ</div>
-        <div class="nav-links">
-            <button class="nav-link active" onclick="showSection('home')">Home</button>
-            <button class="nav-link" onclick="showSection('fire')">Fire</button>
-            <button class="nav-link" onclick="showSection('brisket')">Brisket</button>
-            <button class="nav-link" onclick="showSection('ribs')">Ribs</button>
-            <button class="nav-link" onclick="showSection('pork')">Pork Butt</button>
-            <button class="nav-link" onclick="showSection('grilling')">Grilling</button>
-            <button class="nav-link" onclick="showSection('wood')">Wood</button>
-            <button class="nav-link" onclick="showSection('tools')">Tools</button>
-            <button class="nav-link" onclick="showSection('history')">History</button>
-            <button class="nav-link" onclick="showSection('quiz')">Quiz</button>
-        </div>
+    <nav class="nav-bar" id="navbar">
+        <div class="logo">Franklin BBQ</div>
+        <ul class="nav-links">
+            <li><a href="#philosophy">Philosophy</a></li>
+            <li><a href="#fire">Fire</a></li>
+            <li><a href="#meats">Meats</a></li>
+            <li><a href="#techniques">Techniques</a></li>
+            <li><a href="#story">Story</a></li>
+        </ul>
     </nav>
 
-    <!-- HOME / HERO -->
-    <section id="home" class="section active">
-        <div class="hero">
-            <div class="hero-content">
-                <div class="hero-badge">Aaron Franklin MasterClass</div>
-                <h1>The Art of <span>Texas Barbecue</span></h1>
-                <p class="hero-quote">"It's just a piece of meat and it's just fire. Nothing special, but it's the journey of how you get to the end and then it's the conversations that you get to have at the end of it. That's kind of barbecue for me."</p>
-                <button class="hero-cta" onclick="showSection('fire')">Start Your Journey →</button>
-            </div>
+    <section class="hero" id="top">
+        <div class="hero-content">
+            <p class="subtitle">Aaron Franklin's MasterClass</p>
+            <h1>The Art of<br>Texas Barbecue</h1>
+            <p class="hero-quote">"It's just a piece of meat and it's just fire. Nothing special, but it's the journey of how you get to the end and then it's the conversations that you get to have at the end of it. That's kind of barbecue for me."</p>
+            <p style="color: var(--ash); font-size: 0.9rem; margin-top: 2rem;">
+                An interactive guide to fire, smoke, and the soul of Central Texas barbecue
+            </p>
+        </div>
+        <div class="scroll-indicator" onclick="document.getElementById('philosophy').scrollIntoView({behavior:'smooth'})">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </div>
+    </section>
+
+    <section class="section" id="philosophy">
+        <div class="section-header fade-in">
+            <span class="section-number">01</span>
+            <h2>The Philosophy</h2>
+            <p>Understanding the heart and soul behind great barbecue — it is about the journey, not just the destination.</p>
         </div>
 
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">12</div>
-                    <div class="stat-label">Hour Brisket Cook</div>
+        <div class="cards-grid fade-in">
+            <div class="card" onclick="openModal('philosophy-intro')">
+                <div class="card-body">
+                    <span class="card-tag">Mindset</span>
+                    <h3>Cooking with Heart</h3>
+                    <p>"Even as a kid, I could kind of sense the amount of love that went into this food. And that is the premise of barbecue. It is like you cook with your heart."</p>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-number">255°</div>
-                    <div class="stat-label">Target Temperature</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">16</div>
-                    <div class="stat-label">Mesh Pepper</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">¼"</div>
-                    <div class="stat-label">Fat Cap Thickness</div>
+                <div class="card-footer">
+                    <span class="card-time">Read more →</span>
+                    <span class="card-arrow">→</span>
                 </div>
             </div>
 
-            <div class="section-header">
-                <h2>What You'll Learn</h2>
-                <p>Core techniques from the Franklin Barbecue playbook</p>
-            </div>
-
-            <div class="card-grid">
-                <div class="card" onclick="showSection('fire')">
-                    <div class="card-icon">🔥</div>
-                    <h3>Fire Management</h3>
-                    <p>Build, maintain, and read fires. Learn clean combustion, airflow principles, and the art of proactive fire tending.</p>
+            <div class="card" onclick="openModal('philosophy-process')">
+                <div class="card-body">
+                    <span class="card-tag">Process</span>
+                    <h3>The Journey Matters</h3>
+                    <p>Barbecue is part culture, part process, part food. It is real soul food. The conversations at the end matter as much as the meat itself.</p>
                 </div>
-                <div class="card" onclick="showSection('brisket')">
-                    <div class="card-icon">🥩</div>
-                    <h3>Brisket Mastery</h3>
-                    <p>Trim, season, cook, wrap, rest, and slice the mother of all Texas barbecue cuts. The complete 12-hour journey.</p>
-                </div>
-                <div class="card" onclick="showSection('ribs')">
-                    <div class="card-icon">🍖</div>
-                    <h3>Spare Ribs</h3>
-                    <p>Trim St. Louis style, manage the 3-hour unwrapped phase, wrap with sauce, and feel for perfect tenderness.</p>
-                </div>
-                <div class="card" onclick="showSection('pork')">
-                    <div class="card-icon">🐷</div>
-                    <h3>Pork Butt</h3>
-                    <p>The forgiving beginner's cook. Heavy seasoning, 8-hour smoke, foil wrap, and pull-apart tenderness at 203°F.</p>
-                </div>
-                <div class="card" onclick="showSection('grilling')">
-                    <div class="card-icon">⚡</div>
-                    <h3>Hot & Fast Grilling</h3>
-                    <p>Direct heat techniques for steaks and vegetables. Two-zone cooking, texture reading, and live-fire intuition.</p>
-                </div>
-                <div class="card" onclick="showSection('wood')">
-                    <div class="card-icon">🌳</div>
-                    <h3>Wood & Smoke</h3>
-                    <p>Post oak selection, density reading, moisture content, and understanding clean vs. dirty smoke by sight and smell.</p>
+                <div class="card-footer">
+                    <span class="card-time">Read more →</span>
+                    <span class="card-arrow">→</span>
                 </div>
             </div>
 
-            <div class="quote-block">
-                "You really only learn how to make good barbecue by making bad barbecue. Definitely don't invite a lot of friends over for your first brisket."
-                <cite>— Aaron Franklin</cite>
+            <div class="card" onclick="openModal('philosophy-learning')">
+                <div class="card-body">
+                    <span class="card-tag">Learning</span>
+                    <h3>Embrace Mistakes</h3>
+                    <p>"Just kind of be prepared to make mistakes. It is totally okay. It is just about learning." Franklin teaches exactly how he trains his cooks.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">Read more →</span>
+                    <span class="card-arrow">→</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- FIRE SECTION -->
-    <section id="fire" class="section">
-        <div class="section-header">
-            <h2>🔥 Fire Management</h2>
-            <p>The foundation of all barbecue — learn to build, read, and tend your fire</p>
+    <section class="section" id="fire">
+        <div class="section-header fade-in">
+            <span class="section-number">02</span>
+            <h2>Mastering Fire</h2>
+            <p>Fire is the foundation. Learn to build, maintain, and read the flames that create legendary barbecue.</p>
         </div>
 
-        <div class="interactive-module">
-            <div class="module-title">Interactive Fire Simulator</div>
-            <div class="fire-simulator">
-                <div class="fire-visual" id="fireVisual">
-                    <span style="color: white; font-size: 0.9rem; opacity: 0.7;">Select a log type to see the fire behavior</span>
-                </div>
-                <div class="fire-logs">
-                    <button class="log-btn" onclick="setFire('dense')">Dense Oak Log</button>
-                    <button class="log-btn" onclick="setFire('light')">Light/Dry Log</button>
-                    <button class="log-btn" onclick="setFire('green')">Green Wood</button>
-                    <button class="log-btn" onclick="setFire('small')">Small Kindling</button>
-                </div>
-                <div class="fire-readout">
-                    <div class="readout-item">
-                        <div class="readout-value" id="tempVal">—</div>
-                        <div class="readout-label">Firebox Temp</div>
-                    </div>
-                    <div class="readout-item">
-                        <div class="readout-value" id="smokeVal">—</div>
-                        <div class="readout-label">Smoke Quality</div>
-                    </div>
-                    <div class="readout-item">
-                        <div class="readout-value" id="timeVal">—</div>
-                        <div class="readout-label">Burn Duration</div>
-                    </div>
-                </div>
-                <div id="fireAdvice" style="margin-top: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 10px; font-size: 0.9rem; color: var(--ash); display: none;"></div>
-            </div>
+        <div class="search-box fade-in">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);stroke:var(--ash);width:20px;height:20px;"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" placeholder="Search fire techniques..." id="fireSearch" onkeyup="filterCards('fire', this.value)">
         </div>
 
-        <div class="interactive-module">
-            <div class="module-title">🌫️ Smoke Color Guide</div>
-            <p style="color: var(--ash); margin-bottom: 1rem; font-size: 0.9rem;">Click each type to learn what it means and how to fix it.</p>
-
-            <div class="smoke-indicator" onclick="showSmokeDetail('white')">
-                <div class="smoke-color" style="background: #e8e8e8;"></div>
-                <div class="smoke-info">
-                    <h4>White / Steamy Smoke</h4>
-                    <p>Fresh wood starting to catch — water vapor evaporating</p>
-                </div>
-            </div>
-            <div class="smoke-indicator" onclick="showSmokeDetail('blue')">
-                <div class="smoke-color" style="background: #4a90d9;"></div>
-                <div class="smoke-info">
-                    <h4>Thin Blue Smoke</h4>
-                    <p>Perfect clean combustion — the holy grail of barbecue</p>
-                </div>
-            </div>
-            <div class="smoke-indicator" onclick="showSmokeDetail('brown')">
-                <div class="smoke-color" style="background: #8b4513;"></div>
-                <div class="smoke-info">
-                    <h4>Brown / Billowy Smoke</h4>
-                    <p>Incomplete combustion — creosote forming, bitter flavors</p>
-                </div>
-            </div>
-            <div class="smoke-indicator" onclick="showSmokeDetail('black')">
-                <div class="smoke-color" style="background: #1a1a1a;"></div>
-                <div class="smoke-info">
-                    <h4>Black Smoke</h4>
-                    <p>Starved of oxygen — choked fire, acrid and ruined meat</p>
-                </div>
-            </div>
-            <div id="smokeDetail" style="margin-top: 1rem; padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; display: none; font-size: 0.9rem; color: var(--ash); line-height: 1.7;"></div>
+        <div class="filter-bar fade-in">
+            <button class="filter-btn active" onclick="filterCategory('fire', 'all')">All</button>
+            <button class="filter-btn" onclick="filterCategory('fire', 'building')">Building</button>
+            <button class="filter-btn" onclick="filterCategory('fire', 'wood')">Wood</button>
+            <button class="filter-btn" onclick="filterCategory('fire', 'management')">Management</button>
+            <button class="filter-btn" onclick="filterCategory('fire', 'smoke')">Smoke</button>
         </div>
 
-        <div class="interactive-module">
-            <div class="module-title">⏱️ Fire Tending Timeline</div>
-            <div class="timeline-container">
-                <div class="timeline-line"></div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">0:00 — Start</div>
-                    <div class="timeline-title">Build the Foundation</div>
-                    <div class="timeline-desc">Log cabin style with 1" gaps for airflow</div>
-                    <div class="timeline-detail">
-                        Use one dense log in the middle surrounded by smaller dry splits. Space wood about 1 inch apart. Place oily butcher paper 3 inches from the back. Light and watch. Within 30 minutes you should reach 275-300°F. This is a great time to season your meat.
-                    </div>
+        <div class="cards-grid fade-in" id="fire-cards">
+            <div class="card" data-category="building" onclick="openModal('fire-building')">
+                <img src="https://kimi-web-img.moonshot.cn/img/www.smokedbbqsource.com/678665bc2bc0f52d5c52ec2de2a50d08794e3952.jpg" alt="Brisket bark" class="card-image">
+                <div class="card-body">
+                    <span class="card-tag">Building</span>
+                    <h3>Building the Foundation</h3>
+                    <p>Start with a dense log in the middle, surrounded by dry small pieces. Space wood with 1-inch gaps for airflow. The "log cabin" method gets your cooker to 275-300°F in 30 minutes.</p>
                 </div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">0:30 — First Hour</div>
-                    <div class="timeline-title">Watch the Smoke Stack</div>
-                    <div class="timeline-desc">Learn to read airflow and combustion stage</div>
-                    <div class="timeline-detail">
-                        Fresh logs always smoke initially. Watch for flames intertwining between logs. You should see smoke actually exiting the smokestack. Give it a blow if needed. The fire should pull air through naturally — you cannot push air on a fire, but you can pull it.
-                    </div>
-                </div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">Every 10-15 min</div>
-                    <div class="timeline-title">Add One Log at a Time</div>
-                    <div class="timeline-desc">Proactive fire management beats reactive</div>
-                    <div class="timeline-detail">
-                        Time your log additions so the new log catches right as the previous one starts declining. Listen for popping and cracking — that tells you the wood is burning rapidly. A heavy log will steam moisture out audibly. If temps drop too low, use a dry light piece. If too high, lay a log flat to restrict airflow underneath.
-                    </div>
-                </div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">As Needed</div>
-                    <div class="timeline-title">Rake Coals & Reset</div>
-                    <div class="timeline-desc">Break down ash, rebuild coal bed</div>
-                    <div class="timeline-detail">
-                        When a big fire burns down, get in with a shovel. Rake out coals, break down the coal bed. Blackened logs that have burned complete can be buried in coals. Logs that haven't burned complete should be turned sideways and given air channels underneath. Pre-warm incoming air by keeping coals toward the back of the firebox in cold weather.
-                    </div>
+                <div class="card-footer">
+                    <span class="card-time">30 min to temp</span>
+                    <span class="card-arrow">→</span>
                 </div>
             </div>
-        </div>
 
-        <div class="interactive-module">
-            <div class="module-title">✅ Fire Management Checklist</div>
-            <ul class="checklist" id="fireChecklist">
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Use seasoned post oak, aged 1-2 years</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Build log cabin with 1" air gaps</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Start with oily butcher paper or grape seed oil</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Keep firebox door open in good weather</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Never choke fire by shutting door completely</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Add logs proactively, not reactively</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Aim for thin blue smoke (clean combustion)</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Maintain cooker within 5° of target</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Listen for popping = rapid burn; steaming = moisture</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Rake coals and reset when fire burns down</span></li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- BRISKET SECTION -->
-    <section id="brisket" class="section">
-        <div class="section-header">
-            <h2>🥩 The Brisket Cook</h2>
-            <p>The mother of all Texas barbecue — a complete 12-hour journey</p>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">📋 Cook Planner Calculator</div>
-            <div class="calc-input">
-                <label>Dinner Time:</label>
-                <select id="dinnerTime" onchange="calcBrisket()">
-                    <option value="17">5:00 PM</option>
-                    <option value="18" selected>6:00 PM</option>
-                    <option value="19">7:00 PM</option>
-                    <option value="12">12:00 PM (Lunch)</option>
-                </select>
-            </div>
-            <div class="calc-input">
-                <label>Cook Temp:</label>
-                <select id="cookTemp" onchange="calcBrisket()">
-                    <option value="255" selected>255°F (Standard)</option>
-                    <option value="275">275°F (Faster)</option>
-                    <option value="225">225°F (Low & Slow)</option>
-                </select>
-            </div>
-            <div class="calc-input">
-                <label>Brisket Size:</label>
-                <select id="brisketSize" onchange="calcBrisket()">
-                    <option value="12" selected>12-14 lbs (Standard)</option>
-                    <option value="10">10-12 lbs (Small)</option>
-                    <option value="15">15-18 lbs (Large)</option>
-                </select>
-            </div>
-            <div class="calc-result" id="brisketPlan">
-                <h4>Your Cook Plan</h4>
-                <div class="calc-result-grid" id="planOutput"></div>
-            </div>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">🥩 Brisket Anatomy</div>
-            <p style="color: var(--ash); margin-bottom: 1rem; font-size: 0.9rem;">Click on each part to learn its role in the cook.</p>
-            <div class="anatomy-container">
-                <svg class="anatomy-svg" viewBox="0 0 400 250">
-                    <path id="flat" class="anatomy-part" d="M 50 120 Q 80 100 150 95 Q 220 90 280 100 Q 320 110 340 130 Q 350 150 340 170 Q 320 190 280 195 Q 220 200 150 195 Q 80 190 50 170 Q 40 150 50 120 Z" 
-                          fill="rgba(196,69,54,0.3)" stroke="var(--gold)" stroke-width="2"
-                          onclick="showAnatomy('flat')"/>
-                    <path id="point" class="anatomy-part" d="M 280 100 Q 320 80 360 85 Q 390 90 395 120 Q 400 150 390 180 Q 380 200 350 205 Q 320 210 300 200 Q 280 190 280 170 Q 280 150 280 130 Q 280 110 280 100 Z" 
-                          fill="rgba(212,165,116,0.3)" stroke="var(--gold)" stroke-width="2"
-                          onclick="showAnatomy('point')"/>
-                    <path id="fatcap" class="anatomy-part" d="M 45 115 Q 75 95 145 90 Q 215 85 275 95 Q 315 105 335 125 Q 345 145 335 165" 
-                          fill="none" stroke="#d4a574" stroke-width="8" stroke-linecap="round"
-                          onclick="showAnatomy('fatcap')"/>
-                    <path id="seam" class="anatomy-part" d="M 275 95 Q 285 130 285 170 Q 285 190 295 200" 
-                          fill="none" stroke="#8b6914" stroke-width="4" stroke-dasharray="5,5"
-                          onclick="showAnatomy('seam')"/>
-                    <text x="150" y="150" fill="var(--cream)" font-size="14" text-anchor="middle" opacity="0.5">Click regions to explore</text>
-                </svg>
-                <div class="anatomy-info" id="anatomyInfo">
-                    <p style="color: var(--ash); font-style: italic;">Click on a part of the brisket diagram above to learn about its characteristics and how to handle it during the cook.</p>
+            <div class="card" data-category="wood" onclick="openModal('fire-wood')">
+                <img src="https://kimi-web-img.moonshot.cn/img/www.butlerwood.com/adc9eee8518378c12ade28ff6b9228bc8daf59a6.jpg" alt="Post oak wood" class="card-image">
+                <div class="card-body">
+                    <span class="card-tag">Wood</span>
+                    <h3>Post Oak & Wood Selection</h3>
+                    <p>Central Texas barbecue is defined by post oak. Aged 1-2 years is the sweet spot. Pick up a piece — feel its density and moisture. Heavy = more moisture = slower burn.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">1-2 years aged</span>
+                    <span class="card-arrow">→</span>
                 </div>
             </div>
-        </div>
 
-        <div class="interactive-module">
-            <div class="module-title">📊 The 12-Hour Timeline</div>
-            <div class="tabs">
-                <button class="tab-btn active" onclick="showTab('trim')">Trim & Season</button>
-                <button class="tab-btn" onclick="showTab('cook1')">Hours 0-3</button>
-                <button class="tab-btn" onclick="showTab('cook2')">Hours 3-8</button>
-                <button class="tab-btn" onclick="showTab('stall')">The Stall</button>
-                <button class="tab-btn" onclick="showTab('wrap')">Wrap & Finish</button>
-                <button class="tab-btn" onclick="showTab('rest')">Rest & Slice</button>
+            <div class="card" data-category="management" onclick="openModal('fire-management')">
+                <img src="https://kimi-web-img.moonshot.cn/img/ddrbbqsupply.com/a7659abea41d635417403e73b39af0c109d99a6d.jpg" alt="Offset smoker" class="card-image">
+                <div class="card-body">
+                    <span class="card-tag">Management</span>
+                    <h3>Working the Fire</h3>
+                    <p>Be proactive, not reactive. Time your logs so as one fire dies, another catches. Keep temperatures within 5°F. Listen for pops and cracks — they tell you how fast wood is burning.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">±5°F precision</span>
+                    <span class="card-arrow">→</span>
+                </div>
             </div>
 
-            <div id="trim" class="tab-panel active">
-                <h4 style="color: var(--gold); margin-bottom: 1rem;">Trimming & Seasoning</h4>
-                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
-                    <li>Keep brisket cold — warm fat is sticky and hard to trim</li>
-                    <li>Remove the deckle (where carcass was split) — it won't render</li>
-                    <li>Trim sides to aerodynamic curves — no sharp edges that will dry out</li>
-                    <li>Leave ¼ inch of soft, pillowy fat (not hard waxy fat)</li>
-                    <li>Remove thick seam fat between flat and point (won't render)</li>
-                    <li>Season: 50/50 kosher salt + 16 mesh black pepper by volume</li>
-                    <li>Light mustard slather as glue — you won't taste it after 12 hours</li>
-                    <li>Season presentation side (fat side up) most carefully</li>
-                    <li>Let temper 30-45 minutes before putting on cooker</li>
-                </ul>
+            <div class="card" data-category="smoke" onclick="openModal('fire-smoke')">
+                <div class="card-body">
+                    <span class="card-tag">Smoke</span>
+                    <h3>Reading the Smoke</h3>
+                    <p>Blue, clean smoke is the goal. Brown or black smoke means dirty fire. At 600-680°F combustion, smoke becomes water vapor. Bad smoke for 10-30 minutes will not ruin an 8-hour cook.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">Visual cues</span>
+                    <span class="card-arrow">→</span>
+                </div>
             </div>
-            <div id="cook1" class="tab-panel">
-                <h4 style="color: var(--gold); margin-bottom: 1rem;">Hours 0-3: Foundation</h4>
-                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
-                    <li>Start cooker at 255°F — ease into it, don't shock the meat</li>
-                    <li>Place point toward fire (more fat = more protection)</li>
-                    <li>Use water pan to keep moisture in cook chamber</li>
-                    <li>First 3 hours: do NOT open lid — let bark begin to form</li>
-                    <li>Watch smokestack for clean, thin smoke</li>
-                    <li>At 3-hour mark: first check — look for edge drying, bark formation</li>
-                    <li>Spritz edges with apple cider vinegar if looking dry</li>
-                </ul>
-            </div>
-            <div id="cook2" class="tab-panel">
-                <h4 style="color: var(--gold); margin-bottom: 1rem;">Hours 3-8: Building Bark</h4>
-                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
-                    <li>Check every hour — spritz dry spots specifically</li>
-                    <li>Bump temps to 265°F around hour 5 if bark is forming well</li>
-                    <li>Look for mahogany color, fat beginning to render</li>
-                    <li>Brisket will shrink significantly — this is normal</li>
-                    <li>Edges should not be black or crispy — if so, temps too high</li>
-                    <li>Internal temp will climb steadily toward 160°F</li>
-                    <li>Start planning wrap materials (butcher paper) around hour 7</li>
-                </ul>
-            </div>
-            <div id="stall" class="tab-panel">
-                <h4 style="color: var(--gold); margin-bottom: 1rem;">The Stall (160-170°F internal)</h4>
-                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
-                    <li>Muscle tightens and squeezes out moisture (evaporative cooling)</li>
-                    <li>Surface gets very wet — this is normal and temporary</li>
-                    <li>Bump cooker to 280°F+ to push through — moisture protects from burning</li>
-                    <li>Can last 1-3 hours — don't panic, it's part of the process</li>
-                    <li>Once surface dries and bark looks crusty, you're through the stall</li>
-                    <li>Wrap RIGHT at the end of the stall — not before, not long after</li>
-                </ul>
-            </div>
-            <div id="wrap" class="tab-panel">
-                <h4 style="color: var(--gold); margin-bottom: 1rem;">Wrap & Finish (Hours 8-12)</h4>
-                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
-                    <li>Use pink butcher paper (not foil — too "pot roasty")</li>
-                    <li>Double-layer the bottom where juices will collect</li>
-                    <li>Wrap tight — conform to brisket shape, no loose bag</li>
-                    <li>Put back on cooker, point toward fire</li>
-                    <li>Cook at 275-285°F wrapped</li>
-                    <li>Internal target: 200-205°F, but FEEL trumps temperature</li>
-                    <li>Pick up with towel — should feel like "a bag of melted butter"</li>
-                    <li>Flat should fall over your fingers when lifted</li>
-                </ul>
-            </div>
-            <div id="rest" class="tab-panel">
-                <h4 style="color: var(--gold); margin-bottom: 1rem;">Rest & Slice</h4>
-                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
-                    <li>Rest wrapped until internal temp drops to 140-150°F (about 45 min)</li>
-                    <li>DO NOT put in cooler while hot — carries over too far</li>
-                    <li>Unwrap — save all juices on cutting board</li>
-                    <li>Separate flat from point along the seam</li>
-                    <li>Slice flat against grain, pencil-thick (¼ inch)</li>
-                    <li>Slice point perpendicular, slightly thicker</li>
-                    <li>Every slice should have bark, fat, meat, salt, pepper</li>
-                    <li>Serve immediately — brisket oxidizes quickly once cut</li>
-                </ul>
-            </div>
-        </div>
 
-        <div class="interactive-module">
-            <div class="module-title">🧂 Rub Calculator</div>
-            <div class="calc-input">
-                <label>Brisket Weight (lbs):</label>
-                <input type="number" id="brisketWeight" value="12" min="1" max="20" onchange="calcRub()">
+            <div class="card" data-category="building" onclick="openModal('fire-offset')">
+                <div class="card-body">
+                    <span class="card-tag">Building</span>
+                    <h3>Offset Cooker Mechanics</h3>
+                    <p>Heat hits a flap, curls like a tornado, creating convection. No dampers needed — just control airflow with the firebox door. Open = more air = hotter fire.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">Airflow science</span>
+                    <span class="card-arrow">→</span>
+                </div>
             </div>
-            <div class="calc-result" id="rubResult">
-                <div class="calc-result-grid" id="rubOutput"></div>
+
+            <div class="card" data-category="management" onclick="openModal('fire-tips')">
+                <div class="card-body">
+                    <span class="card-tag">Management</span>
+                    <h3>Pro Fire Tips</h3>
+                    <p>Use greasy butcher paper to start fires. Pre-warm air by keeping coals at the back of the firebox. Lay logs flat to slow burn, stand them up to increase heat. Always watch the smokestack.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">Advanced tricks</span>
+                    <span class="card-arrow">→</span>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- RIBS SECTION -->
-    <section id="ribs" class="section">
-        <div class="section-header">
-            <h2>🍖 Spare Ribs</h2>
-            <p>Intermediate cook — finicky but rewarding</p>
+    <section class="section" id="meats">
+        <div class="section-header fade-in">
+            <span class="section-number">03</span>
+            <h2>The Meats</h2>
+            <p>From pork butt to brisket — the cuts, the rubs, and the techniques that define Texas barbecue.</p>
         </div>
 
-        <div class="interactive-module">
-            <div class="module-title">📋 Ribs Cook Plan</div>
-            <div class="calc-result">
-                <div class="calc-result-grid">
-                    <div class="calc-result-item"><span>Total Cook Time:</span><strong>~6 hours</strong></div>
-                    <div class="calc-result-item"><span>Unwrapped Phase:</span><strong>3 hours at 270°F</strong></div>
-                    <div class="calc-result-item"><span>Wrapped Phase:</span><strong>2 hours in foil with sauce</strong></div>
-                    <div class="calc-result-item"><span>Final Set:</span><strong>30-45 min rest</strong></div>
-                    <div class="calc-result-item"><span>Rub Ratio:</span><strong>2:1 pepper to salt</strong></div>
-                    <div class="calc-result-item"><span>Target Feel:</span><strong>Bend test — almost falling off bone</strong></div>
-                </div>
-            </div>
+        <div class="tabs fade-in">
+            <button class="tab-btn active" onclick="switchTab('pork')">Pork Butt</button>
+            <button class="tab-btn" onclick="switchTab('ribs')">Spare Ribs</button>
+            <button class="tab-btn" onclick="switchTab('brisket')">Brisket</button>
+            <button class="tab-btn" onclick="switchTab('grilling')">Grilling</button>
         </div>
 
-        <div class="interactive-module">
-            <div class="module-title">🔪 Trimming Spare Ribs</div>
-            <div class="timeline-container">
-                <div class="timeline-line"></div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">Step 1</div>
-                    <div class="timeline-title">Remove the Sternum</div>
-                    <div class="timeline-desc">Cut off the cartilage breast bone for even cooking</div>
-                    <div class="timeline-detail">
-                        The sternum is the bone at the wide end. Cut it off completely — it gets in the way when feeling for tenderness later. Use a sharp chef's knife and cut through the cartilage. This also helps the rack cook more evenly.
+        <div class="tab-content active" id="tab-pork">
+            <div class="cards-grid">
+                <div class="card" onclick="openModal('pork-overview')">
+                    <img src="https://kimi-web-img.moonshot.cn/img/www.allrecipes.com/153963d7a8ad249864f87e43923acfd60d100505.jpg" alt="Pulled pork" class="card-image">
+                    <div class="card-body">
+                        <span class="card-tag">Overview</span>
+                        <h3>Pork Butt — The Forgiving Cut</h3>
+                        <p>From the shoulder, bone-in preferred. Cook until the bone twists out easily. Equal parts salt and pepper, plus paprika for color. Mustard slather helps bark stick.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-time">~10 hours</span>
+                        <span class="card-arrow">→</span>
                     </div>
                 </div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">Step 2</div>
-                    <div class="timeline-title">Square the Rack</div>
-                    <div class="timeline-desc">Create uniform thickness for even airflow</div>
-                    <div class="timeline-detail">
-                        Trim the edges to create a uniform rectangular shape. Round off corners so air flows over smoothly (Franklin calls this making it look like a "little Maserati"). Remove the skirt (flap of meat on the bone side) — it cooks unevenly and slides off.
+
+                <div class="card" onclick="openModal('pork-timeline')">
+                    <div class="card-body">
+                        <span class="card-tag">Timeline</span>
+                        <h3>Cook Schedule</h3>
+                        <div class="timeline" style="margin-top: 1rem;">
+                            <div class="timeline-item">
+                                <h4>7:30 AM — On the Cooker</h4>
+                                <p>Fat side up, 270°F target</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>10:30 AM — Start Spritzing</h4>
+                                <p>Every hour with cider vinegar</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>3:30 PM — Wrap in Foil</h4>
+                                <p>When fat cap splits, bark is set</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h4>5:30 PM — Pull & Rest</h4>
+                                <p>Target 203-205°F internal</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">Step 3</div>
-                    <div class="timeline-title">The Membrane Decision</div>
-                    <div class="timeline-desc">Franklin leaves it on — here's why</div>
-                    <div class="timeline-detail">
-                        Most people remove the membrane. Franklin leaves it on because: (1) at the restaurant it would take hours to remove from hundreds of racks, (2) it allows slight overcooking while maintaining structural integrity, (3) rub penetrates through it anyway, and (4) it protects the meat from drying. Make your own choice.
-                    </div>
-                </div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">Step 4</div>
-                    <div class="timeline-title">Check for Bones</div>
-                    <div class="timeline-desc">Feel for chipped bone fragments</div>
-                    <div class="timeline-detail">
-                        Run your fingers along the bones. If the processor sawed too fast, bone chips can splinter off. You don't want anyone biting into a bone shard. Remove any sharp fragments. Also check for "shiners" — ribs where the meat has been cut so thin you can see the bone through it. Avoid these at the store.
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="interactive-module">
-            <div class="module-title">🧂 Seasoning Technique</div>
-            <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
-                <li>2 parts pepper to 1 part salt (opposite of brisket — ribs are thinner)</li>
-                <li>Add paprika for color — gives a nice mahogany red</li>
-                <li>Light mustard slather — just enough to make tacky, not wet</li>
-                <li>Season parallel to the bones (typewriter motion)</li>
-                <li>Hold shaker 8-10 inches high for even distribution</li>
-                <li>Pat down gently — don't rub it in aggressively</li>
-                <li>Add extra pepper on fatty patches (smoke sticks better to pepper than fat)</li>
-                <li>Put extra salt on membrane side for tongue-first salt hit</li>
-            </ul>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">✅ Ribs Checklist</div>
-            <ul class="checklist" id="ribsChecklist">
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Buy full spare ribs with good marbling (avoid "enhanced" with salt water)</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Remove sternum and square the rack</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Remove skirt meat from bone side</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Check for bone chips and shiners</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Light mustard slather</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">2:1 pepper to salt, plus paprika</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Cook 3 hours unwrapped at 270°F</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Spritz every hour after first hour</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Sauce both sides, let set 10 min</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Wrap tight in foil, double-layer over bones</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Cook 2 more hours wrapped</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Feel for tenderness — bend test over fingers</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Rest 30-40 minutes before cutting</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Pour saved juices over ribs before serving</span></li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- PORK BUTT SECTION -->
-    <section id="pork" class="section">
-        <div class="section-header">
-            <h2>🐷 Pork Butt</h2>
-            <p>The forgiving beginner's cook — hard to mess up</p>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">📋 Pork Butt Planner</div>
-            <div class="calc-input">
-                <label>Dinner Time:</label>
-                <select id="porkDinner" onchange="calcPork()">
-                    <option value="17">5:00 PM</option>
-                    <option value="18" selected>6:00 PM</option>
-                    <option value="19">7:00 PM</option>
-                </select>
-            </div>
-            <div class="calc-result" id="porkPlan">
-                <div class="calc-result-grid" id="porkOutput"></div>
-            </div>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">🧂 Heavy Seasoning Method</div>
-            <div class="quote-block">
-                "For pork butt, since it's all going to get pulled apart anyway, I feel pretty good about using a lot of mustard or hot sauce, putting a good slather on there. The more seasoning on the outside, the better it mixes in later."
-                <cite>— Aaron Franklin</cite>
-            </div>
-            <table class="compare-table">
-                <tr><th>Cut</th><th>Salt: Pepper</th><th>Paprika</th><th>Mustard</th><th>Why</th></tr>
-                <tr><td>Brisket</td><td>1:1</td><td>No</td><td>Light glue</td><td>Want to taste beef and smoke</td></tr>
-                <tr><td>Pork Butt</td><td>1:1</td><td>Yes (color)</td><td>Heavy slather</td><td>Gets pulled and mixed together</td></tr>
-                <tr><td>Ribs</td><td>1:2 (more pepper)</td><td>Yes (color)</td><td>Light</td><td>Thin meat, pepper for bark texture</td></tr>
-            </table>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">⏱️ The Cook Timeline</div>
-            <div class="tabs">
-                <button class="tab-btn active" onclick="showTab('pork1')">Prep & Season</button>
-                <button class="tab-btn" onclick="showTab('pork2')">Hours 3-8</button>
-                <button class="tab-btn" onclick="showTab('pork3')">Wrap & Finish</button>
-            </div>
-            <div id="pork1" class="tab-panel active">
-                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
-                    <li>Buy bone-in pork butt (shoulder blade bone) — bone slides out when done</li>
-                    <li>Minimal trimming — leave fat cap, remove only excessive hard fat</li>
-                    <li>Heavy mustard slather — much more than brisket or ribs</li>
-                    <li>Equal parts salt and pepper, plus paprika for color</li>
-                    <li>Season VERY heavily — interior meat is bland, needs exterior flavor to mix in</li>
-                    <li>Place fat side up (heat comes from top on Franklin's cookers)</li>
-                    <li>Cook at 270°F — forgiving temperature</li>
-                </ul>
-            </div>
-            <div id="pork2" class="tab-panel">
-                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
-                    <li>Start spritzing at hour 3 with apple cider vinegar</li>
-                    <li>Spritz every hour until wrap</li>
-                    <li>Use sweeping motion — don't mist (evaporates) or blast (knocks off bark)</li>
-                    <li>Watch for fat cap to split — this is your visual wrap cue</li>
-                    <li>Edges should not be crispy or black</li>
-                    <li>Internal temp is irrelevant for wrap decision — go by bark and fat split</li>
-                </ul>
-            </div>
-            <div id="pork3" class="tab-panel">
-                <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
-                    <li>Wrap tight in foil, shiny side in (dull side out absorbs heat)</li>
-                    <li>Double-layer the foil for strength</li>
-                    <li>Cook 1.5-2 more hours until internal temp ~203°F</li>
-                    <li>FEEL is more important than temp — should feel like "bag of melted butter"</li>
-                    <li>Rest 45-60 minutes wrapped</li>
-                    <li>Pull apart with hands (or tongs if too hot)</li>
-                    <li>Mix bark flakes back into meat</li>
-                    <li>Save juices from foil — pour over pulled pork</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">✅ Pork Butt Checklist</div>
-            <ul class="checklist" id="porkChecklist">
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Buy bone-in pork butt (shoulder blade bone)</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Minimal trimming — leave fat cap on</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Heavy mustard slather all over</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Equal parts salt & pepper, plus paprika</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Cook at 270°F for ~8 hours unwrapped</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Spritz with cider vinegar every hour from hour 3</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Wrap when fat cap splits (visual cue)</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Finish 1.5-2 hours wrapped until 203°F</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Rest 45-60 minutes before pulling</span></li>
-                <li onclick="toggleCheck(this)"><div class="check-box"></div><span class="check-text">Bone should slide out cleanly when done</span></li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- GRILLING SECTION -->
-    <section id="grilling" class="section">
-        <div class="section-header">
-            <h2>⚡ Hot & Fast Grilling</h2>
-            <p>Direct fire cooking for steaks, vegetables, and quick meals</p>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">🔥 Two-Zone Setup</div>
-            <div class="card-grid">
-                <div class="card">
-                    <div class="card-icon">🔴</div>
-                    <h3>Hot Zone</h3>
-                    <p>Directly over coals/wood. For searing, charring, and developing crust. Use for initial contact and final finishing.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🟡</div>
-                    <h3>Safety Zone</h3>
-                    <p>Indirect heat, off to the side. For tempering cold meat, slowing down cooks, and managing flare-ups.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🪵</div>
-                    <h3>Wood Chunk</h3>
-                    <p>Place a dense oak log on the hot zone. It provides smoke flavor and creates a natural divider between zones.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🌡️</div>
-                    <h3>Charcoal Chimney</h3>
-                    <p>Start with natural briquettes. Let them ash over completely. Dump and create your zones immediately.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">🥩 Steak Technique</div>
-            <div class="timeline-container">
-                <div class="timeline-line"></div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">Prep</div>
-                    <div class="timeline-title">Temper & Season</div>
-                    <div class="timeline-desc">15-20 min out of fridge, grape seed oil, light salt</div>
-                    <div class="timeline-detail">
-                        Small steaks don't need long tempering. Use grape seed oil (high smoke point, inexpensive). Light salt now — you'll salt again after cooking. Don't overseason before the fire.
-                    </div>
-                </div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">Sear</div>
-                    <div class="timeline-title">High Heat Contact</div>
-                    <div class="timeline-desc">Place on hot zone, flip frequently</div>
-                    <div class="timeline-detail">
-                        The old "flip once" rule is silly. Flip constantly to even out the cook. Move to safety zone if cooking too fast. Look for meat fibers tightening and surface drying. Use oil to soften dry spots.
-                    </div>
-                </div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">Feel</div>
-                    <div class="timeline-title">Trust Your Fingers</div>
-                    <div class="timeline-desc">No thermometer — squeeze and learn</div>
-                    <div class="timeline-detail">
-                        The thumb-palm test is wrong — everyone's hands are different. Every steak is different. The ONLY way to learn is to pull, cut, check, and remember. Over time you develop muscle memory for medium-rare vs medium.
-                    </div>
-                </div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">Rest</div>
-                    <div class="timeline-title">Let It Settle</div>
-                    <div class="timeline-desc">5-10 minutes, reabsorbs moisture</div>
-                    <div class="timeline-detail">
-                        If you cut immediately, steam escapes = moisture loss. Let it cool slightly. The fibers relax and reabsorb juices. Slice against the grain for tenderness. Finish with flaky salt.
+                <div class="card" onclick="openModal('pork-checklist')">
+                    <div class="card-body">
+                        <span class="card-tag">Interactive</span>
+                        <h3>Pork Butt Checklist</h3>
+                        <ul class="checklist" style="margin-top: 1rem;">
+                            <li onclick="toggleCheck(this)">
+                                <span class="check-circle"></span>
+                                <div class="checklist-text">
+                                    <strong>Bone-in pork butt</strong>
+                                    <span>Shoulder blade bone for tenderness test</span>
+                                </div>
+                            </li>
+                            <li onclick="toggleCheck(this)">
+                                <span class="check-circle"></span>
+                                <div class="checklist-text">
+                                    <strong>Equal parts S&P + paprika</strong>
+                                    <span>Heavy seasoning — it all gets mixed in</span>
+                                </div>
+                            </li>
+                            <li onclick="toggleCheck(this)">
+                                <span class="check-circle"></span>
+                                <div class="checklist-text">
+                                    <strong>Mustard slather</strong>
+                                    <span>Helps bark adhere, will not be tasted</span>
+                                </div>
+                            </li>
+                            <li onclick="toggleCheck(this)">
+                                <span class="check-circle"></span>
+                                <div class="checklist-text">
+                                    <strong>Water pan in cooker</strong>
+                                    <span>Maintains moisture throughout cook</span>
+                                </div>
+                            </li>
+                            <li onclick="toggleCheck(this)">
+                                <span class="check-circle"></span>
+                                <div class="checklist-text">
+                                    <strong>Spritz every hour after 3 hrs</strong>
+                                    <span>Cider vinegar, water, or beer</span>
+                                </div>
+                            </li>
+                            <li onclick="toggleCheck(this)">
+                                <span class="check-circle"></span>
+                                <div class="checklist-text">
+                                    <strong>Wrap when fat cap splits</strong>
+                                    <span>Visual cue: ~8 hours in</span>
+                                </div>
+                            </li>
+                            <li onclick="toggleCheck(this)">
+                                <span class="check-circle"></span>
+                                <div class="checklist-text">
+                                    <strong>Rest 45-60 minutes</strong>
+                                    <span>Carryover cooking continues</span>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="interactive-module">
-            <div class="module-title">🥦 Broccolini / Vegetables</div>
-            <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
-                <li>Use a cooling rack turned upside-down over the chimney</li>
-                <li>Keep stalks over direct flame, crowns on the cooler edge</li>
-                <li>Oil, salt, then char quickly — keep moving constantly</li>
-                <li>Stalks need more heat and time; crowns need quick blistering</li>
-                <li>Remove when stalks are slightly soft with charred blisters</li>
-                <li>This two-zone thinking directly applies to brisket (flat vs point)</li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- WOOD SECTION -->
-    <section id="wood" class="section">
-        <div class="section-header">
-            <h2>🌳 Wood & Smoke</h2>
-            <p>The primary flavor of barbecue — understanding your fuel</p>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">🪵 Wood Types by Region</div>
-            <table class="compare-table">
-                <tr><th>Wood Type</th><th>Region</th><th>Flavor Profile</th><th>Best For</th></tr>
-                <tr><td><strong>Post Oak</strong></td><td>Central Texas</td><td>Sweet, vanilla, mild</td><td>Brisket (12+ hr cooks)</td></tr>
-                <tr><td>Hickory</td><td>Southeast/Midwest</td><td>Bacon-like, strong</td><td>Pork, ribs</td></tr>
-                <tr><td>Mesquite</td><td>South Texas/Mexico</td><td>Intense, earthy</td><td>Grilling (short cooks)</td></tr>
-                <tr><td>Pecan</td><td>East Texas</td><td>Nutty, mild</td><td>All-purpose</td></tr>
-                <tr><td>Fruit Woods</td><td>Various</td><td>Sweet, subtle</td><td>Poultry, fish</td></tr>
-            </table>
-            <div class="quote-block">
-                "Post oak really only grows around central Texas. It's a white oak with less tannic acid than any other oak. At high temperatures, the wood fibers break down with vanilla flavors — similar to wine barrels and bourbon."
-                <cite>— Aaron Franklin</cite>
-            </div>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">📏 The Wood Selection Game</div>
-            <p style="color: var(--ash); margin-bottom: 1rem; font-size: 0.9rem;">Franklin plays a mental game when selecting each log. Click to learn the strategy.</p>
-            <div class="card-grid">
-                <div class="card" onclick="showWoodDetail('junky')">
-                    <div class="card-icon">🪵</div>
-                    <h3>Junky / Light Wood</h3>
-                    <p>Feels like an empty milk carton. Sawdusty, flaky. Use for starting fires only.</p>
-                </div>
-                <div class="card" onclick="showWoodDetail('dense')">
-                    <div class="card-icon">🪨</div>
-                    <h3>Dense / Heavy Wood</h3>
-                    <p>Surprisingly heavy, solid center. Great for early cook when you want clean flavors.</p>
-                </div>
-                <div class="card" onclick="showWoodDetail('wedge')">
-                    <div class="card-icon">🔺</div>
-                    <h3>Wedge Shaped</h3>
-                    <p>Perfect for round fireboxes. Wedge against the side, roll in when ready.</p>
-                </div>
-                <div class="card" onclick="showWoodDetail('small')">
-                    <div class="card-icon">🌿</div>
-                    <h3>Small Splits</h3>
-                    <p>Quick catch, fast burn. Use for small cookers or quick temp boosts.</p>
-                </div>
-            </div>
-            <div id="woodDetail" style="margin-top: 1.5rem; padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; display: none; color: var(--ash); line-height: 1.7;"></div>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">⚠️ Wood Quality Guide</div>
-            <div class="smoke-indicator" onclick="showWoodQuality('green')">
-                <div class="smoke-color" style="background: #4a7c59;"></div>
-                <div class="smoke-info">
-                    <h4>Green Wood (Fresh Cut)</h4>
-                    <p>Too much moisture — won't reach clean combustion, smolders, bitter smoke</p>
-                </div>
-            </div>
-            <div class="smoke-indicator" onclick="showWoodQuality('perfect')">
-                <div class="smoke-color" style="background: #d4a574;"></div>
-                <div class="smoke-info">
-                    <h4>Seasoned (1-2 Years)</h4>
-                    <p>The sweet spot — moisture mostly gone, structure intact, predictable burn</p>
-                </div>
-            </div>
-            <div class="smoke-indicator" onclick="showWoodQuality('rotten')">
-                <div class="smoke-color" style="background: #5c3a21;"></div>
-                <div class="smoke-info">
-                    <h4>Overly Dry / Rotten</h4>
-                    <p>Decomposed too much — nothing left to burn, no flavor, turns to dust</p>
-                </div>
-            </div>
-            <div id="woodQualityDetail" style="margin-top: 1rem; padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; display: none; color: var(--ash); line-height: 1.7;"></div>
-        </div>
-    </section>
-
-    <!-- TOOLS SECTION -->
-    <section id="tools" class="section">
-        <div class="section-header">
-            <h2>🔧 Equipment & Setup</h2>
-            <p>Understanding your cooker and essential tools</p>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">🔥 Offset Cooker Anatomy</div>
-            <div class="card-grid">
-                <div class="card">
-                    <div class="card-icon">📦</div>
-                    <h3>Firebox</h3>
-                    <p>Should be long enough to build a fire "back" from the cook chamber. Round fireboxes are ideal for log placement. No dampers — control with door position.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🌪️</div>
-                    <h3>Cook Chamber</h3>
-                    <p>Single grate preferred (no dripping between shelves). Heat hits a baffle plate, curls like a tornado, creating chaotic convection that dries the bark.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🌫️</div>
-                    <h3>Smoke Stack</h3>
-                    <p>Massive airflow = massive vacuum. No damper on stack. Watch the smoke to guide your fire — it's your most important instrument.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🌡️</div>
-                    <h3>Thermometer</h3>
-                    <p>One gauge at the hottest spot (near the firebox end) is enough. It's a loose guide — watch the smoke, watch the meat, feel the fire.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">🛠️ Essential Tools</div>
-            <table class="compare-table">
-                <tr><th>Tool</th><th>Franklin's Choice</th><th>Why</th></tr>
-                <tr><td>Trimming Knife</td><td>Curved boning knife</td><td>Curve helps get into seams; flexible tip, rigid spine</td></tr>
-                <tr><td>Slicing Knife</td><td>12" serrated bread knife ($25)</td><td>Long enough for full strokes; doesn't crush meat</td></tr>
-                <tr><td>Fire Tongs</td><td>Heavy-duty pair</td><td>For grates, charcoal, moving logs</td></tr>
-                <tr><td>Meat Tongs</td><td>Separate lighter pair</td><td>Never cross-contaminate with fire tools</td></tr>
-                <tr><td>Shovel</td><td>Small fire shovel</td><td>Raking coals, building channels for airflow</td></tr>
-                <tr><td>Thermometer</td><td>Instant-read probe</td><td>For pork butt and carry-over temps only</td></tr>
-                <tr><td>Spritz Bottle</td><td>Any spray bottle</td><td>Apple cider vinegar for spritzing</td></tr>
-                <tr><td>Shaker</td><td>Grocery store shaker</td><td>Even salt/pepper distribution; pivot technique</td></tr>
-                <tr><td>Towels</td><td>Clean kitchen towels</td><td>For handling hot meat — better than gloves for feeling texture</td></tr>
-            </table>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">🔧 Cheap Cooker Mods</div>
-            <ul style="color: var(--ash); line-height: 2; padding-left: 1.5rem;">
-                <li><strong>Baffle plate:</strong> Add a piece of metal (old license plate works) to deflect heat from going straight up the stack</li>
-                <li><strong>Thermometer relocation:</strong> Drill hole, add threaded fitting at grate level — not on the lid</li>
-                <li><strong>Seal leaks:</strong> High-temp gasket around doors to control airflow</li>
-                <li><strong>Extend smokestack:</strong> Taller stack = stronger draft = better airflow</li>
-                <li><strong>Tuning plates:</strong> Add adjustable plates under grate to even out hot spots</li>
-                <li><strong>Charcoal basket:</strong> For smaller cookers, contains coals and improves airflow</li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- HISTORY SECTION -->
-    <section id="history" class="section">
-        <div class="section-header">
-            <h2>📚 History & Philosophy</h2>
-            <p>Where Texas barbecue comes from and why it matters</p>
-        </div>
-
-        <div class="interactive-module">
-            <div class="module-title">🕰️ Central Texas Barbecue Timeline</div>
-            <div class="timeline-container">
-                <div class="timeline-line"></div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">Early 1900s</div>
-                    <div class="timeline-title">German & Czech Markets</div>
-                    <div class="timeline-desc">Immigrants bring butcher shops and meat markets to Central Texas</div>
-                    <div class="timeline-detail">
-                        German and Czech immigrants settled in Central Texas and opened small grocery stores and meat markets. They butchered cows in the back. Before refrigeration, unsold meat had to be cooked or it would spoil. They dug brick pits in the ground — fires on one end, grates on the other, stacks to draw smoke. This is the origin of "pit" barbecue.
+        <div class="tab-content" id="tab-ribs">
+            <div class="cards-grid">
+                <div class="card" onclick="openModal('ribs-overview')">
+                    <img src="https://kimi-web-img.moonshot.cn/img/www.grillseeker.com/f878cd206ac7d52fb88e9ab908bc3da39856a2e8.jpg" alt="BBQ ribs" class="card-image">
+                    <div class="card-body">
+                        <span class="card-tag">Overview</span>
+                        <h3>Spare Ribs — The Intermediate Cut</h3>
+                        <p>Full spares, not St. Louis cut. Trim sternum and skirt. 2:1 pepper to salt ratio. Leave membrane on — it protects from overcooking and adds texture.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-time">~6 hours</span>
+                        <span class="card-arrow">→</span>
                     </div>
                 </div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">Post-WWII</div>
-                    <div class="timeline-title">The Boom Years</div>
-                    <div class="timeline-desc">Returning veterans open joints; 1948 is a magic year</div>
-                    <div class="timeline-detail">
-                        Military men returned with a little money and needed work. Many opened barbecue joints in the late 1940s. Look at any historic Texas barbecue joint — odds are it opened in 1948. They started as markets with smokehouses in back. The meat was whatever didn't sell that week: hind quarters, fore quarters, tenderloins, not specifically brisket yet.
+
+                <div class="card" onclick="openModal('ribs-technique')">
+                    <div class="card-body">
+                        <span class="card-tag">Technique</span>
+                        <h3>Franklin's Rib Method</h3>
+                        <p>3 hours unwrapped at 270°F. Sauce and wrap for 2 hours. Unwrap for final 1 hour. Feel for tenderness at the third rib cartilage — that is your test spot.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-time">3-2-1 method</span>
+                        <span class="card-arrow">→</span>
                     </div>
                 </div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">1950s</div>
-                    <div class="timeline-title">Boxed Beef Revolution</div>
-                    <div class="timeline-desc">Refrigerated trucks and processing plants change everything</div>
-                    <div class="timeline-detail">
-                        Before the 1950s, markets bought whole animals and broke them down. With boxed beef and refrigerated transport, they could order specific cuts. Brisket was cheap and tough — perfect for slow smoking. By the 1960s, brisket had become THE Texas barbecue cut. It was never prestigious; it was what you cooked because you had to.
+
+                <div class="card" onclick="openModal('ribs-sauce')">
+                    <div class="card-body">
+                        <span class="card-tag">Sauce</span>
+                        <h3>Rib Sauce Formula</h3>
+                        <p>Dilute your favorite sauce 1:1 with apple cider vinegar. Warm it before applying. Less sugar = less burning. Apply before wrapping so it cooks into the meat.</p>
                     </div>
-                </div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">Traditional Meal</div>
-                    <div class="timeline-title">Meat, Bread, Pickles, Onion</div>
-                    <div class="timeline-desc">The German market heritage on a plate</div>
-                    <div class="timeline-detail">
-                        The classic sides — white bread, pickles, sliced onion, maybe tomato or cheese — all came from the grocery store side of the business. You'd go in the back, buy smoked meat, then go up front and get a loaf of bread, a jar of pickles, an onion. Eat it in the parking lot with your pocket knife. No sauce needed if the meat was good.
-                    </div>
-                </div>
-                <div class="timeline-item" onclick="toggleDetail(this)">
-                    <div class="timeline-time">Today</div>
-                    <div class="timeline-title">Franklin Barbecue & The New School</div>
-                    <div class="timeline-desc">Precision, passion, and the line around the block</div>
-                    <div class="timeline-detail">
-                        Aaron Franklin started with a $99 offset smoker in his backyard in 2009. Through obsessive fire management, precise trimming, and relentless attention to detail, Franklin Barbecue became a destination. The line is part of the experience. Aaron still believes you learn by making bad barbecue first — and that the fire, not the meat, is what matters most.
+                    <div class="card-footer">
+                        <span class="card-time">Acid-balanced</span>
+                        <span class="card-arrow">→</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="interactive-module">
-            <div class="module-title">💭 Franklin's Philosophy</div>
-            <div class="quote-block">
-                "It's just fire. So just play around with fire. That's fun. You don't really have to be well-read or well-learned on any of this stuff. You're probably going to prove yourself wrong at some point. I know I have."
-                <cite>— Aaron Franklin</cite>
+        <div class="tab-content" id="tab-brisket">
+            <div class="cards-grid">
+                <div class="card" onclick="openModal('brisket-selection')">
+                    <img src="https://kimi-web-img.moonshot.cn/img/assets.epicurious.com/bce62f249aaac086d82a2bcf4709e32ed2f28ff8.jpg" alt="Texas brisket" class="card-image">
+                    <div class="card-body">
+                        <span class="card-tag">Selection</span>
+                        <h3>Choosing the Perfect Brisket</h3>
+                        <p>Prime grade, Angus preferred. Look for thick flat, good marbling. Avoid frozen — it gets mushy. Floppy = good fat-to-meat ratio. The thicker, the better.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-time">Prime + Angus</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </div>
+
+                <div class="card" onclick="openModal('brisket-trim')">
+                    <div class="card-body">
+                        <span class="card-tag">Trimming</span>
+                        <h3>The Trim — Make It Aerodynamic</h3>
+                        <p>Trim to 1/4 inch fat cap. Remove hard seam fat. Round all edges — no sharp corners. Cut off the deckle (where carcass was split). Think "little Maserati."</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-time">Curved boning knife</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </div>
+
+                <div class="card" onclick="openModal('brisket-season')">
+                    <div class="card-body">
+                        <span class="card-tag">Seasoning</span>
+                        <h3>Salt & Pepper — Nothing Else</h3>
+                        <p>50/50 kosher salt and 16-mesh black pepper by volume. Mustard slather as glue. Season from high for even coverage. Let sit 30-45 min before cooking.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-time">Simplicity wins</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </div>
+
+                <div class="card" onclick="openModal('brisket-cook')">
+                    <div class="card-body">
+                        <span class="card-tag">Cooking</span>
+                        <h3>The 12-Hour Cook</h3>
+                        <p>Start at 255°F. Spritz at 3 hours. Bump to 265°F at 5 hours. Wrap at 8-9 hours (end of stall) in butcher paper. Finish at 275-285°F. Rest until 140-150°F internal.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-time">Low and slow</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </div>
+
+                <div class="card" onclick="openModal('brisket-stall')">
+                    <div class="card-body">
+                        <span class="card-tag">Science</span>
+                        <h3>Understanding The Stall</h3>
+                        <p>At 160-170°F internal, muscle tightens and sweats — evaporative cooling. Do not panic! Bump temps to 280°F. Wrap at the tail end of stall when bark is set.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-time">~165°F internal</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </div>
+
+                <div class="card" onclick="openModal('brisket-slice')">
+                    <img src="https://kimi-web-img.moonshot.cn/img/media-cdn2.greatbritishchefs.com/570bc3c375263e227b903cee388ed5328dd3048b.jpg" alt="Sliced brisket" class="card-image">
+                    <div class="card-body">
+                        <span class="card-tag">Slicing</span>
+                        <h3>The Money Shot</h3>
+                        <p>Split point from flat. Slice flat against grain, pencil-thick. Slice point into burnt ends. Every bite should have bark, fat, meat, salt, and pepper. Serve immediately.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-time">Against the grain</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </div>
             </div>
-            <div class="quote-block">
-                "You really only learn how to make good barbecue by making bad barbecue. Definitely don't invite a lot of friends over for your first brisket."
-                <cite>— Aaron Franklin</cite>
-            </div>
-            <div class="quote-block">
-                "What you're really doing is getting flavor from the fire. That's why Central Texas barbecue tastes like Central Texas barbecue — it's because of the wood."
-                <cite>— Aaron Franklin</cite>
-            </div>
-            <div class="quote-block">
-                "I feel incredibly honored to be able to run a restaurant that people line up for hours and hours and hours. It's just a piece of meat and it's just fire. Nothing special, but it's the journey of how you get to the end."
-                <cite>— Aaron Franklin</cite>
+        </div>
+
+        <div class="tab-content" id="tab-grilling">
+            <div class="cards-grid">
+                <div class="card" onclick="openModal('grill-steak')">
+                    <div class="card-body">
+                        <span class="card-tag">Steak</span>
+                        <h3>Hot & Fast Steak</h3>
+                        <p>Create hot and cool zones. Flip frequently — do not believe "flip once" myth. Move to cool zone to control cook. Feel for doneness, do not trust thumb test.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-time">Zone cooking</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </div>
+
+                <div class="card" onclick="openModal('grill-veg')">
+                    <div class="card-body">
+                        <span class="card-tag">Vegetables</span>
+                        <h3>Charred Vegetables</h3>
+                        <p>Use a charcoal chimney for extreme heat. Broccolini: stems over flame, crowns off to side. Oil, salt, quick char. Think texture — crisp inside, charred outside.</p>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-time">2-second char</span>
+                        <span class="card-arrow">→</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- QUIZ SECTION -->
-    <section id="quiz" class="section">
-        <div class="section-header">
-            <h2>🎯 Knowledge Check</h2>
-            <p>Test your understanding of Franklin's barbecue principles</p>
+    <section class="section" id="techniques">
+        <div class="section-header fade-in">
+            <span class="section-number">04</span>
+            <h2>Essential Techniques</h2>
+            <p>Interactive tools and guides for temperature, timing, and the critical details.</p>
         </div>
 
-        <div class="quiz-container">
-            <div class="quiz-question" id="q1">
-                <h4>1. What is the ideal thickness of fat to leave on a trimmed brisket?</h4>
-                <div class="quiz-options">
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q1')">½ inch — more is better for moisture</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q1')">¼ inch — pillowy soft fat only</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q1')">⅛ inch — trim it all off</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q1')">1 inch — traditional Texas style</button>
+        <div class="cards-grid fade-in">
+            <div class="card" onclick="openModal('tech-temps')">
+                <div class="card-body">
+                    <span class="card-tag">Temperature</span>
+                    <h3>Temperature Guide</h3>
+                    <div style="margin-top: 1rem;">
+                        <div class="temp-gauge">
+                            <div class="temp-value">225°</div>
+                            <div style="flex:1">
+                                <div class="temp-label">Low & Slow Start</div>
+                                <div class="temp-bar"><div class="temp-fill low" style="width:30%"></div></div>
+                            </div>
+                        </div>
+                        <div class="temp-gauge">
+                            <div class="temp-value">255°</div>
+                            <div style="flex:1">
+                                <div class="temp-label">Brisket Start Zone</div>
+                                <div class="temp-bar"><div class="temp-fill medium" style="width:50%"></div></div>
+                            </div>
+                        </div>
+                        <div class="temp-gauge">
+                            <div class="temp-value">270°</div>
+                            <div style="flex:1">
+                                <div class="temp-label">Pork & Ribs Zone</div>
+                                <div class="temp-bar"><div class="temp-fill medium" style="width:65%"></div></div>
+                            </div>
+                        </div>
+                        <div class="temp-gauge">
+                            <div class="temp-value">285°</div>
+                            <div style="flex:1">
+                                <div class="temp-label">Post-Stall Push</div>
+                                <div class="temp-bar"><div class="temp-fill high" style="width:85%"></div></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="quiz-feedback" id="f1"></div>
             </div>
 
-            <div class="quiz-question" id="q2">
-                <h4>2. What does "thin blue smoke" indicate?</h4>
-                <div class="quiz-options">
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q2')">The fire is too hot and dangerous</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q2')">You need to add more wood immediately</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q2')">Clean combustion at 600-680°F — ideal flavor</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q2')">The meat is burning</button>
+            <div class="card" onclick="openModal('tech-rub')">
+                <div class="card-body">
+                    <span class="card-tag">Calculator</span>
+                    <h3>Rub Calculator</h3>
+                    <div class="calculator" style="margin-top: 1rem;">
+                        <div class="calc-row">
+                            <span class="calc-label">Kosher Salt (50%)</span>
+                            <span class="calc-value">1/2 cup</span>
+                        </div>
+                        <div class="calc-row">
+                            <span class="calc-label">16-Mesh Black Pepper (50%)</span>
+                            <span class="calc-value">1/2 cup</span>
+                        </div>
+                        <div class="calc-row">
+                            <span class="calc-label">Paprika (optional, for pork)</span>
+                            <span class="calc-value">1 tbsp</span>
+                        </div>
+                        <div class="calc-row">
+                            <span class="calc-label">Coverage</span>
+                            <span class="calc-value">1 brisket</span>
+                        </div>
+                    </div>
+                    <p style="margin-top: 1rem; color: var(--ash); font-size: 0.9rem;">Adjust for more meat: Double for 2 briskets, triple for 3. Shake in a shaker with holes for even distribution.</p>
                 </div>
-                <div class="quiz-feedback" id="f2"></div>
             </div>
 
-            <div class="quiz-question" id="q3">
-                <h4>3. Why does Franklin prefer butcher paper over foil for wrapping brisket?</h4>
-                <div class="quiz-options">
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q3')">It's cheaper and easier to find</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q3')">Foil is too "pot roasty" — paper breathes better</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q3')">Paper adds flavor to the meat</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q3')">Foil is only for competition barbecue</button>
+            <div class="card" onclick="openModal('tech-sauce')">
+                <div class="card-body">
+                    <span class="card-tag">Recipe</span>
+                    <h3>Franklin's BBQ Sauce</h3>
+                    <div class="calculator" style="margin-top: 1rem;">
+                        <div class="calc-row">
+                            <span class="calc-label">Tallow (or oil/lard)</span>
+                            <span class="calc-value">2 tbsp</span>
+                        </div>
+                        <div class="calc-row">
+                            <span class="calc-label">Yellow onion, diced</span>
+                            <span class="calc-value">1/3 cup</span>
+                        </div>
+                        <div class="calc-row">
+                            <span class="calc-label">Garlic cloves</span>
+                            <span class="calc-value">4</span>
+                        </div>
+                        <div class="calc-row">
+                            <span class="calc-label">Light brown sugar</span>
+                            <span class="calc-value">1 cup</span>
+                        </div>
+                        <div class="calc-row">
+                            <span class="calc-label">Apple cider vinegar</span>
+                            <span class="calc-value">1 cup</span>
+                        </div>
+                        <div class="calc-row">
+                            <span class="calc-label">Organic ketchup</span>
+                            <span class="calc-value">2 cups</span>
+                        </div>
+                        <div class="calc-row">
+                            <span class="calc-label">Paprika, mustard powder, salt, pepper</span>
+                            <span class="calc-value">1 tsp each</span>
+                        </div>
+                        <div class="calc-row">
+                            <span class="calc-label">Worcestershire</span>
+                            <span class="calc-value">4 dashes</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="quiz-feedback" id="f3"></div>
             </div>
 
-            <div class="quiz-question" id="q4">
-                <h4>4. What is "the stall" and how do you handle it?</h4>
-                <div class="quiz-options">
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q4')">The smoker stops working — add charcoal</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q4')">The meat is done — pull it immediately</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q4')">Evaporative cooling at 160-170°F — bump temps to push through</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q4')">Open the smoker to cool it down</button>
+            <div class="card" onclick="openModal('tech-cooker')">
+                <div class="card-body">
+                    <span class="card-tag">Equipment</span>
+                    <h3>What Makes a Good Cooker</h3>
+                    <ul class="checklist" style="margin-top: 1rem;">
+                        <li onclick="toggleCheck(this)">
+                            <span class="check-circle"></span>
+                            <div class="checklist-text">
+                                <strong>Thick metal (1/4 inch)</strong>
+                                <span>Retains heat, lasts forever</span>
+                            </div>
+                        </li>
+                        <li onclick="toggleCheck(this)">
+                            <span class="check-circle"></span>
+                            <div class="checklist-text">
+                                <strong>Long firebox</strong>
+                                <span>Room to build and adjust fire</span>
+                            </div>
+                        </li>
+                        <li onclick="toggleCheck(this)">
+                            <span class="check-circle"></span>
+                            <div class="checklist-text">
+                                <strong>Single grate, no shelves</strong>
+                                <span>No dripping between meats</span>
+                            </div>
+                        </li>
+                        <li onclick="toggleCheck(this)">
+                            <span class="check-circle"></span>
+                            <div class="checklist-text">
+                                <strong>Thermometer at grate level</strong>
+                                <span>Not on the lid — that is wrong</span>
+                            </div>
+                        </li>
+                        <li onclick="toggleCheck(this)">
+                            <span class="check-circle"></span>
+                            <div class="checklist-text">
+                                <strong>Smokestack placement</strong>
+                                <span>Pulls heat across the grates</span>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <div class="quiz-feedback" id="f4"></div>
             </div>
-
-            <div class="quiz-question" id="q5">
-                <h4>5. What is the proper salt-to-pepper ratio for brisket rub?</h4>
-                <div class="quiz-options">
-                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q5')">50/50 by volume — kosher salt and 16 mesh pepper</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q5')">2:1 pepper to salt (like ribs)</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q5')">Just salt — pepper is too strong</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q5')">3:1 salt to pepper for thick cuts</button>
-                </div>
-                <div class="quiz-feedback" id="f5"></div>
-            </div>
-
-            <div class="quiz-question" id="q6">
-                <h4>6. Why should you NOT put a hot brisket in a cooler to rest?</h4>
-                <div class="quiz-options">
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q6')">It will get too cold and dry out</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q6')">It insulates and carries over too far, overcooking</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q6')">Coolers are not food-safe</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q6')">The plastic will melt</button>
-                </div>
-                <div class="quiz-feedback" id="f6"></div>
-            </div>
-
-            <div class="quiz-question" id="q7">
-                <h4>7. What is the visual cue that a pork butt is ready to wrap?</h4>
-                <div class="quiz-options">
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q7')">Internal temp reaches 165°F</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q7')">The fat cap splits open</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q7')">The bark is black and crispy</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q7')">It has been exactly 6 hours</button>
-                </div>
-                <div class="quiz-feedback" id="f7"></div>
-            </div>
-
-            <div class="quiz-question" id="q8">
-                <h4>8. What makes Central Texas barbecue taste like Central Texas?</h4>
-                <div class="quiz-options">
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q8')">The special dry rub with 11 secret spices</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q8')">The mesquite wood used exclusively</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, true, 'q8')">Post oak — a white oak with less tannic acid, sweeter flavor</button>
-                    <button class="quiz-option" onclick="checkAnswer(this, false, 'q8')">The limestone water in the area</button>
-                </div>
-                <div class="quiz-feedback" id="f8"></div>
-            </div>
-        </div>
-
-        <div class="interactive-module" style="text-align: center; margin-top: 2rem;">
-            <div id="quizScore" style="font-size: 1.2rem; color: var(--gold); font-weight: 600;"></div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <section class="section" id="story">
+        <div class="section-header fade-in">
+            <span class="section-number">05</span>
+            <h2>The Franklin Story</h2>
+            <p>From backyard dreams to world-famous barbecue — the journey of Aaron Franklin.</p>
+        </div>
+
+        <div class="cards-grid fade-in">
+            <div class="card" onclick="openModal('story-childhood')">
+                <div class="card-body">
+                    <span class="card-tag">Origins</span>
+                    <h3>Childhood in Bryan, Texas</h3>
+                    <p>Sitting on grandpa's lap at a domino-playing barbecue joint. The smell of grease, smoke, and yellowed ceiling tiles. That was the first barbecue memory.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">Age 4-5</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <div class="card" onclick="openModal('story-restaurant')">
+                <div class="card-body">
+                    <span class="card-tag">Teens</span>
+                    <h3>Family Restaurant</h3>
+                    <p>At age 10, prepping at his parents' barbecue restaurant. Cutting onions, slicing lemons, working the sides. Falling in love with the fire.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">Age 10</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <div class="card" onclick="openModal('story-first')">
+                <div class="card-body">
+                    <span class="card-tag">The Spark</span>
+                    <h3>The First Brisket</h3>
+                    <p>A $99 offset smoker from a sporting goods store. A 99 cents/lb grocery store brisket. Drinking a beer, watching the fire — "I think I want to open a barbecue place."</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">Age 24</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <div class="card" onclick="openModal('story-trailer')">
+                <div class="card-body">
+                    <span class="card-tag">Hustle</span>
+                    <h3>The $300 Trailer</h3>
+                    <p>A 1971 Aristocrat trailer from Craigslist. Gutted, redesigned, parked at a coffee roaster. Opened December 2009 with $28 in the bank.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">2009</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <div class="card" onclick="openModal('story-scale')">
+                <div class="card-body">
+                    <span class="card-tag">Growth</span>
+                    <h3>Scaling Up</h3>
+                    <p>From 3 briskets a day to 106. From 12-brisket cookers to 1000-gallon pits. The line determined how fast cookers could be built. Now 40,000 lbs of brisket per month.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">Today</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+
+            <div class="card" onclick="openModal('story-philosophy')">
+                <div class="card-body">
+                    <span class="card-tag">Legacy</span>
+                    <h3>Still Learning</h3>
+                    <p>"I never really set out to be the best. And I am not the best and I never will be. But I am pretty happy with what I have been able to learn." The journey continues.</p>
+                </div>
+                <div class="card-footer">
+                    <span class="card-time">Ongoing</span>
+                    <span class="card-arrow">→</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <footer class="footer">
-        <p>Based on Aaron Franklin's MasterClass on Texas-Style Barbecue</p>
-        <p style="margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.6;">Interactive educational application • Not affiliated with Franklin Barbecue or MasterClass</p>
+        <p class="quote">"You really only learn how to make good barbecue by making bad barbecue."</p>
+        <p>— Aaron Franklin</p>
+        <p style="margin-top: 2rem; font-size: 0.8rem;">
+            Interactive guide based on Aaron Franklin's MasterClass on Texas Barbecue<br>
+            Built for educational purposes • All content derived from the original transcript
+        </p>
     </footer>
 
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" id="modalContent" onclick="event.stopPropagation()">
+            <!-- Content injected via JS -->
+        </div>
+    </div>
+
     <script>
-        // Navigation
-        function showSection(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-            // Find the nav link that matches and activate it
-            document.querySelectorAll('.nav-link').forEach(l => {
-                if(l.getAttribute('onclick') && l.getAttribute('onclick').includes("'" + id + "'")) {
-                    l.classList.add('active');
+        // Modal Data
+        const modalData = {
+            'philosophy-intro': {
+                title: 'Cooking with Heart',
+                content: `<div class="highlight-box"><p>"Even as a kid, I could kind of sense the amount of love that went into this food. And that is the premise of barbecue. It is like you cook with your heart. You pour your heart and soul into this thing."</p></div>
+                <h3>The Emotional Core</h3>
+                <p>Franklin's philosophy centers on the idea that barbecue is fundamentally an act of love. The long hours, the careful attention to fire, the meticulous trimming — all of it is a form of expression.</p>
+                <p>He believes that even if you fall short technically, "the spirit that is behind it and the soul that that represents" is what truly matters. This is why people line up for hours at Franklin Barbecue — they can taste the care.</p>
+                <h3>Teaching Philosophy</h3>
+                <p>When training new cooks, Franklin does not just tell them what to do. He quizzes them:</p>
+                <ul><li>"Pick up this log. What does it feel like?"</li><li>"What do you think it is going to do?"</li><li>"How do you look at a fire?"</li></ul>
+                <p>This Socratic method builds intuition rather than just rote memorization. He wants cooks to <em>think</em> about fire, not just manage it.</p>`
+            },
+            'philosophy-process': {
+                title: 'The Journey Matters',
+                content: `<div class="highlight-box"><p>"It is just a piece of meat and it is just fire. Nothing special, but it is the journey of how you get to the end and then it is the conversations that you get to have at the end of it."</p></div>
+                <h3>Barbecue as Culture</h3>
+                <p>Franklin breaks barbecue down into three parts:</p>
+                <ul><li><strong>Culture</strong> — The traditions, the regions, the history of Central Texas</li><li><strong>Process</strong> — The fire, the smoke, the timing, the technique</li><li><strong>Food</strong> — The meat, the seasoning, the final product</li></ul>
+                <p>But the fourth element, often unspoken, is <strong>community</strong>. Barbecue is meant to be shared. The hours spent tending fire create space for conversation and connection.</p>
+                <h3>Real Soul Food</h3>
+                <p>"It really means something." Franklin emphasizes that barbecue is not fast food or convenience. It is a commitment. The all-night cooks, the lost sleep, the constant attention — this is what makes it soul food.</p>`
+            },
+            'philosophy-learning': {
+                title: 'Embrace Mistakes',
+                content: `<div class="highlight-box"><p>"Just kind of be prepared to make mistakes. It is totally okay. It is just about learning."</p></div>
+                <h3>The Learning Curve</h3>
+                <p>Franklin is explicit: you will mess up. Your first brisket might be terrible. Your fire might get away from you. You might overseason or undercook. That is all part of the process.</p>
+                <p>The key is to document everything. Write down your temperatures, your times, your adjustments. Then after you eat, compare notes with results. This is how you improve.</p>
+                <h3>Franklin's First Brisket</h3>
+                <p>His first brisket was a 99-cent-per-pound grocery store cut. He had no thermometer, no idea about temperatures, and bought wood from the grocery store. "It was doomed from the beginning." But everybody said it was great — and that encouragement kept him going.</p>
+                <div class="tip-box"><strong>Pro Tip:</strong> Keep a notebook. Write down your game plan before cooking, then note what actually happened. Over time, you will see patterns and improve.</div>`
+            },
+            'fire-building': {
+                title: 'Building the Foundation Fire',
+                content: `<h3>The Log Cabin Method</h3>
+                <p>Franklin's specific technique for starting a fire:</p>
+                <ul><li>Pick out logs that fit your round firebox</li><li>One dense log in the middle for the base</li><li>Dry small split pieces around it</li><li>Two wedge pieces as foundation</li><li>Space top pieces with 1-inch gaps for airflow</li></ul>
+                <p>This creates a "basket weave" scenario where flames can travel through the gaps, igniting everything quickly. The dense middle log will not burn fast — it creates a coal bed while the lighter pieces burn quickly.</p>
+                <h3>Starting the Fire</h3>
+                <p>Use greasy butcher paper (saved from wrapping briskets) or oil-soaked paper. Build a loose roll about 3 inches from the back of the wood stack. Light it and watch.</p>
+                <p>Within 30 minutes, you should reach 275-300°F. This is your time to season the meat, grab a beer, and line up firewood.</p>
+                <div class="tip-box"><strong>Pro Tip:</strong> Grapeseed oil works well for soaking paper if you do not have greasy butcher paper.</div>`
+            },
+            'fire-wood': {
+                title: 'Post Oak & Wood Selection',
+                content: `<h3>Why Post Oak?</h3>
+                <p>Post oak is a white oak with less tannic acid than other oaks. This gives it a sweeter flavor — think wine barrels and bourbon. It has a nice heat curve and burns cleanly.</p>
+                <p>Central Texas barbecue tastes like Central Texas because of this wood. It really only grows around central Texas and throughout the south.</p>
+                <h3>Aging Wood</h3>
+                <p>The sweet spot is 1-2 years of aging. Green wood (freshly cut) has too much moisture. Overly dry wood (rotting for years) has nothing left to burn.</p>
+                <p>Develop a feel: pick up a piece and guess its density and moisture. Heavy = more moisture = slower burn. Light = dry = quick burn.</p>
+                <div class="warning-box"><strong>Avoid:</strong> Kiln-dried wood. It is baked in an oven and loses much of its flavor. Source naturally aged hardwoods.</div>`
+            },
+            'fire-management': {
+                title: 'Working the Fire',
+                content: `<h3>Proactive vs. Reactive</h3>
+                <p>The art of fire is guessing what your needs are before you get there. Time your logs so as one fire dies, another catches. This keeps you in your lawn chair instead of constantly scrambling.</p>
+                <p>Franklin aims to keep his cooker within 5°F. When he was cooking ribs daily at the restaurant, he aimed for 3°F precision.</p>
+                <h3>Reading the Wood</h3>
+                <p>Every piece of wood is different. Some catch fast and die quick. Some smolder then explode. Some burn slow and steady. You are playing a guessing game — and getting better at it over time.</p>
+                <p>Listen for pops and cracks. That tells you the wood is burning rapidly, expanding gases. No sound might mean it is not catching properly.</p>
+                <div class="tip-box"><strong>Pro Tip:</strong> On a cold day, keep coals at the back of the firebox to pre-warm air before it hits the fire. The fire works less hard.</div>`
+            },
+            'fire-smoke': {
+                title: 'Reading the Smoke',
+                content: `<h3>Clean vs. Dirty Smoke</h3>
+                <p>At 600-680°F combustion, wood reaches full combustion and smoke becomes water vapor. This is the clean flavor you want. Below that, you get oily, creosote-heavy smoke that lays on your tongue.</p>
+                <p>Blue, thin smoke is good. Brown or black billowy smoke is bad. White puffy smoke means the wood is still catching.</p>
+                <h3>What to Do About Bad Smoke</h3>
+                <p>If you see bad smoke, do not panic. A few minutes of bad smoke over an 8-hour cook will not ruin anything. But hours of it will.</p>
+                <p>Fix it by: giving the fire more air (open the door slightly), blowing on it, or placing a smaller already-lit piece next to a stubborn log to "jump" the flame.</p>
+                <div class="tip-box"><strong>Remember:</strong> Fresh wood always smokes at first. Let it catch and burn naturally. Do not bury it in coals or use a fan to force it.</div>`
+            },
+            'fire-offset': {
+                title: 'Offset Cooker Mechanics',
+                content: `<h3>How It Works</h3>
+                <p>Fire in the firebox. Heat travels through a small opening into the cook chamber. A metal flap (tuning plate) forces heat to curl and spin like a tornado before exiting through the smokestack.</p>
+                <p>This creates chaotic airflow that dries the surface of the meat, forming bark. That is why you spritz — to combat the drying effect of all that moving air.</p>
+                <h3>No Dampers Needed</h3>
+                <p>Franklin's cookers have no dampers on the smokestack or firebox door. Control is manual: open the door for more air, close it for less. The massive airflow pulls heat through naturally.</p>
+                <p>The smokestack is your guide. Watch it — clear heat means good combustion. Billowy smoke means something needs attention.</p>`
+            },
+            'fire-tips': {
+                title: 'Pro Fire Tips',
+                content: `<h3>Advanced Techniques</h3>
+                <ul><li><strong>Greasy butcher paper:</strong> Save paper from wrapping briskets. It is pre-loaded with fat and ignites beautifully.</li><li><strong>Pre-warming air:</strong> On cold days, rake coals to the back of the firebox so incoming air warms before hitting the fire.</li><li><strong>Laying logs flat:</strong> Decreases airflow underneath, slowing the burn. Good for backing off 5°F.</li><li><strong>Standing logs up:</strong> Increases airflow and heat. Good for recovering lost temperature.</li><li><strong>The guessing game:</strong> Time your log placement so the next log catches just as the current one fades.</li></ul>
+                <div class="tip-box"><strong>Key Insight:</strong> You cannot push air into a fire, but you can pull it through. Offset cookers are designed to pull massive amounts of air — use that to your advantage.</div>`
+            },
+            'pork-overview': {
+                title: 'Pork Butt — The Forgiving Cut',
+                content: `<h3>Why Pork Butt?</h3>
+                <p>Pork butt (actually the shoulder) is inexpensive, easy to cook, and very forgiving. It has lots of fat, connective tissue, and a bone. You just cook it until it is really, really tender.</p>
+                <p>It is a great practice cut. If you mess up a little, it is still going to be good. Throw some vinegar on it, add sauce, make a sandwich — it is always delicious.</p>
+                <h3>Bone-In vs. Bone-Out</h3>
+                <p>Always get bone-in. The shoulder blade bone is your tenderness test — if you can twist it and slide it out easily, it is done. Bone-out butts are butterflied and harder to cook evenly.</p>
+                <h3>Seasoning</h3>
+                <p>Equal parts kosher salt and black pepper, plus a little paprika for color. Go heavy — it all gets pulled and mixed together. Mustard slather helps the rub stick.</p>`
+            },
+            'pork-timeline': {
+                title: 'Pork Butt Cook Schedule',
+                content: `<h3>Sample Timeline (Dinner at 6:30 PM)</h3>
+                <div class="timeline">
+                    <div class="timeline-item"><h4>7:30 AM — Meat On</h4><p>Cooker at 270°F, fat side up, water pan filled</p></div>
+                    <div class="timeline-item"><h4>10:30 AM — First Spritz</h4><p>Every hour with cider vinegar, water, or beer</p></div>
+                    <div class="timeline-item"><h4>3:30 PM — Wrap in Foil</h4><p>Fat cap has split, bark is set. Wrap tight, dull side out.</p></div>
+                    <div class="timeline-item"><h4>5:30 PM — Probe for Doneness</h4><p>Target 203-205°F. Should feel like a bag of melted butter.</p></div>
+                    <div class="timeline-item"><h4>5:30 PM — Pull & Rest</h4><p>Rest 45-60 minutes wrapped. Then pull apart with fingers.</p></div>
+                </div>
+                <div class="tip-box"><strong>Note:</strong> This is a loose guideline. Every piece of meat is different. The only rule is: cook until tender.</div>`
+            },
+            'pork-checklist': {
+                title: 'Pork Butt Checklist',
+                content: `<p>Click items to check them off as you prep:</p>
+                <ul class="checklist">
+                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Bone-in pork butt</strong><span>Shoulder blade bone for tenderness test</span></div></li>
+                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Equal parts S&P + paprika</strong><span>Heavy seasoning — it all gets mixed in</span></div></li>
+                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Mustard slather</strong><span>Helps bark adhere, will not be tasted</span></div></li>
+                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Water pan in cooker</strong><span>Maintains moisture throughout cook</span></div></li>
+                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Spritz every hour after 3 hrs</strong><span>Cider vinegar, water, or beer</span></div></li>
+                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Wrap when fat cap splits</strong><span>Visual cue: ~8 hours in</span></div></li>
+                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Rest 45-60 minutes</strong><span>Carryover cooking continues</span></div></li>
+                </ul>`
+            },
+            'ribs-overview': {
+                title: 'Spare Ribs — The Intermediate Cut',
+                content: `<h3>Why Full Spares?</h3>
+                <p>Franklin prefers full spare ribs (not St. Louis cut) because they have more fat and marbling. Fat = flavor and moisture during a long cook.</p>
+                <p>Look for ribs with good marbling visible in the package. Avoid "shiners" — ribs where the meat has been cut too close to the bone.</p>
+                <h3>Trimming</h3>
+                <p>Cut off the sternum (the long bone at the end). Trim the skirt (the thin flap of meat on the back). Round the edges for aerodynamics — Franklin likes his meats to look like "little Maseratis."</p>
+                <h3>The Membrane</h3>
+                <p>Franklin leaves the membrane on. It takes hours to remove, and it actually protects the ribs from overcooking while maintaining texture. Rub penetrates through it just fine.</p>`
+            },
+            'ribs-technique': {
+                title: "Franklin's Rib Method",
+                content: `<h3>The Modified 3-2-1 Method</h3>
+                <p>Franklin's approach is similar to the classic 3-2-1 but with his own twists:</p>
+                <ul><li><strong>3 hours unwrapped</strong> at 270°F — bark formation</li><li><strong>Sauce and wrap</strong> for 2 hours — tenderizing, fat rendering</li><li><strong>Unwrap for 1 hour</strong> — set the sauce, final texture</li></ul>
+                <h3>The Tenderness Test</h3>
+                <p>Pick up the rack with a towel. Feel how the bones fall over your fingers. The test spot is at the third rib cartilage — when that feels soft and pliable, they are done.</p>
+                <p>Franklin likes his ribs very tender — "not quite falling off the bone, but pretty close."</p>
+                <div class="tip-box"><strong>Pro Tip:</strong> When wrapping, double-layer the foil over the bones to prevent tearing. Walk your fingers around the foil to keep it tight and seal in juices.</div>`
+            },
+            'ribs-sauce': {
+                title: 'Rib Sauce Formula',
+                content: `<h3>The Franklin Rib Sauce</h3>
+                <p>Take your favorite commercial or homemade sauce and dilute it 1:1 with apple cider vinegar. This does two things:</p>
+                <ul><li>Thins it so it spreads evenly</li><li>Reduces sugar content so it does not burn on the cooker</li></ul>
+                <h3>Application</h3>
+                <p>Warm the sauce before applying. Cold sauce on hot ribs shocks the meat and undoes your careful temperature work.</p>
+                <p>Spritz first to wash off excess smoke and see the true color. Then apply sauce while wet. Let it set for 10-15 minutes before wrapping.</p>
+                <div class="warning-box"><strong>Warning:</strong> High-sugar sauces burn easily. If your sauce is sweet, dilute more and cook at lower temps.</div>`
+            },
+            'brisket-selection': {
+                title: 'Choosing the Perfect Brisket',
+                content: `<h3>Grade & Breed</h3>
+                <p>Franklin prefers <strong>Prime</strong> grade <strong>Angus</strong> beef. Prime has the most marbling. Angus has a more "beefy" flavor than Wagyu, whose fat melts too quickly.</p>
+                <p>Avoid "select" grade — it may have no fat at all. Avoid frozen briskets — ice crystals tear fibers and make the meat mushy.</p>
+                <h3>Visual Inspection</h3>
+                <p>Look for:</p>
+                <ul><li>Thick flat (the lean end) — thin flats dry out</li><li>Good marbling visible when you flip it over</li><li>Floppy texture — rigid briskets may lack fat</li><li>Minimal blood in the cryovac — excessive blood means it was frozen</li></ul>
+                <div class="tip-box"><strong>Franklin's Ratio:</strong> A good plate of barbecue is 1/3 quality meat, 1/3 skill, and 1/3 luck. Start with the best meat you can afford.</div>`
+            },
+            'brisket-trim': {
+                title: 'The Trim — Make It Aerodynamic',
+                content: `<h3>Tools</h3>
+                <p>Use a curved boning knife. The curve helps you get into seams. Flexible tip, rigid spine — like a fillet knife but taller.</p>
+                <h3>The Goal</h3>
+                <p>Remove hard fat, shape the brisket into a "little sports car," and leave about 1/4 inch of soft, pillowy fat cap. Round all edges — sharp corners burn.</p>
+                <h3>Key Cuts</h3>
+                <ul><li><strong>Deckle:</strong> Remove the hard fat where the carcass was split — it will not render</li><li><strong>Seam fat:</strong> Remove excess between the flat and point, but leave some for structure</li><li><strong>Weird muscles:</strong> Processing plants sometimes clip extra muscles on — remove them</li><li><strong>Edges:</strong> Round everything for airflow</li></ul>
+                <div class="warning-box"><strong>Do Not:</strong> Trim too much seam fat or the point will collapse during cooking. Leave structural fat.</div>`
+            },
+            'brisket-season': {
+                title: 'Salt & Pepper — Nothing Else',
+                content: `<h3>The Rub</h3>
+                <p>50/50 by <strong>volume</strong> (not weight):</p>
+                <ul><li>Kosher salt — thick grain, coarse</li><li>16-mesh black pepper (also called "cafe grind")</li></ul>
+                <p>The similar granule sizes help them stay mixed in the shaker. 16-mesh means it fits through a 1/16-inch screen.</p>
+                <h3>Application</h3>
+                <p>Mustard slather first (Franklin doubts you can taste it after 12 hours, but it acts as glue). Season from high for even coverage — think "typewriter" motion. Pat down gently.</p>
+                <p>Let sit 30-45 minutes before cooking so the salt can start pulling moisture and the rub melts into the surface.</p>
+                <div class="tip-box"><strong>Pro Tip:</strong> Franklin travels with his shaker. The holes and the wrist motion are calibrated for even distribution. Practice the swirl-and-pivot technique.</div>`
+            },
+            'brisket-cook': {
+                title: 'The 12-Hour Cook',
+                content: `<h3>Sample Timeline (Dinner at 5-6 PM)</h3>
+                <div class="timeline">
+                    <div class="timeline-item"><h4>2:00 AM — Meat On</h4><p>Cooker at 255°F. Point toward fire. Water pan filled with hot water.</p></div>
+                    <div class="timeline-item"><h4>5:00 AM — First Check</h4><p>Spritz edges. Check bark formation. Adjust fire if needed.</p></div>
+                    <div class="timeline-item"><h4>9:00 AM — Ramp Up</h4><p>Bump cooker to 280°F to push through the approaching stall.</p></div>
+                    <div class="timeline-item"><h4>10:00-11:00 AM — Wrap</h4><p>At end of stall, bark is set. Wrap in butcher paper (not foil). Point toward fire.</p></div>
+                    <div class="timeline-item"><h4>2:00 PM — Pull & Rest</h4><p>Rest until internal temp drops to 140-150°F. 40+ minutes.</p></div>
+                </div>
+                <div class="tip-box"><strong>Key Principle:</strong> Start low to protect edges. Bump up gradually. Wrap at the end of stall. Rest properly.</div>`
+            },
+            'brisket-stall': {
+                title: 'Understanding The Stall',
+                content: `<h3>What Is The Stall?</h3>
+                <p>At around 160-170°F internal, the muscle fibers tighten and squeeze out moisture. This moisture evaporates from the surface, cooling the meat — just like sweating cools your skin.</p>
+                <p>The temperature can plateau for hours. This is completely normal. Do not panic.</p>
+                <h3>How to Handle It</h3>
+                <ul><li><strong>Bump temperatures</strong> to 280°F to give the cooker momentum</li><li><strong>The moisture protects the meat</strong> from burning at higher temps</li><li><strong>Wrap at the tail end</strong> of the stall when bark is fully set</li></ul>
+                <h3>Why Not Wrap Earlier?</h3>
+                <p>Wrapping too early softens the bark too much. Franklin wants the bark to be "a little too crunchy" when he wraps, because the steam during the wrapped phase will soften it to the perfect texture.</p>
+                <div class="warning-box"><strong>Do Not:</strong> Pull at 165°F! That is right when the stall begins. The meat will be tough, dry, and chalky. Keep going to 195-205°F.</div>`
+            },
+            'brisket-slice': {
+                title: 'The Money Shot',
+                content: `<h3>Before Slicing</h3>
+                <p>Rest until internal temp drops to 140-150°F. Do not unwrap during rest — keep the steam and juices contained. Franklin can smell whether a brisket was properly rested the moment he walks into the restaurant.</p>
+                <h3>The Split</h3>
+                <p>Separate the flat from the point along the seam fat. The flat gives you lean slices. The point gives you moist slices and burnt ends.</p>
+                <h3>Slicing Technique</h3>
+                <ul><li>Slice against the grain</li><li>Flat: pencil-thick slices (about 1/4 inch)</li><li>Use a long serrated bread knife — $25 is fine</li><li>Hold the meat together with your hand as you slice</li><li>Do not saw — let the knife do the work</li></ul>
+                <h3>The Test</h3>
+                <p>A perfect slice should not fall apart under its own weight, but should pull apart tenderly when tugged. Every bite should have bark, fat, meat, salt, and pepper.</p>
+                <div class="tip-box"><strong>Pro Tip:</strong> Slice just before serving. Once sliced, the meat begins oxidizing immediately. Gather your guests and slice together.</div>`
+            },
+            'grill-steak': {
+                title: 'Hot & Fast Steak',
+                content: `<h3>Zone Cooking</h3>
+                <p>Create a hot zone (directly over coals) and a cool zone (off to the side). This gives you control — move the steak to cool zone if it is cooking too fast.</p>
+                <h3>The Flip Myth</h3>
+                <p>Forget "flip only once." Flip frequently! This gives you more even cooking and lets you monitor both sides. Franklin moves steaks around constantly.</p>
+                <h3>Doneness</h3>
+                <p>There is no reliable temperature or thumb test. Every steak is different. You must develop feel through practice. Franklin's method: guess, pull, cut, learn. Over time, you will know.</p>
+                <div class="tip-box"><strong>Pro Tip:</strong> Rest the steak after cooking. If you cut immediately, steam escapes and takes moisture with it. 5-10 minutes is enough for a small steak.</div>`
+            },
+            'grill-veg': {
+                title: 'Charred Vegetables',
+                content: `<h3>The Charcoal Chimney Method</h3>
+                <p>For extreme heat, use a charcoal chimney with a grate on top. This is hotter than most grills and perfect for quick charring.</p>
+                <h3>Broccolini Technique</h3>
+                <p>Oil lightly, salt. Place stems over the hottest part, crowns off to the side. Keep moving — it can burn in 2 seconds. You want blistered char on the outside, crisp and fresh inside.</p>
+                <p>This is practice for brisket thinking: different zones, different cook times, protecting delicate parts while charring tough parts.</p>`
+            },
+            'tech-temps': {
+                title: 'Temperature Guide',
+                content: `<h3>Temperature Zones</h3>
+                <div class="temp-gauge"><div class="temp-value">225°</div><div style="flex:1"><div class="temp-label">Low & Slow Start</div><div class="temp-bar"><div class="temp-fill low" style="width:30%"></div></div></div></div>
+                <div class="temp-gauge"><div class="temp-value">255°</div><div style="flex:1"><div class="temp-label">Brisket Start Zone</div><div class="temp-bar"><div class="temp-fill medium" style="width:50%"></div></div></div></div>
+                <div class="temp-gauge"><div class="temp-value">270°</div><div style="flex:1"><div class="temp-label">Pork & Ribs Zone</div><div class="temp-bar"><div class="temp-fill medium" style="width:65%"></div></div></div></div>
+                <div class="temp-gauge"><div class="temp-value">285°</div><div style="flex:1"><div class="temp-label">Post-Stall Push</div><div class="temp-bar"><div class="temp-fill high" style="width:85%"></div></div></div></div>
+                <p style="margin-top:1rem;color:var(--ash)">Franklin works in 5°F increments. "255 means 255. It does not mean 258." Precision matters because you cannot troubleshoot what you cannot measure.</p>`
+            },
+            'tech-rub': {
+                title: 'Rub Calculator',
+                content: `<h3>Base Recipe (1 Brisket)</h3>
+                <div class="calculator">
+                    <div class="calc-row"><span class="calc-label">Kosher Salt (50% by volume)</span><span class="calc-value">1/2 cup</span></div>
+                    <div class="calc-row"><span class="calc-label">16-Mesh Black Pepper (50% by volume)</span><span class="calc-value">1/2 cup</span></div>
+                    <div class="calc-row"><span class="calc-label">Paprika (optional, for pork)</span><span class="calc-value">1 tbsp</span></div>
+                </div>
+                <h3>Scaling</h3>
+                <div class="calculator">
+                    <div class="calc-row"><span class="calc-label">2 Briskets</span><span class="calc-value">1 cup each</span></div>
+                    <div class="calc-row"><span class="calc-label">3 Briskets</span><span class="calc-value">1.5 cups each</span></div>
+                    <div class="calc-row"><span class="calc-label">Pork Butt (1)</span><span class="calc-value">Same as 1 brisket</span></div>
+                    <div class="calc-row"><span class="calc-label">Ribs (1 rack)</span><span class="calc-value">2-3 tbsp total</span></div>
+                </div>
+                <div class="tip-box"><strong>Mixing:</strong> Use a shaker with adjustable holes. The 16-mesh pepper and kosher salt have similar granule sizes, so they stay mixed better than fine table salt.</div>`
+            },
+            'tech-sauce': {
+                title: "Franklin's BBQ Sauce",
+                content: `<h3>The Recipe</h3>
+                <div class="calculator">
+                    <div class="calc-row"><span class="calc-label">Tallow (or oil/lard/bacon fat)</span><span class="calc-value">2 tbsp</span></div>
+                    <div class="calc-row"><span class="calc-label">Yellow onion, medium dice</span><span class="calc-value">1/3 cup</span></div>
+                    <div class="calc-row"><span class="calc-label">Garlic cloves, chopped</span><span class="calc-value">4</span></div>
+                    <div class="calc-row"><span class="calc-label">Light brown sugar</span><span class="calc-value">1 cup</span></div>
+                    <div class="calc-row"><span class="calc-label">Apple cider vinegar</span><span class="calc-value">1 cup</span></div>
+                    <div class="calc-row"><span class="calc-label">Organic ketchup</span><span class="calc-value">2 cups</span></div>
+                    <div class="calc-row"><span class="calc-label">Paprika</span><span class="calc-value">1 tsp</span></div>
+                    <div class="calc-row"><span class="calc-label">Mustard powder</span><span class="calc-value">1 tsp</span></div>
+                    <div class="calc-row"><span class="calc-label">Fine sea salt</span><span class="calc-value">1 tsp</span></div>
+                    <div class="calc-row"><span class="calc-label">Black pepper</span><span class="calc-value">1 tsp</span></div>
+                    <div class="calc-row"><span class="calc-label">Worcestershire sauce</span><span class="calc-value">4 dashes</span></div>
+                </div>
+                <h3>Method</h3>
+                <p>Sauté onion in tallow until soft. Add garlic. Add brown sugar and let melt. Add vinegar to cool. Add ketchup and spices. Simmer briefly. Blend until smooth. Let cool before storing.</p>
+                <div class="tip-box"><strong>For Ribs:</strong> Dilute this sauce 1:1 with apple cider vinegar for a thinner, less sugary application.</div>`
+            },
+            'tech-cooker': {
+                title: 'What Makes a Good Cooker',
+                content: `<h3>Key Features</h3>
+                <ul class="checklist">
+                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Thick metal (1/4 inch)</strong><span>Retains heat, lasts forever, resists weather</span></div></li>
+                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Long firebox</strong><span>Room to build, adjust, and pre-warm air</span></div></li>
+                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Single grate, no shelves</strong><span>No dripping between meats, even cooking</span></div></li>
+                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Thermometer at grate level</strong><span>Lid thermometers read way too hot</span></div></li>
+                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Smokestack placement</strong><span>Should pull heat across the meat, not straight up</span></div></li>
+                </ul>
+                <h3>Modifications</h3>
+                <p>If you have a cheap cooker, you can improve it:</p>
+                <ul><li>Add a tuning plate (old license plate works) to deflect heat</li><li>Drill a hole at grate level for a proper thermometer</li><li>Extend the smokestack if it is too short</li></ul>
+                <div class="warning-box"><strong>Avoid:</strong> Thin metal cookers. They lose heat in cold/rain and make you work twice as hard.</div>`
+            },
+            'story-childhood': {
+                title: 'Childhood in Bryan, Texas',
+                content: `<div class="highlight-box"><p>"I would kind of be sitting on my grandpa's lap and he is playing dominoes. I would knock him over and stuff, but I could always smell like the smoke in the air."</p></div>
+                <p>Franklin's first barbecue memories were not about eating — they were about atmosphere. The dirt parking lot, the old pit built in the early 1900s, the grease, the haze, the yellowed ceiling tiles.</p>
+                <p>He remembers seeing the fire in the floor, the brick pit, the patina on the walls, the squeaky door. These sensory details imprinted on him before he ever cared about the food.</p>`
+            },
+            'story-restaurant': {
+                title: 'Family Restaurant',
+                content: `<p>At age 10, Franklin's parents operated a barbecue restaurant with a red brick fire pit in the floor. His mom ran the front, waiting tables. Aaron did food prep — cutting onions, slicing lemons, working sides.</p>
+                <p>He found himself drawn to the back, near the fires. He loved the smell, the sound, the feeling of being near live fire. Even though the work was exhausting for his parents, he discovered he enjoyed it.</p>
+                <p>They eventually realized it was too much work and closed it. But the seed was planted.</p>`
+            },
+            'story-first': {
+                title: 'The First Brisket',
+                content: `<div class="highlight-box"><p>"I remember sitting in the backyard and I was kind of drinking a beer, kind of hanging out, just watching the fire and just kind of analyzing. I was like, man, this is great. This I think this is what I want to do."</p></div>
+                <p>At 24, with his first apartment and a tiny backyard, Franklin bought a $99 offset smoker from a sporting goods store. It was thin metal, flawed, terrible — but it was all he could afford.</p>
+                <p>He called his dad for advice. "Just throw it on the cooker and cook it for a real long time and when it is really black, it is probably about ready."</p>
+                <p>That first brisket was black, and he had not even eaten it yet when he knew: "I think I want to open a barbecue place."</p>`
+            },
+            'story-trailer': {
+                title: 'The $300 Trailer',
+                content: `<p>Stacy (his wife) found a 1971 Aristocrat trailer on Craigslist for $300. They gutted it, redesigned it, and parked it at a coffee roaster's parking lot.</p>
+                <p>They opened in December 2009 with $28 in the bank. Franklin cooked 3 briskets for the first day. They made money at lunch, went out and bought more meat, stayed up all night cooking, and did it again.</p>
+                <p>Each day the bank account got a little bigger. And each day Franklin realized he knew less than he thought he did.</p>`
+            },
+            'story-scale': {
+                title: 'Scaling Up',
+                content: `<p>The line at Franklin Barbecue grew because they kept running out of food. The solution was always: build bigger cookers, faster.</p>
+                <p>From 3 briskets per day to 12, then 24, then 106. From 500-gallon cookers to 1000-gallon pits. Now they cook about 40,000 pounds of brisket per month, sourced from 50 ranches.</p>
+                <p>The line is still long. That is the nature of barbecue — it takes time, and there is only so much you can cook.</p>`
+            },
+            'story-philosophy': {
+                title: 'Still Learning',
+                content: `<div class="highlight-box"><p>"I never really set out to be the best. And I am not the best and I never will be. But I am pretty happy with what I have been able to learn."</p></div>
+                <p>After nine years, Franklin says he is still learning. The light bulbs are still going off. Every cook teaches something new.</p>
+                <p>He believes the difference between good and great barbecue is the personal aspect — the willingness to put in the hours, to lose sleep, to stare at fire until you understand it. That is what makes it special.</p>
+                <p>"You can only really get out of it what you put into it."</p>`
+            }
+        };
+
+        // Modal Functions
+        function openModal(key) {
+            const data = modalData[key];
+            if (!data) return;
+
+            const modal = document.getElementById('modalContent');
+            modal.innerHTML = `
+                <div class="modal-header">
+                    <h2>${data.title}</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    ${data.content}
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(e) {
+            if (e && e.target !== e.currentTarget) return;
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Checklist Toggle
+        function toggleCheck(el) {
+            el.classList.toggle('checked');
+        }
+
+        // Category Filter
+        function filterCategory(section, category) {
+            const cards = document.querySelectorAll('#' + section + '-cards .card');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            buttons.forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
                 }
             });
-            window.scrollTo(0, 0);
         }
 
-        // Progress bar
+        // Search Filter
+        function filterCards(section, query) {
+            const cards = document.querySelectorAll('#' + section + '-cards .card');
+            const lowerQuery = query.toLowerCase();
+
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(lowerQuery)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Navbar Show/Hide
+        let lastScroll = 0;
         window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            document.getElementById('progressBar').style.width = (winScroll / height) * 100 + '%';
+            const navbar = document.getElementById('navbar');
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 100) {
+                navbar.classList.add('visible');
+            } else {
+                navbar.classList.remove('visible');
+            }
+
+            lastScroll = currentScroll;
         });
 
-        // Fire simulator
-        const fireData = {
-            dense: { temp: '275°F', smoke: 'Clean → White initial', time: '40-60 min', color: 'linear-gradient(to top, #ff6b35 0%, #f7931e 40%, transparent 70%)', advice: 'Dense oak has moisture to burn out. It will smolder initially, then catch and provide steady, long-lasting heat. Great for the middle of a fire foundation or when you need 30-40 minutes of stable temps.' },
-            light: { temp: '300°F+', smoke: 'Quick blue', time: '10-15 min', color: 'linear-gradient(to top, #ff4500 0%, #ff6b35 30%, transparent 60%)', advice: 'Light, dry wood catches fast and burns hot. Use to quickly raise temps or start a fire. Will die fast — have your next log ready. Good for small cookers where you need responsive temperature control.' },
-            green: { temp: '200°F', smoke: 'Thick white/brown', time: 'Unpredictable', color: 'linear-gradient(to top, #666 0%, #999 50%, transparent 80%)', advice: 'Green wood has too much moisture. It will smolder, produce dirty smoke, and struggle to reach clean combustion. The moisture must boil off before the wood can properly burn. Avoid for cooking — only use if you have no alternative and give it extra air.' },
-            small: { temp: '250°F', smoke: 'Clean but brief', time: '5-10 min', color: 'linear-gradient(to top, #ff8c42 0%, #ffb347 30%, transparent 60%)', advice: 'Small splits are perfect for maintaining steady temps on small cookers. They burn quickly and cleanly. You will need to add them frequently (every 10-15 minutes) but you get very precise control. Ideal for the final hours of a cook.' }
-        };
-
-        function setFire(type) {
-            const data = fireData[type];
-            document.getElementById('fireVisual').style.background = data.color;
-            document.getElementById('tempVal').textContent = data.temp;
-            document.getElementById('smokeVal').textContent = data.smoke;
-            document.getElementById('timeVal').textContent = data.time;
-            document.getElementById('fireAdvice').style.display = 'block';
-            document.getElementById('fireAdvice').textContent = data.advice;
-            document.querySelectorAll('.log-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        // Smoke detail
-        const smokeDetails = {
-            white: 'White smoke is mostly water vapor. When you first add a log, it will always produce white smoke as the moisture in the wood heats up and evaporates. This is normal and temporary. Wait 5-10 minutes for the log to catch and the smoke to clear. If white smoke persists, the wood may be too green or the fire too cold.',
-            blue: 'Thin blue smoke is the holy grail. It indicates the fire is burning at 600-680°F with complete combustion. The smoke is actually becoming more water vapor than particulate matter. This imparts clean, transparent flavor that does not overpower the meat.',
-            brown: 'Brown, billowy smoke means incomplete combustion. The fire is starved of oxygen or the wood is too wet/dense. Creosote and other oil-soluble compounds are forming. This will deposit bitter, acrid flavors on the meat. If you see this, add air, use drier wood, or let the existing log burn more completely before adding another.',
-            black: 'Black smoke means the fire is severely oxygen-starved. This is the worst possible scenario. The meat will taste like an ashtray and the bitter flavor can ruin your palate for a day. Open the firebox door immediately, add air, and remove any smothering logs. Never choke a fire to control temperature.'
-        };
-
-        function showSmokeDetail(type) {
-            document.getElementById('smokeDetail').style.display = 'block';
-            document.getElementById('smokeDetail').textContent = smokeDetails[type];
-        }
-
-        // Timeline toggle
-        function toggleDetail(item) {
-            item.classList.toggle('expanded');
-        }
-
-        // Checklist toggle
-        function toggleCheck(item) {
-            item.classList.toggle('checked');
-        }
-
-        // Tab system
-        function showTab(id) {
-            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        // Anatomy
-        const anatomyInfo = {
-            flat: '<strong style="color:var(--gold)">The Flat (Lean)</strong><br><br>The leaner muscle that sits over the rib cage. It is thinner, cooks faster, and is prone to drying out. This is where your "lean" slices come from. It has less intramuscular fat, so it relies on the fat cap on top and careful spritzing to stay moist. The grain runs in one direction — always slice against it.',
-            point: '<strong style="color:var(--gold)">The Point (Moist/Fatty)</strong><br><br>The thicker, fattier muscle that sits on top of the flat. It has heavy marbling and more connective tissue. This is where burnt ends come from. It can handle more heat and longer cooking. The grain runs perpendicular to the flat, so you rotate 90 degrees when slicing.',
-            fatcap: '<strong style="color:var(--gold)">The Fat Cap</strong><br><br>The layer of fat on top (actually the bottom when the brisket is on the cow). Franklin trims to 1/4 inch of soft, pillowy fat. Hard, waxy fat will not render and tastes bad. Soft fat melts into the meat during the cook. On Franklin's cookers, the fat cap goes UP because the heat comes from the top.',
-            seam: '<strong style="color:var(--gold)">Seam Fat</strong><br><br>The fat between the flat and point muscles. It is thick, hard, and will not render during the cook. Franklin removes most of it during trimming because it creates a greasy, unappetizing layer in the final slice. Leave just enough for structural integrity so the point does not collapse.'
-        };
-
-        function showAnatomy(part) {
-            document.getElementById('anatomyInfo').innerHTML = anatomyInfo[part];
-            document.querySelectorAll('.anatomy-part').forEach(p => p.classList.remove('active'));
-            document.getElementById(part).classList.add('active');
-        }
-
-        // Brisket calculator
-        function calcBrisket() {
-            const dinner = parseInt(document.getElementById('dinnerTime').value);
-            const temp = parseInt(document.getElementById('cookTemp').value);
-            const size = parseInt(document.getElementById('brisketSize').value);
-
-            let cookTime = size === 15 ? 14 : size === 10 ? 10 : 12;
-            let wrapTime = 8;
-            let restTime = 1;
-
-            if (temp === 275) { cookTime -= 1; wrapTime -= 1; }
-            if (temp === 225) { cookTime += 2; wrapTime += 1; }
-
-            const onTime = dinner - cookTime - restTime;
-            const wrapTimeActual = onTime + wrapTime;
-
-            const formatTime = (h) => {
-                const ampm = h >= 12 ? 'PM' : 'AM';
-                const hr = h > 12 ? h - 12 : h === 0 ? 12 : h;
-                return hr + ':00 ' + ampm;
-            };
-
-            document.getElementById('planOutput').innerHTML = 
-                '<div class="calc-result-item"><span>Go on cooker:</span><strong style="color:var(--gold)">' + formatTime(onTime) + '</strong></div>' +
-                '<div class="calc-result-item"><span>Wrap at:</span><strong style="color:var(--gold)">' + formatTime(wrapTimeActual) + '</strong></div>' +
-                '<div class="calc-result-item"><span>Pull at:</span><strong style="color:var(--gold)">' + formatTime(dinner - restTime) + '</strong></div>' +
-                '<div class="calc-result-item"><span>Serve at:</span><strong style="color:var(--gold)">' + formatTime(dinner) + '</strong></div>' +
-                '<div class="calc-result-item"><span>Total cook:</span><strong>' + cookTime + ' hours</strong></div>' +
-                '<div class="calc-result-item"><span>Target temp:</span><strong>' + temp + '°F</strong></div>';
-        }
-        calcBrisket();
-
-        // Rub calculator
-        function calcRub() {
-            const weight = parseInt(document.getElementById('brisketWeight').value) || 12;
-            const salt = (weight * 0.5).toFixed(1);
-            const pepper = (weight * 0.5).toFixed(1);
-            const mustard = (weight * 0.3).toFixed(1);
-
-            document.getElementById('rubOutput').innerHTML = 
-                '<div class="calc-result-item"><span>Kosher Salt:</span><strong>' + salt + ' tbsp</strong></div>' +
-                '<div class="calc-result-item"><span>16 Mesh Pepper:</span><strong>' + pepper + ' tbsp</strong></div>' +
-                '<div class="calc-result-item"><span>Yellow Mustard:</span><strong>' + mustard + ' tbsp</strong></div>' +
-                '<div class="calc-result-item"><span>Ratio:</span><strong>1:1 by volume</strong></div>';
-        }
-        calcRub();
-
-        // Pork calculator
-        function calcPork() {
-            const dinner = parseInt(document.getElementById('porkDinner').value);
-            const onTime = dinner - 10 - 1;
-            const wrapTime = onTime + 8;
-
-            const formatTime = (h) => {
-                const ampm = h >= 12 ? 'PM' : 'AM';
-                const hr = h > 12 ? h - 12 : h === 0 ? 12 : h;
-                return hr + ':00 ' + ampm;
-            };
-
-            document.getElementById('porkOutput').innerHTML = 
-                '<div class="calc-result-item"><span>Go on cooker:</span><strong style="color:var(--gold)">' + formatTime(onTime) + '</strong></div>' +
-                '<div class="calc-result-item"><span>Wrap at:</span><strong style="color:var(--gold)">' + formatTime(wrapTime) + '</strong></div>' +
-                '<div class="calc-result-item"><span>Pull at:</span><strong style="color:var(--gold)">' + formatTime(dinner - 1) + '</strong></div>' +
-                '<div class="calc-result-item"><span>Serve at:</span><strong style="color:var(--gold)">' + formatTime(dinner) + '</strong></div>' +
-                '<div class="calc-result-item"><span>Smoke temp:</span><strong>270°F</strong></div>' +
-                '<div class="calc-result-item"><span>Target internal:</span><strong>203°F</strong></div>';
-        }
-        calcPork();
-
-        // Wood detail
-        const woodDetails = {
-            junky: '<strong>Junky Wood:</strong> This is your firestarter material. It is light, flaky, sawdusty — maybe from a tree that had beetle damage or water rot. It burns fast and irregularly. Perfect for building your initial coal bed because the meat is not on yet. Never use this once food is in the smoker — it produces unpredictable smoke.',
-            dense: '<strong>Dense Wood:</strong> The heavy log that surprises you when you pick it up. It has a solid core and will burn for 40-60 minutes. Use this when you need stability — early in the cook when you want clean flavors, or when you need a 30-minute break. It will smolder at first, then catch and provide steady heat. Time it to catch right as your previous log fades.',
-            wedge: '<strong>Wedge Wood:</strong> The strategic piece. Its shape lets you wedge it against the round wall of the firebox, holding it above the coals until you are ready. When you need heat, just roll it in. This is how you "pre-stage" logs without having them actively smoke. Great for maintaining rhythm without babysitting.',
-            small: '<strong>Small Splits:</strong> These are your precision tools. They catch in seconds, burn hot for 10-15 minutes, and let you dial in exact temperatures. On a small backyard cooker, these are essential — a big log would overshoot your temps and take forever to settle. You will use more of them, but you will have better control.'
-        };
-
-        function showWoodDetail(type) {
-            document.getElementById('woodDetail').style.display = 'block';
-            document.getElementById('woodDetail').innerHTML = woodDetails[type];
-        }
-
-        // Wood quality
-        const woodQuality = {
-            green: '<strong>Green Wood (Avoid):</strong> Freshly cut, straight off the tree. The moisture content is too high — the wood has to boil out its own water before it can reach combustion temperature. This produces thick, white, steamy smoke that never clears up. The meat will taste bitter and ashy. If you must use it, split it very small and give it maximum airflow. But really — find aged wood.',
-            perfect: '<strong>Seasoned Wood (Ideal):</strong> Aged 1-2 years in Texas climate. The moisture has evaporated naturally, but the wood structure is still intact. When you pick it up, it feels noticeably lighter than fresh-cut but still solid. It will catch within a few minutes, burn with thin blue smoke, and provide predictable heat curves. This is what Franklin uses exclusively at the restaurant.',
-            rotten: '<strong>Overly Dry/Rotted (Avoid):</strong> If it has been sitting in a backyard for 6 years, it is decomposed. It will feel unnaturally light, crumble in your hands, and turn to sawdust when split. There is nothing left to burn — no flavor compounds, no structure. It will flare and die instantly. Good for starting fires only, if that.'
-        };
-
-        function showWoodQuality(type) {
-            document.getElementById('woodQualityDetail').style.display = 'block';
-            document.getElementById('woodQualityDetail').innerHTML = woodQuality[type];
-        }
-
-        // Quiz
-        const quizAnswers = {
-            q1: { correct: 1, feedback: 'Correct! Franklin trims to 1/4 inch of soft, pillowy fat. Any more and it will not render properly, leaving waxy, unpleasant fat on the finished slice. The fat should melt between your fingers when raw.' },
-            q2: { correct: 2, feedback: 'Correct! Thin blue smoke appears at 600-680°F combustion temperatures. It is mostly water vapor and clean combustion byproducts, imparting transparent flavor that does not overpower the meat.' },
-            q3: { correct: 1, feedback: 'Correct! Foil creates a steam environment that makes the bark soggy and the meat "pot roasty." Butcher paper breathes, allowing some moisture escape while still protecting the meat. It soaks up grease and forms a protective barrier.' },
-            q4: { correct: 2, feedback: 'Correct! The stall is evaporative cooling — the meat sweats at 160-170°F, cooling itself. Bump your cooker temp to 280°F+ to push through. The moisture on the surface protects from burning during this phase.' },
-            q5: { correct: 0, feedback: 'Correct! 50/50 by volume (not weight) of kosher salt and 16 mesh black pepper. The granule sizes match so they distribute evenly in the shaker. 16 mesh means it fits through a 1/16 inch screen.' },
-            q6: { correct: 1, feedback: 'Correct! A cooler insulates the hot meat, causing carryover cooking to continue far too long. The brisket will overcook and become mushy. Rest on the counter until internal temp drops to 140-150°F.' },
-            q7: { correct: 1, feedback: 'Correct! The fat cap splitting is the visual cue that enough bark has formed and the connective tissue is breaking down. Internal temperature is just a guideline — the fat split tells you the meat is ready for the steam phase.' },
-            q8: { correct: 2, feedback: 'Correct! Post oak is a white oak with less tannic acid than other oaks, giving it a sweeter, more vanilla-like flavor when burned at high heat. It grows almost exclusively in Central Texas and parts of the South.' }
-        };
-
-        let score = 0;
-        let answered = 0;
-
-        function checkAnswer(btn, isCorrect, qid) {
-            const question = document.getElementById(qid);
-            const options = question.querySelectorAll('.quiz-option');
-            const feedback = document.getElementById('f' + qid.slice(1));
-            const data = quizAnswers[qid];
-
-            if (question.dataset.answered) return;
-            question.dataset.answered = 'true';
-            answered++;
-
-            options.forEach(function(opt, idx) {
-                opt.disabled = true;
-                if (idx === data.correct) opt.classList.add('correct');
-                else if (opt === btn && !isCorrect) opt.classList.add('wrong');
+        // Fade In Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
             });
+        }, { threshold: 0.1 });
 
-            if (isCorrect) score++;
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-            feedback.classList.add('show');
-            feedback.classList.add(isCorrect ? 'correct' : 'wrong');
-            feedback.textContent = (isCorrect ? '✓ ' : '✗ ') + data.feedback;
-
-            if (answered === 8) {
-                document.getElementById('quizScore').textContent = 'Score: ' + score + '/8 — ' + (score >= 6 ? 'Pitmaster in training! 🔥' : 'Keep studying the fire! 📚');
-            }
-        }
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
     </script>
 </body>
 </html>
