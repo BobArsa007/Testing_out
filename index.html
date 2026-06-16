@@ -3,365 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anthony Bourdain's BBQ Quest — Tips, Tutorials & Places</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <title>Anthony Bourdain's BBQ Quest — A Cook's Tour Booklet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --kc-red: #B71C1C;
-            --texas-orange: #E65100;
-            --nc-green: #1B5E20;
-            --smoke-gray: #2d2d2d;
-            --warm-white: #faf8f5;
-            --charcoal: #1a1a1a;
-            --ember: #ff6b35;
-            --gold: #d4a853;
+            --paper: #f5f0e8;
+            --paper-dark: #ebe5d8;
+            --ink: #1a1612;
+            --ink-light: #3d3630;
+            --ink-faint: #8a8075;
+            --kc-red: #8B2500;
+            --texas-rust: #A0522D;
+            --nc-green: #2F4F2F;
+            --gold: #B8860B;
+            --sepia: #6B4423;
+            --cream: #faf6f0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: var(--charcoal);
-            color: var(--warm-white);
-            overflow-x: hidden;
-        }
-
-        /* Smoke particles */
-        .smoke-container {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-
-        .smoke-particle {
-            position: absolute;
-            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-            border-radius: 50%;
-            animation: float-up linear infinite;
-        }
-
-        @keyframes float-up {
-            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-            20% { opacity: 0.6; }
-            80% { opacity: 0.3; }
-            100% { transform: translateY(-20vh) scale(2); opacity: 0; }
-        }
-
-        /* Hero */
-        .hero {
-            position: relative;
+            font-family: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+            background: #2a2520;
+            color: var(--ink);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 2rem;
-            z-index: 1;
-            background: linear-gradient(180deg, rgba(26,26,26,0.3) 0%, var(--charcoal) 100%);
+            padding: 40px 20px;
         }
 
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            background: rgba(212, 168, 83, 0.15);
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 0.5rem 1.2rem;
-            border-radius: 100px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            margin-bottom: 2rem;
-            animation: fadeInDown 1s ease-out;
-        }
-
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 8vw, 6rem);
-            font-weight: 900;
-            line-height: 1.05;
-            margin-bottom: 1rem;
-            animation: fadeInUp 1s ease-out 0.2s both;
-        }
-
-        .hero h1 .highlight {
-            background: linear-gradient(135deg, var(--ember) 0%, var(--gold) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-subtitle {
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
-            color: rgba(255,255,255,0.6);
-            max-width: 700px;
-            margin-bottom: 3rem;
-            animation: fadeInUp 1s ease-out 0.4s both;
-        }
-
-        .hero-quote {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 1.3rem;
-            color: var(--gold);
-            max-width: 500px;
-            line-height: 1.6;
-            animation: fadeInUp 1s ease-out 0.6s both;
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 2s infinite;
-            cursor: pointer;
-            opacity: 0.5;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-            40% { transform: translateX(-50%) translateY(-10px); }
-            60% { transform: translateX(-50%) translateY(-5px); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Navigation */
-        .nav-bar {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(26,26,26,0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            padding: 0 2rem;
-        }
-
-        .nav-inner {
-            max-width: 1300px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 60px;
-        }
-
-        .nav-logo {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--gold);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 0.3rem;
-            flex-wrap: wrap;
-        }
-
-        .nav-link {
-            padding: 0.5rem 0.9rem;
-            border-radius: 8px;
-            text-decoration: none;
-            color: rgba(255,255,255,0.6);
-            font-size: 0.8rem;
-            font-weight: 500;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-family: inherit;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            color: white;
-            background: rgba(255,255,255,0.08);
-        }
-
-        .nav-link.kc:hover, .nav-link.kc.active { color: #ff8a80; }
-        .nav-link.tx:hover, .nav-link.tx.active { color: #ffcc80; }
-        .nav-link.nc:hover, .nav-link.nc.active { color: #a5d6a7; }
-
-        /* Main content */
-        .content {
+        /* The Book */
+        .book {
+            width: 100%;
+            max-width: 900px;
+            background: var(--paper);
+            box-shadow:
+                0 0 0 1px rgba(0,0,0,0.1),
+                0 0 0 8px #d4c4a8,
+                0 0 0 9px rgba(0,0,0,0.15),
+                0 20px 60px rgba(0,0,0,0.4),
+                0 40px 100px rgba(0,0,0,0.2);
+            border-radius: 4px;
             position: relative;
-            z-index: 1;
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 2rem;
+            overflow: hidden;
         }
 
-        /* Section headers */
-        .section-header {
-            text-align: center;
-            padding: 5rem 0 3rem;
+        /* Spine effect */
+        .book::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 100%;
+            background: linear-gradient(90deg,
+                rgba(0,0,0,0.08) 0%,
+                rgba(0,0,0,0.02) 30%,
+                rgba(255,255,255,0.1) 50%,
+                rgba(0,0,0,0.02) 70%,
+                rgba(0,0,0,0.06) 100%
+            );
+            z-index: 10;
+            pointer-events: none;
         }
 
-        .section-label {
-            font-family: 'JetBrains Mono', monospace;
+        /* Page texture overlay */
+        .book::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(139,115,85,0.03) 31px, rgba(139,115,85,0.03) 32px);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Page */
+        .page {
+            padding: 60px 70px 60px 90px;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .page + .page {
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+
+        /* Drop cap */
+        .drop-cap::first-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            float: left;
+            line-height: 0.8;
+            padding-right: 12px;
+            padding-top: 8px;
+            color: var(--sepia);
+            font-weight: 700;
+        }
+
+        /* Typography */
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            font-weight: 900;
+            line-height: 1.1;
+            color: var(--ink);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--ink);
+            display: inline-block;
+        }
+
+        h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            font-style: italic;
+            color: var(--ink-light);
+            margin: 2rem 0 0.8rem;
+        }
+
+        h4 {
+            font-family: 'Inter', sans-serif;
             font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 0.25em;
-            color: rgba(255,255,255,0.3);
-            margin-bottom: 1rem;
-        }
-
-        .section-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
-            font-weight: 700;
-            margin-bottom: 0.8rem;
-        }
-
-        .section-desc {
-            color: rgba(255,255,255,0.5);
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        /* Region Tabs */
-        .region-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
-        }
-
-        .region-tab {
-            padding: 0.8rem 1.8rem;
-            border-radius: 100px;
+            letter-spacing: 0.2em;
+            color: var(--ink-faint);
+            margin-bottom: 0.5rem;
             font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-            background: rgba(255,255,255,0.03);
-            color: rgba(255,255,255,0.5);
-            font-family: inherit;
         }
 
-        .region-tab:hover {
-            background: rgba(255,255,255,0.06);
-            color: white;
+        p {
+            font-size: 1.05rem;
+            line-height: 1.75;
+            color: var(--ink-light);
+            margin-bottom: 1.2rem;
+            text-align: justify;
+            hyphens: auto;
         }
 
-        .region-tab.active.kc-tab {
-            border-color: #B71C1C;
-            color: #ff8a80;
-            background: rgba(183, 28, 28, 0.1);
+        /* Chapter opener */
+        .chapter-opener {
+            text-align: center;
+            padding: 80px 40px;
+            position: relative;
         }
 
-        .region-tab.active.tx-tab {
-            border-color: #E65100;
-            color: #ffcc80;
-            background: rgba(230, 81, 0, 0.1);
-        }
-
-        .region-tab.active.nc-tab {
-            border-color: #1B5E20;
-            color: #a5d6a7;
-            background: rgba(27, 94, 32, 0.1);
-        }
-
-        /* Tab content */
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-            animation: fadeInUp 0.5s ease-out;
-        }
-
-        /* Tutorial Cards */
-        .tutorials-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .tutorial-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.4s;
-        }
-
-        .tutorial-card:hover {
-            border-color: rgba(255,255,255,0.12);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .tutorial-header {
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .tutorial-icon {
-            font-size: 2rem;
-        }
-
-        .tutorial-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-
-        .tutorial-body {
-            padding: 1.5rem 2rem;
-        }
-
-        .tutorial-desc {
-            color: rgba(255,255,255,0.6);
-            font-size: 0.9rem;
-            line-height: 1.7;
+        .chapter-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
             margin-bottom: 1.5rem;
         }
 
-        .recipe-box {
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            padding: 1.2rem;
+        .chapter-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            line-height: 1.1;
             margin-bottom: 1rem;
         }
 
-        .recipe-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
+        .chapter-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--ink-faint);
+            margin-bottom: 2rem;
+        }
+
+        .ornament {
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin: 1.5rem 0;
+            letter-spacing: 0.5em;
+        }
+
+        /* Pull quotes */
+        .pull-quote {
+            margin: 2.5rem 2rem;
+            padding: 1.5rem 2rem;
+            border-left: 3px solid var(--gold);
+            background: rgba(184,134,11,0.04);
+            position: relative;
+        }
+
+        .pull-quote::before {
+            content: '"';
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            color: rgba(184,134,11,0.15);
+            position: absolute;
+            top: -0.5rem;
+            left: 0.5rem;
+            line-height: 1;
+        }
+
+        .pull-quote p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-style: italic;
+            color: var(--sepia);
+            line-height: 1.6;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pull-quote .attribution {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-style: normal;
+            color: var(--ink-faint);
+            margin-top: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: rgba(255,255,255,0.4);
+            letter-spacing: 0.1em;
+        }
+
+        /* Recipe boxes */
+        .recipe-box {
+            background: var(--cream);
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 2px;
+            padding: 1.5rem 2rem;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .recipe-box::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 2rem;
+            right: 2rem;
+            height: 3px;
+            background: var(--accent-color, var(--gold));
+        }
+
+        .recipe-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--ink);
+        }
+
+        .recipe-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--ink-faint);
             margin-bottom: 0.8rem;
         }
 
         .recipe-ingredients {
             list-style: none;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.7);
-            line-height: 1.8;
+            font-size: 0.95rem;
+            line-height: 1.9;
+            color: var(--ink-light);
+            margin-bottom: 1rem;
         }
 
         .recipe-ingredients li {
@@ -370,938 +282,939 @@
         }
 
         .recipe-ingredients li::before {
-            content: '•';
+            content: '—';
             position: absolute;
             left: 0;
             color: var(--accent-color, var(--gold));
+            font-weight: 600;
         }
 
-        .steps-list {
+        .recipe-steps {
             counter-reset: step;
             list-style: none;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--ink-light);
         }
 
-        .steps-list li {
+        .recipe-steps li {
             position: relative;
-            padding-left: 2.5rem;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            line-height: 1.7;
-            color: rgba(255,255,255,0.75);
+            padding-left: 2.2rem;
+            margin-bottom: 0.8rem;
         }
 
-        .steps-list li::before {
+        .recipe-steps li::before {
             counter-increment: step;
-            content: counter(step);
+            content: counter(step) '.';
             position: absolute;
             left: 0;
-            top: 0;
-            width: 1.6rem;
-            height: 1.6rem;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.08);
-            color: var(--accent-color, var(--gold));
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-        }
-
-        .tip-box {
-            background: rgba(212, 168, 83, 0.06);
-            border-left: 3px solid var(--gold);
-            border-radius: 0 10px 10px 0;
-            padding: 1rem 1.2rem;
-            margin-top: 1rem;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.6);
-            line-height: 1.6;
-        }
-
-        .tip-box strong {
-            color: var(--gold);
-        }
-
-        /* Places Section */
-        .places-section {
-            padding: 4rem 0;
-        }
-
-        .places-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-        }
-
-        .place-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 20px;
-            overflow: hidden;
-            transition: all 0.4s;
-            position: relative;
-        }
-
-        .place-card:hover {
-            border-color: rgba(255,255,255,0.15);
-            transform: translateY(-4px);
-        }
-
-        .place-status {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            padding: 0.3rem 0.8rem;
-            border-radius: 100px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .status-open {
-            background: rgba(46, 125, 50, 0.2);
-            color: #a5d6a7;
-            border: 1px solid rgba(46, 125, 50, 0.3);
-        }
-
-        .status-closed {
-            background: rgba(183, 28, 28, 0.2);
-            color: #ff8a80;
-            border: 1px solid rgba(183, 28, 28, 0.3);
-        }
-
-        .status-evolved {
-            background: rgba(230, 81, 0, 0.2);
-            color: #ffcc80;
-            border: 1px solid rgba(230, 81, 0, 0.3);
-        }
-
-        .place-header {
-            padding: 2rem 2rem 1rem;
-        }
-
-        .place-type {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-bottom: 0.5rem;
-        }
-
-        .place-name {
             font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 0.3rem;
+            color: var(--accent-color, var(--gold));
+            font-size: 1rem;
         }
 
-        .place-location {
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.4);
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        .place-body {
-            padding: 0 2rem 1.5rem;
-        }
-
-        .place-desc {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.6);
-            line-height: 1.7;
-            margin-bottom: 1rem;
-        }
-
-        .place-dish {
-            background: rgba(255,255,255,0.03);
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .place-dish-label {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: rgba(255,255,255,0.4);
-            margin-bottom: 0.3rem;
-        }
-
-        .place-dish-name {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.85);
-        }
-
-        .place-quote {
+        .recipe-note {
+            font-family: 'Cormorant Garamond', serif;
             font-style: italic;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.5);
-            border-left: 2px solid rgba(255,255,255,0.1);
-            padding-left: 1rem;
-            line-height: 1.6;
+            font-size: 0.95rem;
+            color: var(--ink-faint);
+            border-top: 1px solid rgba(0,0,0,0.06);
+            padding-top: 0.8rem;
+            margin-top: 1rem;
         }
 
-        .place-footer {
-            padding: 1rem 2rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
+        /* Place cards */
+        .place-entry {
+            margin: 2rem 0;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .place-entry:last-child {
+            border-bottom: none;
+        }
+
+        .place-header-line {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: baseline;
+            margin-bottom: 0.5rem;
             flex-wrap: wrap;
             gap: 0.5rem;
         }
 
-        .place-address {
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.4);
+        .place-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--ink);
+        }
+
+        .place-status {
             font-family: 'JetBrains Mono', monospace;
-        }
-
-        .place-link {
-            color: var(--gold);
-            text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.2rem 0.6rem;
+            border-radius: 2px;
             font-weight: 500;
-            transition: opacity 0.3s;
         }
 
-        .place-link:hover {
-            opacity: 0.7;
-        }
+        .status-open { background: rgba(47,79,47,0.1); color: var(--nc-green); }
+        .status-closed { background: rgba(139,37,0,0.08); color: var(--kc-red); }
+        .status-evolved { background: rgba(160,82,45,0.1); color: var(--texas-rust); }
 
-        /* Quick Tips Section */
-        .quick-tips {
-            padding: 4rem 0;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .tips-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .tip-card {
-            background: rgba(255,255,255,0.02);
-            border-radius: 16px;
-            padding: 1.8rem;
-            transition: all 0.3s;
-        }
-
-        .tip-card:hover {
-            background: rgba(255,255,255,0.04);
-        }
-
-        .tip-emoji {
-            font-size: 2rem;
+        .place-meta {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: var(--ink-faint);
             margin-bottom: 0.8rem;
         }
 
-        .tip-title {
-            font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
+        .place-desc {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--ink-light);
+            margin-bottom: 0.8rem;
         }
 
-        .tip-text {
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.55);
-            line-height: 1.6;
-        }
-
-        /* Footer */
-        .footer {
-            padding: 4rem 2rem;
-            text-align: center;
-            background: rgba(0,0,0,0.2);
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .footer-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.5rem;
+        .place-dish {
+            font-family: 'Cormorant Garamond', serif;
             font-style: italic;
+            font-size: 1rem;
+            color: var(--sepia);
+            padding: 0.6rem 1rem;
+            background: rgba(107,68,35,0.04);
+            border-left: 2px solid var(--sepia);
+            margin-bottom: 0.8rem;
+        }
+
+        .place-quote {
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--ink-faint);
+            padding-left: 1rem;
+            border-left: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .place-footer {
+            margin-top: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: var(--ink-faint);
+        }
+
+        .place-footer a {
+            color: var(--sepia);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--sepia);
+        }
+
+        /* Two column layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 700px) {
+            .two-col { grid-template-columns: 1fr; gap: 1.5rem; }
+            .page { padding: 40px 30px 40px 50px; }
+            h1 { font-size: 2.2rem; }
+            .chapter-title { font-size: 2rem; }
+        }
+
+        /* Section divider */
+        .section-divider {
+            text-align: center;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .section-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            background: rgba(0,0,0,0.08);
+        }
+
+        .section-divider span {
+            background: var(--paper);
+            padding: 0 1.5rem;
+            position: relative;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
             color: var(--gold);
+        }
+
+        /* Tip cards in booklet style */
+        .tip-entry {
+            margin: 1rem 0;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .tip-entry:last-child {
+            border-bottom: none;
+        }
+
+        .tip-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--gold);
+            line-height: 1;
+            min-width: 2.5rem;
+            text-align: center;
+        }
+
+        .tip-content h5 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--ink);
+        }
+
+        .tip-content p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 0;
+            text-align: left;
+        }
+
+        /* Footer page */
+        .book-footer {
+            text-align: center;
+            padding: 60px 40px;
+            background: var(--paper-dark);
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .book-footer p {
+            text-align: center;
+            font-style: italic;
+            color: var(--ink-faint);
+        }
+
+        .book-footer .closing {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            color: var(--sepia);
             margin-bottom: 1rem;
         }
 
-        .footer-sub {
-            color: rgba(255,255,255,0.3);
-            font-size: 0.85rem;
+        /* Print styles */
+        @media print {
+            body { background: white; padding: 0; }
+            .book { box-shadow: none; max-width: 100%; }
+            .book::before, .book::after { display: none; }
+            .page { break-inside: avoid; min-height: auto; }
         }
 
-        /* Animations */
-        .region-section, .places-section, .quick-tips {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .region-section.visible, .places-section.visible, .quick-tips.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .tutorial-card, .place-card, .tip-card {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .visible .tutorial-card,
-        .visible .place-card,
-        .visible .tip-card {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .visible .tutorial-card:nth-child(1) { transition-delay: 0.1s; }
-        .visible .tutorial-card:nth-child(2) { transition-delay: 0.2s; }
-        .visible .place-card:nth-child(1) { transition-delay: 0.05s; }
-        .visible .place-card:nth-child(2) { transition-delay: 0.1s; }
-        .visible .place-card:nth-child(3) { transition-delay: 0.15s; }
-        .visible .place-card:nth-child(4) { transition-delay: 0.2s; }
-        .visible .place-card:nth-child(5) { transition-delay: 0.25s; }
-        .visible .place-card:nth-child(6) { transition-delay: 0.3s; }
-        .visible .tip-card:nth-child(1) { transition-delay: 0.05s; }
-        .visible .tip-card:nth-child(2) { transition-delay: 0.1s; }
-        .visible .tip-card:nth-child(3) { transition-delay: 0.15s; }
-        .visible .tip-card:nth-child(4) { transition-delay: 0.2s; }
-        .visible .tip-card:nth-child(5) { transition-delay: 0.25s; }
-        .visible .tip-card:nth-child(6) { transition-delay: 0.3s; }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--charcoal); }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .tutorials-grid { grid-template-columns: 1fr; }
-            .nav-links { gap: 0.2rem; }
-            .nav-link { padding: 0.4rem 0.6rem; font-size: 0.75rem; }
+        /* Page number simulation */
+        .page-number {
+            position: absolute;
+            bottom: 30px;
+            right: 70px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--ink-faint);
         }
     </style>
 <base target="_blank">
 </head>
 <body>
-    <!-- Smoke particles -->
-    <div class="smoke-container" id="smoke"></div>
+    <div class="book">
 
-    <!-- Hero -->
-    <section class="hero" id="hero">
-        <div class="hero-badge">
-            <span>🔥</span> A Cook's Tour — BBQ Episode (S2E7, April 4, 2003)
+        <!-- COVER / TITLE PAGE -->
+        <div class="page chapter-opener" style="min-height: auto; padding-bottom: 100px;">
+            <div class="chapter-number">A Cook's Tour — Season 2, Episode 7</div>
+            <div class="ornament">❦ ❦ ❦</div>
+            <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">Anthony Bourdain's<br>Barbecue Quest</h1>
+            <p class="chapter-subtitle" style="font-size: 1.1rem; max-width: 500px; margin: 0 auto 2rem;">
+                A field guide to the people, places, recipes, and philosophy of America's most controversial cuisine — drawn from the original 2003 broadcast.
+            </p>
+            <div class="ornament">— ◈ —</div>
+            <p style="text-align: center; font-size: 0.85rem; color: var(--ink-faint); margin-top: 3rem;">
+                Featuring Kansas City • Houston, Texas • Eastern & Western North Carolina
+            </p>
         </div>
-        <h1>
-            Anthony Bourdain's<br>
-            <span class="highlight">Barbecue Quest</span>
-        </h1>
-        <p class="hero-subtitle">
-            Tips, tutorials, and real places from Bourdain's smoky pilgrimage across the BBQ Triangle — Kansas City, Houston, and North Carolina.
-        </p>
-        <p class="hero-quote">
-            "Barbecue is not a cuisine, it's an obsession. Barbecuers are free-thinking individualists."
-        </p>
-        <div class="scroll-indicator" onclick="document.getElementById('nav').scrollIntoView({behavior:'smooth'})">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
-            </svg>
-        </div>
-    </section>
 
-    <!-- Navigation -->
-    <nav class="nav-bar" id="nav">
-        <div class="nav-inner">
-            <div class="nav-logo">BBQ Quest</div>
-            <div class="nav-links">
-                <button class="nav-link" onclick="scrollToSection('tutorials')">Tutorials</button>
-                <button class="nav-link" onclick="scrollToSection('places')">Places</button>
-                <button class="nav-link" onclick="scrollToSection('tips')">Quick Tips</button>
+        <!-- INTRODUCTION -->
+        <div class="page">
+            <span class="page-number">3</span>
+            <h4>Introduction</h4>
+            <p class="drop-cap">
+                As a cook, tastes and smells are my memories. And now I'm in search of new ones. So I'm leaving New York City in hope to have a few epiphanies around the world. And I'm willing to go to some lengths to do that. I'm looking for extremes of emotion and experience. I'll try anything, I'll risk everything, I have nothing to lose.
+            </p>
+            <p>
+                My fellow Americans, what is our one culinary contribution to the world that's as original as jazz, baseball, rock and roll? That's right, barbecue. Ribs fall right off the bone. It's all ours. Even the French can't do it.
+            </p>
+            <p>
+                What do I know about barbecue? Yep, that about sums it up for me. I kid, I kid. Actually, it turns out there's a barbecue debate more heated than the last presidential election. There is just no element of barbecue that's not controversial. The cooking unit, the meat, fuel, the seasoning, and the most elusive, the expertise of the chef.
+            </p>
+            <div class="pull-quote">
+                <p>Barbecue is not a cuisine, it's an obsession. Barbecuers are free-thinking individualists.</p>
+                <div class="attribution">— Anthony Bourdain</div>
+            </div>
+            <p>
+                This booklet collects the recipes, techniques, and wisdom gathered from three corners of the BBQ Triangle — Kansas City, Texas, and North Carolina — along with the real places you can still visit today.
+            </p>
+        </div>
+
+        <!-- CHAPTER 1: KANSAS CITY -->
+        <div class="page chapter-opener">
+            <span class="page-number">5</span>
+            <div class="chapter-number">Chapter One</div>
+            <div class="ornament">❦</div>
+            <h1 class="chapter-title" style="color: var(--kc-red);">Kansas City</h1>
+            <p class="chapter-subtitle">The Barbecue Capital of the World</p>
+            <p style="max-width: 500px; margin: 0 auto; font-size: 1rem; color: var(--ink-faint);">
+                While other regions specialize in specific meats, in Kansas City, they'll cook anything, anyhow. If it moves, barbecue it.
+            </p>
+        </div>
+
+        <div class="page">
+            <span class="page-number">6</span>
+            <h2 style="border-color: var(--kc-red);">Oklahoma Joe's</h2>
+            <p class="drop-cap">
+                If you want to get to the bottom of something, you start at the top. So I make a dinner date with Carolyn Wells, executive director of the Kansas City Barbecue Society, at Oklahoma Joe's — a gas station, liquor store, convenience store, and some of the finest barbecue in this country.
+            </p>
+            <p>
+                My favorite menu item is the Carolina Pork Sandwich, which is a pulled pork sandwich with slaw on top, served with Bubba sauce. But their ribs are great. And I think they're cooking up some burnt ends just for you.
+            </p>
+            <p>
+                A burnt end is the charred part of the brisket after it's cooked that they used to throw away. Only in Kansas City, that I know of, had they really become menu items. Here, they collect them all week so they can offer them one night during the week.
+            </p>
+            <div class="pull-quote">
+                <p>Oh wow. Now this is finger-licking good. Flavor up the ying-yang, it's great.</p>
+                <div class="attribution">— Bourdain, on the burnt ends</div>
+            </div>
+
+            <h3>The Carolina Pork Sandwich</h3>
+            <div class="recipe-box" style="--accent-color: var(--kc-red);">
+                <div class="recipe-label">What You Need</div>
+                <ul class="recipe-ingredients" style="--accent-color: var(--kc-red);">
+                    <li>4–5 lb pork shoulder (Boston butt)</li>
+                    <li>Yellow mustard (as binder)</li>
+                    <li>KC-style rub (see Paul Kirk's recipe below)</li>
+                    <li>Soft white buns</li>
+                    <li>Coleslaw (vinegar-based)</li>
+                    <li>Bubba sauce or your favorite sweet & tangy BBQ sauce</li>
+                </ul>
+                <div class="recipe-label" style="margin-top:1rem;">The Method</div>
+                <ol class="recipe-steps" style="--accent-color: var(--kc-red);">
+                    <li>Coat pork shoulder with yellow mustard, then apply rub liberally.</li>
+                    <li>Smoke at 225°F for 10–12 hours until internal temp reaches 195–205°F.</li>
+                    <li>Rest 30 minutes, then pull/shred with two forks.</li>
+                    <li>Toss pulled pork with a little sauce — don't drown it.</li>
+                    <li>Pile on a soft bun, top with vinegar slaw, drizzle with more sauce.</li>
+                </ol>
+                <div class="recipe-note">
+                    <strong>Note:</strong> Good barbecue is not always pretty. Don't worry about Instagram-perfect — worry about flavor.
+                </div>
             </div>
         </div>
-    </nav>
 
-    <!-- Main Content -->
-    <div class="content">
+        <div class="page">
+            <span class="page-number">7</span>
+            <h2 style="border-color: var(--kc-red);">Paul Kirk — The Baron of Barbecue</h2>
+            <p class="drop-cap">
+                Sunday afternoon in Kansas. We're here to talk about barbecue with the world-recognized grand master authority on the subject of Kansas City barbecue, Paul Kirk, known as the Baron of Barbecue. I'm searching for that ultimate barbecue. I've never found it.
+            </p>
+            <p>
+                Paul Kirk is like a barbecue prize fighter-turned-manager. He won loads of international competitions and now he trains rookies. I decided to investigate, even if it means I gotta do a little work. Maybe get my hands sticky.
+            </p>
+            <p>
+                It's apron time for you. Okay, what I have here, three briskets. I wanna know which one you would pick and why. Like the feel and the look of this guy. Nice fat layer, nice confirmation in shape, and I'm expecting it'll be a nice mix of fat and lean.
+            </p>
+            <p>
+                Very good. I'mma show you how I trim 'em. And then I'mma let you trim the other one. I'm gonna try to trim down to a quarter to 1/8th of an inch of fat. Now you get to do it.
+            </p>
 
-        <!-- TUTORIALS SECTION -->
-        <section class="region-section" id="tutorials">
-            <div class="section-header">
-                <div class="section-label">Learn from the Masters</div>
-                <h2 class="section-title">BBQ Tutorials & Recipes</h2>
-                <p class="section-desc">Step-by-step guides inspired by the techniques Bourdain learned from Paul Kirk, Dave Klose, Ed Mitchell, and Roy Burns.</p>
-            </div>
-
-            <!-- Region Tabs -->
-            <div class="region-tabs">
-                <button class="region-tab kc-tab active" onclick="switchTab('kc')">🔥 Kansas City</button>
-                <button class="region-tab tx-tab" onclick="switchTab('tx')">🤠 Texas</button>
-                <button class="region-tab nc-tab" onclick="switchTab('nc')">🐷 North Carolina</button>
-            </div>
-
-            <!-- KC Tutorials -->
-            <div class="tab-content active" id="tab-kc">
-                <div class="tutorials-grid">
-                    <div class="tutorial-card">
-                        <div class="tutorial-header" style="border-bottom-color: rgba(183,28,28,0.3);">
-                            <span class="tutorial-icon">🥩</span>
-                            <h3 class="tutorial-title" style="color: #ff8a80;">Paul Kirk's Burnt Ends</h3>
-                        </div>
-                        <div class="tutorial-body">
-                            <p class="tutorial-desc">The charred brisket pieces that were once thrown away — now the most prized item on any KC menu. Paul Kirk's method: 14+ hours of patience.</p>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">Dry Rub (Basic KC Foundation)</div>
-                                <ul class="recipe-ingredients" style="--accent-color: #ff8a80;">
-                                    <li>2 tbsp seasoning salt</li>
-                                    <li>1 tbsp celery salt</li>
-                                    <li>1 tbsp onion salt</li>
-                                    <li>1 tbsp garlic salt</li>
-                                    <li><em>+ Your signature: coriander, cumin, allspice, or oregano</em></li>
-                                </ul>
-                            </div>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">The Method</div>
-                                <ol class="steps-list" style="--accent-color: #ff8a80;">
-                                    <li>Start with a full packer brisket (point end). Trim fat cap to ¼ inch.</li>
-                                    <li>Apply rub generously. Let sit overnight in fridge.</li>
-                                    <li>Smoke at 225°F using hickory or oak until internal temp hits 195°F (8–10 hours).</li>
-                                    <li>Separate the point from the flat. Cube the point into 1-inch chunks.</li>
-                                    <li>Toss cubes in a pan with BBQ sauce + a splash of cola or apple juice.</li>
-                                    <li>Return to smoker for 1–2 more hours until sticky and caramelized.</li>
-                                </ol>
-                            </div>
-
-                            <div class="tip-box">
-                                <strong>Paul's Pro Tip:</strong> "Make it your own." The basic four-salt rub is just the foundation — add three signature spices to develop your personal flavor profile.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tutorial-card">
-                        <div class="tutorial-header" style="border-bottom-color: rgba(183,28,28,0.3);">
-                            <span class="tutorial-icon">🍖</span>
-                            <h3 class="tutorial-title" style="color: #ff8a80;">KC-Style Brisket Sandwich</h3>
-                        </div>
-                        <div class="tutorial-body">
-                            <p class="tutorial-desc">The Carolina Pork Sandwich at Joe's Kansas City — pulled pork with slaw on top, served with Bubba sauce. Adapted for home cooks.</p>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">What You Need</div>
-                                <ul class="recipe-ingredients" style="--accent-color: #ff8a80;">
-                                    <li>4–5 lb pork shoulder (Boston butt)</li>
-                                    <li>Yellow mustard (as binder)</li>
-                                    <li>KC-style rub (see above)</li>
-                                    <li>Soft white buns</li>
-                                    <li>Coleslaw (vinegar-based)</li>
-                                    <li>Your favorite sweet & tangy BBQ sauce</li>
-                                </ul>
-                            </div>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">The Method</div>
-                                <ol class="steps-list" style="--accent-color: #ff8a80;">
-                                    <li>Coat pork shoulder with yellow mustard, then apply rub liberally.</li>
-                                    <li>Smoke at 225°F for 10–12 hours until internal temp reaches 195–205°F.</li>
-                                    <li>Rest 30 minutes, then pull/shred with two forks.</li>
-                                    <li>Toss pulled pork with a little sauce — don't drown it.</li>
-                                    <li>Pile on a soft bun, top with vinegar slaw, drizzle with more sauce.</li>
-                                </ol>
-                            </div>
-
-                            <div class="tip-box">
-                                <strong>Bourdain's Note:</strong> "Good barbecue is not always pretty." Don't worry about Instagram-perfect — worry about flavor.
-                            </div>
-                        </div>
-                    </div>
+            <h3>Paul Kirk's Basic Rub</h3>
+            <div class="recipe-box" style="--accent-color: var(--kc-red);">
+                <div class="recipe-label">Foundation (The Four Salts)</div>
+                <ul class="recipe-ingredients" style="--accent-color: var(--kc-red);">
+                    <li>2 tbsp seasoning salt</li>
+                    <li>1 tbsp celery salt</li>
+                    <li>1 tbsp onion salt</li>
+                    <li>1 tbsp garlic salt</li>
+                </ul>
+                <div class="recipe-label" style="margin-top:1rem;">Add Your Signature — Pick Three</div>
+                <ul class="recipe-ingredients" style="--accent-color: var(--kc-red);">
+                    <li>Coriander</li>
+                    <li>Oregano</li>
+                    <li>Cumin</li>
+                    <li>Allspice</li>
+                    <li>Paprika</li>
+                    <li>Brown sugar</li>
+                </ul>
+                <div class="recipe-note">
+                    <strong>Paul's Pro Tip:</strong> "Make it your own." The basic four-salt rub is just the foundation. Add three signature spices to develop your personal flavor profile.
                 </div>
             </div>
 
-            <!-- Texas Tutorials -->
-            <div class="tab-content" id="tab-tx">
-                <div class="tutorials-grid">
-                    <div class="tutorial-card">
-                        <div class="tutorial-header" style="border-bottom-color: rgba(230,81,0,0.3);">
-                            <span class="tutorial-icon">🪵</span>
-                            <h3 class="tutorial-title" style="color: #ffcc80;">Texas Post Oak Brisket</h3>
-                        </div>
-                        <div class="tutorial-body">
-                            <p class="tutorial-desc">Roy Burns' secret: post oak. Dave Klose's engineering: the perfect pit. Combine both for authentic Texas-style brisket at home.</p>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">The Texas Trinity Rub</div>
-                                <ul class="recipe-ingredients" style="--accent-color: #ffcc80;">
-                                    <li>2.5 tbsp kosher salt</li>
-                                    <li>2.5 tbsp coarse black pepper</li>
-                                    <li>2 tbsp garlic powder (optional)</li>
-                                    <li>Post oak wood chunks or chips</li>
-                                    <li>Beef tallow (for wrapping)</li>
-                                </ul>
-                            </div>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">The Method</div>
-                                <ol class="steps-list" style="--accent-color: #ffcc80;">
-                                    <li>Trim brisket: remove silver skin, square off sides, leave ¼ inch fat cap.</li>
-                                    <li>Season with salt & pepper only. Dry brine overnight in fridge.</li>
-                                    <li>Preheat smoker to 250–265°F. Add post oak for smoke.</li>
-                                    <li>Place brisket fat-side toward heat. Smoke 7–8 hours until 165–170°F internal.</li>
-                                    <li>Wrap in butcher paper drizzled with beef tallow.</li>
-                                    <li>Continue smoking 7–8 more hours until 202–203°F internal.</li>
-                                    <li>Rest at room temperature at least 2 hours before slicing.</li>
-                                </ol>
-                            </div>
-
-                            <div class="tip-box">
-                                <strong>Why Post Oak?</strong> Post oak burns slow and steady with a mild, clean smoke that enhances beef without overpowering it. It's the gold standard in Texas BBQ.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tutorial-card">
-                        <div class="tutorial-header" style="border-bottom-color: rgba(230,81,0,0.3);">
-                            <span class="tutorial-icon">🍤</span>
-                            <h3 class="tutorial-title" style="color: #ffcc80;">Dave Klose's Signature Shrimp</h3>
-                        </div>
-                        <div class="tutorial-body">
-                            <p class="tutorial-desc">The dish that blew Bourdain away: tiger shrimp stuffed with stone crab, wrapped in chicken tender & maple-smoked bacon, soaked in Cabernet.</p>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">Ingredients</div>
-                                <ul class="recipe-ingredients" style="--accent-color: #ffcc80;">
-                                    <li>8–10 count tiger shrimp (jumbo)</li>
-                                    <li>Stone crab claw meat</li>
-                                    <li>Chicken tenders, pounded thin</li>
-                                    <li>Maple-smoked bacon</li>
-                                    <li>Cabernet Sauvignon</li>
-                                    <li>Toothpicks or butcher's twine</li>
-                                </ul>
-                            </div>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">The Method</div>
-                                <ol class="steps-list" style="--accent-color: #ffcc80;">
-                                    <li>Peel and devein shrimp, leaving tail on. Butterfly each shrimp.</li>
-                                    <li>Stuff each shrimp with stone crab meat.</li>
-                                    <li>Wrap stuffed shrimp with a pounded-thin chicken tender.</li>
-                                    <li>Wrap the entire bundle with maple-smoked bacon. Secure with toothpicks.</li>
-                                    <li>Soak in Cabernet Sauvignon overnight (or at least 4 hours).</li>
-                                    <li>Smoke or grill at 275°F until bacon is crispy and chicken is cooked through (about 45 min).</li>
-                                </ol>
-                            </div>
-
-                            <div class="tip-box">
-                                <strong>Dave's Wisdom:</strong> "You cannot mess this up. If you do it bad, it's incredible. If you do it right, it'll take the top of your head off."
-                            </div>
-                        </div>
-                    </div>
+            <h3>Burnt Ends — The KC Treasure</h3>
+            <div class="recipe-box" style="--accent-color: var(--kc-red);">
+                <div class="recipe-label">The Method</div>
+                <ol class="recipe-steps" style="--accent-color: var(--kc-red);">
+                    <li>Start with a full packer brisket (point end). Trim fat cap to ¼ inch.</li>
+                    <li>Apply rub generously. Let sit overnight in fridge.</li>
+                    <li>Smoke at 225°F using hickory or oak until internal temp hits 195°F (8–10 hours).</li>
+                    <li>Separate the point from the flat. Cube the point into 1-inch chunks.</li>
+                    <li>Toss cubes in a pan with BBQ sauce + a splash of cola or apple juice.</li>
+                    <li>Return to smoker for 1–2 more hours until sticky and caramelized.</li>
+                </ol>
+                <div class="recipe-note">
+                    <strong>Note:</strong> A burnt end is the charred part of the brisket after it's cooked that they used to throw away. Only in Kansas City did they really become menu items.
                 </div>
             </div>
+        </div>
 
-            <!-- NC Tutorials -->
-            <div class="tab-content" id="tab-nc">
-                <div class="tutorials-grid">
-                    <div class="tutorial-card">
-                        <div class="tutorial-header" style="border-bottom-color: rgba(27,94,32,0.3);">
-                            <span class="tutorial-icon">🐷</span>
-                            <h3 class="tutorial-title" style="color: #a5d6a7;">Eastern NC Whole Hog (Home Adaptation)</h3>
-                        </div>
-                        <div class="tutorial-body">
-                            <p class="tutorial-desc">Ed Mitchell's nose-to-tail philosophy. For home cooks without a whole hog pit, this oven method captures the spirit using multiple pork cuts.</p>
+        <div class="page">
+            <span class="page-number">8</span>
+            <h2 style="border-color: var(--kc-red);">Places: Kansas City</h2>
 
-                            <div class="recipe-box">
-                                <div class="recipe-label">"Whole Hog" Assembly</div>
-                                <ul class="recipe-ingredients" style="--accent-color: #a5d6a7;">
-                                    <li>2–3 lb pork shoulder (Boston butt)</li>
-                                    <li>1 lb pork belly</li>
-                                    <li>1 lb pork tenderloin</li>
-                                    <li>1 rack baby back ribs</li>
-                                    <li>Kosher salt, black pepper, smoked paprika</li>
-                                    <li>Apple cider vinegar (for sauce)</li>
-                                </ul>
-                            </div>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">The Method</div>
-                                <ol class="steps-list" style="--accent-color: #a5d6a7;">
-                                    <li>Cut all pork pieces in half. Season with salt, pepper, and smoked paprika.</li>
-                                    <li>Layer in a Dutch oven: ribs on bottom, then shoulder, tenderloin, belly, sirloin, top with remaining ribs.</li>
-                                    <li>Wrap tightly in 3–4 layers of heavy-duty foil.</li>
-                                    <li>Roast at 250°F for 8–10 hours until falling-off-bone tender.</li>
-                                    <li>Remove bones, pull and shred all meat together. Mix in rendered fat.</li>
-                                    <li>Toss with Eastern NC vinegar sauce (see next card). Top with crispy skin cracklins if available.</li>
-                                </ol>
-                            </div>
-
-                            <div class="tip-box">
-                                <strong>Ed's Philosophy:</strong> "If you're gonna kill a pig, you should eat every part of it." The blend of shoulder, belly, and tenderloin mimics whole-hog flavor.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tutorial-card">
-                        <div class="tutorial-header" style="border-bottom-color: rgba(27,94,32,0.3);">
-                            <span class="tutorial-icon">🍶</span>
-                            <h3 class="tutorial-title" style="color: #a5d6a7;">Eastern NC Vinegar-Pepper Sauce</h3>
-                        </div>
-                        <div class="tutorial-body">
-                            <p class="tutorial-desc">The soul of Eastern NC barbecue. No tomato allowed. Just vinegar, pepper, salt, and sugar — shaken, not cooked. This is the "icing on the cake."</p>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">Eastern NC Style (No Tomato)</div>
-                                <ul class="recipe-ingredients" style="--accent-color: #a5d6a7;">
-                                    <li>1 cup apple cider vinegar</li>
-                                    <li>1 cup white distilled vinegar</li>
-                                    <li>1 tbsp crushed red pepper flakes</li>
-                                    <li>1 tsp freshly ground black pepper</li>
-                                    <li>1 tsp kosher salt</li>
-                                    <li>1–2 tsp sugar (optional)</li>
-                                    <li>Dash of hot sauce (Texas Pete if you can find it)</li>
-                                </ul>
-                            </div>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">Western NC Style (Lexington Dip)</div>
-                                <ul class="recipe-ingredients" style="--accent-color: #a5d6a7;">
-                                    <li>¾ cup apple cider vinegar</li>
-                                    <li>½ cup ketchup</li>
-                                    <li>1–2 tbsp brown sugar</li>
-                                    <li>1 tbsp Worcestershire sauce</li>
-                                    <li>1 tsp crushed red pepper</li>
-                                    <li>1 tsp black pepper</li>
-                                    <li>½ tsp salt</li>
-                                </ul>
-                            </div>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">The Method</div>
-                                <ol class="steps-list" style="--accent-color: #a5d6a7;">
-                                    <li>Combine all ingredients in a jar with tight-fitting lid.</li>
-                                    <li>Shake vigorously until salt and sugar dissolve.</li>
-                                    <li>Let stand at least 30 minutes. For best flavor, refrigerate 1–2 days.</li>
-                                    <li>Shake before each use. Store in fridge up to 2 months.</li>
-                                </ol>
-                            </div>
-
-                            <div class="tip-box">
-                                <strong>The Civil War:</strong> Eastern NC says tomatoes are poisonous. Western NC (Lexington) adds a little ketchup. Pick your side — or make both and let your guests choose.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tutorial-card">
-                        <div class="tutorial-header" style="border-bottom-color: rgba(27,94,32,0.3);">
-                            <span class="tutorial-icon">🍖</span>
-                            <h3 class="tutorial-title" style="color: #a5d6a7;">Pulled Pork Shoulder (Western NC Style)</h3>
-                        </div>
-                        <div class="tutorial-body">
-                            <p class="tutorial-desc">Bill Leeson and Jim Tabb's method: pork shoulder only, cooked with direct heat for 12–14 hours. The meat should fall apart with no knife needed.</p>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">What You Need</div>
-                                <ul class="recipe-ingredients" style="--accent-color: #a5d6a7;">
-                                    <li>8–10 lb pork shoulder (bone-in preferred)</li>
-                                    <li>Kosher salt & black pepper</li>
-                                    <li>Apple cider vinegar (for mopping)</li>
-                                    <li>Red slaw & hush puppies (for serving)</li>
-                                    <li>Western NC sauce (see above)</li>
-                                </ul>
-                            </div>
-
-                            <div class="recipe-box">
-                                <div class="recipe-label">The Method</div>
-                                <ol class="steps-list" style="--accent-color: #a5d6a7;">
-                                    <li>Season shoulder generously with salt and pepper. Let sit 1 hour.</li>
-                                    <li>Set up smoker for indirect heat at 225°F. Add hickory or oak.</li>
-                                    <li>Place shoulder fat-side up. Smoke 12–14 hours, mopping with vinegar every 2 hours.</li>
-                                    <li>Target internal temp: 195–205°F. Probe should slide in like butter.</li>
-                                    <li>Rest 1 hour. Pull apart with forks or gloved hands — no knife needed.</li>
-                                    <li>Serve with red slaw, hush puppies, and Lexington Dip on the side.</li>
-                                </ol>
-                            </div>
-
-                            <div class="tip-box">
-                                <strong>Bill's Test:</strong> "If you need a knife, you got roast pork." The meat should pull apart effortlessly. That's when you know it's done.
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- PLACES SECTION -->
-        <section class="places-section" id="places">
-            <div class="section-header">
-                <div class="section-label">Visit in Person</div>
-                <h2 class="section-title">Real Places from the Episode</h2>
-                <p class="section-desc">Every restaurant, pit, and backyard Bourdain visited — with current status, addresses, and what to order.</p>
-            </div>
-
-            <div class="places-grid">
-                <!-- KC Places -->
-                <div class="place-card">
+            <div class="place-entry">
+                <div class="place-header-line">
+                    <span class="place-name">Joe's Kansas City Bar-B-Que</span>
                     <span class="place-status status-open">Open</span>
-                    <div class="place-header">
-                        <div class="place-type" style="color: #ff8a80;">Gas Station Institution</div>
-                        <h3 class="place-name" style="color: #ff8a80;">Joe's Kansas City Bar-B-Que</h3>
-                        <div class="place-location">📍 Kansas City, KS / Leawood, KS</div>
-                    </div>
-                    <div class="place-body">
-                        <p class="place-desc">Originally Oklahoma Joe's, opened in 1996 inside a gas station at 47th & Mission in Kansas City, Kansas. Bourdain named the original location one of "13 Places You Must Eat Before You Die." The name changed to Joe's Kansas City Bar-B-Que in 2014. Three locations now serve the KC area.</p>
-                        <div class="place-dish">
-                            <div class="place-dish-label">Bourdain's Order</div>
-                            <div class="place-dish-name">Carolina Pork Sandwich (pulled pork + slaw + Bubba sauce), burnt ends, ribs</div>
-                        </div>
-                        <p class="place-quote">"Oh wow, now this is finger-licking good. Flavor up the yin-yang, it's great."</p>
-                    </div>
-                    <div class="place-footer">
-                        <span class="place-address">11723 Roe Ave, Leawood, KS 66211</span>
-                        <a href="https://www.joeskc.com/" class="place-link" target="_blank">Website →</a>
-                    </div>
                 </div>
+                <div class="place-meta">📍 11723 Roe Ave, Leawood, KS 66211 &nbsp;|&nbsp; Originally Oklahoma Joe's (1996)</div>
+                <p class="place-desc">
+                    Opened in 1996 inside a gas station at 47th & Mission in Kansas City, Kansas. Bourdain named the original location one of "13 Places You Must Eat Before You Die." The name changed to Joe's Kansas City Bar-B-Que in 2014. Three locations now serve the KC area.
+                </p>
+                <div class="place-dish">
+                    Order: Carolina Pork Sandwich (pulled pork + slaw + Bubba sauce), burnt ends, ribs
+                </div>
+                <p class="place-quote">"If you want to get to the bottom of something, you start at the top."</p>
+                <div class="place-footer">
+                    <a href="https://www.joeskc.com/" target="_blank">joeskc.com</a>
+                </div>
+            </div>
 
-                <div class="place-card">
+            <div class="place-entry">
+                <div class="place-header-line">
+                    <span class="place-name">Paul Kirk — Baron of Barbecue</span>
                     <span class="place-status status-closed">Passed Away 2025</span>
-                    <div class="place-header">
-                        <div class="place-type" style="color: #ff8a80;">Grand Master Pitmaster</div>
-                        <h3 class="place-name" style="color: #ff8a80;">Paul Kirk — Baron of Barbecue</h3>
-                        <div class="place-location">📍 Kansas City Area, KS</div>
-                    </div>
-                    <div class="place-body">
-                        <p class="place-desc">Seven-time World Barbecue Champion, author of 12 BBQ books, and founder of the Baron's School of Pitmasters. Paul trained countless pitmasters and appeared on Bourdain's show in his backyard. He passed away on May 26, 2025 at age 84. His legacy lives on through his books, rubs, and the pitmasters he mentored.</p>
-                        <div class="place-dish">
-                            <div class="place-dish-label">Legacy</div>
-                            <div class="place-dish-name">Baron of Barbecue sauce, 12 cookbooks, Baron's School of Pitmasters</div>
-                        </div>
-                        <p class="place-quote">"I'm searching for that ultimate barbecue. I've never found it."</p>
-                    </div>
-                    <div class="place-footer">
-                        <span class="place-address">Baron's School of Pitmasters (legacy)</span>
-                        <a href="https://www.midwest-cremation.com/obituaries/paul-kirk" class="place-link" target="_blank">Obituary →</a>
-                    </div>
                 </div>
+                <div class="place-meta">📍 Kansas City Area, KS &nbsp;|&nbsp; Seven-time World Barbecue Champion</div>
+                <p class="place-desc">
+                    Author of 12 BBQ books and founder of the Baron's School of Pitmasters. Paul trained countless pitmasters and appeared on Bourdain's show in his backyard. He passed away on May 26, 2025 at age 84. His legacy lives on through his books, rubs, and the pitmasters he mentored.
+                </p>
+                <div class="place-dish">
+                    Legacy: Baron of Barbecue sauce, 12 cookbooks, Baron's School of Pitmasters
+                </div>
+                <p class="place-quote">"I'm searching for that ultimate barbecue. I've never found it."</p>
+                <div class="place-footer">
+                    <a href="https://www.midwest-cremation.com/obituaries/paul-kirk" target="_blank">Obituary</a>
+                </div>
+            </div>
+        </div>
 
-                <!-- Texas Places -->
-                <div class="place-card">
+        <!-- CHAPTER 2: TEXAS -->
+        <div class="page chapter-opener">
+            <span class="page-number">9</span>
+            <div class="chapter-number">Chapter Two</div>
+            <div class="ornament">❦</div>
+            <h1 class="chapter-title" style="color: var(--texas-rust);">Texas</h1>
+            <p class="chapter-subtitle">Nothing Beats Texas-Style Barbecue</p>
+            <p style="max-width: 500px; margin: 0 auto; font-size: 1rem; color: var(--ink-faint);">
+                Texans don't just make barbecue — they engineer it. From bullet-proof glass pits to 14-foot beer bottle smokers, the pit is as important as the meat.
+            </p>
+        </div>
+
+        <div class="page">
+            <span class="page-number">10</span>
+            <h2 style="border-color: var(--texas-rust);">Dave Klose — Pit Engineer</h2>
+            <p class="drop-cap">
+                Looks like I'm off to Houston, Texas. You'd think there's some hard and fast rules, the individual way they do things in certain states. But I gotta tell ya, I'm getting pretty confused. But one thing I'm not confused about is who makes, who builds, designs, and constructs the best pits maybe in the universe? This is the man, Dave Klose.
+            </p>
+            <p>
+                I actually believe we make some of the highest quality and best engineered pits in the world. And I won't stop, until I've made something out of everything in the planet Earth. You don't wanna park a car next to us, trust me.
+            </p>
+            <p>
+                I was working out at NASA for years. Administrator at NASA's a woman. I told her I wanted a pit on the moon. She said, "Why?" "Why do you want a pit on the moon?" I said because when the Russians or anyone else land, I want them to see the world's first Klose interplanetary grill.
+            </p>
+
+            <div class="pull-quote">
+                <p>It's not just food, it's not just a lifestyle, it's a calling, and... it's an illness.</p>
+                <div class="attribution">— Dave Klose</div>
+            </div>
+
+            <h3>Dave Klose's Signature Shrimp</h3>
+            <div class="recipe-box" style="--accent-color: var(--texas-rust);">
+                <div class="recipe-label">Ingredients</div>
+                <ul class="recipe-ingredients" style="--accent-color: var(--texas-rust);">
+                    <li>8–10 count tiger shrimp (jumbo), peeled and deveined</li>
+                    <li>Stone crab claw meat</li>
+                    <li>Chicken tenders, pounded thin</li>
+                    <li>Maple-smoked bacon</li>
+                    <li>Cabernet Sauvignon</li>
+                    <li>Toothpicks or butcher's twine</li>
+                </ul>
+                <div class="recipe-label" style="margin-top:1rem;">The Method</div>
+                <ol class="recipe-steps" style="--accent-color: var(--texas-rust);">
+                    <li>Butterfly each shrimp, leaving tail on.</li>
+                    <li>Stuff each shrimp with stone crab meat.</li>
+                    <li>Wrap stuffed shrimp with a pounded-thin chicken tender.</li>
+                    <li>Wrap the entire bundle with maple-smoked bacon. Secure with toothpicks.</li>
+                    <li>Soak in Cabernet Sauvignon overnight (or at least 4 hours).</li>
+                    <li>Smoke or grill at 275°F until bacon is crispy and chicken is cooked through (about 45 min).</li>
+                </ol>
+                <div class="recipe-note">
+                    <strong>Dave's Wisdom:</strong> "You cannot mess this up. If you do it bad, it's incredible. If you do it right, it'll take the top of your head off."
+                </div>
+            </div>
+        </div>
+
+        <div class="page">
+            <span class="page-number">11</span>
+            <h2 style="border-color: var(--texas-rust);">Roy Burns BBQ</h2>
+            <p class="drop-cap">
+                Dave says that he knows a place where they make some of the best ribs and brisket in the nation. So, yeah, where are we, Dave? Yeah, we're at Roy Burn's barbecue. It's been here about 30, 35 years. Some of the best barbecue in Houston.
+            </p>
+            <p>
+                Good lord, it looks like a decent sneeze would level this place. That doesn't seem to stop the customers. People come from all over Houston, southwest side, east side, everywhere. They drive in traffic to get over here and eat this barbecue.
+            </p>
+            <p>
+                According to Roy, the secret to his barbecue lies in the fuel. Slow burning oak. Post oak, that's the secret doing the slow.
+            </p>
+            <p>
+                Roy really understands the business. The main thing is, I tell my customers to come back and tell me if it's bad or good. So then I start looking for ways to change. When you see cars lined up down the street, that's a good tip-off. Limos, and Cadillacs will pull up here. Man, you never know who's getting out.
+            </p>
+
+            <h3>Texas Post Oak Brisket</h3>
+            <div class="recipe-box" style="--accent-color: var(--texas-rust);">
+                <div class="recipe-label">The Texas Trinity Rub</div>
+                <ul class="recipe-ingredients" style="--accent-color: var(--texas-rust);">
+                    <li>2.5 tbsp kosher salt</li>
+                    <li>2.5 tbsp coarse black pepper</li>
+                    <li>2 tbsp garlic powder (optional)</li>
+                    <li>Post oak wood chunks or chips</li>
+                    <li>Beef tallow (for wrapping)</li>
+                </ul>
+                <div class="recipe-label" style="margin-top:1rem;">The Method</div>
+                <ol class="recipe-steps" style="--accent-color: var(--texas-rust);">
+                    <li>Trim brisket: remove silver skin, square off sides, leave ¼ inch fat cap.</li>
+                    <li>Season with salt & pepper only. Dry brine overnight in fridge.</li>
+                    <li>Preheat smoker to 250–265°F. Add post oak for smoke.</li>
+                    <li>Place brisket fat-side toward heat. Smoke 7–8 hours until 165–170°F internal.</li>
+                    <li>Wrap in butcher paper drizzled with beef tallow.</li>
+                    <li>Continue smoking 7–8 more hours until 202–203°F internal.</li>
+                    <li>Rest at room temperature at least 2 hours before slicing.</li>
+                </ol>
+                <div class="recipe-note">
+                    <strong>Why Post Oak?</strong> Post oak burns slow and steady with a mild, clean smoke that enhances beef without overpowering it. It's the gold standard in Texas BBQ.
+                </div>
+            </div>
+        </div>
+
+        <div class="page">
+            <span class="page-number">12</span>
+            <h2 style="border-color: var(--texas-rust);">Places: Texas</h2>
+
+            <div class="place-entry">
+                <div class="place-header-line">
+                    <span class="place-name">BBQ Pits by Klose</span>
                     <span class="place-status status-open">Open</span>
-                    <div class="place-header">
-                        <div class="place-type" style="color: #ffcc80;">Pit Builder / Engineer</div>
-                        <h3 class="place-name" style="color: #ffcc80;">BBQ Pits by Klose</h3>
-                        <div class="place-location">📍 Houston, TX</div>
-                    </div>
-                    <div class="place-body">
-                        <p class="place-desc">David Klose has been building custom BBQ pits in Houston for over 40 years. His creations range from bullet-proof glass pits (from a Sarajevo phone booth) to 14-foot beer bottle smokers with pony keg taps. He's also a World Champion BBQ Pitmaster. You can visit the shop to see the madness in person.</p>
-                        <div class="place-dish">
-                            <div class="place-dish-label">Signature Creation</div>
-                            <div class="place-dish-name">Custom-designed pits from $2,000 to $8,000+. Also: tiger shrimp stuffed with crab, wrapped in bacon & chicken, soaked in Cabernet.</div>
-                        </div>
-                        <p class="place-quote">"I won't stop until I've made something out of everything on planet Earth."</p>
-                    </div>
-                    <div class="place-footer">
-                        <span class="place-address">1355 Judiway St Ste B, Houston, TX 77018</span>
-                        <a href="https://bbqpits.com/" class="place-link" target="_blank">Website →</a>
-                    </div>
                 </div>
+                <div class="place-meta">📍 1355 Judiway St Ste B, Houston, TX 77018 &nbsp;|&nbsp; 40+ years building custom pits</div>
+                <p class="place-desc">
+                    David Klose has been building custom BBQ pits in Houston for over 40 years. His creations range from bullet-proof glass pits (from a Sarajevo phone booth) to 14-foot beer bottle smokers with pony keg taps. He's also a World Champion BBQ Pitmaster.
+                </p>
+                <div class="place-dish">
+                    Visit the shop to see the madness in person. Custom pits from $2,000 to $8,000+
+                </div>
+                <p class="place-quote">"I won't stop until I've made something out of everything on planet Earth."</p>
+                <div class="place-footer">
+                    <a href="https://bbqpits.com/" target="_blank">bbqpits.com</a>
+                </div>
+            </div>
 
-                <div class="place-card">
+            <div class="place-entry">
+                <div class="place-header-line">
+                    <span class="place-name">Burns Original BBQ</span>
                     <span class="place-status status-open">Open</span>
-                    <div class="place-header">
-                        <div class="place-type" style="color: #ffcc80;">50+ Year Institution</div>
-                        <h3 class="place-name" style="color: #ffcc80;">Burns Original BBQ</h3>
-                        <div class="place-location">📍 Houston, TX (Acres Homes)</div>
-                    </div>
-                    <div class="place-body">
-                        <p class="place-desc">Founded in 1973 by Roy Burns Sr., who started selling BBQ by the side of the road in Acres Homes. After Roy passed in 2009, the original location fell into disrepair until grandsons Cory and Carl Crawford bought and restored it in 2012. Today it's a Houston institution with a devoted following — limos and Cadillacs still line up.</p>
-                        <div class="place-dish">
-                            <div class="place-dish-label">Bourdain's Order</div>
-                            <div class="place-dish-name">Ribs and brisket with secret sauce, mustard-based potato salad with pickles</div>
-                        </div>
-                        <p class="place-quote">"Burn's place may not get a 30 for decor from the Zagats, but Roy has mastered the golden rule: make good food."</p>
-                    </div>
-                    <div class="place-footer">
-                        <span class="place-address">8307 De Priest St, Houston, TX 77088</span>
-                        <a href="https://www.burnsoriginalbbq.com/" class="place-link" target="_blank">Website →</a>
+                </div>
+                <div class="place-meta">📍 8307 De Priest St, Houston, TX 77088 &nbsp;|&nbsp; Founded 1973 in Acres Homes</div>
+                <p class="place-desc">
+                    Founded by Roy Burns Sr., who started selling BBQ by the side of the road. After Roy passed in 2009, the original location fell into disrepair until grandsons Cory and Carl Crawford bought and restored it in 2012. Today it's a Houston institution — limos and Cadillacs still line up.
+                </p>
+                <div class="place-dish">
+                    Order: Ribs and brisket with secret sauce, mustard-based potato salad with pickles
+                </div>
+                <p class="place-quote">"Burn's place may not get a 30 for decor from the Zagats, but Roy has mastered the golden rule: make good food."</p>
+                <div class="place-footer">
+                    <a href="https://www.burnsoriginalbbq.com/" target="_blank">burnsoriginalbbq.com</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHAPTER 3: NORTH CAROLINA -->
+        <div class="page chapter-opener">
+            <span class="page-number">13</span>
+            <div class="chapter-number">Chapter Three</div>
+            <div class="ornament">❦</div>
+            <h1 class="chapter-title" style="color: var(--nc-green);">North Carolina</h1>
+            <p class="chapter-subtitle">Cradle of Barbecue — Where It All Began</p>
+            <p style="max-width: 500px; margin: 0 auto; font-size: 1rem; color: var(--ink-faint);">
+                It's all about pig, pig, pig, pig, pig, pig, pig. And when you're talking about Eastern North Carolina, you're talking about nose to tail, everything but the squeak.
+            </p>
+        </div>
+
+        <div class="page">
+            <span class="page-number">14</span>
+            <h2 style="border-color: var(--nc-green);">Ed Mitchell — Whole Hog</h2>
+            <p class="drop-cap">
+                During my travels, I hear about a joint called Mitchell's, where they proudly specialize in whole hog barbecue. I'm introduced to proprietor Ed Mitchell, who promises to come clean on their entire operation.
+            </p>
+            <p>
+                First step, trimming the pig. We'll let Tony cut the feet. What am I thinking? I'm thinking an episode of the Sopranos I saw a few weeks ago. Getting good at this, huh? Every now and then, we get one like me, he's a little healthy. He has a lot of fat glands. A lot of actors in Hollywood pay to have that done, you know, while they're still alive.
+            </p>
+            <p>
+                Now this one, it got all the good stuff in it. The tongue. The brains. The eyeballs. The thymus gland. This is good eating. Now she's ready to go on. Spank it. Now take a stroll on back. That is really a symbolic of a salute. Because he's really gone make somebody very happy.
+            </p>
+
+            <div class="pull-quote">
+                <p>If you're gonna kill a pig, you should eat every part of it. I mean, if the pig ever hunts me down and kills me, I hope that he uses every part.</p>
+                <div class="attribution">— Ed Mitchell</div>
+            </div>
+
+            <h3>Eastern NC Whole Hog (Home Adaptation)</h3>
+            <div class="recipe-box" style="--accent-color: var(--nc-green);">
+                <div class="recipe-label">"Whole Hog" Assembly for the Home Cook</div>
+                <ul class="recipe-ingredients" style="--accent-color: var(--nc-green);">
+                    <li>2–3 lb pork shoulder (Boston butt)</li>
+                    <li>1 lb pork belly</li>
+                    <li>1 lb pork tenderloin</li>
+                    <li>1 rack baby back ribs</li>
+                    <li>Kosher salt, black pepper, smoked paprika</li>
+                    <li>Apple cider vinegar (for sauce)</li>
+                </ul>
+                <div class="recipe-label" style="margin-top:1rem;">The Method</div>
+                <ol class="recipe-steps" style="--accent-color: var(--nc-green);">
+                    <li>Cut all pork pieces in half. Season with salt, pepper, and smoked paprika.</li>
+                    <li>Layer in a Dutch oven: ribs on bottom, then shoulder, tenderloin, belly, sirloin, top with remaining ribs.</li>
+                    <li>Wrap tightly in 3–4 layers of heavy-duty foil.</li>
+                    <li>Roast at 250°F for 8–10 hours until falling-off-bone tender.</li>
+                    <li>Remove bones, pull and shred all meat together. Mix in rendered fat.</li>
+                    <li>Toss with Eastern NC vinegar sauce. Top with crispy skin cracklins if available.</li>
+                </ol>
+                <div class="recipe-note">
+                    <strong>Ed's Philosophy:</strong> The blend of shoulder, belly, and tenderloin mimics whole-hog flavor. If you kill it, use it all.
+                </div>
+            </div>
+        </div>
+
+        <div class="page">
+            <span class="page-number">15</span>
+            <h2 style="border-color: var(--nc-green);">The Sauce Wars</h2>
+            <p class="drop-cap">
+                Just when I think my investigation is over, I discover barbecue has battles within battles. Turns out in North Carolina, there's a barbecue civil war.
+            </p>
+            <p>
+                When you're talking about barbecue in North Carolina, you're talking about two major significant styles. You got your East North Carolina barbecue, which is kind of a vinegary whole hog thing, and you got your western, or Piedmont-Lexington style barbecue.
+            </p>
+            <p>
+                Traditionally, the people east of Carolina thought tomatoes were poisonous. As they came west, they began to add tomatoes.
+            </p>
+
+            <div class="two-col">
+                <div class="recipe-box" style="--accent-color: var(--nc-green);">
+                    <div class="recipe-title">Eastern NC Style</div>
+                    <div class="recipe-label">No Tomato Allowed</div>
+                    <ul class="recipe-ingredients" style="--accent-color: var(--nc-green);">
+                        <li>1 cup apple cider vinegar</li>
+                        <li>1 cup white distilled vinegar</li>
+                        <li>1 tbsp crushed red pepper flakes</li>
+                        <li>1 tsp freshly ground black pepper</li>
+                        <li>1 tsp kosher salt</li>
+                        <li>1–2 tsp sugar (optional)</li>
+                        <li>Dash of hot sauce</li>
+                    </ul>
+                    <div class="recipe-note" style="font-size:0.85rem;">
+                        Shake all ingredients in a jar. Let stand 30 minutes. Refrigerate 1–2 days for best flavor.
                     </div>
                 </div>
 
-                <!-- NC Places -->
-                <div class="place-card">
+                <div class="recipe-box" style="--accent-color: var(--texas-rust);">
+                    <div class="recipe-title">Western NC Style</div>
+                    <div class="recipe-label">Lexington Dip</div>
+                    <ul class="recipe-ingredients" style="--accent-color: var(--texas-rust);">
+                        <li>¾ cup apple cider vinegar</li>
+                        <li>½ cup ketchup</li>
+                        <li>1–2 tbsp brown sugar</li>
+                        <li>1 tbsp Worcestershire sauce</li>
+                        <li>1 tsp crushed red pepper</li>
+                        <li>1 tsp black pepper</li>
+                        <li>½ tsp salt</li>
+                    </ul>
+                    <div class="recipe-note" style="font-size:0.85rem;">
+                        Combine and simmer 10 minutes. Or shake cold and let rest overnight.
+                    </div>
+                </div>
+            </div>
+
+            <div class="pull-quote">
+                <p>We were barbecuing when those people in Texas were chasing cows.</p>
+                <div class="attribution">— Bill Leeson & Jim Tabb, Western NC</div>
+            </div>
+        </div>
+
+        <div class="page">
+            <span class="page-number">16</span>
+            <h2 style="border-color: var(--nc-green);">Bill & Jim — Western NC Style</h2>
+            <p class="drop-cap">
+                Representing the west side are Bill Leeson and Jim Tabb. Even in a real war, these guys would be useful. Jim is an ex-pilot, and Bill is an expert at blowing stuff up. But in the barbecue war, they're generals.
+            </p>
+            <p>
+                Strategy number one, moist shoulder meat. Shoulder is a juicy piece of meat. It's got more fat in the shoulder than the ham. Strategy number two? Direct heat. Far as we're concerned, direct heat is the way to cook.
+            </p>
+            <p>
+                Instead of a separate fire box, these guys cook right on top of the flame. Anywhere from 12 to 14 hours. That smoke's rolling now. Can someone hand me a knife? I know we won't need a knife. I'm furious if we need a knife.
+            </p>
+
+            <h3>Pulled Pork Shoulder (Western NC)</h3>
+            <div class="recipe-box" style="--accent-color: var(--nc-green);">
+                <div class="recipe-label">What You Need</div>
+                <ul class="recipe-ingredients" style="--accent-color: var(--nc-green);">
+                    <li>8–10 lb pork shoulder (bone-in preferred)</li>
+                    <li>Kosher salt & black pepper</li>
+                    <li>Apple cider vinegar (for mopping)</li>
+                    <li>Red slaw & hush puppies (for serving)</li>
+                    <li>Western NC sauce (Lexington Dip)</li>
+                </ul>
+                <div class="recipe-label" style="margin-top:1rem;">The Method</div>
+                <ol class="recipe-steps" style="--accent-color: var(--nc-green);">
+                    <li>Season shoulder generously with salt and pepper. Let sit 1 hour.</li>
+                    <li>Set up smoker for indirect heat at 225°F. Add hickory or oak.</li>
+                    <li>Place shoulder fat-side up. Smoke 12–14 hours, mopping with vinegar every 2 hours.</li>
+                    <li>Target internal temp: 195–205°F. Probe should slide in like butter.</li>
+                    <li>Rest 1 hour. Pull apart with forks or gloved hands — no knife needed.</li>
+                    <li>Serve with red slaw, hush puppies, and Lexington Dip on the side.</li>
+                </ol>
+                <div class="recipe-note">
+                    <strong>Bill's Test:</strong> "If you need a knife, you got roast pork." The meat should pull apart effortlessly.
+                </div>
+            </div>
+        </div>
+
+        <div class="page">
+            <span class="page-number">17</span>
+            <h2 style="border-color: var(--nc-green);">Places: North Carolina</h2>
+
+            <div class="place-entry">
+                <div class="place-header-line">
+                    <span class="place-name">Ed Mitchell's Barbecue</span>
                     <span class="place-status status-evolved">Evolved</span>
-                    <div class="place-header">
-                        <div class="place-type" style="color: #a5d6a7;">Whole Hog Legend</div>
-                        <h3 class="place-name" style="color: #a5d6a7;">Ed Mitchell's Barbecue</h3>
-                        <div class="place-location">📍 Wilson, NC → Raleigh, NC</div>
-                    </div>
-                    <div class="place-body">
-                        <p class="place-desc">Ed Mitchell started in his family's grocery store in Wilson, NC in the 1990s. After The Pit (Raleigh) and Que (Durham, closed 2015), Ed and son Ryan opened The Preserve in Raleigh in partnership with LM Restaurants. Ed was inducted into the National Barbecue Hall of Fame in 2022 and the Black BBQ Hall of Fame. His sauces and rubs are available nationwide through True Made Foods.</p>
-                        <div class="place-dish">
-                            <div class="place-dish-label">Bourdain's Experience</div>
-                            <div class="place-dish-name">Whole hog 8–10 hours, hand-chopped, vinegar-pepper sauce, pig bar with trotters/tails/ears/chitlins</div>
-                        </div>
-                        <p class="place-quote">"Best pig foot I've ever had. And I've had a fair amount of them."</p>
-                    </div>
-                    <div class="place-footer">
-                        <span class="place-address">The Preserve, Raleigh, NC (opening 2024/2025)</span>
-                        <a href="https://www.thepitmasteredmitchell.com/" class="place-link" target="_blank">Website →</a>
-                    </div>
                 </div>
+                <div class="place-meta">📍 The Preserve, Raleigh, NC &nbsp;|&nbsp; National BBQ Hall of Fame 2022</div>
+                <p class="place-desc">
+                    Ed started in his family's grocery store in Wilson, NC in the 1990s. After The Pit (Raleigh) and Que (Durham, closed 2015), Ed and son Ryan opened The Preserve in partnership with LM Restaurants. Inducted into the National Barbecue Hall of Fame in 2022 and the Black BBQ Hall of Fame. Sauces and rubs available nationwide through True Made Foods.
+                </p>
+                <div class="place-dish">
+                    Experience: Whole hog 8–10 hours, hand-chopped, vinegar-pepper sauce, pig bar with trotters/tails/ears/chitlins
+                </div>
+                <p class="place-quote">"Best pig foot I've ever had. And I've had a fair amount of them."</p>
+                <div class="place-footer">
+                    <a href="https://www.thepitmasteredmitchell.com/" target="_blank">thepitmasteredmitchell.com</a>
+                </div>
+            </div>
 
-                <div class="place-card">
+            <div class="place-entry">
+                <div class="place-header-line">
+                    <span class="place-name">Lexington, NC BBQ Trail</span>
                     <span class="place-status status-open">Open</span>
-                    <div class="place-header">
-                        <div class="place-type" style="color: #a5d6a7;">Lexington-Style BBQ</div>
-                        <h3 class="place-name" style="color: #a5d6a7;">Lexington, NC BBQ Joints</div>
-                        <div class="place-location">📍 Lexington, NC (Piedmont)</div>
-                    </div>
-                    <div class="place-body">
-                        <p class="place-desc">Bourdain visited Bill Leeson and Jim Tabb to explore Western NC (Piedmont/Lexington) style. While their specific operation was featured in the episode, Lexington itself is known as the "Barbecue Capital of the World" with over 20 BBQ restaurants. The style uses pork shoulder only, cooked with direct heat, served with red slaw and hush puppies.</p>
-                        <div class="place-dish">
-                            <div class="place-dish-label">What to Try</div>
-                            <div class="place-dish-name">Pulled/chopped pork shoulder, red slaw (ketchup-based), hush puppies, Lexington Dip (tomato-vinegar sauce)</div>
-                        </div>
-                        <p class="place-quote">"We were barbecuing when those people in Texas were chasing cows."</p>
-                    </div>
-                    <div class="place-footer">
-                        <span class="place-address">Lexington, NC BBQ Trail</span>
-                        <a href="https://www.visitlexingtonnc.com/" class="place-link" target="_blank">Visit Lexington →</a>
-                    </div>
+                </div>
+                <div class="place-meta">📍 Lexington, NC (Piedmont) &nbsp;|&nbsp; "Barbecue Capital of the World"</div>
+                <p class="place-desc">
+                    Bourdain visited Bill Leeson and Jim Tabb to explore Western NC (Piedmont/Lexington) style. Lexington itself is known as the "Barbecue Capital of the World" with over 20 BBQ restaurants. The style uses pork shoulder only, cooked with direct heat, served with red slaw and hush puppies.
+                </p>
+                <div class="place-dish">
+                    Try: Pulled/chopped pork shoulder, red slaw (ketchup-based), hush puppies, Lexington Dip
+                </div>
+                <p class="place-quote">"We were barbecuing when those people in Texas were chasing cows."</p>
+                <div class="place-footer">
+                    <a href="https://www.visitlexingtonnc.com/" target="_blank">visitlexingtonnc.com</a>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- QUICK TIPS SECTION -->
-        <section class="quick-tips" id="tips">
-            <div class="section-header">
-                <div class="section-label">Pitmaster Secrets</div>
-                <h2 class="section-title">Quick Tips from the Episode</h2>
-                <p class="section-desc">Bite-sized wisdom gathered from every stop on the BBQ Triangle.</p>
-            </div>
+        <!-- CHAPTER 4: BACKYARD -->
+        <div class="page chapter-opener">
+            <span class="page-number">18</span>
+            <div class="chapter-number">Chapter Four</div>
+            <div class="ornament">❦</div>
+            <h1 class="chapter-title" style="color: var(--sepia);">The Backyard</h1>
+            <p class="chapter-subtitle">Where Most of America Gets Their Barbecue</p>
+            <p style="max-width: 500px; margin: 0 auto; font-size: 1rem; color: var(--ink-faint);">
+                Most of America gets their barbecue from one place — their own backyard. In this case, we're in the backyard of barbecue connoisseur John Lonergan.
+            </p>
+        </div>
 
-            <div class="tips-grid">
-                <div class="tip-card">
-                    <div class="tip-emoji">⏱️</div>
-                    <h4 class="tip-title">Patience is the Secret Ingredient</h4>
-                    <p class="tip-text">Every pitmaster in the episode cooks 8–16 hours. Brisket needs 14+. There is no shortcut. "It's the absolute antithesis of fast food."</p>
-                </div>
+        <div class="page">
+            <span class="page-number">19</span>
+            <h2 style="border-color: var(--sepia);">John Lonergan's Backyard Ribs</h2>
+            <p class="drop-cap">
+                This is a strange and exotic environment for me. I have this overwhelming urge to put on an apron saying "World's Best Dad" or "I'm With Stupid." I need a novelty apron. Nice and quiet. Nobody to bother you. Peaceful. Phone's not ringing. This is the essence of barbecue.
+            </p>
+            <p>
+                Sitting in the backyard, waiting for the ribs to cook, drinking beer, right. Think those ribs are just about done, too. You wanna go ahead and pop it open and take a peek? Of course I do. Rubbed with mustard and spices, these ribs cook for four hours. John pours on the slurry he made from Coke and brown sugar.
+            </p>
+            <p>
+                And one hour later, the perfect ribs. I'll get the plate out, and I'll let you do the honors and chop up some ribs. Oh yeah. We don't cook a lot on this show. I'm actually touching food on this episode. All that beer you're drinking, you gotta get some exercise.
+            </p>
+            <p>
+                If I remember, the dimly remembered past, I last saw one of these, I think this is called a salad. When the meat and the bone come apart that easy, you know you got some good ribs. A true American experience. Real backyard barbecue. This is the barbecue story encapsulated, you know. Now, I can really say, I've been everywhere.
+            </p>
 
-                <div class="tip-card">
-                    <div class="tip-emoji">🪵</div>
-                    <h4 class="tip-title">Wood Matters More Than Sauce</h4>
-                    <p class="tip-text">Post oak in Texas. Hickory and oak in KC. Oak and hickory in NC. The fuel defines the flavor. Roy Burns: "Post oak, that's the secret doing the slow."</p>
-                </div>
-
-                <div class="tip-card">
-                    <div class="tip-emoji">🧂</div>
-                    <h4 class="tip-title">Make Your Rub Your Own</h4>
-                    <p class="tip-text">Paul Kirk's foundation is four salts. Then add three signature spices. "Make it your own" was his signature advice to every student.</p>
-                </div>
-
-                <div class="tip-card">
-                    <div class="tip-emoji">🐷</div>
-                    <h4 class="tip-title">Nose to Tail, Everything But the Squeak</h4>
-                    <p class="tip-text">Ed Mitchell's philosophy: if you kill it, use it all. Trotters, ears, tails, chitlins, cracklins — every part has a place at the pig bar.</p>
-                </div>
-
-                <div class="tip-card">
-                    <div class="tip-emoji">🍺</div>
-                    <h4 class="tip-title">The Backyard is Sacred</h4>
-                    <p class="tip-text">John Lonergan's method: mustard rub, 4 hours, Coca-Cola & brown sugar slurry, beer in hand. "The essence of barbecue is sitting in the backyard, waiting."</p>
-                </div>
-
-                <div class="tip-card">
-                    <div class="tip-emoji">🔪</div>
-                    <h4 class="tip-title">If You Need a Knife, It's Wrong</h4>
-                    <p class="tip-text">Bill Leeson's test: properly cooked pulled pork falls apart with no knife. "If you need a knife, you got roast pork." Probe should slide like butter.</p>
-                </div>
-
-                <div class="tip-card">
-                    <div class="tip-emoji">🌶️</div>
-                    <h4 class="tip-title">Sauce is a Civil War</h4>
-                    <p class="tip-text">Eastern NC: vinegar only, no tomato ("tomatoes are poisonous"). Western NC: a little ketchup. Kansas City: thick & sweet. Texas: often no sauce at all.</p>
-                </div>
-
-                <div class="tip-card">
-                    <div class="tip-emoji">🎓</div>
-                    <h4 class="tip-title">Barbecue is an Endless Learning Process</h4>
-                    <p class="tip-text">Even the masters admit they don't know it all. Every cook teaches something new. The journey is the destination — there is no "perfect" barbecue.</p>
+            <div class="recipe-box" style="--accent-color: var(--sepia);">
+                <div class="recipe-title">Backyard Coca-Cola Ribs</div>
+                <div class="recipe-label">What You Need</div>
+                <ul class="recipe-ingredients" style="--accent-color: var(--sepia);">
+                    <li>2 racks baby back ribs</li>
+                    <li>Yellow mustard (as binder)</li>
+                    <li>Your favorite BBQ rub</li>
+                    <li>1 cup Coca-Cola</li>
+                    <li>½ cup brown sugar</li>
+                    <li>Beer (for the pitmaster)</li>
+                    <li>Salad (optional, mostly forgotten)</li>
+                </ul>
+                <div class="recipe-label" style="margin-top:1rem;">The Method</div>
+                <ol class="recipe-steps" style="--accent-color: var(--sepia);">
+                    <li>Remove membrane from back of ribs. Coat with mustard, then rub.</li>
+                    <li>Smoke at 225°F for 3 hours.</li>
+                    <li>Mix Coca-Cola and brown sugar into a slurry.</li>
+                    <li>Wrap ribs in foil, pour slurry over, seal tightly.</li>
+                    <li>Return to smoker for 1 more hour.</li>
+                    <li>Unwrap, sauce if desired, smoke 30 min to set glaze.</li>
+                    <li>Rest 10 minutes. The meat should literally fall off the bone.</li>
+                </ol>
+                <div class="recipe-note">
+                    <strong>The Essence:</strong> "Sitting in the backyard, waiting for the ribs to cook, drinking beer. This is the barbecue story encapsulated."
                 </div>
             </div>
-        </section>
+        </div>
+
+        <!-- CHAPTER 5: WISDOM -->
+        <div class="page chapter-opener">
+            <span class="page-number">20</span>
+            <div class="chapter-number">Chapter Five</div>
+            <div class="ornament">❦</div>
+            <h1 class="chapter-title" style="color: var(--gold);">Pitmaster Wisdom</h1>
+            <p class="chapter-subtitle">Eight Lessons from the Smoke</p>
+        </div>
+
+        <div class="page">
+            <span class="page-number">21</span>
+            <h2 style="border-color: var(--gold);">Lessons from the Fire</h2>
+
+            <div class="tip-entry">
+                <span class="tip-number">I</span>
+                <div class="tip-content">
+                    <h5>Patience is the Secret Ingredient</h5>
+                    <p>Every pitmaster in the episode cooks 8–16 hours. Brisket needs 14+. There is no shortcut. "It's the absolute antithesis of fast food."</p>
+                </div>
+            </div>
+
+            <div class="tip-entry">
+                <span class="tip-number">II</span>
+                <div class="tip-content">
+                    <h5>Wood Matters More Than Sauce</h5>
+                    <p>Post oak in Texas. Hickory and oak in KC. Oak and hickory in NC. The fuel defines the flavor. Roy Burns: "Post oak, that's the secret doing the slow."</p>
+                </div>
+            </div>
+
+            <div class="tip-entry">
+                <span class="tip-number">III</span>
+                <div class="tip-content">
+                    <h5>Make Your Rub Your Own</h5>
+                    <p>Paul Kirk's foundation is four salts. Then add three signature spices. "Make it your own" was his signature advice to every student.</p>
+                </div>
+            </div>
+
+            <div class="tip-entry">
+                <span class="tip-number">IV</span>
+                <div class="tip-content">
+                    <h5>Nose to Tail, Everything But the Squeak</h5>
+                    <p>Ed Mitchell's philosophy: if you kill it, use it all. Trotters, ears, tails, chitlins, cracklins — every part has a place at the pig bar.</p>
+                </div>
+            </div>
+
+            <div class="tip-entry">
+                <span class="tip-number">V</span>
+                <div class="tip-content">
+                    <h5>The Backyard is Sacred</h5>
+                    <p>John Lonergan's method: mustard rub, 4 hours, Coca-Cola & brown sugar slurry, beer in hand. "The essence of barbecue is sitting in the backyard, waiting."</p>
+                </div>
+            </div>
+
+            <div class="tip-entry">
+                <span class="tip-number">VI</span>
+                <div class="tip-content">
+                    <h5>If You Need a Knife, It's Wrong</h5>
+                    <p>Bill Leeson's test: properly cooked pulled pork falls apart with no knife. "If you need a knife, you got roast pork." Probe should slide like butter.</p>
+                </div>
+            </div>
+
+            <div class="tip-entry">
+                <span class="tip-number">VII</span>
+                <div class="tip-content">
+                    <h5>Sauce is a Civil War</h5>
+                    <p>Eastern NC: vinegar only, no tomato ("tomatoes are poisonous"). Western NC: a little ketchup. Kansas City: thick & sweet. Texas: often no sauce at all.</p>
+                </div>
+            </div>
+
+            <div class="tip-entry">
+                <span class="tip-number">VIII</span>
+                <div class="tip-content">
+                    <h5>Barbecue is an Endless Learning Process</h5>
+                    <p>Even the masters admit they don't know it all. Every cook teaches something new. The journey is the destination — there is no "perfect" barbecue.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CLOSING -->
+        <div class="page">
+            <span class="page-number">22</span>
+            <div class="section-divider" style="margin-top: 2rem;">
+                <span>❦</span>
+            </div>
+
+            <div class="pull-quote" style="margin-top: 3rem;">
+                <p>So, I've searched far and wide for America's best barbecue. Apologies to Memphis and St. Louis. What is my one absolute conclusion? Barbecue is not a cuisine, it's an obsession. But the barbecue debate should make us all proud. Barbecuers are free-thinking individualists.</p>
+                <div class="attribution">— Anthony Bourdain</div>
+            </div>
+
+            <p style="text-align: center; margin-top: 3rem; font-style: italic; color: var(--ink-faint);">
+                Show the world what you're made of, America.<br>
+                Put on that apron and light up those barbecues<br>
+                from sea to shining sea.<br><br>
+                Now, where can I find a salad bar?
+            </p>
+
+            <div class="section-divider" style="margin-top: 3rem;">
+                <span>◈</span>
+            </div>
+
+            <p style="text-align: center; font-size: 0.8rem; color: var(--ink-faint); margin-top: 2rem;">
+                A Cook's Tour — Season 2, Episode 7<br>
+                "The BBQ Triangle" — Originally aired April 4, 2003<br><br>
+                <em>Transcribed and compiled from the original broadcast.</em>
+            </p>
+        </div>
 
     </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <p class="footer-text">"Show the world what you're made of, America. Light up those barbecues from sea to shining sea."</p>
-        <p class="footer-sub">Anthony Bourdain — A Cook's Tour: The BBQ Triangle (S2E7, April 4, 2003)</p>
-    </footer>
-
-    <script>
-        // Generate smoke particles
-        function createSmoke() {
-            const container = document.getElementById('smoke');
-            for (let i = 0; i < 15; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'smoke-particle';
-                const size = Math.random() * 150 + 80;
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDuration = (Math.random() * 15 + 20) + 's';
-                particle.style.animationDelay = (Math.random() * 20) + 's';
-                container.appendChild(particle);
-            }
-        }
-        createSmoke();
-
-        // Scroll to section
-        function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if (el) {
-                const offset = 80;
-                const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
-                window.scrollTo({ top, behavior: 'smooth' });
-            }
-        }
-
-        // Tab switching
-        function switchTab(region) {
-            document.querySelectorAll('.region-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-
-            document.querySelector('.' + region + '-tab').classList.add('active');
-            document.getElementById('tab-' + region).classList.add('active');
-        }
-
-        // Intersection Observer for scroll animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
-
-        document.querySelectorAll('.region-section, .places-section, .quick-tips').forEach(el => {
-            observer.observe(el);
-        });
-
-        // Parallax hero
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const hero = document.querySelector('.hero');
-            if (hero && scrolled < window.innerHeight) {
-                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
-            }
-        });
-    </script>
 </body>
 </html>
