@@ -1,1954 +1,1212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Franklin Barbecue MasterClass — Interactive Guide</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --ember: #c75b39;
-            --ember-light: #e87a54;
-            --ember-dark: #a04020;
-            --charcoal: #1a1a1a;
-            --smoke: #2d2d2d;
-            --ash: #4a4a4a;
-            --paper: #f5f0e8;
-            --cream: #faf7f2;
-            --wood: #8b6914;
-            --wood-light: #b8943c;
-            --success: #4a7c59;
-            --warning: #d4a843;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--charcoal);
-            color: var(--paper);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: linear-gradient(135deg, #1a0a05 0%, #2d1810 50%, #1a1a1a 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="%23c75b39" stroke-width="0.3" opacity="0.1"/></svg>');
-            background-size: 80px 80px;
-            animation: drift 20s linear infinite;
-        }
-
-        @keyframes drift {
-            0% { background-position: 0 0; }
-            100% { background-position: 80px 80px; }
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            max-width: 900px;
-            padding: 2rem;
-        }
-
-        .hero h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2.5rem, 8vw, 5rem);
-            font-weight: 900;
-            color: var(--paper);
-            margin-bottom: 1rem;
-            letter-spacing: -0.02em;
-            text-shadow: 0 4px 20px rgba(199, 91, 57, 0.3);
-        }
-
-        .hero .subtitle {
-            font-size: 1.3rem;
-            color: var(--ember-light);
-            font-weight: 300;
-            margin-bottom: 2rem;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-
-        .hero-quote {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            font-style: italic;
-            color: rgba(245, 240, 232, 0.8);
-            max-width: 700px;
-            margin: 0 auto 3rem;
-            line-height: 1.8;
-            border-left: 3px solid var(--ember);
-            padding-left: 2rem;
-            text-align: left;
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 2s infinite;
-            cursor: pointer;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(10px); }
-        }
-
-        .scroll-indicator svg {
-            width: 40px;
-            height: 40px;
-            stroke: var(--ember-light);
-            fill: none;
-            stroke-width: 2;
-        }
-
-        .nav-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(26, 26, 26, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(199, 91, 57, 0.2);
-            transform: translateY(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .nav-bar.visible { transform: translateY(0); }
-
-        .nav-bar .logo {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            color: var(--ember-light);
-            font-size: 1.2rem;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--paper);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: color 0.3s;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--ember);
-            transition: width 0.3s;
-        }
-
-        .nav-links a:hover { color: var(--ember-light); }
-        .nav-links a:hover::after { width: 100%; }
-
-        .section {
-            padding: 5rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .section-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(2rem, 5vw, 3rem);
-            color: var(--paper);
-            margin-bottom: 0.5rem;
-        }
-
-        .section-number {
-            display: inline-block;
-            background: var(--ember);
-            color: var(--paper);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            line-height: 40px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .section-header p {
-            color: var(--ash);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            background: var(--smoke);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid rgba(199, 91, 57, 0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            position: relative;
-        }
-
-        .card:hover {
-            transform: translateY(-8px);
-            border-color: var(--ember);
-            box-shadow: 0 20px 40px rgba(199, 91, 57, 0.15);
-        }
-
-        .card-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        .card-tag {
-            display: inline-block;
-            background: var(--ember-dark);
-            color: var(--paper);
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.75rem;
-        }
-
-        .card h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.4rem;
-            color: var(--paper);
-            margin-bottom: 0.5rem;
-        }
-
-        .card p {
-            color: var(--ash);
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .card-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-time {
-            color: var(--wood-light);
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .card-arrow {
-            color: var(--ember);
-            transition: transform 0.3s;
-        }
-
-        .card:hover .card-arrow {
-            transform: translateX(5px);
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(8px);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            overflow-y: auto;
-        }
-
-        .modal-overlay.active { display: flex; }
-
-        .modal {
-            background: var(--smoke);
-            border-radius: 20px;
-            max-width: 800px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            border: 1px solid rgba(199, 91, 57, 0.2);
-            position: relative;
-        }
-
-        .modal-header {
-            padding: 2rem 2rem 1rem;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .modal-header h2 {
-            font-family: 'Playfair Display', serif;
-            color: var(--paper);
-            font-size: 2rem;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: none;
-            border: none;
-            color: var(--paper);
-            font-size: 1.5rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s;
-        }
-
-        .modal-close:hover {
-            background: rgba(199, 91, 57, 0.2);
-        }
-
-        .modal-body {
-            padding: 2rem;
-        }
-
-        .modal-body h3 {
-            font-family: 'Playfair Display', serif;
-            color: var(--ember-light);
-            font-size: 1.5rem;
-            margin: 1.5rem 0 0.75rem;
-        }
-
-        .modal-body h3:first-child { margin-top: 0; }
-
-        .modal-body p, .modal-body li {
-            color: rgba(245, 240, 232, 0.85);
-            line-height: 1.8;
-            margin-bottom: 0.75rem;
-        }
-
-        .modal-body ul {
-            padding-left: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .modal-body li {
-            margin-bottom: 0.5rem;
-        }
-
-        .highlight-box {
-            background: rgba(199, 91, 57, 0.1);
-            border-left: 4px solid var(--ember);
-            padding: 1.25rem;
-            border-radius: 0 8px 8px 0;
-            margin: 1.5rem 0;
-        }
-
-        .highlight-box p {
-            margin: 0;
-            font-style: italic;
-            color: var(--paper);
-        }
-
-        .tip-box {
-            background: rgba(74, 124, 89, 0.15);
-            border-left: 4px solid var(--success);
-            padding: 1.25rem;
-            border-radius: 0 8px 8px 0;
-            margin: 1.5rem 0;
-        }
-
-        .tip-box strong {
-            color: var(--success);
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .warning-box {
-            background: rgba(212, 168, 67, 0.15);
-            border-left: 4px solid var(--warning);
-            padding: 1.25rem;
-            border-radius: 0 8px 8px 0;
-            margin: 1.5rem 0;
-        }
-
-        .warning-box strong {
-            color: var(--warning);
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .timeline {
-            position: relative;
-            padding-left: 2rem;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(to bottom, var(--ember), var(--wood));
-        }
-
-        .timeline-item {
-            position: relative;
-            padding-bottom: 2rem;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -2rem;
-            top: 0.5rem;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--ember);
-            border: 3px solid var(--charcoal);
-            transform: translateX(-5px);
-        }
-
-        .timeline-item h4 {
-            color: var(--ember-light);
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .timeline-item p {
-            color: var(--ash);
-            font-size: 0.95rem;
-        }
-
-        .checklist {
-            list-style: none;
-            padding: 0;
-        }
-
-        .checklist li {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 1px solid transparent;
-        }
-
-        .checklist li:hover {
-            background: rgba(255,255,255,0.06);
-            border-color: rgba(199, 91, 57, 0.2);
-        }
-
-        .checklist li.checked {
-            background: rgba(74, 124, 89, 0.1);
-            border-color: var(--success);
-        }
-
-        .checklist li.checked .check-circle {
-            background: var(--success);
-            border-color: var(--success);
-        }
-
-        .checklist li.checked .check-circle::after {
-            content: '✓';
-            color: white;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        .check-circle {
-            width: 24px;
-            height: 24px;
-            border: 2px solid var(--ash);
-            border-radius: 50%;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            margin-top: 2px;
-        }
-
-        .checklist-text {
-            flex: 1;
-        }
-
-        .checklist-text strong {
-            color: var(--paper);
-            display: block;
-            margin-bottom: 0.25rem;
-        }
-
-        .checklist-text span {
-            color: var(--ash);
-            font-size: 0.9rem;
-        }
-
-        .temp-gauge {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1.5rem;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            margin: 1rem 0;
-        }
-
-        .temp-value {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--ember);
-            min-width: 100px;
-            text-align: center;
-        }
-
-        .temp-label {
-            color: var(--ash);
-            font-size: 0.9rem;
-        }
-
-        .temp-bar {
-            flex: 1;
-            height: 8px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 4px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .temp-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 1s ease;
-        }
-
-        .temp-fill.low { background: linear-gradient(90deg, #4a7c59, #6ba37a); }
-        .temp-fill.medium { background: linear-gradient(90deg, #d4a843, #e8c76a); }
-        .temp-fill.high { background: linear-gradient(90deg, #c75b39, #e87a54); }
-
-        .progress-tracker {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 2rem 0;
-            padding: 1rem;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-        }
-
-        .progress-step {
-            text-align: center;
-            flex: 1;
-            position: relative;
-        }
-
-        .progress-step::after {
-            content: '';
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            width: 100%;
-            height: 2px;
-            background: rgba(255,255,255,0.1);
-            z-index: 0;
-        }
-
-        .progress-step:last-child::after { display: none; }
-
-        .progress-step.active::after {
-            background: linear-gradient(90deg, var(--ember), var(--wood));
-        }
-
-        .step-circle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--smoke);
-            border: 2px solid var(--ash);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 0.5rem;
-            position: relative;
-            z-index: 1;
-            font-weight: 700;
-            color: var(--ash);
-            transition: all 0.3s;
-        }
-
-        .progress-step.active .step-circle {
-            background: var(--ember);
-            border-color: var(--ember);
-            color: var(--paper);
-        }
-
-        .progress-step.completed .step-circle {
-            background: var(--success);
-            border-color: var(--success);
-            color: var(--paper);
-        }
-
-        .step-label {
-            font-size: 0.8rem;
-            color: var(--ash);
-            font-weight: 500;
-        }
-
-        .progress-step.active .step-label {
-            color: var(--ember-light);
-        }
-
-        .calculator {
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-        }
-
-        .calc-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .calc-row:last-child { border-bottom: none; }
-
-        .calc-label {
-            color: var(--ash);
-        }
-
-        .calc-value {
-            font-weight: 700;
-            color: var(--paper);
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 0.5rem;
-        }
-
-        .tab-btn {
-            background: none;
-            border: none;
-            color: var(--ash);
-            padding: 0.75rem 1.5rem;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-        }
-
-        .tab-btn:hover {
-            color: var(--paper);
-            background: rgba(255,255,255,0.05);
-        }
-
-        .tab-btn.active {
-            color: var(--paper);
-            background: var(--ember);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active { display: block; }
-
-        .footer {
-            text-align: center;
-            padding: 4rem 2rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            margin-top: 4rem;
-        }
-
-        .footer p {
-            color: var(--ash);
-            font-size: 0.9rem;
-        }
-
-        .footer .quote {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            font-size: 1.2rem;
-            color: var(--paper);
-            max-width: 600px;
-            margin: 0 auto 1rem;
-        }
-
-        .search-box {
-            max-width: 500px;
-            margin: 0 auto 3rem;
-            position: relative;
-        }
-
-        .search-box input {
-            width: 100%;
-            padding: 1rem 1.5rem 1rem 3rem;
-            background: var(--smoke);
-            border: 1px solid rgba(199, 91, 57, 0.2);
-            border-radius: 50px;
-            color: var(--paper);
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .search-box input:focus {
-            border-color: var(--ember);
-            box-shadow: 0 0 20px rgba(199, 91, 57, 0.1);
-        }
-
-        .search-box input::placeholder {
-            color: var(--ash);
-        }
-
-        .search-box svg {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            stroke: var(--ash);
-            width: 20px;
-            height: 20px;
-        }
-
-        .filter-bar {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
-
-        .filter-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: var(--ash);
-            padding: 0.5rem 1.25rem;
-            border-radius: 20px;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.85rem;
-            transition: all 0.3s;
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            background: var(--ember);
-            border-color: var(--ember);
-            color: var(--paper);
-        }
-
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .cards-grid { grid-template-columns: 1fr; }
-            .progress-tracker { flex-wrap: wrap; gap: 1rem; }
-            .progress-step::after { display: none; }
-            .temp-gauge { flex-direction: column; text-align: center; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solitude — A Flipbook</title>
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { -webkit-font-smoothing:antialiased; }
+
+body {
+  background: #1a1410;
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(201,169,110,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(0,0,0,0.4) 0%, transparent 50%),
+    linear-gradient(180deg, #1e1812 0%, #16120e 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: Georgia, "Times New Roman", serif;
+  overflow: hidden;
+  color: #2c241b;
+}
+
+.book-stage {
+  position: relative;
+  width: 1000px;
+  height: 680px;
+  max-width: 95vw;
+  perspective: 2000px;
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.6));
+}
+
+.book {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.spread {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  transition: opacity 0.1s;
+}
+.spread.active {
+  opacity: 1;
+  pointer-events: all;
+}
+.spread.exiting {
+  animation: spreadOut 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.spread.entering {
+  animation: spreadIn 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes spreadOut {
+  from { transform: translateX(0) scale(1); opacity: 1; }
+  to   { transform: translateX(-40px) scale(0.98); opacity: 0; }
+}
+@keyframes spreadIn {
+  from { transform: translateX(40px) scale(0.98); opacity: 0; }
+  to   { transform: translateX(0) scale(1); opacity: 1; }
+}
+
+.page {
+  width: 50%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: 40px 36px 52px 44px;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-left {
+  background:
+    linear-gradient(to right, rgba(0,0,0,0.06) 0%, transparent 8%, transparent 92%, rgba(0,0,0,0.02) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.03) 0%, transparent 6%),
+    #f5f2eb;
+  border-radius: 3px 0 0 3px;
+  padding-right: 40px;
+  padding-left: 48px;
+}
+
+.page-right {
+  background:
+    linear-gradient(to left, rgba(0,0,0,0.06) 0%, transparent 8%, transparent 92%, rgba(0,0,0,0.02) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.03) 0%, transparent 6%),
+    #f5f2eb;
+  border-radius: 0 3px 3px 0;
+  padding-left: 40px;
+  padding-right: 48px;
+}
+
+.page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.5;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.page-left::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 24px; height: 100%;
+  background: linear-gradient(to left, rgba(0,0,0,0.12) 0%, transparent 100%);
+  pointer-events: none;
+}
+.page-right::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 24px; height: 100%;
+  background: linear-gradient(to right, rgba(0,0,0,0.10) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.page-num {
+  position: absolute;
+  bottom: 18px;
+  font-family: -apple-system, sans-serif;
+  font-size: 10px;
+  color: #a09890;
+  letter-spacing: 1px;
+}
+.page-left .page-num { left: 48px; }
+.page-right .page-num { right: 48px; }
+
+/* Typography */
+.paper-title {
+  font-family: Georgia, serif;
+  font-size: 2.4rem;
+  font-weight: 400;
+  color: #1a1410;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 6px;
+}
+.paper-sub {
+  font-family: -apple-system, sans-serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #8a8078;
+  margin-bottom: 28px;
+}
+.paper-eyebrow {
+  font-family: -apple-system, sans-serif;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #8a2b2b;
+  margin-bottom: 14px;
+  font-weight: 700;
+}
+.paper-h2 {
+  font-family: Georgia, serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: #1a1410;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+.paper-h3 {
+  font-family: -apple-system, sans-serif;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: #6b5a3e;
+  margin-top: 22px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.paper-p {
+  font-size: 12.5px;
+  line-height: 1.7;
+  color: #3a3228;
+  margin-bottom: 10px;
+  text-align: justify;
+  hyphens: auto;
+}
+.paper-p em { font-style: italic; color: #1a1410; }
+.paper-p strong { font-weight: 600; color: #1a1410; }
+.paper-lead {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #4a4238;
+  font-style: italic;
+  margin-bottom: 16px;
+  border-left: 2px solid #c9a96e;
+  padding-left: 14px;
+}
+.paper-quote {
+  margin: 18px 0;
+  padding: 12px 0;
+  border-top: 1px solid #d8d4cc;
+  border-bottom: 1px solid #d8d4cc;
+}
+.paper-quote p {
+  font-style: italic;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #2c241b;
+  margin: 0;
+}
+.paper-quote cite {
+  display: block;
+  margin-top: 8px;
+  font-family: -apple-system, sans-serif;
+  font-size: 10px;
+  color: #8a8078;
+  font-style: normal;
+  letter-spacing: 0.5px;
+}
+.paper-quote cite::before {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 1px;
+  background: #c9a96e;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+.paper-insight {
+  background: rgba(201,169,110,0.07);
+  border-left: 2px solid #c9a96e;
+  padding: 10px 12px;
+  margin: 14px 0;
+  border-radius: 0 4px 4px 0;
+}
+.paper-insight h4 {
+  font-family: -apple-system, sans-serif;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #6b5a3e;
+  margin-bottom: 5px;
+  font-weight: 700;
+}
+.paper-insight p {
+  font-size: 11.5px;
+  line-height: 1.55;
+  color: #4a4238;
+  margin: 0;
+}
+.paper-practical {
+  background: #faf8f4;
+  border: 1px solid #e5e0d6;
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin: 12px 0;
+}
+.paper-practical h4 {
+  font-family: -apple-system, sans-serif;
+  font-size: 8px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #1a1410;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+.paper-practical ol, .paper-practical ul {
+  padding-left: 16px;
+  margin: 0;
+}
+.paper-practical li {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #3a3228;
+  margin-bottom: 4px;
+}
+.paper-practical li::marker { color: #c9a96e; }
+.paper-toc-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 0;
+  border-bottom: 1px dotted #d8d4cc;
+  font-size: 12px;
+  color: #3a3228;
+}
+.paper-toc-item span:last-child {
+  font-family: -apple-system, sans-serif;
+  font-size: 10px;
+  color: #a09890;
+}
+.paper-toc-h {
+  font-family: -apple-system, sans-serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: #1a1410;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+.paper-endmark {
+  text-align: center;
+  margin-top: auto;
+  padding-bottom: 16px;
+}
+.paper-endmark span {
+  font-size: 16px;
+  color: #c9a96e;
+  letter-spacing: 8px;
+}
+.paper-rule {
+  width: 40px;
+  height: 1px;
+  background: #c9a96e;
+  margin: 16px 0;
+}
+.paper-wisdom-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.paper-wisdom-list li {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #3a3228;
+  padding: 8px 0;
+  border-bottom: 1px dotted #d8d4cc;
+}
+.paper-wisdom-list li:last-child { border-bottom: none; }
+.paper-wisdom-list li::before {
+  content: '—';
+  color: #c9a96e;
+  margin-right: 8px;
+  font-weight: 700;
+}
+
+/* Cover */
+.cover-right {
+  background:
+    linear-gradient(135deg, rgba(201,169,110,0.1) 0%, transparent 50%),
+    linear-gradient(to bottom, #f5f2eb 0%, #ebe7de 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.cover-right .paper-title {
+  font-size: 3rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.cover-right .ornament {
+  width: 60px;
+  height: 2px;
+  background: #c9a96e;
+  margin: 16px 0;
+}
+.cover-right .paper-sub {
+  font-size: 10px;
+  letter-spacing: 3px;
+  max-width: 200px;
+  line-height: 1.5;
+}
+.cover-left {
+  background: #2a1b15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cover-left .endpaper-pattern {
+  width: 80%;
+  height: 80%;
+  border: 1px solid rgba(201,169,110,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cover-left .endpaper-pattern span {
+  color: rgba(201,169,110,0.2);
+  font-size: 48px;
+}
+
+.back-right {
+  background: #2a1b15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: rgba(245,242,235,0.6);
+  text-align: center;
+}
+.back-right p {
+  font-size: 12px;
+  line-height: 1.8;
+  max-width: 70%;
+}
+.back-right .the-end {
+  font-family: Georgia, serif;
+  font-size: 2rem;
+  color: #c9a96e;
+  margin-bottom: 16px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+}
+
+/* Turn shadow */
+.turn-shadow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(to left, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 50%);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 20;
+}
+.turn-shadow.sweep {
+  animation: shadowSweep 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes shadowSweep {
+  0%   { transform: translateX(0); opacity: 0; }
+  15%  { opacity: 1; }
+  100% { transform: translateX(-100%); opacity: 0; }
+}
+
+/* Controls */
+.book-controls {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: -apple-system, sans-serif;
+  z-index: 100;
+}
+.book-controls button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,169,110,0.3);
+  background: rgba(26,20,16,0.6);
+  color: #c9a96e;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  backdrop-filter: blur(8px);
+}
+.book-controls button:hover {
+  background: rgba(201,169,110,0.15);
+  transform: scale(1.1);
+}
+.book-controls button:active { transform: scale(0.95); }
+.book-controls button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.page-indicator {
+  font-size: 12px;
+  color: rgba(245,242,235,0.5);
+  letter-spacing: 2px;
+  min-width: 80px;
+  text-align: center;
+}
+
+.click-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 30%;
+  cursor: pointer;
+  z-index: 10;
+}
+.click-zone.prev-zone { left: 0; }
+.click-zone.next-zone { right: 0; }
+
+.mobile-hint {
+  display: none;
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: -apple-system, sans-serif;
+  font-size: 11px;
+  color: rgba(245,242,235,0.3);
+  text-align: center;
+}
+
+@media (max-width: 1050px) {
+  .book-stage { transform: scale(0.85); transform-origin: center center; }
+}
+@media (max-width: 850px) {
+  .book-stage { transform: scale(0.7); }
+}
+@media (max-width: 680px) {
+  .book-stage { transform: scale(0.55); }
+  .mobile-hint { display: block; }
+}
+@media (max-width: 520px) {
+  .book-stage { transform: scale(0.45); }
+  .book-controls { transform: scale(1.3); margin-top: 40px; }
+}
+</style>
 <base target="_blank">
 </head>
 <body>
-    <nav class="nav-bar" id="navbar">
-        <div class="logo">Franklin BBQ</div>
-        <ul class="nav-links">
-            <li><a href="#philosophy">Philosophy</a></li>
-            <li><a href="#fire">Fire</a></li>
-            <li><a href="#meats">Meats</a></li>
-            <li><a href="#techniques">Techniques</a></li>
-            <li><a href="#story">Story</a></li>
-        </ul>
-    </nav>
 
-    <section class="hero" id="top">
-        <div class="hero-content">
-            <p class="subtitle">Aaron Franklin's MasterClass</p>
-            <h1>The Art of<br>Texas Barbecue</h1>
-            <p class="hero-quote">"It's just a piece of meat and it's just fire. Nothing special, but it's the journey of how you get to the end and then it's the conversations that you get to have at the end of it. That's kind of barbecue for me."</p>
-            <p style="color: var(--ash); font-size: 0.9rem; margin-top: 2rem;">
-                An interactive guide to fire, smoke, and the soul of Central Texas barbecue
-            </p>
+<div class="book-stage">
+  <div class="book" id="book">
+    <div class="turn-shadow" id="turnShadow"></div>
+
+    <!-- ==================== SPREAD 0: COVER ==================== -->
+    <div class="spread active" data-index="0">
+      <div class="page page-left cover-left">
+        <div class="endpaper-pattern"><span>❦</span></div>
+        <span class="page-num">i</span>
+      </div>
+      <div class="page page-right cover-right">
+        <div class="paper-eyebrow" style="color:#6b5a3e; margin-bottom:20px;">A Field Manual</div>
+        <div class="paper-title" style="font-size:3.2rem;">Solitude</div>
+        <div class="ornament"></div>
+        <div class="paper-sub" style="font-size:10px; letter-spacing:3px; max-width:220px;">
+          Practicals, Wisdom & Quotes on the Art of Being Alone
         </div>
-        <div class="scroll-indicator" onclick="document.getElementById('philosophy').scrollIntoView({behavior:'smooth'})">
-            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-        </div>
-    </section>
-
-    <section class="section" id="philosophy">
-        <div class="section-header fade-in">
-            <span class="section-number">01</span>
-            <h2>The Philosophy</h2>
-            <p>Understanding the heart and soul behind great barbecue — it is about the journey, not just the destination.</p>
-        </div>
-
-        <div class="cards-grid fade-in">
-            <div class="card" onclick="openModal('philosophy-intro')">
-                <div class="card-body">
-                    <span class="card-tag">Mindset</span>
-                    <h3>Cooking with Heart</h3>
-                    <p>"Even as a kid, I could kind of sense the amount of love that went into this food. And that is the premise of barbecue. It is like you cook with your heart."</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">Read more →</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-
-            <div class="card" onclick="openModal('philosophy-process')">
-                <div class="card-body">
-                    <span class="card-tag">Process</span>
-                    <h3>The Journey Matters</h3>
-                    <p>Barbecue is part culture, part process, part food. It is real soul food. The conversations at the end matter as much as the meat itself.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">Read more →</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-
-            <div class="card" onclick="openModal('philosophy-learning')">
-                <div class="card-body">
-                    <span class="card-tag">Learning</span>
-                    <h3>Embrace Mistakes</h3>
-                    <p>"Just kind of be prepared to make mistakes. It is totally okay. It is just about learning." Franklin teaches exactly how he trains his cooks.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">Read more →</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="fire">
-        <div class="section-header fade-in">
-            <span class="section-number">02</span>
-            <h2>Mastering Fire</h2>
-            <p>Fire is the foundation. Learn to build, maintain, and read the flames that create legendary barbecue.</p>
-        </div>
-
-        <div class="search-box fade-in">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);stroke:var(--ash);width:20px;height:20px;"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            <input type="text" placeholder="Search fire techniques..." id="fireSearch" onkeyup="filterCards('fire', this.value)">
-        </div>
-
-        <div class="filter-bar fade-in">
-            <button class="filter-btn active" onclick="filterCategory('fire', 'all')">All</button>
-            <button class="filter-btn" onclick="filterCategory('fire', 'building')">Building</button>
-            <button class="filter-btn" onclick="filterCategory('fire', 'wood')">Wood</button>
-            <button class="filter-btn" onclick="filterCategory('fire', 'management')">Management</button>
-            <button class="filter-btn" onclick="filterCategory('fire', 'smoke')">Smoke</button>
-        </div>
-
-        <div class="cards-grid fade-in" id="fire-cards">
-            <div class="card" data-category="building" onclick="openModal('fire-building')">
-                <img src="https://kimi-web-img.moonshot.cn/img/www.smokedbbqsource.com/678665bc2bc0f52d5c52ec2de2a50d08794e3952.jpg" alt="Brisket bark" class="card-image">
-                <div class="card-body">
-                    <span class="card-tag">Building</span>
-                    <h3>Building the Foundation</h3>
-                    <p>Start with a dense log in the middle, surrounded by dry small pieces. Space wood with 1-inch gaps for airflow. The "log cabin" method gets your cooker to 275-300°F in 30 minutes.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">30 min to temp</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-
-            <div class="card" data-category="wood" onclick="openModal('fire-wood')">
-                <img src="https://kimi-web-img.moonshot.cn/img/www.butlerwood.com/adc9eee8518378c12ade28ff6b9228bc8daf59a6.jpg" alt="Post oak wood" class="card-image">
-                <div class="card-body">
-                    <span class="card-tag">Wood</span>
-                    <h3>Post Oak & Wood Selection</h3>
-                    <p>Central Texas barbecue is defined by post oak. Aged 1-2 years is the sweet spot. Pick up a piece — feel its density and moisture. Heavy = more moisture = slower burn.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">1-2 years aged</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-
-            <div class="card" data-category="management" onclick="openModal('fire-management')">
-                <img src="https://kimi-web-img.moonshot.cn/img/ddrbbqsupply.com/a7659abea41d635417403e73b39af0c109d99a6d.jpg" alt="Offset smoker" class="card-image">
-                <div class="card-body">
-                    <span class="card-tag">Management</span>
-                    <h3>Working the Fire</h3>
-                    <p>Be proactive, not reactive. Time your logs so as one fire dies, another catches. Keep temperatures within 5°F. Listen for pops and cracks — they tell you how fast wood is burning.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">±5°F precision</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-
-            <div class="card" data-category="smoke" onclick="openModal('fire-smoke')">
-                <div class="card-body">
-                    <span class="card-tag">Smoke</span>
-                    <h3>Reading the Smoke</h3>
-                    <p>Blue, clean smoke is the goal. Brown or black smoke means dirty fire. At 600-680°F combustion, smoke becomes water vapor. Bad smoke for 10-30 minutes will not ruin an 8-hour cook.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">Visual cues</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-
-            <div class="card" data-category="building" onclick="openModal('fire-offset')">
-                <div class="card-body">
-                    <span class="card-tag">Building</span>
-                    <h3>Offset Cooker Mechanics</h3>
-                    <p>Heat hits a flap, curls like a tornado, creating convection. No dampers needed — just control airflow with the firebox door. Open = more air = hotter fire.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">Airflow science</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-
-            <div class="card" data-category="management" onclick="openModal('fire-tips')">
-                <div class="card-body">
-                    <span class="card-tag">Management</span>
-                    <h3>Pro Fire Tips</h3>
-                    <p>Use greasy butcher paper to start fires. Pre-warm air by keeping coals at the back of the firebox. Lay logs flat to slow burn, stand them up to increase heat. Always watch the smokestack.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">Advanced tricks</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="meats">
-        <div class="section-header fade-in">
-            <span class="section-number">03</span>
-            <h2>The Meats</h2>
-            <p>From pork butt to brisket — the cuts, the rubs, and the techniques that define Texas barbecue.</p>
-        </div>
-
-        <div class="tabs fade-in">
-            <button class="tab-btn active" onclick="switchTab('pork')">Pork Butt</button>
-            <button class="tab-btn" onclick="switchTab('ribs')">Spare Ribs</button>
-            <button class="tab-btn" onclick="switchTab('brisket')">Brisket</button>
-            <button class="tab-btn" onclick="switchTab('grilling')">Grilling</button>
-        </div>
-
-        <div class="tab-content active" id="tab-pork">
-            <div class="cards-grid">
-                <div class="card" onclick="openModal('pork-overview')">
-                    <img src="https://kimi-web-img.moonshot.cn/img/www.allrecipes.com/153963d7a8ad249864f87e43923acfd60d100505.jpg" alt="Pulled pork" class="card-image">
-                    <div class="card-body">
-                        <span class="card-tag">Overview</span>
-                        <h3>Pork Butt — The Forgiving Cut</h3>
-                        <p>From the shoulder, bone-in preferred. Cook until the bone twists out easily. Equal parts salt and pepper, plus paprika for color. Mustard slather helps bark stick.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-time">~10 hours</span>
-                        <span class="card-arrow">→</span>
-                    </div>
-                </div>
-
-                <div class="card" onclick="openModal('pork-timeline')">
-                    <div class="card-body">
-                        <span class="card-tag">Timeline</span>
-                        <h3>Cook Schedule</h3>
-                        <div class="timeline" style="margin-top: 1rem;">
-                            <div class="timeline-item">
-                                <h4>7:30 AM — On the Cooker</h4>
-                                <p>Fat side up, 270°F target</p>
-                            </div>
-                            <div class="timeline-item">
-                                <h4>10:30 AM — Start Spritzing</h4>
-                                <p>Every hour with cider vinegar</p>
-                            </div>
-                            <div class="timeline-item">
-                                <h4>3:30 PM — Wrap in Foil</h4>
-                                <p>When fat cap splits, bark is set</p>
-                            </div>
-                            <div class="timeline-item">
-                                <h4>5:30 PM — Pull & Rest</h4>
-                                <p>Target 203-205°F internal</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card" onclick="openModal('pork-checklist')">
-                    <div class="card-body">
-                        <span class="card-tag">Interactive</span>
-                        <h3>Pork Butt Checklist</h3>
-                        <ul class="checklist" style="margin-top: 1rem;">
-                            <li onclick="toggleCheck(this)">
-                                <span class="check-circle"></span>
-                                <div class="checklist-text">
-                                    <strong>Bone-in pork butt</strong>
-                                    <span>Shoulder blade bone for tenderness test</span>
-                                </div>
-                            </li>
-                            <li onclick="toggleCheck(this)">
-                                <span class="check-circle"></span>
-                                <div class="checklist-text">
-                                    <strong>Equal parts S&P + paprika</strong>
-                                    <span>Heavy seasoning — it all gets mixed in</span>
-                                </div>
-                            </li>
-                            <li onclick="toggleCheck(this)">
-                                <span class="check-circle"></span>
-                                <div class="checklist-text">
-                                    <strong>Mustard slather</strong>
-                                    <span>Helps bark adhere, will not be tasted</span>
-                                </div>
-                            </li>
-                            <li onclick="toggleCheck(this)">
-                                <span class="check-circle"></span>
-                                <div class="checklist-text">
-                                    <strong>Water pan in cooker</strong>
-                                    <span>Maintains moisture throughout cook</span>
-                                </div>
-                            </li>
-                            <li onclick="toggleCheck(this)">
-                                <span class="check-circle"></span>
-                                <div class="checklist-text">
-                                    <strong>Spritz every hour after 3 hrs</strong>
-                                    <span>Cider vinegar, water, or beer</span>
-                                </div>
-                            </li>
-                            <li onclick="toggleCheck(this)">
-                                <span class="check-circle"></span>
-                                <div class="checklist-text">
-                                    <strong>Wrap when fat cap splits</strong>
-                                    <span>Visual cue: ~8 hours in</span>
-                                </div>
-                            </li>
-                            <li onclick="toggleCheck(this)">
-                                <span class="check-circle"></span>
-                                <div class="checklist-text">
-                                    <strong>Rest 45-60 minutes</strong>
-                                    <span>Carryover cooking continues</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="tab-content" id="tab-ribs">
-            <div class="cards-grid">
-                <div class="card" onclick="openModal('ribs-overview')">
-                    <img src="https://kimi-web-img.moonshot.cn/img/www.grillseeker.com/f878cd206ac7d52fb88e9ab908bc3da39856a2e8.jpg" alt="BBQ ribs" class="card-image">
-                    <div class="card-body">
-                        <span class="card-tag">Overview</span>
-                        <h3>Spare Ribs — The Intermediate Cut</h3>
-                        <p>Full spares, not St. Louis cut. Trim sternum and skirt. 2:1 pepper to salt ratio. Leave membrane on — it protects from overcooking and adds texture.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-time">~6 hours</span>
-                        <span class="card-arrow">→</span>
-                    </div>
-                </div>
-
-                <div class="card" onclick="openModal('ribs-technique')">
-                    <div class="card-body">
-                        <span class="card-tag">Technique</span>
-                        <h3>Franklin's Rib Method</h3>
-                        <p>3 hours unwrapped at 270°F. Sauce and wrap for 2 hours. Unwrap for final 1 hour. Feel for tenderness at the third rib cartilage — that is your test spot.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-time">3-2-1 method</span>
-                        <span class="card-arrow">→</span>
-                    </div>
-                </div>
-
-                <div class="card" onclick="openModal('ribs-sauce')">
-                    <div class="card-body">
-                        <span class="card-tag">Sauce</span>
-                        <h3>Rib Sauce Formula</h3>
-                        <p>Dilute your favorite sauce 1:1 with apple cider vinegar. Warm it before applying. Less sugar = less burning. Apply before wrapping so it cooks into the meat.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-time">Acid-balanced</span>
-                        <span class="card-arrow">→</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="tab-content" id="tab-brisket">
-            <div class="cards-grid">
-                <div class="card" onclick="openModal('brisket-selection')">
-                    <img src="https://kimi-web-img.moonshot.cn/img/assets.epicurious.com/bce62f249aaac086d82a2bcf4709e32ed2f28ff8.jpg" alt="Texas brisket" class="card-image">
-                    <div class="card-body">
-                        <span class="card-tag">Selection</span>
-                        <h3>Choosing the Perfect Brisket</h3>
-                        <p>Prime grade, Angus preferred. Look for thick flat, good marbling. Avoid frozen — it gets mushy. Floppy = good fat-to-meat ratio. The thicker, the better.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-time">Prime + Angus</span>
-                        <span class="card-arrow">→</span>
-                    </div>
-                </div>
-
-                <div class="card" onclick="openModal('brisket-trim')">
-                    <div class="card-body">
-                        <span class="card-tag">Trimming</span>
-                        <h3>The Trim — Make It Aerodynamic</h3>
-                        <p>Trim to 1/4 inch fat cap. Remove hard seam fat. Round all edges — no sharp corners. Cut off the deckle (where carcass was split). Think "little Maserati."</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-time">Curved boning knife</span>
-                        <span class="card-arrow">→</span>
-                    </div>
-                </div>
-
-                <div class="card" onclick="openModal('brisket-season')">
-                    <div class="card-body">
-                        <span class="card-tag">Seasoning</span>
-                        <h3>Salt & Pepper — Nothing Else</h3>
-                        <p>50/50 kosher salt and 16-mesh black pepper by volume. Mustard slather as glue. Season from high for even coverage. Let sit 30-45 min before cooking.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-time">Simplicity wins</span>
-                        <span class="card-arrow">→</span>
-                    </div>
-                </div>
-
-                <div class="card" onclick="openModal('brisket-cook')">
-                    <div class="card-body">
-                        <span class="card-tag">Cooking</span>
-                        <h3>The 12-Hour Cook</h3>
-                        <p>Start at 255°F. Spritz at 3 hours. Bump to 265°F at 5 hours. Wrap at 8-9 hours (end of stall) in butcher paper. Finish at 275-285°F. Rest until 140-150°F internal.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-time">Low and slow</span>
-                        <span class="card-arrow">→</span>
-                    </div>
-                </div>
-
-                <div class="card" onclick="openModal('brisket-stall')">
-                    <div class="card-body">
-                        <span class="card-tag">Science</span>
-                        <h3>Understanding The Stall</h3>
-                        <p>At 160-170°F internal, muscle tightens and sweats — evaporative cooling. Do not panic! Bump temps to 280°F. Wrap at the tail end of stall when bark is set.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-time">~165°F internal</span>
-                        <span class="card-arrow">→</span>
-                    </div>
-                </div>
-
-                <div class="card" onclick="openModal('brisket-slice')">
-                    <img src="https://kimi-web-img.moonshot.cn/img/media-cdn2.greatbritishchefs.com/570bc3c375263e227b903cee388ed5328dd3048b.jpg" alt="Sliced brisket" class="card-image">
-                    <div class="card-body">
-                        <span class="card-tag">Slicing</span>
-                        <h3>The Money Shot</h3>
-                        <p>Split point from flat. Slice flat against grain, pencil-thick. Slice point into burnt ends. Every bite should have bark, fat, meat, salt, and pepper. Serve immediately.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-time">Against the grain</span>
-                        <span class="card-arrow">→</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="tab-content" id="tab-grilling">
-            <div class="cards-grid">
-                <div class="card" onclick="openModal('grill-steak')">
-                    <div class="card-body">
-                        <span class="card-tag">Steak</span>
-                        <h3>Hot & Fast Steak</h3>
-                        <p>Create hot and cool zones. Flip frequently — do not believe "flip once" myth. Move to cool zone to control cook. Feel for doneness, do not trust thumb test.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-time">Zone cooking</span>
-                        <span class="card-arrow">→</span>
-                    </div>
-                </div>
-
-                <div class="card" onclick="openModal('grill-veg')">
-                    <div class="card-body">
-                        <span class="card-tag">Vegetables</span>
-                        <h3>Charred Vegetables</h3>
-                        <p>Use a charcoal chimney for extreme heat. Broccolini: stems over flame, crowns off to side. Oil, salt, quick char. Think texture — crisp inside, charred outside.</p>
-                    </div>
-                    <div class="card-footer">
-                        <span class="card-time">2-second char</span>
-                        <span class="card-arrow">→</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="techniques">
-        <div class="section-header fade-in">
-            <span class="section-number">04</span>
-            <h2>Essential Techniques</h2>
-            <p>Interactive tools and guides for temperature, timing, and the critical details.</p>
-        </div>
-
-        <div class="cards-grid fade-in">
-            <div class="card" onclick="openModal('tech-temps')">
-                <div class="card-body">
-                    <span class="card-tag">Temperature</span>
-                    <h3>Temperature Guide</h3>
-                    <div style="margin-top: 1rem;">
-                        <div class="temp-gauge">
-                            <div class="temp-value">225°</div>
-                            <div style="flex:1">
-                                <div class="temp-label">Low & Slow Start</div>
-                                <div class="temp-bar"><div class="temp-fill low" style="width:30%"></div></div>
-                            </div>
-                        </div>
-                        <div class="temp-gauge">
-                            <div class="temp-value">255°</div>
-                            <div style="flex:1">
-                                <div class="temp-label">Brisket Start Zone</div>
-                                <div class="temp-bar"><div class="temp-fill medium" style="width:50%"></div></div>
-                            </div>
-                        </div>
-                        <div class="temp-gauge">
-                            <div class="temp-value">270°</div>
-                            <div style="flex:1">
-                                <div class="temp-label">Pork & Ribs Zone</div>
-                                <div class="temp-bar"><div class="temp-fill medium" style="width:65%"></div></div>
-                            </div>
-                        </div>
-                        <div class="temp-gauge">
-                            <div class="temp-value">285°</div>
-                            <div style="flex:1">
-                                <div class="temp-label">Post-Stall Push</div>
-                                <div class="temp-bar"><div class="temp-fill high" style="width:85%"></div></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card" onclick="openModal('tech-rub')">
-                <div class="card-body">
-                    <span class="card-tag">Calculator</span>
-                    <h3>Rub Calculator</h3>
-                    <div class="calculator" style="margin-top: 1rem;">
-                        <div class="calc-row">
-                            <span class="calc-label">Kosher Salt (50%)</span>
-                            <span class="calc-value">1/2 cup</span>
-                        </div>
-                        <div class="calc-row">
-                            <span class="calc-label">16-Mesh Black Pepper (50%)</span>
-                            <span class="calc-value">1/2 cup</span>
-                        </div>
-                        <div class="calc-row">
-                            <span class="calc-label">Paprika (optional, for pork)</span>
-                            <span class="calc-value">1 tbsp</span>
-                        </div>
-                        <div class="calc-row">
-                            <span class="calc-label">Coverage</span>
-                            <span class="calc-value">1 brisket</span>
-                        </div>
-                    </div>
-                    <p style="margin-top: 1rem; color: var(--ash); font-size: 0.9rem;">Adjust for more meat: Double for 2 briskets, triple for 3. Shake in a shaker with holes for even distribution.</p>
-                </div>
-            </div>
-
-            <div class="card" onclick="openModal('tech-sauce')">
-                <div class="card-body">
-                    <span class="card-tag">Recipe</span>
-                    <h3>Franklin's BBQ Sauce</h3>
-                    <div class="calculator" style="margin-top: 1rem;">
-                        <div class="calc-row">
-                            <span class="calc-label">Tallow (or oil/lard)</span>
-                            <span class="calc-value">2 tbsp</span>
-                        </div>
-                        <div class="calc-row">
-                            <span class="calc-label">Yellow onion, diced</span>
-                            <span class="calc-value">1/3 cup</span>
-                        </div>
-                        <div class="calc-row">
-                            <span class="calc-label">Garlic cloves</span>
-                            <span class="calc-value">4</span>
-                        </div>
-                        <div class="calc-row">
-                            <span class="calc-label">Light brown sugar</span>
-                            <span class="calc-value">1 cup</span>
-                        </div>
-                        <div class="calc-row">
-                            <span class="calc-label">Apple cider vinegar</span>
-                            <span class="calc-value">1 cup</span>
-                        </div>
-                        <div class="calc-row">
-                            <span class="calc-label">Organic ketchup</span>
-                            <span class="calc-value">2 cups</span>
-                        </div>
-                        <div class="calc-row">
-                            <span class="calc-label">Paprika, mustard powder, salt, pepper</span>
-                            <span class="calc-value">1 tsp each</span>
-                        </div>
-                        <div class="calc-row">
-                            <span class="calc-label">Worcestershire</span>
-                            <span class="calc-value">4 dashes</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card" onclick="openModal('tech-cooker')">
-                <div class="card-body">
-                    <span class="card-tag">Equipment</span>
-                    <h3>What Makes a Good Cooker</h3>
-                    <ul class="checklist" style="margin-top: 1rem;">
-                        <li onclick="toggleCheck(this)">
-                            <span class="check-circle"></span>
-                            <div class="checklist-text">
-                                <strong>Thick metal (1/4 inch)</strong>
-                                <span>Retains heat, lasts forever</span>
-                            </div>
-                        </li>
-                        <li onclick="toggleCheck(this)">
-                            <span class="check-circle"></span>
-                            <div class="checklist-text">
-                                <strong>Long firebox</strong>
-                                <span>Room to build and adjust fire</span>
-                            </div>
-                        </li>
-                        <li onclick="toggleCheck(this)">
-                            <span class="check-circle"></span>
-                            <div class="checklist-text">
-                                <strong>Single grate, no shelves</strong>
-                                <span>No dripping between meats</span>
-                            </div>
-                        </li>
-                        <li onclick="toggleCheck(this)">
-                            <span class="check-circle"></span>
-                            <div class="checklist-text">
-                                <strong>Thermometer at grate level</strong>
-                                <span>Not on the lid — that is wrong</span>
-                            </div>
-                        </li>
-                        <li onclick="toggleCheck(this)">
-                            <span class="check-circle"></span>
-                            <div class="checklist-text">
-                                <strong>Smokestack placement</strong>
-                                <span>Pulls heat across the grates</span>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="section" id="story">
-        <div class="section-header fade-in">
-            <span class="section-number">05</span>
-            <h2>The Franklin Story</h2>
-            <p>From backyard dreams to world-famous barbecue — the journey of Aaron Franklin.</p>
-        </div>
-
-        <div class="cards-grid fade-in">
-            <div class="card" onclick="openModal('story-childhood')">
-                <div class="card-body">
-                    <span class="card-tag">Origins</span>
-                    <h3>Childhood in Bryan, Texas</h3>
-                    <p>Sitting on grandpa's lap at a domino-playing barbecue joint. The smell of grease, smoke, and yellowed ceiling tiles. That was the first barbecue memory.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">Age 4-5</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-
-            <div class="card" onclick="openModal('story-restaurant')">
-                <div class="card-body">
-                    <span class="card-tag">Teens</span>
-                    <h3>Family Restaurant</h3>
-                    <p>At age 10, prepping at his parents' barbecue restaurant. Cutting onions, slicing lemons, working the sides. Falling in love with the fire.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">Age 10</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-
-            <div class="card" onclick="openModal('story-first')">
-                <div class="card-body">
-                    <span class="card-tag">The Spark</span>
-                    <h3>The First Brisket</h3>
-                    <p>A $99 offset smoker from a sporting goods store. A 99 cents/lb grocery store brisket. Drinking a beer, watching the fire — "I think I want to open a barbecue place."</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">Age 24</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-
-            <div class="card" onclick="openModal('story-trailer')">
-                <div class="card-body">
-                    <span class="card-tag">Hustle</span>
-                    <h3>The $300 Trailer</h3>
-                    <p>A 1971 Aristocrat trailer from Craigslist. Gutted, redesigned, parked at a coffee roaster. Opened December 2009 with $28 in the bank.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">2009</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-
-            <div class="card" onclick="openModal('story-scale')">
-                <div class="card-body">
-                    <span class="card-tag">Growth</span>
-                    <h3>Scaling Up</h3>
-                    <p>From 3 briskets a day to 106. From 12-brisket cookers to 1000-gallon pits. The line determined how fast cookers could be built. Now 40,000 lbs of brisket per month.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">Today</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-
-            <div class="card" onclick="openModal('story-philosophy')">
-                <div class="card-body">
-                    <span class="card-tag">Legacy</span>
-                    <h3>Still Learning</h3>
-                    <p>"I never really set out to be the best. And I am not the best and I never will be. But I am pretty happy with what I have been able to learn." The journey continues.</p>
-                </div>
-                <div class="card-footer">
-                    <span class="card-time">Ongoing</span>
-                    <span class="card-arrow">→</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <p class="quote">"You really only learn how to make good barbecue by making bad barbecue."</p>
-        <p>— Aaron Franklin</p>
-        <p style="margin-top: 2rem; font-size: 0.8rem;">
-            Interactive guide based on Aaron Franklin's MasterClass on Texas Barbecue<br>
-            Built for educational purposes • All content derived from the original transcript
-        </p>
-    </footer>
-
-    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-        <div class="modal" id="modalContent" onclick="event.stopPropagation()">
-            <!-- Content injected via JS -->
-        </div>
+        <span class="page-num">1</span>
+      </div>
     </div>
 
-    <script>
-        // Modal Data
-        const modalData = {
-            'philosophy-intro': {
-                title: 'Cooking with Heart',
-                content: `<div class="highlight-box"><p>"Even as a kid, I could kind of sense the amount of love that went into this food. And that is the premise of barbecue. It is like you cook with your heart. You pour your heart and soul into this thing."</p></div>
-                <h3>The Emotional Core</h3>
-                <p>Franklin's philosophy centers on the idea that barbecue is fundamentally an act of love. The long hours, the careful attention to fire, the meticulous trimming — all of it is a form of expression.</p>
-                <p>He believes that even if you fall short technically, "the spirit that is behind it and the soul that that represents" is what truly matters. This is why people line up for hours at Franklin Barbecue — they can taste the care.</p>
-                <h3>Teaching Philosophy</h3>
-                <p>When training new cooks, Franklin does not just tell them what to do. He quizzes them:</p>
-                <ul><li>"Pick up this log. What does it feel like?"</li><li>"What do you think it is going to do?"</li><li>"How do you look at a fire?"</li></ul>
-                <p>This Socratic method builds intuition rather than just rote memorization. He wants cooks to <em>think</em> about fire, not just manage it.</p>`
-            },
-            'philosophy-process': {
-                title: 'The Journey Matters',
-                content: `<div class="highlight-box"><p>"It is just a piece of meat and it is just fire. Nothing special, but it is the journey of how you get to the end and then it is the conversations that you get to have at the end of it."</p></div>
-                <h3>Barbecue as Culture</h3>
-                <p>Franklin breaks barbecue down into three parts:</p>
-                <ul><li><strong>Culture</strong> — The traditions, the regions, the history of Central Texas</li><li><strong>Process</strong> — The fire, the smoke, the timing, the technique</li><li><strong>Food</strong> — The meat, the seasoning, the final product</li></ul>
-                <p>But the fourth element, often unspoken, is <strong>community</strong>. Barbecue is meant to be shared. The hours spent tending fire create space for conversation and connection.</p>
-                <h3>Real Soul Food</h3>
-                <p>"It really means something." Franklin emphasizes that barbecue is not fast food or convenience. It is a commitment. The all-night cooks, the lost sleep, the constant attention — this is what makes it soul food.</p>`
-            },
-            'philosophy-learning': {
-                title: 'Embrace Mistakes',
-                content: `<div class="highlight-box"><p>"Just kind of be prepared to make mistakes. It is totally okay. It is just about learning."</p></div>
-                <h3>The Learning Curve</h3>
-                <p>Franklin is explicit: you will mess up. Your first brisket might be terrible. Your fire might get away from you. You might overseason or undercook. That is all part of the process.</p>
-                <p>The key is to document everything. Write down your temperatures, your times, your adjustments. Then after you eat, compare notes with results. This is how you improve.</p>
-                <h3>Franklin's First Brisket</h3>
-                <p>His first brisket was a 99-cent-per-pound grocery store cut. He had no thermometer, no idea about temperatures, and bought wood from the grocery store. "It was doomed from the beginning." But everybody said it was great — and that encouragement kept him going.</p>
-                <div class="tip-box"><strong>Pro Tip:</strong> Keep a notebook. Write down your game plan before cooking, then note what actually happened. Over time, you will see patterns and improve.</div>`
-            },
-            'fire-building': {
-                title: 'Building the Foundation Fire',
-                content: `<h3>The Log Cabin Method</h3>
-                <p>Franklin's specific technique for starting a fire:</p>
-                <ul><li>Pick out logs that fit your round firebox</li><li>One dense log in the middle for the base</li><li>Dry small split pieces around it</li><li>Two wedge pieces as foundation</li><li>Space top pieces with 1-inch gaps for airflow</li></ul>
-                <p>This creates a "basket weave" scenario where flames can travel through the gaps, igniting everything quickly. The dense middle log will not burn fast — it creates a coal bed while the lighter pieces burn quickly.</p>
-                <h3>Starting the Fire</h3>
-                <p>Use greasy butcher paper (saved from wrapping briskets) or oil-soaked paper. Build a loose roll about 3 inches from the back of the wood stack. Light it and watch.</p>
-                <p>Within 30 minutes, you should reach 275-300°F. This is your time to season the meat, grab a beer, and line up firewood.</p>
-                <div class="tip-box"><strong>Pro Tip:</strong> Grapeseed oil works well for soaking paper if you do not have greasy butcher paper.</div>`
-            },
-            'fire-wood': {
-                title: 'Post Oak & Wood Selection',
-                content: `<h3>Why Post Oak?</h3>
-                <p>Post oak is a white oak with less tannic acid than other oaks. This gives it a sweeter flavor — think wine barrels and bourbon. It has a nice heat curve and burns cleanly.</p>
-                <p>Central Texas barbecue tastes like Central Texas because of this wood. It really only grows around central Texas and throughout the south.</p>
-                <h3>Aging Wood</h3>
-                <p>The sweet spot is 1-2 years of aging. Green wood (freshly cut) has too much moisture. Overly dry wood (rotting for years) has nothing left to burn.</p>
-                <p>Develop a feel: pick up a piece and guess its density and moisture. Heavy = more moisture = slower burn. Light = dry = quick burn.</p>
-                <div class="warning-box"><strong>Avoid:</strong> Kiln-dried wood. It is baked in an oven and loses much of its flavor. Source naturally aged hardwoods.</div>`
-            },
-            'fire-management': {
-                title: 'Working the Fire',
-                content: `<h3>Proactive vs. Reactive</h3>
-                <p>The art of fire is guessing what your needs are before you get there. Time your logs so as one fire dies, another catches. This keeps you in your lawn chair instead of constantly scrambling.</p>
-                <p>Franklin aims to keep his cooker within 5°F. When he was cooking ribs daily at the restaurant, he aimed for 3°F precision.</p>
-                <h3>Reading the Wood</h3>
-                <p>Every piece of wood is different. Some catch fast and die quick. Some smolder then explode. Some burn slow and steady. You are playing a guessing game — and getting better at it over time.</p>
-                <p>Listen for pops and cracks. That tells you the wood is burning rapidly, expanding gases. No sound might mean it is not catching properly.</p>
-                <div class="tip-box"><strong>Pro Tip:</strong> On a cold day, keep coals at the back of the firebox to pre-warm air before it hits the fire. The fire works less hard.</div>`
-            },
-            'fire-smoke': {
-                title: 'Reading the Smoke',
-                content: `<h3>Clean vs. Dirty Smoke</h3>
-                <p>At 600-680°F combustion, wood reaches full combustion and smoke becomes water vapor. This is the clean flavor you want. Below that, you get oily, creosote-heavy smoke that lays on your tongue.</p>
-                <p>Blue, thin smoke is good. Brown or black billowy smoke is bad. White puffy smoke means the wood is still catching.</p>
-                <h3>What to Do About Bad Smoke</h3>
-                <p>If you see bad smoke, do not panic. A few minutes of bad smoke over an 8-hour cook will not ruin anything. But hours of it will.</p>
-                <p>Fix it by: giving the fire more air (open the door slightly), blowing on it, or placing a smaller already-lit piece next to a stubborn log to "jump" the flame.</p>
-                <div class="tip-box"><strong>Remember:</strong> Fresh wood always smokes at first. Let it catch and burn naturally. Do not bury it in coals or use a fan to force it.</div>`
-            },
-            'fire-offset': {
-                title: 'Offset Cooker Mechanics',
-                content: `<h3>How It Works</h3>
-                <p>Fire in the firebox. Heat travels through a small opening into the cook chamber. A metal flap (tuning plate) forces heat to curl and spin like a tornado before exiting through the smokestack.</p>
-                <p>This creates chaotic airflow that dries the surface of the meat, forming bark. That is why you spritz — to combat the drying effect of all that moving air.</p>
-                <h3>No Dampers Needed</h3>
-                <p>Franklin's cookers have no dampers on the smokestack or firebox door. Control is manual: open the door for more air, close it for less. The massive airflow pulls heat through naturally.</p>
-                <p>The smokestack is your guide. Watch it — clear heat means good combustion. Billowy smoke means something needs attention.</p>`
-            },
-            'fire-tips': {
-                title: 'Pro Fire Tips',
-                content: `<h3>Advanced Techniques</h3>
-                <ul><li><strong>Greasy butcher paper:</strong> Save paper from wrapping briskets. It is pre-loaded with fat and ignites beautifully.</li><li><strong>Pre-warming air:</strong> On cold days, rake coals to the back of the firebox so incoming air warms before hitting the fire.</li><li><strong>Laying logs flat:</strong> Decreases airflow underneath, slowing the burn. Good for backing off 5°F.</li><li><strong>Standing logs up:</strong> Increases airflow and heat. Good for recovering lost temperature.</li><li><strong>The guessing game:</strong> Time your log placement so the next log catches just as the current one fades.</li></ul>
-                <div class="tip-box"><strong>Key Insight:</strong> You cannot push air into a fire, but you can pull it through. Offset cookers are designed to pull massive amounts of air — use that to your advantage.</div>`
-            },
-            'pork-overview': {
-                title: 'Pork Butt — The Forgiving Cut',
-                content: `<h3>Why Pork Butt?</h3>
-                <p>Pork butt (actually the shoulder) is inexpensive, easy to cook, and very forgiving. It has lots of fat, connective tissue, and a bone. You just cook it until it is really, really tender.</p>
-                <p>It is a great practice cut. If you mess up a little, it is still going to be good. Throw some vinegar on it, add sauce, make a sandwich — it is always delicious.</p>
-                <h3>Bone-In vs. Bone-Out</h3>
-                <p>Always get bone-in. The shoulder blade bone is your tenderness test — if you can twist it and slide it out easily, it is done. Bone-out butts are butterflied and harder to cook evenly.</p>
-                <h3>Seasoning</h3>
-                <p>Equal parts kosher salt and black pepper, plus a little paprika for color. Go heavy — it all gets pulled and mixed together. Mustard slather helps the rub stick.</p>`
-            },
-            'pork-timeline': {
-                title: 'Pork Butt Cook Schedule',
-                content: `<h3>Sample Timeline (Dinner at 6:30 PM)</h3>
-                <div class="timeline">
-                    <div class="timeline-item"><h4>7:30 AM — Meat On</h4><p>Cooker at 270°F, fat side up, water pan filled</p></div>
-                    <div class="timeline-item"><h4>10:30 AM — First Spritz</h4><p>Every hour with cider vinegar, water, or beer</p></div>
-                    <div class="timeline-item"><h4>3:30 PM — Wrap in Foil</h4><p>Fat cap has split, bark is set. Wrap tight, dull side out.</p></div>
-                    <div class="timeline-item"><h4>5:30 PM — Probe for Doneness</h4><p>Target 203-205°F. Should feel like a bag of melted butter.</p></div>
-                    <div class="timeline-item"><h4>5:30 PM — Pull & Rest</h4><p>Rest 45-60 minutes wrapped. Then pull apart with fingers.</p></div>
-                </div>
-                <div class="tip-box"><strong>Note:</strong> This is a loose guideline. Every piece of meat is different. The only rule is: cook until tender.</div>`
-            },
-            'pork-checklist': {
-                title: 'Pork Butt Checklist',
-                content: `<p>Click items to check them off as you prep:</p>
-                <ul class="checklist">
-                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Bone-in pork butt</strong><span>Shoulder blade bone for tenderness test</span></div></li>
-                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Equal parts S&P + paprika</strong><span>Heavy seasoning — it all gets mixed in</span></div></li>
-                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Mustard slather</strong><span>Helps bark adhere, will not be tasted</span></div></li>
-                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Water pan in cooker</strong><span>Maintains moisture throughout cook</span></div></li>
-                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Spritz every hour after 3 hrs</strong><span>Cider vinegar, water, or beer</span></div></li>
-                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Wrap when fat cap splits</strong><span>Visual cue: ~8 hours in</span></div></li>
-                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Rest 45-60 minutes</strong><span>Carryover cooking continues</span></div></li>
-                </ul>`
-            },
-            'ribs-overview': {
-                title: 'Spare Ribs — The Intermediate Cut',
-                content: `<h3>Why Full Spares?</h3>
-                <p>Franklin prefers full spare ribs (not St. Louis cut) because they have more fat and marbling. Fat = flavor and moisture during a long cook.</p>
-                <p>Look for ribs with good marbling visible in the package. Avoid "shiners" — ribs where the meat has been cut too close to the bone.</p>
-                <h3>Trimming</h3>
-                <p>Cut off the sternum (the long bone at the end). Trim the skirt (the thin flap of meat on the back). Round the edges for aerodynamics — Franklin likes his meats to look like "little Maseratis."</p>
-                <h3>The Membrane</h3>
-                <p>Franklin leaves the membrane on. It takes hours to remove, and it actually protects the ribs from overcooking while maintaining texture. Rub penetrates through it just fine.</p>`
-            },
-            'ribs-technique': {
-                title: "Franklin's Rib Method",
-                content: `<h3>The Modified 3-2-1 Method</h3>
-                <p>Franklin's approach is similar to the classic 3-2-1 but with his own twists:</p>
-                <ul><li><strong>3 hours unwrapped</strong> at 270°F — bark formation</li><li><strong>Sauce and wrap</strong> for 2 hours — tenderizing, fat rendering</li><li><strong>Unwrap for 1 hour</strong> — set the sauce, final texture</li></ul>
-                <h3>The Tenderness Test</h3>
-                <p>Pick up the rack with a towel. Feel how the bones fall over your fingers. The test spot is at the third rib cartilage — when that feels soft and pliable, they are done.</p>
-                <p>Franklin likes his ribs very tender — "not quite falling off the bone, but pretty close."</p>
-                <div class="tip-box"><strong>Pro Tip:</strong> When wrapping, double-layer the foil over the bones to prevent tearing. Walk your fingers around the foil to keep it tight and seal in juices.</div>`
-            },
-            'ribs-sauce': {
-                title: 'Rib Sauce Formula',
-                content: `<h3>The Franklin Rib Sauce</h3>
-                <p>Take your favorite commercial or homemade sauce and dilute it 1:1 with apple cider vinegar. This does two things:</p>
-                <ul><li>Thins it so it spreads evenly</li><li>Reduces sugar content so it does not burn on the cooker</li></ul>
-                <h3>Application</h3>
-                <p>Warm the sauce before applying. Cold sauce on hot ribs shocks the meat and undoes your careful temperature work.</p>
-                <p>Spritz first to wash off excess smoke and see the true color. Then apply sauce while wet. Let it set for 10-15 minutes before wrapping.</p>
-                <div class="warning-box"><strong>Warning:</strong> High-sugar sauces burn easily. If your sauce is sweet, dilute more and cook at lower temps.</div>`
-            },
-            'brisket-selection': {
-                title: 'Choosing the Perfect Brisket',
-                content: `<h3>Grade & Breed</h3>
-                <p>Franklin prefers <strong>Prime</strong> grade <strong>Angus</strong> beef. Prime has the most marbling. Angus has a more "beefy" flavor than Wagyu, whose fat melts too quickly.</p>
-                <p>Avoid "select" grade — it may have no fat at all. Avoid frozen briskets — ice crystals tear fibers and make the meat mushy.</p>
-                <h3>Visual Inspection</h3>
-                <p>Look for:</p>
-                <ul><li>Thick flat (the lean end) — thin flats dry out</li><li>Good marbling visible when you flip it over</li><li>Floppy texture — rigid briskets may lack fat</li><li>Minimal blood in the cryovac — excessive blood means it was frozen</li></ul>
-                <div class="tip-box"><strong>Franklin's Ratio:</strong> A good plate of barbecue is 1/3 quality meat, 1/3 skill, and 1/3 luck. Start with the best meat you can afford.</div>`
-            },
-            'brisket-trim': {
-                title: 'The Trim — Make It Aerodynamic',
-                content: `<h3>Tools</h3>
-                <p>Use a curved boning knife. The curve helps you get into seams. Flexible tip, rigid spine — like a fillet knife but taller.</p>
-                <h3>The Goal</h3>
-                <p>Remove hard fat, shape the brisket into a "little sports car," and leave about 1/4 inch of soft, pillowy fat cap. Round all edges — sharp corners burn.</p>
-                <h3>Key Cuts</h3>
-                <ul><li><strong>Deckle:</strong> Remove the hard fat where the carcass was split — it will not render</li><li><strong>Seam fat:</strong> Remove excess between the flat and point, but leave some for structure</li><li><strong>Weird muscles:</strong> Processing plants sometimes clip extra muscles on — remove them</li><li><strong>Edges:</strong> Round everything for airflow</li></ul>
-                <div class="warning-box"><strong>Do Not:</strong> Trim too much seam fat or the point will collapse during cooking. Leave structural fat.</div>`
-            },
-            'brisket-season': {
-                title: 'Salt & Pepper — Nothing Else',
-                content: `<h3>The Rub</h3>
-                <p>50/50 by <strong>volume</strong> (not weight):</p>
-                <ul><li>Kosher salt — thick grain, coarse</li><li>16-mesh black pepper (also called "cafe grind")</li></ul>
-                <p>The similar granule sizes help them stay mixed in the shaker. 16-mesh means it fits through a 1/16-inch screen.</p>
-                <h3>Application</h3>
-                <p>Mustard slather first (Franklin doubts you can taste it after 12 hours, but it acts as glue). Season from high for even coverage — think "typewriter" motion. Pat down gently.</p>
-                <p>Let sit 30-45 minutes before cooking so the salt can start pulling moisture and the rub melts into the surface.</p>
-                <div class="tip-box"><strong>Pro Tip:</strong> Franklin travels with his shaker. The holes and the wrist motion are calibrated for even distribution. Practice the swirl-and-pivot technique.</div>`
-            },
-            'brisket-cook': {
-                title: 'The 12-Hour Cook',
-                content: `<h3>Sample Timeline (Dinner at 5-6 PM)</h3>
-                <div class="timeline">
-                    <div class="timeline-item"><h4>2:00 AM — Meat On</h4><p>Cooker at 255°F. Point toward fire. Water pan filled with hot water.</p></div>
-                    <div class="timeline-item"><h4>5:00 AM — First Check</h4><p>Spritz edges. Check bark formation. Adjust fire if needed.</p></div>
-                    <div class="timeline-item"><h4>9:00 AM — Ramp Up</h4><p>Bump cooker to 280°F to push through the approaching stall.</p></div>
-                    <div class="timeline-item"><h4>10:00-11:00 AM — Wrap</h4><p>At end of stall, bark is set. Wrap in butcher paper (not foil). Point toward fire.</p></div>
-                    <div class="timeline-item"><h4>2:00 PM — Pull & Rest</h4><p>Rest until internal temp drops to 140-150°F. 40+ minutes.</p></div>
-                </div>
-                <div class="tip-box"><strong>Key Principle:</strong> Start low to protect edges. Bump up gradually. Wrap at the end of stall. Rest properly.</div>`
-            },
-            'brisket-stall': {
-                title: 'Understanding The Stall',
-                content: `<h3>What Is The Stall?</h3>
-                <p>At around 160-170°F internal, the muscle fibers tighten and squeeze out moisture. This moisture evaporates from the surface, cooling the meat — just like sweating cools your skin.</p>
-                <p>The temperature can plateau for hours. This is completely normal. Do not panic.</p>
-                <h3>How to Handle It</h3>
-                <ul><li><strong>Bump temperatures</strong> to 280°F to give the cooker momentum</li><li><strong>The moisture protects the meat</strong> from burning at higher temps</li><li><strong>Wrap at the tail end</strong> of the stall when bark is fully set</li></ul>
-                <h3>Why Not Wrap Earlier?</h3>
-                <p>Wrapping too early softens the bark too much. Franklin wants the bark to be "a little too crunchy" when he wraps, because the steam during the wrapped phase will soften it to the perfect texture.</p>
-                <div class="warning-box"><strong>Do Not:</strong> Pull at 165°F! That is right when the stall begins. The meat will be tough, dry, and chalky. Keep going to 195-205°F.</div>`
-            },
-            'brisket-slice': {
-                title: 'The Money Shot',
-                content: `<h3>Before Slicing</h3>
-                <p>Rest until internal temp drops to 140-150°F. Do not unwrap during rest — keep the steam and juices contained. Franklin can smell whether a brisket was properly rested the moment he walks into the restaurant.</p>
-                <h3>The Split</h3>
-                <p>Separate the flat from the point along the seam fat. The flat gives you lean slices. The point gives you moist slices and burnt ends.</p>
-                <h3>Slicing Technique</h3>
-                <ul><li>Slice against the grain</li><li>Flat: pencil-thick slices (about 1/4 inch)</li><li>Use a long serrated bread knife — $25 is fine</li><li>Hold the meat together with your hand as you slice</li><li>Do not saw — let the knife do the work</li></ul>
-                <h3>The Test</h3>
-                <p>A perfect slice should not fall apart under its own weight, but should pull apart tenderly when tugged. Every bite should have bark, fat, meat, salt, and pepper.</p>
-                <div class="tip-box"><strong>Pro Tip:</strong> Slice just before serving. Once sliced, the meat begins oxidizing immediately. Gather your guests and slice together.</div>`
-            },
-            'grill-steak': {
-                title: 'Hot & Fast Steak',
-                content: `<h3>Zone Cooking</h3>
-                <p>Create a hot zone (directly over coals) and a cool zone (off to the side). This gives you control — move the steak to cool zone if it is cooking too fast.</p>
-                <h3>The Flip Myth</h3>
-                <p>Forget "flip only once." Flip frequently! This gives you more even cooking and lets you monitor both sides. Franklin moves steaks around constantly.</p>
-                <h3>Doneness</h3>
-                <p>There is no reliable temperature or thumb test. Every steak is different. You must develop feel through practice. Franklin's method: guess, pull, cut, learn. Over time, you will know.</p>
-                <div class="tip-box"><strong>Pro Tip:</strong> Rest the steak after cooking. If you cut immediately, steam escapes and takes moisture with it. 5-10 minutes is enough for a small steak.</div>`
-            },
-            'grill-veg': {
-                title: 'Charred Vegetables',
-                content: `<h3>The Charcoal Chimney Method</h3>
-                <p>For extreme heat, use a charcoal chimney with a grate on top. This is hotter than most grills and perfect for quick charring.</p>
-                <h3>Broccolini Technique</h3>
-                <p>Oil lightly, salt. Place stems over the hottest part, crowns off to the side. Keep moving — it can burn in 2 seconds. You want blistered char on the outside, crisp and fresh inside.</p>
-                <p>This is practice for brisket thinking: different zones, different cook times, protecting delicate parts while charring tough parts.</p>`
-            },
-            'tech-temps': {
-                title: 'Temperature Guide',
-                content: `<h3>Temperature Zones</h3>
-                <div class="temp-gauge"><div class="temp-value">225°</div><div style="flex:1"><div class="temp-label">Low & Slow Start</div><div class="temp-bar"><div class="temp-fill low" style="width:30%"></div></div></div></div>
-                <div class="temp-gauge"><div class="temp-value">255°</div><div style="flex:1"><div class="temp-label">Brisket Start Zone</div><div class="temp-bar"><div class="temp-fill medium" style="width:50%"></div></div></div></div>
-                <div class="temp-gauge"><div class="temp-value">270°</div><div style="flex:1"><div class="temp-label">Pork & Ribs Zone</div><div class="temp-bar"><div class="temp-fill medium" style="width:65%"></div></div></div></div>
-                <div class="temp-gauge"><div class="temp-value">285°</div><div style="flex:1"><div class="temp-label">Post-Stall Push</div><div class="temp-bar"><div class="temp-fill high" style="width:85%"></div></div></div></div>
-                <p style="margin-top:1rem;color:var(--ash)">Franklin works in 5°F increments. "255 means 255. It does not mean 258." Precision matters because you cannot troubleshoot what you cannot measure.</p>`
-            },
-            'tech-rub': {
-                title: 'Rub Calculator',
-                content: `<h3>Base Recipe (1 Brisket)</h3>
-                <div class="calculator">
-                    <div class="calc-row"><span class="calc-label">Kosher Salt (50% by volume)</span><span class="calc-value">1/2 cup</span></div>
-                    <div class="calc-row"><span class="calc-label">16-Mesh Black Pepper (50% by volume)</span><span class="calc-value">1/2 cup</span></div>
-                    <div class="calc-row"><span class="calc-label">Paprika (optional, for pork)</span><span class="calc-value">1 tbsp</span></div>
-                </div>
-                <h3>Scaling</h3>
-                <div class="calculator">
-                    <div class="calc-row"><span class="calc-label">2 Briskets</span><span class="calc-value">1 cup each</span></div>
-                    <div class="calc-row"><span class="calc-label">3 Briskets</span><span class="calc-value">1.5 cups each</span></div>
-                    <div class="calc-row"><span class="calc-label">Pork Butt (1)</span><span class="calc-value">Same as 1 brisket</span></div>
-                    <div class="calc-row"><span class="calc-label">Ribs (1 rack)</span><span class="calc-value">2-3 tbsp total</span></div>
-                </div>
-                <div class="tip-box"><strong>Mixing:</strong> Use a shaker with adjustable holes. The 16-mesh pepper and kosher salt have similar granule sizes, so they stay mixed better than fine table salt.</div>`
-            },
-            'tech-sauce': {
-                title: "Franklin's BBQ Sauce",
-                content: `<h3>The Recipe</h3>
-                <div class="calculator">
-                    <div class="calc-row"><span class="calc-label">Tallow (or oil/lard/bacon fat)</span><span class="calc-value">2 tbsp</span></div>
-                    <div class="calc-row"><span class="calc-label">Yellow onion, medium dice</span><span class="calc-value">1/3 cup</span></div>
-                    <div class="calc-row"><span class="calc-label">Garlic cloves, chopped</span><span class="calc-value">4</span></div>
-                    <div class="calc-row"><span class="calc-label">Light brown sugar</span><span class="calc-value">1 cup</span></div>
-                    <div class="calc-row"><span class="calc-label">Apple cider vinegar</span><span class="calc-value">1 cup</span></div>
-                    <div class="calc-row"><span class="calc-label">Organic ketchup</span><span class="calc-value">2 cups</span></div>
-                    <div class="calc-row"><span class="calc-label">Paprika</span><span class="calc-value">1 tsp</span></div>
-                    <div class="calc-row"><span class="calc-label">Mustard powder</span><span class="calc-value">1 tsp</span></div>
-                    <div class="calc-row"><span class="calc-label">Fine sea salt</span><span class="calc-value">1 tsp</span></div>
-                    <div class="calc-row"><span class="calc-label">Black pepper</span><span class="calc-value">1 tsp</span></div>
-                    <div class="calc-row"><span class="calc-label">Worcestershire sauce</span><span class="calc-value">4 dashes</span></div>
-                </div>
-                <h3>Method</h3>
-                <p>Sauté onion in tallow until soft. Add garlic. Add brown sugar and let melt. Add vinegar to cool. Add ketchup and spices. Simmer briefly. Blend until smooth. Let cool before storing.</p>
-                <div class="tip-box"><strong>For Ribs:</strong> Dilute this sauce 1:1 with apple cider vinegar for a thinner, less sugary application.</div>`
-            },
-            'tech-cooker': {
-                title: 'What Makes a Good Cooker',
-                content: `<h3>Key Features</h3>
-                <ul class="checklist">
-                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Thick metal (1/4 inch)</strong><span>Retains heat, lasts forever, resists weather</span></div></li>
-                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Long firebox</strong><span>Room to build, adjust, and pre-warm air</span></div></li>
-                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Single grate, no shelves</strong><span>No dripping between meats, even cooking</span></div></li>
-                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Thermometer at grate level</strong><span>Lid thermometers read way too hot</span></div></li>
-                    <li onclick="toggleCheck(this)"><span class="check-circle"></span><div class="checklist-text"><strong>Smokestack placement</strong><span>Should pull heat across the meat, not straight up</span></div></li>
-                </ul>
-                <h3>Modifications</h3>
-                <p>If you have a cheap cooker, you can improve it:</p>
-                <ul><li>Add a tuning plate (old license plate works) to deflect heat</li><li>Drill a hole at grate level for a proper thermometer</li><li>Extend the smokestack if it is too short</li></ul>
-                <div class="warning-box"><strong>Avoid:</strong> Thin metal cookers. They lose heat in cold/rain and make you work twice as hard.</div>`
-            },
-            'story-childhood': {
-                title: 'Childhood in Bryan, Texas',
-                content: `<div class="highlight-box"><p>"I would kind of be sitting on my grandpa's lap and he is playing dominoes. I would knock him over and stuff, but I could always smell like the smoke in the air."</p></div>
-                <p>Franklin's first barbecue memories were not about eating — they were about atmosphere. The dirt parking lot, the old pit built in the early 1900s, the grease, the haze, the yellowed ceiling tiles.</p>
-                <p>He remembers seeing the fire in the floor, the brick pit, the patina on the walls, the squeaky door. These sensory details imprinted on him before he ever cared about the food.</p>`
-            },
-            'story-restaurant': {
-                title: 'Family Restaurant',
-                content: `<p>At age 10, Franklin's parents operated a barbecue restaurant with a red brick fire pit in the floor. His mom ran the front, waiting tables. Aaron did food prep — cutting onions, slicing lemons, working sides.</p>
-                <p>He found himself drawn to the back, near the fires. He loved the smell, the sound, the feeling of being near live fire. Even though the work was exhausting for his parents, he discovered he enjoyed it.</p>
-                <p>They eventually realized it was too much work and closed it. But the seed was planted.</p>`
-            },
-            'story-first': {
-                title: 'The First Brisket',
-                content: `<div class="highlight-box"><p>"I remember sitting in the backyard and I was kind of drinking a beer, kind of hanging out, just watching the fire and just kind of analyzing. I was like, man, this is great. This I think this is what I want to do."</p></div>
-                <p>At 24, with his first apartment and a tiny backyard, Franklin bought a $99 offset smoker from a sporting goods store. It was thin metal, flawed, terrible — but it was all he could afford.</p>
-                <p>He called his dad for advice. "Just throw it on the cooker and cook it for a real long time and when it is really black, it is probably about ready."</p>
-                <p>That first brisket was black, and he had not even eaten it yet when he knew: "I think I want to open a barbecue place."</p>`
-            },
-            'story-trailer': {
-                title: 'The $300 Trailer',
-                content: `<p>Stacy (his wife) found a 1971 Aristocrat trailer on Craigslist for $300. They gutted it, redesigned it, and parked it at a coffee roaster's parking lot.</p>
-                <p>They opened in December 2009 with $28 in the bank. Franklin cooked 3 briskets for the first day. They made money at lunch, went out and bought more meat, stayed up all night cooking, and did it again.</p>
-                <p>Each day the bank account got a little bigger. And each day Franklin realized he knew less than he thought he did.</p>`
-            },
-            'story-scale': {
-                title: 'Scaling Up',
-                content: `<p>The line at Franklin Barbecue grew because they kept running out of food. The solution was always: build bigger cookers, faster.</p>
-                <p>From 3 briskets per day to 12, then 24, then 106. From 500-gallon cookers to 1000-gallon pits. Now they cook about 40,000 pounds of brisket per month, sourced from 50 ranches.</p>
-                <p>The line is still long. That is the nature of barbecue — it takes time, and there is only so much you can cook.</p>`
-            },
-            'story-philosophy': {
-                title: 'Still Learning',
-                content: `<div class="highlight-box"><p>"I never really set out to be the best. And I am not the best and I never will be. But I am pretty happy with what I have been able to learn."</p></div>
-                <p>After nine years, Franklin says he is still learning. The light bulbs are still going off. Every cook teaches something new.</p>
-                <p>He believes the difference between good and great barbecue is the personal aspect — the willingness to put in the hours, to lose sleep, to stare at fire until you understand it. That is what makes it special.</p>
-                <p>"You can only really get out of it what you put into it."</p>`
-            }
-        };
+    <!-- ==================== SPREAD 1: TOC ==================== -->
+    <div class="spread" data-index="1">
+      <div class="page page-left">
+        <div class="paper-toc-h">Contents</div>
+        <div class="paper-toc-item"><span>Practicals I — The Social Muscle</span><span>3</span></div>
+        <div class="paper-toc-item"><span>Practicals II — The Wilderness Test</span><span>7</span></div>
+        <div class="paper-toc-item"><span>Practicals III — The Monk's Toolkit</span><span>11</span></div>
+        <div class="paper-toc-item"><span>Practicals IV — The Strategic Silence</span><span>15</span></div>
+        <div class="paper-toc-item"><span>Wisdom I — On Being Alone</span><span>19</span></div>
+        <div class="paper-toc-item"><span>Wisdom II — On Power & Truth</span><span>21</span></div>
+        <div class="paper-toc-item"><span>Quotes — The Codex</span><span>23</span></div>
+        <span class="page-num">2</span>
+      </div>
+      <div class="page page-right">
+        <div class="paper-eyebrow">How to Use This Book</div>
+        <div class="paper-h2">Read. Do. Reflect.</div>
+        <p class="paper-p">This book contains no narrative. No stories. No characters. Only what you can use: step-by-step practicals, distilled wisdom, and quotes that have survived centuries.</p>
+        <p class="paper-p">The practicals are exercises. Do them. The wisdom is compressed insight. Sit with it. The quotes are ammunition. Carry them.</p>
+        <div class="paper-insight">
+          <h4>Core Principle</h4>
+          <p>Solitude is not the absence of others. It is the presence of yourself.</p>
+        </div>
+        <div class="paper-quote">
+          <p>Loneliness is the poverty of self; solitude is the richness of self.</p>
+          <cite>May Sarton</cite>
+        </div>
+        <span class="page-num">3</span>
+      </div>
+    </div>
 
-        // Modal Functions
-        function openModal(key) {
-            const data = modalData[key];
-            if (!data) return;
+    <!-- ==================== SPREAD 2: PRACTICALS I ==================== -->
+    <div class="spread" data-index="2">
+      <div class="page page-left">
+        <div class="paper-eyebrow">Practicals I</div>
+        <div class="paper-h2">The Social Muscle</div>
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 1: The Solo Meal</h4>
+          <ol>
+            <li>Pick a restaurant you actually want to try.</li>
+            <li>Go alone. No phone, no book for the first ten minutes.</li>
+            <li>Order something that takes time to eat.</li>
+            <li>Observe the room. Listen. Taste slowly.</li>
+            <li>Notice: the shame is in your head, not in the room.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 2: The Opposite Momentum</h4>
+          <ol>
+            <li>Identify one social event you are avoiding this week.</li>
+            <li>Attend for exactly thirty minutes. Set a timer.</li>
+            <li>Speak to one person you do not know.</li>
+            <li>Leave early if you must, but do not skip it.</li>
+            <li>Repeat weekly until the dread fades.</li>
+          </ol>
+        </div>
+        <span class="page-num">4</span>
+      </div>
+      <div class="page page-right">
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 3: Spirit Companions</h4>
+          <ol>
+            <li>Choose one book, film, or album that moves you deeply.</li>
+            <li>Experience it entirely alone. No multitasking.</li>
+            <li>Afterward, write one paragraph on what it taught you.</li>
+            <li>Keep a running list of these "spirit companions."</li>
+            <li>Return to the list when loneliness strikes.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 4: The Digital Sabbath</h4>
+          <ol>
+            <li>Pick one evening per week.</li>
+            <li>Turn off all screens from 6 PM to sleep.</li>
+            <li>Replace the time with paper, pen, and silence.</li>
+            <li>Notice what surfaces when distraction is removed.</li>
+          </ol>
+        </div>
+        <div class="paper-quote">
+          <p>If you are excited in your spirit, then you are not really alone.</p>
+        </div>
+        <span class="page-num">5</span>
+      </div>
+    </div>
 
-            const modal = document.getElementById('modalContent');
-            modal.innerHTML = `
-                <div class="modal-header">
-                    <h2>${data.title}</h2>
-                    <button class="modal-close" onclick="closeModal()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    ${data.content}
-                </div>
-            `;
-            document.getElementById('modalOverlay').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+    <!-- ==================== SPREAD 3: PRACTICALS I CONT ==================== -->
+    <div class="spread" data-index="3">
+      <div class="page page-left">
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 5: The Bathtub Ritual</h4>
+          <ol>
+            <li>Run a bath. Hot, deep, with salts if you have them.</li>
+            <li>Bring one book. Nothing electronic.</li>
+            <li>Stay until the water cools. No timer, no rush.</li>
+            <li>This is not hygiene. This is training in pleasure without company.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 6: The Momentum Journal</h4>
+          <ol>
+            <li>Each morning, rate your social anxiety 1–10.</li>
+            <li>Log one social action taken that day, however small.</li>
+            <li>Review weekly. Watch the numbers drift downward.</li>
+            <li>The data is your proof that the muscle grows.</li>
+          </ol>
+        </div>
+        <div class="paper-insight">
+          <h4>The Momentum Principle</h4>
+          <p>Isolation breeds timidity; timidity breeds more isolation. The only way out is to reverse the cycle deliberately, one small social step at a time, until the momentum shifts in your favor.</p>
+        </div>
+        <span class="page-num">6</span>
+      </div>
+      <div class="page page-right">
+        <div class="paper-eyebrow">Practicals II</div>
+        <div class="paper-h2">The Wilderness Test</div>
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 7: The Solo Weekend</h4>
+          <ol>
+            <li>Book one night in a place you have never been.</li>
+            <li>Go alone. No itinerary, no plans.</li>
+            <li>Walk for two hours without a destination.</li>
+            <li>Eat alone at a local restaurant. Sleep alone.</li>
+            <li>Document what you noticed that you would have missed with company.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 8: The Cold Shower</h4>
+          <ol>
+            <li>End every shower with 60 seconds of cold water.</li>
+            <li>No negotiation. No gradual cooling. Full cold.</li>
+            <li>Breathe through the discomfort. Do not exit early.</li>
+            <li>This is type two fun in miniature. Train the tolerance.</li>
+          </ol>
+        </div>
+        <span class="page-num">7</span>
+      </div>
+    </div>
 
-        function closeModal(e) {
-            if (e && e.target !== e.currentTarget) return;
-            document.getElementById('modalOverlay').classList.remove('active');
-            document.body.style.overflow = '';
-        }
+    <!-- ==================== SPREAD 4: PRACTICALS II CONT ==================== -->
+    <div class="spread" data-index="4">
+      <div class="page page-left">
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 9: The Comfort Fast</h4>
+          <ol>
+            <li>Identify your most comfortable routine.</li>
+            <li>Disrupt it for one week. Sleep on the floor. Walk instead of drive. Cook instead of order.</li>
+            <li>Notice what you complain about. That is your fishbowl.</li>
+            <li>Document the discomfort. Revisit in one month.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 10: The Enforced Wait</h4>
+          <ol>
+            <li>Choose a line you would normally avoid: the post office, the DMV, a crowded clinic.</li>
+            <li>Do not bring a phone or a book.</li>
+            <li>Stand in silence for the full duration.</li>
+            <li>Observe your mind's rebellion. This is the edge of your tolerance.</li>
+          </ol>
+        </div>
+        <div class="paper-insight">
+          <h4>The Fishbowl</h4>
+          <p>Comfort becomes confinement when it prevents growth. The same walls that protect us from danger also block us from discovery. Every fishbowl, no matter how pleasant, is still a bowl.</p>
+        </div>
+        <span class="page-num">8</span>
+      </div>
+      <div class="page page-right">
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 11: The Elastic Band</h4>
+          <ol>
+            <li>Write down who you were one year ago.</li>
+            <li>Write down who you are now.</li>
+            <li>Identify the moment that stretched you. The discomfort. The alone.</li>
+            <li>You cannot shrink back. The band has been stretched. You are larger now.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 12: The Type 2 Log</h4>
+          <ol>
+            <li>Once a month, do something that is not fun in the moment.</li>
+            <li>Record the experience while it is happening. Be honest about the misery.</li>
+            <li>Re-read the log after one month. Note the transformation.</li>
+            <li>This is the alchemy of hindsight. Train yourself to seek it.</li>
+          </ol>
+        </div>
+        <div class="paper-quote">
+          <p>Do difficult things now and then, and do them alone sometimes, even if they are type two fun.</p>
+        </div>
+        <span class="page-num">9</span>
+      </div>
+    </div>
 
-        // Tab Switching
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('tab-' + tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
+    <!-- ==================== SPREAD 5: PRACTICALS III ==================== -->
+    <div class="spread" data-index="5">
+      <div class="page page-left">
+        <div class="paper-eyebrow">Practicals III</div>
+        <div class="paper-h2">The Monk's Toolkit</div>
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 13: Metta Meditation</h4>
+          <ol>
+            <li>Sit alone in a quiet room. Close your eyes.</li>
+            <li>Begin with yourself: "May I be happy. May I be well."</li>
+            <li>Move to a loved one, then a neutral person, then an enemy.</li>
+            <li>Finally, expand to all beings everywhere.</li>
+            <li>Practice for ten minutes each morning.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 14: The Digital Declutter</h4>
+          <ol>
+            <li>Deactivate non-essential social media for one week.</li>
+            <li>Move your phone to another room after 8 PM.</li>
+            <li>Replace scrolling with reading, writing, or walking.</li>
+            <li>Notice the anxiety. Sit with it. It will pass.</li>
+          </ol>
+        </div>
+        <span class="page-num">10</span>
+      </div>
+      <div class="page page-right">
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 15: The Morning Pages</h4>
+          <ol>
+            <li>Upon waking, write three pages longhand.</li>
+            <li>Do not edit, censor, or re-read.</li>
+            <li>Dump every thought, fear, and plan onto the page.</li>
+            <li>Do this for thirty days. Review on day thirty.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 16: The Artist's Schedule</h4>
+          <ol>
+            <li>Block four hours each morning for deep work.</li>
+            <li>No meetings, no messages, no interruptions.</li>
+            <li>Guard this block as you would a meeting with a king.</li>
+            <li>Track output. You will be astonished.</li>
+          </ol>
+        </div>
+        <div class="paper-quote">
+          <p>Without great solitude, no serious work is possible.</p>
+          <cite>Pablo Picasso</cite>
+        </div>
+        <span class="page-num">11</span>
+      </div>
+    </div>
 
-        // Checklist Toggle
-        function toggleCheck(el) {
-            el.classList.toggle('checked');
-        }
+    <!-- ==================== SPREAD 6: PRACTICALS III CONT ==================== -->
+    <div class="spread" data-index="6">
+      <div class="page page-left">
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 17: The Red Flag Audit</h4>
+          <ol>
+            <li>List every person you spend time with regularly.</li>
+            <li>Mark each with a green, yellow, or red flag.</li>
+            <li>Green: they expand you. Yellow: they drain you slowly. Red: they wound you.</li>
+            <li>Reduce red to zero. Reduce yellow by half. Increase green.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 18: The Reflection Hour</h4>
+          <ol>
+            <li>Every Sunday evening, sit alone for one hour.</li>
+            <li>No input. No output. Just thinking.</li>
+            <li>Ask: What direction am I moving? What doors should close? What doors should open?</li>
+            <li>Write one sentence of decision. Execute it Monday.</li>
+          </ol>
+        </div>
+        <div class="paper-insight">
+          <h4>Historical Truth</h4>
+          <p>From Egyptian deserts to Himalayan mountains, the greatest spiritual traditions have always reserved a special place for solitude. The suspicion modern society casts on loners says more about our collective anxiety than about the loners themselves.</p>
+        </div>
+        <span class="page-num">12</span>
+      </div>
+      <div class="page page-right">
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 19: The Silence Fast</h4>
+          <ol>
+            <li>Choose one day per month.</li>
+            <li>Speak to no one. Write nothing. Text nothing.</li>
+            <li>Communicate only through gesture if absolutely necessary.</li>
+            <li>Observe what your mind does with the surplus energy.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 20: The Creator's Retreat</h4>
+          <ol>
+            <li>Once per quarter, take 48 hours alone.</li>
+            <li>No internet. No television. No music with lyrics.</li>
+            <li>Bring only materials for one project.</li>
+            <li>Work until exhaustion. Sleep. Repeat.</li>
+          </ol>
+        </div>
+        <div class="paper-quote">
+          <p>Happiness comes from within and does not require the presence of other people.</p>
+        </div>
+        <span class="page-num">13</span>
+      </div>
+    </div>
 
-        // Category Filter
-        function filterCategory(section, category) {
-            const cards = document.querySelectorAll('#' + section + '-cards .card');
-            const buttons = document.querySelectorAll('.filter-btn');
+    <!-- ==================== SPREAD 7: PRACTICALS IV ==================== -->
+    <div class="spread" data-index="7">
+      <div class="page page-left">
+        <div class="paper-eyebrow">Practicals IV</div>
+        <div class="paper-h2">The Strategic Silence</div>
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 21: The Information Diet</h4>
+          <ol>
+            <li>Unfollow every account that does not teach you something.</li>
+            <li>Unsubscribe from every newsletter you skim.</li>
+            <li>Remove every news app from your phone.</li>
+            <li>Replace the void with one deep source. Read it slowly.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 22: The Approval Fast</h4>
+          <ol>
+            <li>For one week, make no decision based on what others will think.</li>
+            <li>Choose clothes, meals, and activities based solely on your own criteria.</li>
+            <li>Document the anxiety. It is the withdrawal from a drug.</li>
+            <li>By day seven, the craving will have weakened.</li>
+          </ol>
+        </div>
+        <span class="page-num">14</span>
+      </div>
+      <div class="page page-right">
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 23: The Time Audit</h4>
+          <ol>
+            <li>Track every hour for one week. Be brutal.</li>
+            <li>Categorize: reactive (responding to others) vs. sovereign (your own agenda).</li>
+            <li>Calculate the ratio. Most people are 80% reactive.</li>
+            <li>Shift 10% per month toward sovereign until you cross 50%.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 24: The Disappearance</h4>
+          <ol>
+            <li>Once per year, vanish for one week. Tell almost no one.</li>
+            <li>No social media. No check-ins. No photographs.</li>
+            <li>Use the time to plan the next twelve months.</li>
+            <li>Return with a single document: your strategy.</li>
+          </ol>
+        </div>
+        <div class="paper-quote">
+          <p>The quietest room produces the sharpest mind.</p>
+        </div>
+        <span class="page-num">15</span>
+      </div>
+    </div>
 
-            buttons.forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+    <!-- ==================== SPREAD 8: PRACTICALS IV CONT ==================== -->
+    <div class="spread" data-index="8">
+      <div class="page page-left">
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 25: The Truth Room</h4>
+          <ol>
+            <li>Find a room with no decoration, no screen, no sound.</li>
+            <li>Sit in it for thirty minutes. No agenda.</li>
+            <li>When your mind offers a distraction, name it aloud: "Fear." "Vanity." "Laziness."</li>
+            <li>Do this until you can sit without naming anything.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 26: The Leverage List</h4>
+          <ol>
+            <li>Write down every person who has leverage over you.</li>
+            <li>Next to each, write what they control: time, emotion, money, status.</li>
+            <li>For each, design one action that removes their leverage.</li>
+            <li>Execute one per month until the list is empty.</li>
+          </ol>
+        </div>
+        <div class="paper-insight">
+          <h4>The Ultimate Test</h4>
+          <p>If you cannot sit in a room alone without losing your mind, you have no power. Because power requires sovereignty over yourself first. And that sovereignty is only tested when no one is watching, no one is clapping, and no one is helping.</p>
+        </div>
+        <span class="page-num">16</span>
+      </div>
+      <div class="page page-right">
+        <div class="paper-practical" style="margin-top:4px;">
+          <h4>Exercise 27: The Cold Calculation</h4>
+          <ol>
+            <li>Pick one emotional decision you made this month.</li>
+            <li>Reconstruct it as a spreadsheet: pros, cons, probabilities, expected values.</li>
+            <li>Compare the calculated choice to the emotional one.</li>
+            <li>Notice the gap. That gap is the cost of noise.</li>
+          </ol>
+        </div>
+        <div class="paper-practical">
+          <h4>Exercise 28: The Social Distance</h4>
+          <ol>
+            <li>Identify the three people you spend the most time with.</li>
+            <li>Rate each on a scale of 1–10 for: ambition, honesty, clarity, discipline.</li>
+            <li>Your average is your invisible ceiling.</li>
+            <li>Increase distance from the lowest scores. Increase proximity to the highest.</li>
+          </ol>
+        </div>
+        <div class="paper-quote">
+          <p>Power doesn't come when you feel good. It comes when you're stripped of everything unnecessary.</p>
+        </div>
+        <span class="page-num">17</span>
+      </div>
+    </div>
 
-            cards.forEach(card => {
-                if (category === 'all' || card.dataset.category === category) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
+    <!-- ==================== SPREAD 9: WISDOM I ==================== -->
+    <div class="spread" data-index="9">
+      <div class="page page-left">
+        <div class="paper-eyebrow">Wisdom I</div>
+        <div class="paper-h2">On Being Alone</div>
+        <div class="paper-wisdom-list" style="margin-top:4px;">
+          <li>Shame in solitude is learned, not natural.</li>
+          <li>It is better to be alone than to be in bad company.</li>
+          <li>If you are excited in your spirit, then you are not really alone.</li>
+          <li>Isolation breeds timidity; timidity breeds more isolation.</li>
+          <li>You are not alone in your lonely. It is very human.</li>
+          <li>The social muscle atrophies when unused, but it never fully disappears.</li>
+          <li>Find pleasure in being alone, and loneliness loses its staining.</li>
+          <li>Comfort becomes confinement when it prevents growth.</li>
+          <li>Every fishbowl, no matter how pleasant, is still a bowl.</li>
+          <li>Like an elastic band stretched to its limit, you can never resume your former shape.</li>
+          <li>Voluntary solitude strengthens; enforced isolation wounds.</li>
+          <li>The difference is not the amount of silence, but the presence of choice.</li>
+        </div>
+        <span class="page-num">18</span>
+      </div>
+      <div class="page page-right">
+        <div class="paper-wisdom-list" style="margin-top:4px;">
+          <li>Type two fun is the forge of character.</li>
+          <li>Stress testing makes you thicker-skinned.</li>
+          <li>The greatest spiritual traditions have always reserved a place for solitude.</li>
+          <li>Society's suspicion of loners says more about collective anxiety than about loners.</li>
+          <li>Without great solitude, no serious work is possible.</li>
+          <li>Happiness comes from within and requires no audience.</li>
+          <li>When you are content being by yourself, it is easy to walk away from bad company.</li>
+          <li>In solitude, you see the big picture and cultivate love for all beings.</li>
+          <li>The crowd weakens your mind. You pick up their habits, their fears, their limits.</li>
+          <li>When you separate yourself, you hear your own mind clearly for the first time.</li>
+          <li>People talk too much because they think too little.</li>
+          <li>They fear silence because silence reveals truth.</li>
+        </div>
+        <span class="page-num">19</span>
+      </div>
+    </div>
 
-        // Search Filter
-        function filterCards(section, query) {
-            const cards = document.querySelectorAll('#' + section + '-cards .card');
-            const lowerQuery = query.toLowerCase();
+    <!-- ==================== SPREAD 10: WISDOM II ==================== -->
+    <div class="spread" data-index="10">
+      <div class="page page-left">
+        <div class="paper-eyebrow">Wisdom II</div>
+        <div class="paper-h2">On Power & Truth</div>
+        <div class="paper-wisdom-list" style="margin-top:4px;">
+          <li>There is a version of you the world has never met. You will only meet him in silence.</li>
+          <li>Power comes when you are stripped of everything unnecessary.</li>
+          <li>Most people walk through life blind because they are never alone long enough to see clearly.</li>
+          <li>The person who isolates himself sees what most people never will: the truth.</li>
+          <li>Solitude is not just a luxury. It is a weapon.</li>
+          <li>The truth you uncover in silence gives you an unfair advantage.</li>
+          <li>Once you face reality without illusion, you gain leverage.</li>
+          <li>While others chase pleasure, you are positioning.</li>
+          <li>While others play the role they were told to play, you are writing the script.</li>
+          <li>Time, when weaponized, becomes the greatest advantage in war, business, and life.</li>
+          <li>You cannot lead anything until you command your time.</li>
+          <li>You cannot command your time while you are surrounded.</li>
+        </div>
+        <span class="page-num">20</span>
+      </div>
+      <div class="page page-right">
+        <div class="paper-wisdom-list" style="margin-top:4px;">
+          <li>When you are constantly around people, you live in response mode.</li>
+          <li>Solitude is not just peace. It is tactical advantage.</li>
+          <li>It allows you to escape the emotional contagion of the masses.</li>
+          <li>Your brain adjusts to whatever environment it is in. Cut the noise, and it confronts itself.</li>
+          <li>When you are alone, there is no one left to blame. No distractions to numb you.</li>
+          <li>The truth is brutal. It exposes your laziness. It confronts your excuses.</li>
+          <li>If you endure that process without running back to comfort, you develop clarity.</li>
+          <li>You become the kind of person who does not need—he chooses.</li>
+          <li>That makes you unstoppable.</li>
+          <li>Solitude strips away the flattering noise. It leaves you face to face with your false identity.</li>
+          <li>You no longer need to be right. You just want to see clearly.</li>
+          <li>Truth, unfiltered, brutal truth, is only found in solitude.</li>
+        </div>
+        <span class="page-num">21</span>
+      </div>
+    </div>
 
-            cards.forEach(card => {
-                const text = card.textContent.toLowerCase();
-                if (text.includes(lowerQuery)) {
-                    card.style.display = '';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
+    <!-- ==================== SPREAD 11: QUOTES ==================== -->
+    <div class="spread" data-index="11">
+      <div class="page page-left">
+        <div class="paper-eyebrow">Quotes</div>
+        <div class="paper-h2">The Codex</div>
+        <div class="paper-quote" style="margin-top:4px;">
+          <p>Loneliness is the poverty of self; solitude is the richness of self.</p>
+          <cite>May Sarton</cite>
+        </div>
+        <div class="paper-quote">
+          <p>It is better to be alone than to be in bad company.</p>
+          <cite>Italian Proverb</cite>
+        </div>
+        <div class="paper-quote">
+          <p>Without great solitude, no serious work is possible.</p>
+          <cite>Pablo Picasso</cite>
+        </div>
+        <div class="paper-quote">
+          <p>It is much safer to be feared than loved.</p>
+          <cite>Niccolò Machiavelli</cite>
+        </div>
+        <span class="page-num">22</span>
+      </div>
+      <div class="page page-right">
+        <div class="paper-quote" style="margin-top:4px;">
+          <p>The one who depends on others to stand will fall when they walk away.</p>
+          <cite>Machiavelli</cite>
+        </div>
+        <div class="paper-quote">
+          <p>Power doesn't come when you feel good. It comes when you're stripped of everything unnecessary.</p>
+        </div>
+        <div class="paper-quote">
+          <p>The quietest room produces the sharpest mind.</p>
+        </div>
+        <div class="paper-quote">
+          <p>You cannot sharpen a blade in a storm.</p>
+        </div>
+        <div class="paper-quote">
+          <p>Do difficult things now and then, and do them alone sometimes, even if they are type two fun.</p>
+        </div>
+        <span class="page-num">23</span>
+      </div>
+    </div>
 
-        // Navbar Show/Hide
-        let lastScroll = 0;
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
-            const currentScroll = window.pageYOffset;
+    <!-- ==================== SPREAD 12: QUOTES CONT ==================== -->
+    <div class="spread" data-index="12">
+      <div class="page page-left">
+        <div class="paper-quote" style="margin-top:4px;">
+          <p>If you are excited in your spirit, then you are not really alone.</p>
+        </div>
+        <div class="paper-quote">
+          <p>Comfort becomes confinement when it prevents growth.</p>
+        </div>
+        <div class="paper-quote">
+          <p>Every fishbowl, no matter how pleasant, is still a bowl.</p>
+        </div>
+        <div class="paper-quote">
+          <p>Voluntary solitude strengthens; enforced isolation wounds.</p>
+        </div>
+        <div class="paper-quote">
+          <p>Happiness comes from within and does not require the presence of other people.</p>
+        </div>
+        <div class="paper-quote">
+          <p>The crowd weakens your mind. You pick up their habits, their opinions, their fears.</p>
+        </div>
+        <span class="page-num">24</span>
+      </div>
+      <div class="page page-right">
+        <div class="paper-quote" style="margin-top:4px;">
+          <p>People talk too much because they think too little.</p>
+        </div>
+        <div class="paper-quote">
+          <p>They fear silence because silence reveals truth.</p>
+        </div>
+        <div class="paper-quote">
+          <p>Power doesn't live in comfort. It lives in clarity.</p>
+        </div>
+        <div class="paper-quote">
+          <p>Clarity only comes in solitude.</p>
+        </div>
+        <div class="paper-quote">
+          <p>The man who can master solitude can master anything.</p>
+        </div>
+        <div class="paper-quote">
+          <p>Go silent. Disappear. Cut the noise and give yourself space to build what no one sees coming.</p>
+        </div>
+        <span class="page-num">25</span>
+      </div>
+    </div>
 
-            if (currentScroll > 100) {
-                navbar.classList.add('visible');
-            } else {
-                navbar.classList.remove('visible');
-            }
+    <!-- ==================== SPREAD 13: THE END ==================== -->
+    <div class="spread" data-index="13">
+      <div class="page page-left" style="background:#f5f2eb;">
+        <div style="margin-top:auto; margin-bottom:auto; text-align:center; width:100%;">
+          <div style="font-family:Georgia,serif; font-size:1.1rem; color:#8a8078; font-style:italic; line-height:1.6;">
+            "Close the tab.<br>Sit in silence for five minutes.<br>The book will wait. The silence will not."
+          </div>
+          <div style="margin-top:24px; color:#c9a96e; font-size:14px; letter-spacing:6px;">❦ ❦ ❦</div>
+        </div>
+        <span class="page-num">26</span>
+      </div>
+      <div class="page page-right back-right">
+        <div class="the-end">The End</div>
+        <p>A Field Manual<br>28 Exercises. 48 Wisdoms. 21 Quotes.</p>
+        <div style="margin-top:32px; color:rgba(245,242,235,0.2); font-size:24px;">❦</div>
+        <span class="page-num">27</span>
+      </div>
+    </div>
 
-            lastScroll = currentScroll;
-        });
+  </div><!-- /book -->
+</div><!-- /book-stage -->
 
-        // Fade In Animation
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.1 });
+<div class="click-zone prev-zone" onclick="prevSpread()"></div>
+<div class="click-zone next-zone" onclick="nextSpread()"></div>
 
-        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+<div class="book-controls">
+  <button onclick="prevSpread()" id="btnPrev">←</button>
+  <span class="page-indicator" id="indicator">1 / 14</span>
+  <button onclick="nextSpread()" id="btnNext">→</button>
+</div>
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
-    </script>
+<div class="mobile-hint">Tap edges or use arrows to turn pages</div>
+
+<script>
+const spreads = document.querySelectorAll('.spread');
+const turnShadow = document.getElementById('turnShadow');
+const indicator = document.getElementById('indicator');
+const btnPrev = document.getElementById('btnPrev');
+const btnNext = document.getElementById('btnNext');
+let current = 0;
+const total = spreads.length;
+
+function updateControls() {
+  indicator.textContent = (current + 1) + ' / ' + total;
+  btnPrev.disabled = current === 0;
+  btnNext.disabled = current === total - 1;
+}
+
+function nextSpread() {
+  if (current >= total - 1) return;
+  const outgoing = spreads[current];
+  const incoming = spreads[current + 1];
+  turnShadow.classList.add('sweep');
+  outgoing.classList.add('exiting');
+  incoming.classList.add('entering');
+  setTimeout(() => {
+    outgoing.classList.remove('active', 'exiting');
+    incoming.classList.remove('entering');
+    incoming.classList.add('active');
+    turnShadow.classList.remove('sweep');
+    current++;
+    updateControls();
+  }, 550);
+}
+
+function prevSpread() {
+  if (current <= 0) return;
+  const outgoing = spreads[current];
+  const incoming = spreads[current - 1];
+  turnShadow.style.transform = 'translateX(-100%)';
+  turnShadow.style.background = 'linear-gradient(to right, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 50%)';
+  turnShadow.classList.add('sweep');
+  outgoing.classList.add('exiting');
+  incoming.classList.add('entering');
+  setTimeout(() => {
+    outgoing.classList.remove('active', 'exiting');
+    incoming.classList.remove('entering');
+    incoming.classList.add('active');
+    turnShadow.classList.remove('sweep');
+    turnShadow.style.transform = '';
+    turnShadow.style.background = '';
+    current--;
+    updateControls();
+  }, 550);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') nextSpread();
+  if (e.key === 'ArrowLeft') prevSpread();
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+document.addEventListener('touchend', e => {
+  const diff = touchStartX - e.changedTouches[0].screenX;
+  if (Math.abs(diff) > 50) {
+    diff > 0 ? nextSpread() : prevSpread();
+  }
+});
+
+updateControls();
+</script>
 </body>
 </html>
