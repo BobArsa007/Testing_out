@@ -3,1218 +3,1730 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anthony Bourdain's BBQ Quest — A Cook's Tour Booklet</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <title>ONE TWO CUPS — The Iced Black Ritual</title>
     <style>
-        :root {
-            --paper: #f5f0e8;
-            --paper-dark: #ebe5d8;
-            --ink: #1a1612;
-            --ink-light: #3d3630;
-            --ink-faint: #8a8075;
-            --kc-red: #8B2500;
-            --texas-rust: #A0522D;
-            --nc-green: #2F4F2F;
-            --gold: #B8860B;
-            --sepia: #6B4423;
-            --cream: #faf6f0;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
-            background: #2a2520;
-            color: var(--ink);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            padding: 40px 20px;
+        :root {
+            --bg: #0a0a0a;
+            --bg-elevated: #111111;
+            --surface: rgba(255,255,255,0.03);
+            --surface-hover: rgba(255,255,255,0.06);
+            --border: rgba(255,255,255,0.08);
+            --border-hover: rgba(255,255,255,0.15);
+            --text: #f0ece4;
+            --text-muted: rgba(240,236,228,0.5);
+            --text-faint: rgba(240,236,228,0.25);
+            --accent: #c8a97e;
+            --accent-dim: rgba(200,169,126,0.15);
+            --accent-glow: rgba(200,169,126,0.4);
+            --ice: #a8c8d8;
+            --ice-glow: rgba(168,200,216,0.2);
+            --danger: #c44;
         }
 
-        /* The Book */
-        .book {
+        html, body {
             width: 100%;
-            max-width: 900px;
-            background: var(--paper);
-            box-shadow:
-                0 0 0 1px rgba(0,0,0,0.1),
-                0 0 0 8px #d4c4a8,
-                0 0 0 9px rgba(0,0,0,0.15),
-                0 20px 60px rgba(0,0,0,0.4),
-                0 40px 100px rgba(0,0,0,0.2);
-            border-radius: 4px;
-            position: relative;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ambient Background */
+        .ambient {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
             overflow: hidden;
         }
-
-        /* Spine effect */
-        .book::before {
+        .ambient::before {
             content: '';
             position: absolute;
-            left: 0;
-            top: 0;
-            width: 40px;
-            height: 100%;
-            background: linear-gradient(90deg,
-                rgba(0,0,0,0.08) 0%,
-                rgba(0,0,0,0.02) 30%,
-                rgba(255,255,255,0.1) 50%,
-                rgba(0,0,0,0.02) 70%,
-                rgba(0,0,0,0.06) 100%
-            );
-            z-index: 10;
-            pointer-events: none;
+            top: -30%;
+            left: -20%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(ellipse, rgba(200,169,126,0.08) 0%, transparent 60%);
+            animation: drift 20s ease-in-out infinite;
+        }
+        .ambient::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            right: -10%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(ellipse, rgba(168,200,216,0.06) 0%, transparent 60%);
+            animation: drift 25s ease-in-out infinite reverse;
+        }
+        @keyframes drift {
+            0%, 100% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(30px,-20px) scale(1.1); }
+            66% { transform: translate(-20px,30px) scale(0.95); }
         }
 
-        /* Page texture overlay */
-        .book::after {
-            content: '';
+        /* Grain Texture */
+        .grain {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-size: 200px;
+        }
+
+        /* Main Container */
+        .app {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Stage */
+        .stage {
+            width: 100%;
+            max-width: 1100px;
+            height: 85vh;
+            max-height: 700px;
+            position: relative;
+            perspective: 1200px;
+            padding: 0 40px;
+        }
+
+        /* Card */
+        .card {
             position: absolute;
             inset: 0;
-            background-image:
-                repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(139,115,85,0.03) 31px, rgba(139,115,85,0.03) 32px);
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateX(60px) rotateY(-8deg) scale(0.95);
+            transform-origin: center left;
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
             pointer-events: none;
+            display: flex;
+        }
+
+        .card.active {
+            opacity: 1;
+            transform: translateX(0) rotateY(0) scale(1);
+            pointer-events: all;
+            z-index: 10;
+        }
+
+        .card.prev {
+            opacity: 0;
+            transform: translateX(-60px) rotateY(8deg) scale(0.95);
             z-index: 5;
         }
 
-        /* Page */
-        .page {
-            padding: 60px 70px 60px 90px;
-            position: relative;
-            min-height: 100vh;
+        .card.next {
+            opacity: 0;
+            transform: translateX(60px) rotateY(-8deg) scale(0.95);
+            z-index: 5;
         }
 
-        .page + .page {
-            border-top: 1px solid rgba(0,0,0,0.08);
-        }
-
-        /* Drop cap */
-        .drop-cap::first-letter {
-            font-family: 'Playfair Display', serif;
-            font-size: 4.5rem;
-            float: left;
-            line-height: 0.8;
-            padding-right: 12px;
-            padding-top: 8px;
-            color: var(--sepia);
-            font-weight: 700;
-        }
-
-        /* Typography */
-        h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 3.2rem;
-            font-weight: 900;
-            line-height: 1.1;
-            color: var(--ink);
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.02em;
-        }
-
-        h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--ink);
-            margin: 2.5rem 0 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--ink);
-            display: inline-block;
-        }
-
-        h3 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.4rem;
-            font-weight: 600;
-            font-style: italic;
-            color: var(--ink-light);
-            margin: 2rem 0 0.8rem;
-        }
-
-        h4 {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--ink-faint);
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-        }
-
-        p {
-            font-size: 1.05rem;
-            line-height: 1.75;
-            color: var(--ink-light);
-            margin-bottom: 1.2rem;
-            text-align: justify;
-            hyphens: auto;
-        }
-
-        /* Chapter opener */
-        .chapter-opener {
-            text-align: center;
-            padding: 80px 40px;
-            position: relative;
-        }
-
-        .chapter-number {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--gold);
-            margin-bottom: 1.5rem;
-        }
-
-        .chapter-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8rem;
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-        }
-
-        .chapter-subtitle {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            font-style: italic;
-            color: var(--ink-faint);
-            margin-bottom: 2rem;
-        }
-
-        .ornament {
-            font-size: 1.5rem;
-            color: var(--gold);
-            margin: 1.5rem 0;
-            letter-spacing: 0.5em;
-        }
-
-        /* Pull quotes */
-        .pull-quote {
-            margin: 2.5rem 2rem;
-            padding: 1.5rem 2rem;
-            border-left: 3px solid var(--gold);
-            background: rgba(184,134,11,0.04);
-            position: relative;
-        }
-
-        .pull-quote::before {
-            content: '"';
-            font-family: 'Playfair Display', serif;
-            font-size: 5rem;
-            color: rgba(184,134,11,0.15);
-            position: absolute;
-            top: -0.5rem;
-            left: 0.5rem;
-            line-height: 1;
-        }
-
-        .pull-quote p {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.25rem;
-            font-style: italic;
-            color: var(--sepia);
-            line-height: 1.6;
-            margin: 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .pull-quote .attribution {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            font-style: normal;
-            color: var(--ink-faint);
-            margin-top: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-
-        /* Recipe boxes */
-        .recipe-box {
-            background: var(--cream);
-            border: 1px solid rgba(0,0,0,0.08);
-            border-radius: 2px;
-            padding: 1.5rem 2rem;
-            margin: 1.5rem 0;
-            position: relative;
-        }
-
-        .recipe-box::before {
+        /* Glass Edge Effect */
+        .card::before {
             content: '';
             position: absolute;
-            top: -1px;
-            left: 2rem;
-            right: 2rem;
-            height: 3px;
-            background: var(--accent-color, var(--gold));
+            inset: 0;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            z-index: 20;
         }
 
-        .recipe-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 0.3rem;
-            color: var(--ink);
-        }
-
-        .recipe-label {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            color: var(--ink-faint);
-            margin-bottom: 0.8rem;
-        }
-
-        .recipe-ingredients {
-            list-style: none;
-            font-size: 0.95rem;
-            line-height: 1.9;
-            color: var(--ink-light);
-            margin-bottom: 1rem;
-        }
-
-        .recipe-ingredients li {
-            padding-left: 1.2rem;
-            position: relative;
-        }
-
-        .recipe-ingredients li::before {
-            content: '—';
-            position: absolute;
-            left: 0;
-            color: var(--accent-color, var(--gold));
-            font-weight: 600;
-        }
-
-        .recipe-steps {
-            counter-reset: step;
-            list-style: none;
-            font-size: 0.95rem;
-            line-height: 1.8;
-            color: var(--ink-light);
-        }
-
-        .recipe-steps li {
-            position: relative;
-            padding-left: 2.2rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .recipe-steps li::before {
-            counter-increment: step;
-            content: counter(step) '.';
-            position: absolute;
-            left: 0;
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            color: var(--accent-color, var(--gold));
-            font-size: 1rem;
-        }
-
-        .recipe-note {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: 0.95rem;
-            color: var(--ink-faint);
-            border-top: 1px solid rgba(0,0,0,0.06);
-            padding-top: 0.8rem;
-            margin-top: 1rem;
-        }
-
-        /* Place cards */
-        .place-entry {
-            margin: 2rem 0;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-        }
-
-        .place-entry:last-child {
-            border-bottom: none;
-        }
-
-        .place-header-line {
+        /* Card Inner Layout */
+        .card-inner {
             display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            border-right: 1px solid var(--border);
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
             justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 0.5rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
         }
 
-        .place-name {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--ink);
-        }
-
-        .place-status {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
+        .sidebar-top .kicker {
+            font-size: 0.65rem;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 0.2rem 0.6rem;
-            border-radius: 2px;
+            color: var(--accent);
+            margin-bottom: 12px;
             font-weight: 500;
         }
 
-        .status-open { background: rgba(47,79,47,0.1); color: var(--nc-green); }
-        .status-closed { background: rgba(139,37,0,0.08); color: var(--kc-red); }
-        .status-evolved { background: rgba(160,82,45,0.1); color: var(--texas-rust); }
-
-        .place-meta {
-            font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            color: var(--ink-faint);
-            margin-bottom: 0.8rem;
+        .sidebar-top .title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.4rem;
+            font-weight: 300;
+            line-height: 1.1;
+            color: var(--text);
+            letter-spacing: -0.5px;
         }
 
-        .place-desc {
+        .sidebar-top .title em {
+            font-style: italic;
+            font-weight: 400;
+            color: var(--accent);
+        }
+
+        .sidebar-bottom {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .nav-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--border-hover);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .nav-dot:hover { background: var(--text-muted); }
+        .nav-dot.active {
+            width: 24px;
+            border-radius: 3px;
+            background: var(--accent);
+        }
+
+        .page-num {
+            font-size: 0.75rem;
+            color: var(--text-faint);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 1px;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 40px 50px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .content::-webkit-scrollbar { width: 4px; }
+        .content::-webkit-scrollbar-track { background: transparent; }
+        .content::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
+
+        /* Typography */
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.8rem;
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+
+        h2 em { font-style: italic; font-weight: 400; color: var(--accent); }
+
+        h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            margin: 32px 0 16px;
+        }
+
+        p {
             font-size: 0.95rem;
             line-height: 1.7;
-            color: var(--ink-light);
-            margin-bottom: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            font-weight: 300;
         }
 
-        .place-dish {
+        p strong { color: var(--text); font-weight: 500; }
+
+        .lead {
             font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
             font-style: italic;
+            color: var(--text-muted);
+            line-height: 1.6;
+            border-left: 2px solid var(--accent);
+            padding-left: 24px;
+            margin: 24px 0;
+        }
+
+        /* Cover Page */
+        .cover-layout {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .cover-center {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cover-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 40px;
+            background: var(--surface);
+            backdrop-filter: blur(10px);
+        }
+
+        .cover-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .cover-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 300;
+            line-height: 0.95;
+            letter-spacing: -2px;
+            margin-bottom: 16px;
+        }
+
+        .cover-title span {
+            display: block;
+            font-style: italic;
+            font-weight: 400;
+            color: var(--accent);
+        }
+
+        .cover-sub {
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-faint);
+            margin-bottom: 40px;
+        }
+
+        .cover-desc {
+            max-width: 420px;
+            margin: 0 auto 50px;
             font-size: 1rem;
-            color: var(--sepia);
-            padding: 0.6rem 1rem;
-            background: rgba(107,68,35,0.04);
-            border-left: 2px solid var(--sepia);
-            margin-bottom: 0.8rem;
+            line-height: 1.8;
+            color: var(--text-muted);
         }
 
-        .place-quote {
-            font-style: italic;
-            font-size: 0.9rem;
-            color: var(--ink-faint);
-            padding-left: 1rem;
-            border-left: 1px solid rgba(0,0,0,0.1);
+        .cover-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 32px;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.4s;
         }
 
-        .place-footer {
-            margin-top: 0.8rem;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.75rem;
-            color: var(--ink-faint);
+        .cover-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px var(--accent-glow);
         }
 
-        .place-footer a {
-            color: var(--sepia);
-            text-decoration: none;
-            border-bottom: 1px dotted var(--sepia);
+        .cover-cta .arrow {
+            transition: transform 0.3s;
+        }
+        .cover-cta:hover .arrow {
+            transform: translateX(4px);
         }
 
-        /* Two column layout */
-        .two-col {
+        /* Decorative Elements */
+        .deco-ring {
+            position: absolute;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .deco-ring.r1 {
+            width: 500px; height: 500px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.3;
+            animation: spin 60s linear infinite;
+        }
+        .deco-ring.r2 {
+            width: 700px; height: 700px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.15;
+            animation: spin 80s linear infinite reverse;
+        }
+        @keyframes spin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Grid Cards */
+        .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
-            margin: 1.5rem 0;
+            gap: 16px;
+            margin: 24px 0;
         }
 
-        @media (max-width: 700px) {
-            .two-col { grid-template-columns: 1fr; gap: 1.5rem; }
-            .page { padding: 40px 30px 40px 50px; }
-            h1 { font-size: 2.2rem; }
-            .chapter-title { font-size: 2rem; }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 24px 0;
         }
 
-        /* Section divider */
-        .section-divider {
-            text-align: center;
-            margin: 3rem 0;
+        .info-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.4s;
+            cursor: pointer;
+        }
+
+        .info-card:hover {
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
+            transform: translateY(-2px);
+        }
+
+        .info-card .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--accent-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+
+        .info-card:hover .icon {
+            background: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .info-card h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .info-card p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0;
+            color: var(--text-muted);
+        }
+
+        /* Step Timeline */
+        .timeline {
             position: relative;
+            margin: 32px 0;
+            padding-left: 32px;
         }
 
-        .section-divider::before {
+        .timeline::before {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 20%;
-            right: 20%;
-            height: 1px;
-            background: rgba(0,0,0,0.08);
+            left: 11px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(180deg, var(--accent) 0%, var(--border) 100%);
         }
 
-        .section-divider span {
-            background: var(--paper);
-            padding: 0 1.5rem;
+        .timeline-item {
             position: relative;
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
-            color: var(--gold);
+            margin-bottom: 28px;
+            padding-left: 28px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        /* Tip cards in booklet style */
-        .tip-entry {
-            margin: 1rem 0;
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(0,0,0,0.04);
+        .timeline-item:hover {
+            transform: translateX(4px);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -27px;
+            top: 4px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--bg-elevated);
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover::before {
+            border-color: var(--accent);
+            background: var(--accent);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .timeline-item .step-label {
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .timeline-item .step-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .timeline-item .step-desc {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        /* Salt Interactive */
+        .salt-stage {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            margin: 24px 0;
+        }
+
+        .salt-options {
             display: flex;
-            gap: 1rem;
-            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 24px;
         }
 
-        .tip-entry:last-child {
+        .salt-btn {
+            flex: 1;
+            padding: 16px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .salt-btn:hover {
+            border-color: var(--border-hover);
+            color: var(--text);
+        }
+
+        .salt-btn.active {
+            border-color: var(--accent);
+            background: var(--accent-dim);
+            color: var(--accent);
+        }
+
+        .salt-btn .amount {
+            display: block;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .salt-btn .label {
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .salt-display {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            display: none;
+            animation: reveal 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .salt-display.show {
+            display: block;
+        }
+
+        @keyframes reveal {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .salt-display .metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .salt-display .metric:last-child {
             border-bottom: none;
         }
 
-        .tip-number {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--gold);
-            line-height: 1;
-            min-width: 2.5rem;
-            text-align: center;
+        .salt-display .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-faint);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .tip-content h5 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 0.3rem;
-            color: var(--ink);
-        }
-
-        .tip-content p {
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin: 0;
-            text-align: left;
-        }
-
-        /* Footer page */
-        .book-footer {
-            text-align: center;
-            padding: 60px 40px;
-            background: var(--paper-dark);
-            border-top: 1px solid rgba(0,0,0,0.06);
-        }
-
-        .book-footer p {
-            text-align: center;
-            font-style: italic;
-            color: var(--ink-faint);
-        }
-
-        .book-footer .closing {
+        .salt-display .metric-value {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            color: var(--sepia);
-            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: var(--text);
         }
 
-        /* Print styles */
-        @media print {
-            body { background: white; padding: 0; }
-            .book { box-shadow: none; max-width: 100%; }
-            .book::before, .book::after { display: none; }
-            .page { break-inside: avoid; min-height: auto; }
+        .salt-display .advice {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--text-muted);
+            font-style: italic;
         }
 
-        /* Page number simulation */
-        .page-number {
+        /* Slider */
+        .slider-wrap {
+            margin: 24px 0;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .slider-label span {
+            font-size: 0.75rem;
+            color: var(--text-faint);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .slider-track {
+            position: relative;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 8px;
+        }
+
+        .slider-fill {
             position: absolute;
-            bottom: 30px;
-            right: 70px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--ink-faint);
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.3s;
         }
+
+        .slider-thumb {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--accent-glow);
+            cursor: grab;
+            transition: transform 0.2s;
+        }
+
+        .slider-thumb:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        .slider-thumb:active {
+            cursor: grabbing;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .slider-value {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-top: 8px;
+        }
+
+        .slider-sub {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-faint);
+            margin-top: 4px;
+        }
+
+        /* Recipe Final */
+        .recipe-final {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .recipe-final .recipe-header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .recipe-final .recipe-header h3 {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .recipe-final .recipe-header .sub {
+            font-size: 0.8rem;
+            color: var(--text-faint);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 8px;
+        }
+
+        .recipe-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .recipe-row:last-child {
+            border-bottom: none;
+        }
+
+        .recipe-row .ingredient {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .recipe-row .value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .recipe-row .value em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        /* Tip */
+        .tip {
+            background: linear-gradient(135deg, rgba(200,169,126,0.08) 0%, rgba(200,169,126,0.02) 100%);
+            border: 1px solid rgba(200,169,126,0.15);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+            position: relative;
+        }
+
+        .tip::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 24px;
+            width: 40px;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        .tip h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: var(--accent);
+        }
+
+        .tip p {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            margin: 0;
+            color: var(--text-muted);
+        }
+
+        /* Navigation */
+        .nav-arrows {
+            position: absolute;
+            bottom: 40px;
+            right: 50px;
+            display: flex;
+            gap: 12px;
+            z-index: 30;
+        }
+
+        .nav-arrow {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-arrow:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--accent-dim);
+        }
+
+        .nav-arrow:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .card-inner { flex-direction: column; }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding: 24px;
+                flex-direction: row;
+                align-items: center;
+            }
+            .sidebar-top .title { font-size: 1.6rem; }
+            .sidebar-bottom { flex-direction: row; align-items: center; }
+            .content { padding: 24px; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .salt-options { flex-direction: column; }
+            .stage { height: 95vh; padding: 0 16px; }
+            .nav-arrows { bottom: 20px; right: 24px; }
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .float { animation: float 4s ease-in-out infinite; }
+
+        /* Utility */
+        .accent-text { color: var(--accent); }
+        .muted { color: var(--text-muted); }
+        .faint { color: var(--text-faint); }
+
+        /* Comparison Cards */
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .compare-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .compare-card:hover {
+            border-color: var(--border-hover);
+        }
+
+        .compare-card .check {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+        }
+
+        .compare-card.good .check {
+            background: rgba(74, 155, 74, 0.15);
+            color: #4a9b4a;
+        }
+
+        .compare-card.bad .check {
+            background: rgba(204, 68, 68, 0.15);
+            color: #c44;
+        }
+
+        .compare-card h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .compare-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .compare-card li {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .compare-card li:last-child {
+            border-bottom: none;
+        }
+
+        /* Method Cards */
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .method-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .method-card:hover {
+            border-color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        .method-card .method-letter {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .method-card .method-name {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .method-card .method-desc {
+            font-size: 0.75rem;
+            color: var(--text-faint);
+            line-height: 1.5;
+        }
+
+        .method-detail {
+            display: none;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 12px;
+            animation: reveal 0.4s ease;
+        }
+
+        .method-detail.show {
+            display: block;
+        }
+
     </style>
 <base target="_blank">
 </head>
 <body>
-    <div class="book">
 
-        <!-- COVER / TITLE PAGE -->
-        <div class="page chapter-opener" style="min-height: auto; padding-bottom: 100px;">
-            <div class="chapter-number">A Cook's Tour — Season 2, Episode 7</div>
-            <div class="ornament">❦ ❦ ❦</div>
-            <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">Anthony Bourdain's<br>Barbecue Quest</h1>
-            <p class="chapter-subtitle" style="font-size: 1.1rem; max-width: 500px; margin: 0 auto 2rem;">
-                A field guide to the people, places, recipes, and philosophy of America's most controversial cuisine — drawn from the original 2003 broadcast.
-            </p>
-            <div class="ornament">— ◈ —</div>
-            <p style="text-align: center; font-size: 0.85rem; color: var(--ink-faint); margin-top: 3rem;">
-                Featuring Kansas City • Houston, Texas • Eastern & Western North Carolina
-            </p>
-        </div>
+<div class="ambient"></div>
+<div class="grain"></div>
 
-        <!-- INTRODUCTION -->
-        <div class="page">
-            <span class="page-number">3</span>
-            <h4>Introduction</h4>
-            <p class="drop-cap">
-                As a cook, tastes and smells are my memories. And now I'm in search of new ones. So I'm leaving New York City in hope to have a few epiphanies around the world. And I'm willing to go to some lengths to do that. I'm looking for extremes of emotion and experience. I'll try anything, I'll risk everything, I have nothing to lose.
-            </p>
-            <p>
-                My fellow Americans, what is our one culinary contribution to the world that's as original as jazz, baseball, rock and roll? That's right, barbecue. Ribs fall right off the bone. It's all ours. Even the French can't do it.
-            </p>
-            <p>
-                What do I know about barbecue? Yep, that about sums it up for me. I kid, I kid. Actually, it turns out there's a barbecue debate more heated than the last presidential election. There is just no element of barbecue that's not controversial. The cooking unit, the meat, fuel, the seasoning, and the most elusive, the expertise of the chef.
-            </p>
-            <div class="pull-quote">
-                <p>Barbecue is not a cuisine, it's an obsession. Barbecuers are free-thinking individualists.</p>
-                <div class="attribution">— Anthony Bourdain</div>
-            </div>
-            <p>
-                This booklet collects the recipes, techniques, and wisdom gathered from three corners of the BBQ Triangle — Kansas City, Texas, and North Carolina — along with the real places you can still visit today.
-            </p>
-        </div>
+<div class="app">
+    <div class="stage" id="stage">
 
-        <!-- CHAPTER 1: KANSAS CITY -->
-        <div class="page chapter-opener">
-            <span class="page-number">5</span>
-            <div class="chapter-number">Chapter One</div>
-            <div class="ornament">❦</div>
-            <h1 class="chapter-title" style="color: var(--kc-red);">Kansas City</h1>
-            <p class="chapter-subtitle">The Barbecue Capital of the World</p>
-            <p style="max-width: 500px; margin: 0 auto; font-size: 1rem; color: var(--ink-faint);">
-                While other regions specialize in specific meats, in Kansas City, they'll cook anything, anyhow. If it moves, barbecue it.
-            </p>
-        </div>
-
-        <div class="page">
-            <span class="page-number">6</span>
-            <h2 style="border-color: var(--kc-red);">Oklahoma Joe's</h2>
-            <p class="drop-cap">
-                If you want to get to the bottom of something, you start at the top. So I make a dinner date with Carolyn Wells, executive director of the Kansas City Barbecue Society, at Oklahoma Joe's — a gas station, liquor store, convenience store, and some of the finest barbecue in this country.
-            </p>
-            <p>
-                My favorite menu item is the Carolina Pork Sandwich, which is a pulled pork sandwich with slaw on top, served with Bubba sauce. But their ribs are great. And I think they're cooking up some burnt ends just for you.
-            </p>
-            <p>
-                A burnt end is the charred part of the brisket after it's cooked that they used to throw away. Only in Kansas City, that I know of, had they really become menu items. Here, they collect them all week so they can offer them one night during the week.
-            </p>
-            <div class="pull-quote">
-                <p>Oh wow. Now this is finger-licking good. Flavor up the ying-yang, it's great.</p>
-                <div class="attribution">— Bourdain, on the burnt ends</div>
-            </div>
-
-            <h3>The Carolina Pork Sandwich</h3>
-            <div class="recipe-box" style="--accent-color: var(--kc-red);">
-                <div class="recipe-label">What You Need</div>
-                <ul class="recipe-ingredients" style="--accent-color: var(--kc-red);">
-                    <li>4–5 lb pork shoulder (Boston butt)</li>
-                    <li>Yellow mustard (as binder)</li>
-                    <li>KC-style rub (see Paul Kirk's recipe below)</li>
-                    <li>Soft white buns</li>
-                    <li>Coleslaw (vinegar-based)</li>
-                    <li>Bubba sauce or your favorite sweet & tangy BBQ sauce</li>
-                </ul>
-                <div class="recipe-label" style="margin-top:1rem;">The Method</div>
-                <ol class="recipe-steps" style="--accent-color: var(--kc-red);">
-                    <li>Coat pork shoulder with yellow mustard, then apply rub liberally.</li>
-                    <li>Smoke at 225°F for 10–12 hours until internal temp reaches 195–205°F.</li>
-                    <li>Rest 30 minutes, then pull/shred with two forks.</li>
-                    <li>Toss pulled pork with a little sauce — don't drown it.</li>
-                    <li>Pile on a soft bun, top with vinegar slaw, drizzle with more sauce.</li>
-                </ol>
-                <div class="recipe-note">
-                    <strong>Note:</strong> Good barbecue is not always pretty. Don't worry about Instagram-perfect — worry about flavor.
+        <!-- PAGE 1: COVER -->
+        <div class="card active" data-page="1">
+            <div class="cover-layout">
+                <div class="deco-ring r1"></div>
+                <div class="deco-ring r2"></div>
+                <div class="cover-center">
+                    <div class="cover-badge">
+                        <span class="dot"></span>
+                        OneTwoCups 20-Bar Edition
+                    </div>
+                    <h1 class="cover-title">
+                        The Iced<br>
+                        <span>Black Ritual</span>
+                    </h1>
+                    <div class="cover-sub">A Complete Brewing Guide</div>
+                    <p class="cover-desc">
+                        Master the art of bold, refreshing iced black coffee with your portable 20-bar hand press — and discover the precise science of salt integration.
+                    </p>
+                    <button class="cover-cta" onclick="nextPage()">
+                        Begin the Ritual
+                        <span class="arrow">→</span>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="page">
-            <span class="page-number">7</span>
-            <h2 style="border-color: var(--kc-red);">Paul Kirk — The Baron of Barbecue</h2>
-            <p class="drop-cap">
-                Sunday afternoon in Kansas. We're here to talk about barbecue with the world-recognized grand master authority on the subject of Kansas City barbecue, Paul Kirk, known as the Baron of Barbecue. I'm searching for that ultimate barbecue. I've never found it.
-            </p>
-            <p>
-                Paul Kirk is like a barbecue prize fighter-turned-manager. He won loads of international competitions and now he trains rookies. I decided to investigate, even if it means I gotta do a little work. Maybe get my hands sticky.
-            </p>
-            <p>
-                It's apron time for you. Okay, what I have here, three briskets. I wanna know which one you would pick and why. Like the feel and the look of this guy. Nice fat layer, nice confirmation in shape, and I'm expecting it'll be a nice mix of fat and lean.
-            </p>
-            <p>
-                Very good. I'mma show you how I trim 'em. And then I'mma let you trim the other one. I'm gonna try to trim down to a quarter to 1/8th of an inch of fat. Now you get to do it.
-            </p>
-
-            <h3>Paul Kirk's Basic Rub</h3>
-            <div class="recipe-box" style="--accent-color: var(--kc-red);">
-                <div class="recipe-label">Foundation (The Four Salts)</div>
-                <ul class="recipe-ingredients" style="--accent-color: var(--kc-red);">
-                    <li>2 tbsp seasoning salt</li>
-                    <li>1 tbsp celery salt</li>
-                    <li>1 tbsp onion salt</li>
-                    <li>1 tbsp garlic salt</li>
-                </ul>
-                <div class="recipe-label" style="margin-top:1rem;">Add Your Signature — Pick Three</div>
-                <ul class="recipe-ingredients" style="--accent-color: var(--kc-red);">
-                    <li>Coriander</li>
-                    <li>Oregano</li>
-                    <li>Cumin</li>
-                    <li>Allspice</li>
-                    <li>Paprika</li>
-                    <li>Brown sugar</li>
-                </ul>
-                <div class="recipe-note">
-                    <strong>Paul's Pro Tip:</strong> "Make it your own." The basic four-salt rub is just the foundation. Add three signature spices to develop your personal flavor profile.
-                </div>
-            </div>
-
-            <h3>Burnt Ends — The KC Treasure</h3>
-            <div class="recipe-box" style="--accent-color: var(--kc-red);">
-                <div class="recipe-label">The Method</div>
-                <ol class="recipe-steps" style="--accent-color: var(--kc-red);">
-                    <li>Start with a full packer brisket (point end). Trim fat cap to ¼ inch.</li>
-                    <li>Apply rub generously. Let sit overnight in fridge.</li>
-                    <li>Smoke at 225°F using hickory or oak until internal temp hits 195°F (8–10 hours).</li>
-                    <li>Separate the point from the flat. Cube the point into 1-inch chunks.</li>
-                    <li>Toss cubes in a pan with BBQ sauce + a splash of cola or apple juice.</li>
-                    <li>Return to smoker for 1–2 more hours until sticky and caramelized.</li>
-                </ol>
-                <div class="recipe-note">
-                    <strong>Note:</strong> A burnt end is the charred part of the brisket after it's cooked that they used to throw away. Only in Kansas City did they really become menu items.
-                </div>
-            </div>
-        </div>
-
-        <div class="page">
-            <span class="page-number">8</span>
-            <h2 style="border-color: var(--kc-red);">Places: Kansas City</h2>
-
-            <div class="place-entry">
-                <div class="place-header-line">
-                    <span class="place-name">Joe's Kansas City Bar-B-Que</span>
-                    <span class="place-status status-open">Open</span>
-                </div>
-                <div class="place-meta">📍 11723 Roe Ave, Leawood, KS 66211 &nbsp;|&nbsp; Originally Oklahoma Joe's (1996)</div>
-                <p class="place-desc">
-                    Opened in 1996 inside a gas station at 47th & Mission in Kansas City, Kansas. Bourdain named the original location one of "13 Places You Must Eat Before You Die." The name changed to Joe's Kansas City Bar-B-Que in 2014. Three locations now serve the KC area.
-                </p>
-                <div class="place-dish">
-                    Order: Carolina Pork Sandwich (pulled pork + slaw + Bubba sauce), burnt ends, ribs
-                </div>
-                <p class="place-quote">"If you want to get to the bottom of something, you start at the top."</p>
-                <div class="place-footer">
-                    <a href="https://www.joeskc.com/" target="_blank">joeskc.com</a>
-                </div>
-            </div>
-
-            <div class="place-entry">
-                <div class="place-header-line">
-                    <span class="place-name">Paul Kirk — Baron of Barbecue</span>
-                    <span class="place-status status-closed">Passed Away 2025</span>
-                </div>
-                <div class="place-meta">📍 Kansas City Area, KS &nbsp;|&nbsp; Seven-time World Barbecue Champion</div>
-                <p class="place-desc">
-                    Author of 12 BBQ books and founder of the Baron's School of Pitmasters. Paul trained countless pitmasters and appeared on Bourdain's show in his backyard. He passed away on May 26, 2025 at age 84. His legacy lives on through his books, rubs, and the pitmasters he mentored.
-                </p>
-                <div class="place-dish">
-                    Legacy: Baron of Barbecue sauce, 12 cookbooks, Baron's School of Pitmasters
-                </div>
-                <p class="place-quote">"I'm searching for that ultimate barbecue. I've never found it."</p>
-                <div class="place-footer">
-                    <a href="https://www.midwest-cremation.com/obituaries/paul-kirk" target="_blank">Obituary</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- CHAPTER 2: TEXAS -->
-        <div class="page chapter-opener">
-            <span class="page-number">9</span>
-            <div class="chapter-number">Chapter Two</div>
-            <div class="ornament">❦</div>
-            <h1 class="chapter-title" style="color: var(--texas-rust);">Texas</h1>
-            <p class="chapter-subtitle">Nothing Beats Texas-Style Barbecue</p>
-            <p style="max-width: 500px; margin: 0 auto; font-size: 1rem; color: var(--ink-faint);">
-                Texans don't just make barbecue — they engineer it. From bullet-proof glass pits to 14-foot beer bottle smokers, the pit is as important as the meat.
-            </p>
-        </div>
-
-        <div class="page">
-            <span class="page-number">10</span>
-            <h2 style="border-color: var(--texas-rust);">Dave Klose — Pit Engineer</h2>
-            <p class="drop-cap">
-                Looks like I'm off to Houston, Texas. You'd think there's some hard and fast rules, the individual way they do things in certain states. But I gotta tell ya, I'm getting pretty confused. But one thing I'm not confused about is who makes, who builds, designs, and constructs the best pits maybe in the universe? This is the man, Dave Klose.
-            </p>
-            <p>
-                I actually believe we make some of the highest quality and best engineered pits in the world. And I won't stop, until I've made something out of everything in the planet Earth. You don't wanna park a car next to us, trust me.
-            </p>
-            <p>
-                I was working out at NASA for years. Administrator at NASA's a woman. I told her I wanted a pit on the moon. She said, "Why?" "Why do you want a pit on the moon?" I said because when the Russians or anyone else land, I want them to see the world's first Klose interplanetary grill.
-            </p>
-
-            <div class="pull-quote">
-                <p>It's not just food, it's not just a lifestyle, it's a calling, and... it's an illness.</p>
-                <div class="attribution">— Dave Klose</div>
-            </div>
-
-            <h3>Dave Klose's Signature Shrimp</h3>
-            <div class="recipe-box" style="--accent-color: var(--texas-rust);">
-                <div class="recipe-label">Ingredients</div>
-                <ul class="recipe-ingredients" style="--accent-color: var(--texas-rust);">
-                    <li>8–10 count tiger shrimp (jumbo), peeled and deveined</li>
-                    <li>Stone crab claw meat</li>
-                    <li>Chicken tenders, pounded thin</li>
-                    <li>Maple-smoked bacon</li>
-                    <li>Cabernet Sauvignon</li>
-                    <li>Toothpicks or butcher's twine</li>
-                </ul>
-                <div class="recipe-label" style="margin-top:1rem;">The Method</div>
-                <ol class="recipe-steps" style="--accent-color: var(--texas-rust);">
-                    <li>Butterfly each shrimp, leaving tail on.</li>
-                    <li>Stuff each shrimp with stone crab meat.</li>
-                    <li>Wrap stuffed shrimp with a pounded-thin chicken tender.</li>
-                    <li>Wrap the entire bundle with maple-smoked bacon. Secure with toothpicks.</li>
-                    <li>Soak in Cabernet Sauvignon overnight (or at least 4 hours).</li>
-                    <li>Smoke or grill at 275°F until bacon is crispy and chicken is cooked through (about 45 min).</li>
-                </ol>
-                <div class="recipe-note">
-                    <strong>Dave's Wisdom:</strong> "You cannot mess this up. If you do it bad, it's incredible. If you do it right, it'll take the top of your head off."
-                </div>
-            </div>
-        </div>
-
-        <div class="page">
-            <span class="page-number">11</span>
-            <h2 style="border-color: var(--texas-rust);">Roy Burns BBQ</h2>
-            <p class="drop-cap">
-                Dave says that he knows a place where they make some of the best ribs and brisket in the nation. So, yeah, where are we, Dave? Yeah, we're at Roy Burn's barbecue. It's been here about 30, 35 years. Some of the best barbecue in Houston.
-            </p>
-            <p>
-                Good lord, it looks like a decent sneeze would level this place. That doesn't seem to stop the customers. People come from all over Houston, southwest side, east side, everywhere. They drive in traffic to get over here and eat this barbecue.
-            </p>
-            <p>
-                According to Roy, the secret to his barbecue lies in the fuel. Slow burning oak. Post oak, that's the secret doing the slow.
-            </p>
-            <p>
-                Roy really understands the business. The main thing is, I tell my customers to come back and tell me if it's bad or good. So then I start looking for ways to change. When you see cars lined up down the street, that's a good tip-off. Limos, and Cadillacs will pull up here. Man, you never know who's getting out.
-            </p>
-
-            <h3>Texas Post Oak Brisket</h3>
-            <div class="recipe-box" style="--accent-color: var(--texas-rust);">
-                <div class="recipe-label">The Texas Trinity Rub</div>
-                <ul class="recipe-ingredients" style="--accent-color: var(--texas-rust);">
-                    <li>2.5 tbsp kosher salt</li>
-                    <li>2.5 tbsp coarse black pepper</li>
-                    <li>2 tbsp garlic powder (optional)</li>
-                    <li>Post oak wood chunks or chips</li>
-                    <li>Beef tallow (for wrapping)</li>
-                </ul>
-                <div class="recipe-label" style="margin-top:1rem;">The Method</div>
-                <ol class="recipe-steps" style="--accent-color: var(--texas-rust);">
-                    <li>Trim brisket: remove silver skin, square off sides, leave ¼ inch fat cap.</li>
-                    <li>Season with salt & pepper only. Dry brine overnight in fridge.</li>
-                    <li>Preheat smoker to 250–265°F. Add post oak for smoke.</li>
-                    <li>Place brisket fat-side toward heat. Smoke 7–8 hours until 165–170°F internal.</li>
-                    <li>Wrap in butcher paper drizzled with beef tallow.</li>
-                    <li>Continue smoking 7–8 more hours until 202–203°F internal.</li>
-                    <li>Rest at room temperature at least 2 hours before slicing.</li>
-                </ol>
-                <div class="recipe-note">
-                    <strong>Why Post Oak?</strong> Post oak burns slow and steady with a mild, clean smoke that enhances beef without overpowering it. It's the gold standard in Texas BBQ.
-                </div>
-            </div>
-        </div>
-
-        <div class="page">
-            <span class="page-number">12</span>
-            <h2 style="border-color: var(--texas-rust);">Places: Texas</h2>
-
-            <div class="place-entry">
-                <div class="place-header-line">
-                    <span class="place-name">BBQ Pits by Klose</span>
-                    <span class="place-status status-open">Open</span>
-                </div>
-                <div class="place-meta">📍 1355 Judiway St Ste B, Houston, TX 77018 &nbsp;|&nbsp; 40+ years building custom pits</div>
-                <p class="place-desc">
-                    David Klose has been building custom BBQ pits in Houston for over 40 years. His creations range from bullet-proof glass pits (from a Sarajevo phone booth) to 14-foot beer bottle smokers with pony keg taps. He's also a World Champion BBQ Pitmaster.
-                </p>
-                <div class="place-dish">
-                    Visit the shop to see the madness in person. Custom pits from $2,000 to $8,000+
-                </div>
-                <p class="place-quote">"I won't stop until I've made something out of everything on planet Earth."</p>
-                <div class="place-footer">
-                    <a href="https://bbqpits.com/" target="_blank">bbqpits.com</a>
-                </div>
-            </div>
-
-            <div class="place-entry">
-                <div class="place-header-line">
-                    <span class="place-name">Burns Original BBQ</span>
-                    <span class="place-status status-open">Open</span>
-                </div>
-                <div class="place-meta">📍 8307 De Priest St, Houston, TX 77088 &nbsp;|&nbsp; Founded 1973 in Acres Homes</div>
-                <p class="place-desc">
-                    Founded by Roy Burns Sr., who started selling BBQ by the side of the road. After Roy passed in 2009, the original location fell into disrepair until grandsons Cory and Carl Crawford bought and restored it in 2012. Today it's a Houston institution — limos and Cadillacs still line up.
-                </p>
-                <div class="place-dish">
-                    Order: Ribs and brisket with secret sauce, mustard-based potato salad with pickles
-                </div>
-                <p class="place-quote">"Burn's place may not get a 30 for decor from the Zagats, but Roy has mastered the golden rule: make good food."</p>
-                <div class="place-footer">
-                    <a href="https://www.burnsoriginalbbq.com/" target="_blank">burnsoriginalbbq.com</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- CHAPTER 3: NORTH CAROLINA -->
-        <div class="page chapter-opener">
-            <span class="page-number">13</span>
-            <div class="chapter-number">Chapter Three</div>
-            <div class="ornament">❦</div>
-            <h1 class="chapter-title" style="color: var(--nc-green);">North Carolina</h1>
-            <p class="chapter-subtitle">Cradle of Barbecue — Where It All Began</p>
-            <p style="max-width: 500px; margin: 0 auto; font-size: 1rem; color: var(--ink-faint);">
-                It's all about pig, pig, pig, pig, pig, pig, pig. And when you're talking about Eastern North Carolina, you're talking about nose to tail, everything but the squeak.
-            </p>
-        </div>
-
-        <div class="page">
-            <span class="page-number">14</span>
-            <h2 style="border-color: var(--nc-green);">Ed Mitchell — Whole Hog</h2>
-            <p class="drop-cap">
-                During my travels, I hear about a joint called Mitchell's, where they proudly specialize in whole hog barbecue. I'm introduced to proprietor Ed Mitchell, who promises to come clean on their entire operation.
-            </p>
-            <p>
-                First step, trimming the pig. We'll let Tony cut the feet. What am I thinking? I'm thinking an episode of the Sopranos I saw a few weeks ago. Getting good at this, huh? Every now and then, we get one like me, he's a little healthy. He has a lot of fat glands. A lot of actors in Hollywood pay to have that done, you know, while they're still alive.
-            </p>
-            <p>
-                Now this one, it got all the good stuff in it. The tongue. The brains. The eyeballs. The thymus gland. This is good eating. Now she's ready to go on. Spank it. Now take a stroll on back. That is really a symbolic of a salute. Because he's really gone make somebody very happy.
-            </p>
-
-            <div class="pull-quote">
-                <p>If you're gonna kill a pig, you should eat every part of it. I mean, if the pig ever hunts me down and kills me, I hope that he uses every part.</p>
-                <div class="attribution">— Ed Mitchell</div>
-            </div>
-
-            <h3>Eastern NC Whole Hog (Home Adaptation)</h3>
-            <div class="recipe-box" style="--accent-color: var(--nc-green);">
-                <div class="recipe-label">"Whole Hog" Assembly for the Home Cook</div>
-                <ul class="recipe-ingredients" style="--accent-color: var(--nc-green);">
-                    <li>2–3 lb pork shoulder (Boston butt)</li>
-                    <li>1 lb pork belly</li>
-                    <li>1 lb pork tenderloin</li>
-                    <li>1 rack baby back ribs</li>
-                    <li>Kosher salt, black pepper, smoked paprika</li>
-                    <li>Apple cider vinegar (for sauce)</li>
-                </ul>
-                <div class="recipe-label" style="margin-top:1rem;">The Method</div>
-                <ol class="recipe-steps" style="--accent-color: var(--nc-green);">
-                    <li>Cut all pork pieces in half. Season with salt, pepper, and smoked paprika.</li>
-                    <li>Layer in a Dutch oven: ribs on bottom, then shoulder, tenderloin, belly, sirloin, top with remaining ribs.</li>
-                    <li>Wrap tightly in 3–4 layers of heavy-duty foil.</li>
-                    <li>Roast at 250°F for 8–10 hours until falling-off-bone tender.</li>
-                    <li>Remove bones, pull and shred all meat together. Mix in rendered fat.</li>
-                    <li>Toss with Eastern NC vinegar sauce. Top with crispy skin cracklins if available.</li>
-                </ol>
-                <div class="recipe-note">
-                    <strong>Ed's Philosophy:</strong> The blend of shoulder, belly, and tenderloin mimics whole-hog flavor. If you kill it, use it all.
-                </div>
-            </div>
-        </div>
-
-        <div class="page">
-            <span class="page-number">15</span>
-            <h2 style="border-color: var(--nc-green);">The Sauce Wars</h2>
-            <p class="drop-cap">
-                Just when I think my investigation is over, I discover barbecue has battles within battles. Turns out in North Carolina, there's a barbecue civil war.
-            </p>
-            <p>
-                When you're talking about barbecue in North Carolina, you're talking about two major significant styles. You got your East North Carolina barbecue, which is kind of a vinegary whole hog thing, and you got your western, or Piedmont-Lexington style barbecue.
-            </p>
-            <p>
-                Traditionally, the people east of Carolina thought tomatoes were poisonous. As they came west, they began to add tomatoes.
-            </p>
-
-            <div class="two-col">
-                <div class="recipe-box" style="--accent-color: var(--nc-green);">
-                    <div class="recipe-title">Eastern NC Style</div>
-                    <div class="recipe-label">No Tomato Allowed</div>
-                    <ul class="recipe-ingredients" style="--accent-color: var(--nc-green);">
-                        <li>1 cup apple cider vinegar</li>
-                        <li>1 cup white distilled vinegar</li>
-                        <li>1 tbsp crushed red pepper flakes</li>
-                        <li>1 tsp freshly ground black pepper</li>
-                        <li>1 tsp kosher salt</li>
-                        <li>1–2 tsp sugar (optional)</li>
-                        <li>Dash of hot sauce</li>
-                    </ul>
-                    <div class="recipe-note" style="font-size:0.85rem;">
-                        Shake all ingredients in a jar. Let stand 30 minutes. Refrigerate 1–2 days for best flavor.
+        <!-- PAGE 2: INTRO -->
+        <div class="card next" data-page="2">
+            <div class="card-inner">
+                <div class="sidebar">
+                    <div class="sidebar-top">
+                        <div class="kicker">Chapter 01</div>
+                        <div class="title">Why Iced<br><em>Black?</em></div>
+                    </div>
+                    <div class="sidebar-bottom">
+                        <div class="nav-dots">
+                            <div class="nav-dot active" onclick="goToPage(1)"></div>
+                            <div class="nav-dot active" onclick="goToPage(2)"></div>
+                            <div class="nav-dot" onclick="goToPage(3)"></div>
+                            <div class="nav-dot" onclick="goToPage(4)"></div>
+                            <div class="nav-dot" onclick="goToPage(5)"></div>
+                            <div class="nav-dot" onclick="goToPage(6)"></div>
+                            <div class="nav-dot" onclick="goToPage(7)"></div>
+                            <div class="nav-dot" onclick="goToPage(8)"></div>
+                        </div>
+                        <div class="page-num">02 / 08</div>
                     </div>
                 </div>
+                <div class="content">
+                    <div class="lead">
+                        "Black coffee is the purest expression of the bean. Ice transforms it into something else entirely — a drink that reveals hidden notes you never knew existed."
+                    </div>
+                    <p>Your <strong>OneTwoCups Hand Press Mini Espresso</strong> is a 20-bar portable powerhouse. Unlike drip coffee, it produces <strong>espresso concentrate</strong> — thick, rich, and full of oils. When poured over ice, this creates an <strong>Iced Long Black</strong>: a layered, visually stunning drink with a velvety crema top.</p>
 
-                <div class="recipe-box" style="--accent-color: var(--texas-rust);">
-                    <div class="recipe-title">Western NC Style</div>
-                    <div class="recipe-label">Lexington Dip</div>
-                    <ul class="recipe-ingredients" style="--accent-color: var(--texas-rust);">
-                        <li>¾ cup apple cider vinegar</li>
-                        <li>½ cup ketchup</li>
-                        <li>1–2 tbsp brown sugar</li>
-                        <li>1 tbsp Worcestershire sauce</li>
-                        <li>1 tsp crushed red pepper</li>
-                        <li>1 tsp black pepper</li>
-                        <li>½ tsp salt</li>
-                    </ul>
-                    <div class="recipe-note" style="font-size:0.85rem;">
-                        Combine and simmer 10 minutes. Or shake cold and let rest overnight.
+                    <div class="grid-3">
+                        <div class="info-card">
+                            <div class="icon">🌡️</div>
+                            <h4>Instant Chill</h4>
+                            <p>Brewing hot directly over ice locks in aromatics while flash-cooling the concentrate.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="icon">💧</div>
+                            <h4>Dilution Control</h4>
+                            <p>You control the final strength by adjusting the ice-to-water ratio precisely.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="icon">✨</div>
+                            <h4>Crema Magic</h4>
+                            <p>The 20-bar pressure creates a golden foam that floats beautifully atop the ice.</p>
+                        </div>
+                    </div>
+
+                    <div class="tip">
+                        <h4>The "Freddo" Method</h4>
+                        <p>Greek baristas discovered that shaking hot espresso with ice creates a thick, creamy foam. Your OneTwoCups produces the perfect base for this technique — try it on page 4.</p>
                     </div>
                 </div>
-            </div>
-
-            <div class="pull-quote">
-                <p>We were barbecuing when those people in Texas were chasing cows.</p>
-                <div class="attribution">— Bill Leeson & Jim Tabb, Western NC</div>
-            </div>
-        </div>
-
-        <div class="page">
-            <span class="page-number">16</span>
-            <h2 style="border-color: var(--nc-green);">Bill & Jim — Western NC Style</h2>
-            <p class="drop-cap">
-                Representing the west side are Bill Leeson and Jim Tabb. Even in a real war, these guys would be useful. Jim is an ex-pilot, and Bill is an expert at blowing stuff up. But in the barbecue war, they're generals.
-            </p>
-            <p>
-                Strategy number one, moist shoulder meat. Shoulder is a juicy piece of meat. It's got more fat in the shoulder than the ham. Strategy number two? Direct heat. Far as we're concerned, direct heat is the way to cook.
-            </p>
-            <p>
-                Instead of a separate fire box, these guys cook right on top of the flame. Anywhere from 12 to 14 hours. That smoke's rolling now. Can someone hand me a knife? I know we won't need a knife. I'm furious if we need a knife.
-            </p>
-
-            <h3>Pulled Pork Shoulder (Western NC)</h3>
-            <div class="recipe-box" style="--accent-color: var(--nc-green);">
-                <div class="recipe-label">What You Need</div>
-                <ul class="recipe-ingredients" style="--accent-color: var(--nc-green);">
-                    <li>8–10 lb pork shoulder (bone-in preferred)</li>
-                    <li>Kosher salt & black pepper</li>
-                    <li>Apple cider vinegar (for mopping)</li>
-                    <li>Red slaw & hush puppies (for serving)</li>
-                    <li>Western NC sauce (Lexington Dip)</li>
-                </ul>
-                <div class="recipe-label" style="margin-top:1rem;">The Method</div>
-                <ol class="recipe-steps" style="--accent-color: var(--nc-green);">
-                    <li>Season shoulder generously with salt and pepper. Let sit 1 hour.</li>
-                    <li>Set up smoker for indirect heat at 225°F. Add hickory or oak.</li>
-                    <li>Place shoulder fat-side up. Smoke 12–14 hours, mopping with vinegar every 2 hours.</li>
-                    <li>Target internal temp: 195–205°F. Probe should slide in like butter.</li>
-                    <li>Rest 1 hour. Pull apart with forks or gloved hands — no knife needed.</li>
-                    <li>Serve with red slaw, hush puppies, and Lexington Dip on the side.</li>
-                </ol>
-                <div class="recipe-note">
-                    <strong>Bill's Test:</strong> "If you need a knife, you got roast pork." The meat should pull apart effortlessly.
+                <div class="nav-arrows">
+                    <button class="nav-arrow" onclick="prevPage()">←</button>
+                    <button class="nav-arrow" onclick="nextPage()">→</button>
                 </div>
             </div>
         </div>
 
-        <div class="page">
-            <span class="page-number">17</span>
-            <h2 style="border-color: var(--nc-green);">Places: North Carolina</h2>
+        <!-- PAGE 3: SETUP -->
+        <div class="card next" data-page="3">
+            <div class="card-inner">
+                <div class="sidebar">
+                    <div class="sidebar-top">
+                        <div class="kicker">Chapter 02</div>
+                        <div class="title">Your<br><em>Setup</em></div>
+                    </div>
+                    <div class="sidebar-bottom">
+                        <div class="nav-dots">
+                            <div class="nav-dot" onclick="goToPage(1)"></div>
+                            <div class="nav-dot" onclick="goToPage(2)"></div>
+                            <div class="nav-dot active" onclick="goToPage(3)"></div>
+                            <div class="nav-dot" onclick="goToPage(4)"></div>
+                            <div class="nav-dot" onclick="goToPage(5)"></div>
+                            <div class="nav-dot" onclick="goToPage(6)"></div>
+                            <div class="nav-dot" onclick="goToPage(7)"></div>
+                            <div class="nav-dot" onclick="goToPage(8)"></div>
+                        </div>
+                        <div class="page-num">03 / 08</div>
+                    </div>
+                </div>
+                <div class="content">
+                    <h2>Equipment & <em>Parameters</em></h2>
+                    <p>Before brewing, gather these essentials. The OneTwoCups is 3-in-1 compatible — we'll use the <strong>ground coffee filter</strong> for maximum flavor control.</p>
 
-            <div class="place-entry">
-                <div class="place-header-line">
-                    <span class="place-name">Ed Mitchell's Barbecue</span>
-                    <span class="place-status status-evolved">Evolved</span>
-                </div>
-                <div class="place-meta">📍 The Preserve, Raleigh, NC &nbsp;|&nbsp; National BBQ Hall of Fame 2022</div>
-                <p class="place-desc">
-                    Ed started in his family's grocery store in Wilson, NC in the 1990s. After The Pit (Raleigh) and Que (Durham, closed 2015), Ed and son Ryan opened The Preserve in partnership with LM Restaurants. Inducted into the National Barbecue Hall of Fame in 2022 and the Black BBQ Hall of Fame. Sauces and rubs available nationwide through True Made Foods.
-                </p>
-                <div class="place-dish">
-                    Experience: Whole hog 8–10 hours, hand-chopped, vinegar-pepper sauce, pig bar with trotters/tails/ears/chitlins
-                </div>
-                <p class="place-quote">"Best pig foot I've ever had. And I've had a fair amount of them."</p>
-                <div class="place-footer">
-                    <a href="https://www.thepitmasteredmitchell.com/" target="_blank">thepitmasteredmitchell.com</a>
-                </div>
-            </div>
+                    <div class="grid-2">
+                        <div class="info-card">
+                            <div class="icon">🔧</div>
+                            <h4>Equipment</h4>
+                            <p>OneTwoCups Hand Press (20 bar)<br>Ground coffee filter basket<br>Measuring scoop (included)<br>Tall glass (300-400ml)<br>Ice cube tray or bagged ice<br>Filtered water<br>Small spoon for salt</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="icon">☕</div>
+                            <h4>Coffee Specs</h4>
+                            <p><strong>Grind:</strong> Medium-fine<br><strong>Dose:</strong> 18-20g (2 scoops)<br><strong>Roast:</strong> Medium to dark<br><strong>Water:</strong> 60-80ml @ 92°C<br><strong>Ice:</strong> 150-200g large cubes</p>
+                        </div>
+                    </div>
 
-            <div class="place-entry">
-                <div class="place-header-line">
-                    <span class="place-name">Lexington, NC BBQ Trail</span>
-                    <span class="place-status status-open">Open</span>
+                    <div class="tip">
+                        <h4>Water Quality Matters</h4>
+                        <p>Tap water can be hard and alter flavor. Use bottled or filtered water at 90-95°C (just off boil). Let boiled water sit 30 seconds before using. The grind should feel like "fine sand" — too fine and pressure stalls; too coarse and the shot is weak.</p>
+                    </div>
                 </div>
-                <div class="place-meta">📍 Lexington, NC (Piedmont) &nbsp;|&nbsp; "Barbecue Capital of the World"</div>
-                <p class="place-desc">
-                    Bourdain visited Bill Leeson and Jim Tabb to explore Western NC (Piedmont/Lexington) style. Lexington itself is known as the "Barbecue Capital of the World" with over 20 BBQ restaurants. The style uses pork shoulder only, cooked with direct heat, served with red slaw and hush puppies.
-                </p>
-                <div class="place-dish">
-                    Try: Pulled/chopped pork shoulder, red slaw (ketchup-based), hush puppies, Lexington Dip
-                </div>
-                <p class="place-quote">"We were barbecuing when those people in Texas were chasing cows."</p>
-                <div class="place-footer">
-                    <a href="https://www.visitlexingtonnc.com/" target="_blank">visitlexingtonnc.com</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- CHAPTER 4: BACKYARD -->
-        <div class="page chapter-opener">
-            <span class="page-number">18</span>
-            <div class="chapter-number">Chapter Four</div>
-            <div class="ornament">❦</div>
-            <h1 class="chapter-title" style="color: var(--sepia);">The Backyard</h1>
-            <p class="chapter-subtitle">Where Most of America Gets Their Barbecue</p>
-            <p style="max-width: 500px; margin: 0 auto; font-size: 1rem; color: var(--ink-faint);">
-                Most of America gets their barbecue from one place — their own backyard. In this case, we're in the backyard of barbecue connoisseur John Lonergan.
-            </p>
-        </div>
-
-        <div class="page">
-            <span class="page-number">19</span>
-            <h2 style="border-color: var(--sepia);">John Lonergan's Backyard Ribs</h2>
-            <p class="drop-cap">
-                This is a strange and exotic environment for me. I have this overwhelming urge to put on an apron saying "World's Best Dad" or "I'm With Stupid." I need a novelty apron. Nice and quiet. Nobody to bother you. Peaceful. Phone's not ringing. This is the essence of barbecue.
-            </p>
-            <p>
-                Sitting in the backyard, waiting for the ribs to cook, drinking beer, right. Think those ribs are just about done, too. You wanna go ahead and pop it open and take a peek? Of course I do. Rubbed with mustard and spices, these ribs cook for four hours. John pours on the slurry he made from Coke and brown sugar.
-            </p>
-            <p>
-                And one hour later, the perfect ribs. I'll get the plate out, and I'll let you do the honors and chop up some ribs. Oh yeah. We don't cook a lot on this show. I'm actually touching food on this episode. All that beer you're drinking, you gotta get some exercise.
-            </p>
-            <p>
-                If I remember, the dimly remembered past, I last saw one of these, I think this is called a salad. When the meat and the bone come apart that easy, you know you got some good ribs. A true American experience. Real backyard barbecue. This is the barbecue story encapsulated, you know. Now, I can really say, I've been everywhere.
-            </p>
-
-            <div class="recipe-box" style="--accent-color: var(--sepia);">
-                <div class="recipe-title">Backyard Coca-Cola Ribs</div>
-                <div class="recipe-label">What You Need</div>
-                <ul class="recipe-ingredients" style="--accent-color: var(--sepia);">
-                    <li>2 racks baby back ribs</li>
-                    <li>Yellow mustard (as binder)</li>
-                    <li>Your favorite BBQ rub</li>
-                    <li>1 cup Coca-Cola</li>
-                    <li>½ cup brown sugar</li>
-                    <li>Beer (for the pitmaster)</li>
-                    <li>Salad (optional, mostly forgotten)</li>
-                </ul>
-                <div class="recipe-label" style="margin-top:1rem;">The Method</div>
-                <ol class="recipe-steps" style="--accent-color: var(--sepia);">
-                    <li>Remove membrane from back of ribs. Coat with mustard, then rub.</li>
-                    <li>Smoke at 225°F for 3 hours.</li>
-                    <li>Mix Coca-Cola and brown sugar into a slurry.</li>
-                    <li>Wrap ribs in foil, pour slurry over, seal tightly.</li>
-                    <li>Return to smoker for 1 more hour.</li>
-                    <li>Unwrap, sauce if desired, smoke 30 min to set glaze.</li>
-                    <li>Rest 10 minutes. The meat should literally fall off the bone.</li>
-                </ol>
-                <div class="recipe-note">
-                    <strong>The Essence:</strong> "Sitting in the backyard, waiting for the ribs to cook, drinking beer. This is the barbecue story encapsulated."
+                <div class="nav-arrows">
+                    <button class="nav-arrow" onclick="prevPage()">←</button>
+                    <button class="nav-arrow" onclick="nextPage()">→</button>
                 </div>
             </div>
         </div>
 
-        <!-- CHAPTER 5: WISDOM -->
-        <div class="page chapter-opener">
-            <span class="page-number">20</span>
-            <div class="chapter-number">Chapter Five</div>
-            <div class="ornament">❦</div>
-            <h1 class="chapter-title" style="color: var(--gold);">Pitmaster Wisdom</h1>
-            <p class="chapter-subtitle">Eight Lessons from the Smoke</p>
-        </div>
-
-        <div class="page">
-            <span class="page-number">21</span>
-            <h2 style="border-color: var(--gold);">Lessons from the Fire</h2>
-
-            <div class="tip-entry">
-                <span class="tip-number">I</span>
-                <div class="tip-content">
-                    <h5>Patience is the Secret Ingredient</h5>
-                    <p>Every pitmaster in the episode cooks 8–16 hours. Brisket needs 14+. There is no shortcut. "It's the absolute antithesis of fast food."</p>
+        <!-- PAGE 4: BREWING -->
+        <div class="card next" data-page="4">
+            <div class="card-inner">
+                <div class="sidebar">
+                    <div class="sidebar-top">
+                        <div class="kicker">Chapter 03</div>
+                        <div class="title">The Brewing<br><em>Ritual</em></div>
+                    </div>
+                    <div class="sidebar-bottom">
+                        <div class="nav-dots">
+                            <div class="nav-dot" onclick="goToPage(1)"></div>
+                            <div class="nav-dot" onclick="goToPage(2)"></div>
+                            <div class="nav-dot" onclick="goToPage(3)"></div>
+                            <div class="nav-dot active" onclick="goToPage(4)"></div>
+                            <div class="nav-dot" onclick="goToPage(5)"></div>
+                            <div class="nav-dot" onclick="goToPage(6)"></div>
+                            <div class="nav-dot" onclick="goToPage(7)"></div>
+                            <div class="nav-dot" onclick="goToPage(8)"></div>
+                        </div>
+                        <div class="page-num">04 / 08</div>
+                    </div>
                 </div>
-            </div>
+                <div class="content">
+                    <h2>Five Steps to <em>Perfection</em></h2>
+                    <p>Follow these steps precisely. The OneTwoCups requires firm, steady pressure to reach its 20-bar potential.</p>
 
-            <div class="tip-entry">
-                <span class="tip-number">II</span>
-                <div class="tip-content">
-                    <h5>Wood Matters More Than Sauce</h5>
-                    <p>Post oak in Texas. Hickory and oak in KC. Oak and hickory in NC. The fuel defines the flavor. Roy Burns: "Post oak, that's the secret doing the slow."</p>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="step-label">Step 01</div>
+                            <div class="step-title">Prep the Filter</div>
+                            <div class="step-desc">Insert the ground coffee filter. Add 18-20g of medium-fine coffee. Level the bed with your finger — don't tamp hard, just settle evenly.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="step-label">Step 02</div>
+                            <div class="step-title">Heat & Add Water</div>
+                            <div class="step-desc">Pour 60-80ml of hot water (90-95°C) into the reservoir. This is a "ristretto" style short shot — concentrated and bold. Screw the top on firmly.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="step-label">Step 03</div>
+                            <div class="step-title">Press with Power</div>
+                            <div class="step-desc">Hold over your cup. Press down firmly with both thumbs. Feel strong resistance — that's 20 bars building. Extract for 20-30 seconds until the stream blondes.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="step-label">Step 04</div>
+                            <div class="step-title">Ice Preparation</div>
+                            <div class="step-desc">Fill a tall glass with 150g of large ice cubes. Big cubes melt slower. Pro move: make coffee ice cubes from yesterday's brew.</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="step-label">Step 05</div>
+                            <div class="step-title">The Pour & Layer</div>
+                            <div class="step-desc">Pour hot espresso directly over ice. Watch the crema separate and float. Add 60-80ml cold water to complete the "long black" style.</div>
+                        </div>
+                    </div>
+
+                    <div class="tip">
+                        <h4>The "Freddo" Variation</h4>
+                        <p>For extra creaminess: Pour hot espresso into a cocktail shaker with 2 ice cubes. Shake vigorously for 10 seconds. Strain over fresh ice. This creates a thick, velvety foam layer that transforms the drink entirely.</p>
+                    </div>
                 </div>
-            </div>
-
-            <div class="tip-entry">
-                <span class="tip-number">III</span>
-                <div class="tip-content">
-                    <h5>Make Your Rub Your Own</h5>
-                    <p>Paul Kirk's foundation is four salts. Then add three signature spices. "Make it your own" was his signature advice to every student.</p>
-                </div>
-            </div>
-
-            <div class="tip-entry">
-                <span class="tip-number">IV</span>
-                <div class="tip-content">
-                    <h5>Nose to Tail, Everything But the Squeak</h5>
-                    <p>Ed Mitchell's philosophy: if you kill it, use it all. Trotters, ears, tails, chitlins, cracklins — every part has a place at the pig bar.</p>
-                </div>
-            </div>
-
-            <div class="tip-entry">
-                <span class="tip-number">V</span>
-                <div class="tip-content">
-                    <h5>The Backyard is Sacred</h5>
-                    <p>John Lonergan's method: mustard rub, 4 hours, Coca-Cola & brown sugar slurry, beer in hand. "The essence of barbecue is sitting in the backyard, waiting."</p>
-                </div>
-            </div>
-
-            <div class="tip-entry">
-                <span class="tip-number">VI</span>
-                <div class="tip-content">
-                    <h5>If You Need a Knife, It's Wrong</h5>
-                    <p>Bill Leeson's test: properly cooked pulled pork falls apart with no knife. "If you need a knife, you got roast pork." Probe should slide like butter.</p>
-                </div>
-            </div>
-
-            <div class="tip-entry">
-                <span class="tip-number">VII</span>
-                <div class="tip-content">
-                    <h5>Sauce is a Civil War</h5>
-                    <p>Eastern NC: vinegar only, no tomato ("tomatoes are poisonous"). Western NC: a little ketchup. Kansas City: thick & sweet. Texas: often no sauce at all.</p>
-                </div>
-            </div>
-
-            <div class="tip-entry">
-                <span class="tip-number">VIII</span>
-                <div class="tip-content">
-                    <h5>Barbecue is an Endless Learning Process</h5>
-                    <p>Even the masters admit they don't know it all. Every cook teaches something new. The journey is the destination — there is no "perfect" barbecue.</p>
+                <div class="nav-arrows">
+                    <button class="nav-arrow" onclick="prevPage()">←</button>
+                    <button class="nav-arrow" onclick="nextPage()">→</button>
                 </div>
             </div>
         </div>
 
-        <!-- CLOSING -->
-        <div class="page">
-            <span class="page-number">22</span>
-            <div class="section-divider" style="margin-top: 2rem;">
-                <span>❦</span>
+        <!-- PAGE 5: SCIENCE -->
+        <div class="card next" data-page="5">
+            <div class="card-inner">
+                <div class="sidebar">
+                    <div class="sidebar-top">
+                        <div class="kicker">Chapter 04</div>
+                        <div class="title">The Salt<br><em>Science</em></div>
+                    </div>
+                    <div class="sidebar-bottom">
+                        <div class="nav-dots">
+                            <div class="nav-dot" onclick="goToPage(1)"></div>
+                            <div class="nav-dot" onclick="goToPage(2)"></div>
+                            <div class="nav-dot" onclick="goToPage(3)"></div>
+                            <div class="nav-dot" onclick="goToPage(4)"></div>
+                            <div class="nav-dot active" onclick="goToPage(5)"></div>
+                            <div class="nav-dot" onclick="goToPage(6)"></div>
+                            <div class="nav-dot" onclick="goToPage(7)"></div>
+                            <div class="nav-dot" onclick="goToPage(8)"></div>
+                        </div>
+                        <div class="page-num">05 / 08</div>
+                    </div>
+                </div>
+                <div class="content">
+                    <h2>Why Salt in <em>Coffee?</em></h2>
+                    <div class="lead">
+                        "Salt doesn't just mask bitterness — it blocks it at the receptor level, allowing hidden sweetness and complexity to emerge."
+                    </div>
+
+                    <p>Adding salt to coffee is not a gimmick. Sodium ions (Na+) bind to bitter taste receptors on your tongue, physically preventing bitter compounds from activating them. This is called <strong>cross-modal perception</strong>.</p>
+
+                    <div class="grid-3">
+                        <div class="info-card">
+                            <div class="icon">🔬</div>
+                            <h4>Bitter Blocker</h4>
+                            <p>Sodium ions occupy bitter receptors, reducing harshness from chlorogenic acids and phenylindanes in dark roasts.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="icon">🍯</div>
+                            <h4>Sweetness Amplifier</h4>
+                            <p>By suppressing bitterness, your palate perceives the coffee's natural sugars more vividly and completely.</p>
+                        </div>
+                        <div class="info-card">
+                            <div class="icon">⚡</div>
+                            <h4>Electrolyte Balance</h4>
+                            <p>Caffeine causes mild sodium loss. A pinch replaces this, preventing the "wired but tired" afternoon crash.</p>
+                        </div>
+                    </div>
+
+                    <p>The darker the roast, the more bitter compounds (phenylindanes) are present. This makes salted iced black coffee particularly effective — the cold temperature already reduces perceived bitterness, and salt completes the smoothing effect.</p>
+
+                    <div class="tip">
+                        <h4>Historical Context</h4>
+                        <p>Scandinavian sailors brewed coffee with seawater when fresh water was scarce. Nordic countries still serve salt alongside sugar at coffee houses. In Turkey, brides-to-be traditionally serve salted coffee as a premarital ceremony — a test of character.</p>
+                    </div>
+                </div>
+                <div class="nav-arrows">
+                    <button class="nav-arrow" onclick="prevPage()">←</button>
+                    <button class="nav-arrow" onclick="nextPage()">→</button>
+                </div>
             </div>
+        </div>
 
-            <div class="pull-quote" style="margin-top: 3rem;">
-                <p>So, I've searched far and wide for America's best barbecue. Apologies to Memphis and St. Louis. What is my one absolute conclusion? Barbecue is not a cuisine, it's an obsession. But the barbecue debate should make us all proud. Barbecuers are free-thinking individualists.</p>
-                <div class="attribution">— Anthony Bourdain</div>
+        <!-- PAGE 6: SALT DOSAGE -->
+        <div class="card next" data-page="6">
+            <div class="card-inner">
+                <div class="sidebar">
+                    <div class="sidebar-top">
+                        <div class="kicker">Chapter 05</div>
+                        <div class="title">Salt<br><em>Dosage</em></div>
+                    </div>
+                    <div class="sidebar-bottom">
+                        <div class="nav-dots">
+                            <div class="nav-dot" onclick="goToPage(1)"></div>
+                            <div class="nav-dot" onclick="goToPage(2)"></div>
+                            <div class="nav-dot" onclick="goToPage(3)"></div>
+                            <div class="nav-dot" onclick="goToPage(4)"></div>
+                            <div class="nav-dot" onclick="goToPage(5)"></div>
+                            <div class="nav-dot active" onclick="goToPage(6)"></div>
+                            <div class="nav-dot" onclick="goToPage(7)"></div>
+                            <div class="nav-dot" onclick="goToPage(8)"></div>
+                        </div>
+                        <div class="page-num">06 / 08</div>
+                    </div>
+                </div>
+                <div class="content">
+                    <h2>How Much <em>Salt?</em></h2>
+                    <p>The golden rule: <strong>if you taste salt, you've added too much.</strong> It should be imperceptible as a flavor, only noticeable as a smoothing effect.</p>
+
+                    <div class="salt-stage">
+                        <p style="font-size: 0.8rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px;">Select your roast level</p>
+                        <div class="salt-options">
+                            <div class="salt-btn" onclick="selectSalt(this, 'tiny')">
+                                <span class="amount">·</span>
+                                <span class="label">Micro Pinch</span>
+                            </div>
+                            <div class="salt-btn active" onclick="selectSalt(this, 'small')">
+                                <span class="amount">··</span>
+                                <span class="label">Small Pinch</span>
+                            </div>
+                            <div class="salt-btn" onclick="selectSalt(this, 'standard')">
+                                <span class="amount">···</span>
+                                <span class="label">Standard</span>
+                            </div>
+                            <div class="salt-btn" onclick="selectSalt(this, 'bold')">
+                                <span class="amount">∴</span>
+                                <span class="label">Bold</span>
+                            </div>
+                        </div>
+
+                        <div class="salt-display show" id="saltResult">
+                            <div class="metric">
+                                <span class="metric-label">Amount</span>
+                                <span class="metric-value" id="saltAmount">~0.15g / 1/16 tsp</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Best For</span>
+                                <span class="metric-value" id="saltBest">Medium-dark roasts, daily drinking</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Method</span>
+                                <span class="metric-value" id="saltMethod">Add to hot espresso, stir 10s</span>
+                            </div>
+                            <div class="advice" id="saltAdvice">
+                                For the OneTwoCups double shot, sprinkle the salt directly into the hot espresso immediately after brewing, then stir for 10 seconds before pouring over ice. This ensures complete dissolution and even distribution.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="slider-wrap">
+                        <div class="slider-label">
+                            <span>Glass Size</span>
+                            <span>Auto-calculated salt</span>
+                        </div>
+                        <div class="slider-track" id="sliderTrack" onclick="handleSliderClick(event)">
+                            <div class="slider-fill" id="sliderFill" style="width: 20%"></div>
+                            <div class="slider-thumb" id="sliderThumb" style="left: 20%"></div>
+                        </div>
+                        <div class="slider-value" id="sliderValue">200 ml</div>
+                        <div class="slider-sub" id="sliderSub">Salt needed: ~0.15g (small pinch)</div>
+                    </div>
+
+                    <div class="method-grid">
+                        <div class="method-card" onclick="showMethod('a')">
+                            <div class="method-letter">A</div>
+                            <div class="method-name">Post-Brew</div>
+                            <div class="method-desc">Add to hot espresso, stir, then ice</div>
+                        </div>
+                        <div class="method-card" onclick="showMethod('b')">
+                            <div class="method-letter">B</div>
+                            <div class="method-name">Pre-Ground</div>
+                            <div class="method-desc">Mix into dry grounds before brewing</div>
+                        </div>
+                        <div class="method-card" onclick="showMethod('c')">
+                            <div class="method-letter">C</div>
+                            <div class="method-name">Solution</div>
+                            <div class="method-desc">20% salt water, 2-3 drops precisely</div>
+                        </div>
+                    </div>
+
+                    <div class="method-detail" id="methodA">
+                        <strong>Method A (Recommended):</strong> Add salt to hot espresso immediately after extraction. Stir 10 seconds to dissolve completely. Then pour over ice. Best control and most even distribution.
+                    </div>
+                    <div class="method-detail" id="methodB">
+                        <strong>Method B:</strong> Mix salt into dry grounds before brewing. Even distribution throughout extraction, but harder to adjust per cup. Good for consistent daily brewing.
+                    </div>
+                    <div class="method-detail" id="methodC">
+                        <strong>Method C (Barista Precision):</strong> Create a 20% salt solution (2g salt in 10ml water). Add 2-3 drops to brewed coffee. Maximum precision, used by professionals for dialing in.
+                    </div>
+                </div>
+                <div class="nav-arrows">
+                    <button class="nav-arrow" onclick="prevPage()">←</button>
+                    <button class="nav-arrow" onclick="nextPage()">→</button>
+                </div>
             </div>
+        </div>
 
-            <p style="text-align: center; margin-top: 3rem; font-style: italic; color: var(--ink-faint);">
-                Show the world what you're made of, America.<br>
-                Put on that apron and light up those barbecues<br>
-                from sea to shining sea.<br><br>
-                Now, where can I find a salad bar?
-            </p>
+        <!-- PAGE 7: SALT TYPES -->
+        <div class="card next" data-page="7">
+            <div class="card-inner">
+                <div class="sidebar">
+                    <div class="sidebar-top">
+                        <div class="kicker">Chapter 06</div>
+                        <div class="title">Salt<br><em>Selection</em></div>
+                    </div>
+                    <div class="sidebar-bottom">
+                        <div class="nav-dots">
+                            <div class="nav-dot" onclick="goToPage(1)"></div>
+                            <div class="nav-dot" onclick="goToPage(2)"></div>
+                            <div class="nav-dot" onclick="goToPage(3)"></div>
+                            <div class="nav-dot" onclick="goToPage(4)"></div>
+                            <div class="nav-dot" onclick="goToPage(5)"></div>
+                            <div class="nav-dot" onclick="goToPage(6)"></div>
+                            <div class="nav-dot active" onclick="goToPage(7)"></div>
+                            <div class="nav-dot" onclick="goToPage(8)"></div>
+                        </div>
+                        <div class="page-num">07 / 08</div>
+                    </div>
+                </div>
+                <div class="content">
+                    <h2>Which Salt to <em>Use?</em></h2>
+                    <p>Not all salts are equal. Mineral content affects flavor integration and mouthfeel.</p>
 
-            <div class="section-divider" style="margin-top: 3rem;">
-                <span>◈</span>
+                    <div class="grid-2">
+                        <div class="info-card" style="border-top: 2px solid var(--accent);">
+                            <div class="icon" style="background: var(--accent-dim);">🏆</div>
+                            <h4>Fine Sea Salt</h4>
+                            <p>Clean, neutral flavor. Dissolves instantly in hot coffee. No additives or anti-caking agents. Trace minerals enhance complexity. <strong>The best choice.</strong></p>
+                        </div>
+                        <div class="info-card" style="border-top: 2px solid #c8a0a0;">
+                            <div class="icon" style="background: rgba(200,160,160,0.15);">🌸</div>
+                            <h4>Pink Himalayan</h4>
+                            <p>84 trace minerals. Slightly earthy undertone. Beautiful with Indonesian/Sumatra beans. Use sparingly — stronger flavor profile.</p>
+                        </div>
+                        <div class="info-card" style="border-top: 2px solid #a0c8a0;">
+                            <div class="icon" style="background: rgba(160,200,160,0.15);">🧂</div>
+                            <h4>Kosher Salt</h4>
+                            <p>Large flakes — crush first. Pure sodium chloride. Good for pre-ground mixing. Harder to dissolve in cold liquid.</p>
+                        </div>
+                        <div class="info-card" style="border-top: 2px solid var(--danger); opacity: 0.7;">
+                            <div class="icon" style="background: rgba(204,68,68,0.15);">❌</div>
+                            <h4>Iodized Table Salt</h4>
+                            <p>Iodine adds metallic taste. Anti-caking agents affect mouthfeel. Can clash with coffee aromatics. Creates chemical aftertaste. <strong>Avoid.</strong></p>
+                        </div>
+                    </div>
+
+                    <h3>When to Salt, When to Skip</h3>
+                    <div class="compare">
+                        <div class="compare-card good">
+                            <div class="check">✓</div>
+                            <h4>Do Salt</h4>
+                            <ul>
+                                <li>Dark roasts</li>
+                                <li>Robusta blends</li>
+                                <li>Over-extracted shots</li>
+                                <li>Office / diner coffee</li>
+                                <li>Hard water areas</li>
+                                <li>Fasting mornings</li>
+                            </ul>
+                        </div>
+                        <div class="compare-card bad">
+                            <div class="check">✗</div>
+                            <h4>Skip Salt</h4>
+                            <ul>
+                                <li>Light single-origins</li>
+                                <li>Yemen / Gesha / Panama</li>
+                                <li>Fruity naturals</li>
+                                <li>Floral coffees</li>
+                                <li>Delicate acidity stars</li>
+                                <li>First cup of the day</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tip">
+                        <h4>The "Scott Rao" Standard</h4>
+                        <p>Coffee roasting expert Scott Rao found that <strong>0.15g of salt per 100g of brewed coffee</strong> yielded the best results. For your OneTwoCups double shot (60ml ≈ 60g), that's roughly 0.09g — barely a dusting on the fingertip.</p>
+                    </div>
+                </div>
+                <div class="nav-arrows">
+                    <button class="nav-arrow" onclick="prevPage()">←</button>
+                    <button class="nav-arrow" onclick="nextPage()">→</button>
+                </div>
             </div>
+        </div>
 
-            <p style="text-align: center; font-size: 0.8rem; color: var(--ink-faint); margin-top: 2rem;">
-                A Cook's Tour — Season 2, Episode 7<br>
-                "The BBQ Triangle" — Originally aired April 4, 2003<br><br>
-                <em>Transcribed and compiled from the original broadcast.</em>
-            </p>
+        <!-- PAGE 8: FINAL RECIPE -->
+        <div class="card next" data-page="8">
+            <div class="card-inner">
+                <div class="sidebar">
+                    <div class="sidebar-top">
+                        <div class="kicker">Final</div>
+                        <div class="title">Your<br><em>Recipe</em></div>
+                    </div>
+                    <div class="sidebar-bottom">
+                        <div class="nav-dots">
+                            <div class="nav-dot" onclick="goToPage(1)"></div>
+                            <div class="nav-dot" onclick="goToPage(2)"></div>
+                            <div class="nav-dot" onclick="goToPage(3)"></div>
+                            <div class="nav-dot" onclick="goToPage(4)"></div>
+                            <div class="nav-dot" onclick="goToPage(5)"></div>
+                            <div class="nav-dot" onclick="goToPage(6)"></div>
+                            <div class="nav-dot" onclick="goToPage(7)"></div>
+                            <div class="nav-dot active" onclick="goToPage(8)"></div>
+                        </div>
+                        <div class="page-num">08 / 08</div>
+                    </div>
+                </div>
+                <div class="content" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="recipe-final">
+                        <div class="recipe-header">
+                            <h3>The Salted Iced Long Black</h3>
+                            <div class="sub">OneTwoCups Edition</div>
+                        </div>
+
+                        <div class="recipe-row">
+                            <span class="ingredient">Coffee Dose</span>
+                            <span class="value">18–20g <em>medium-fine</em></span>
+                        </div>
+                        <div class="recipe-row">
+                            <span class="ingredient">Hot Water</span>
+                            <span class="value">70ml <em>@ 92°C</em></span>
+                        </div>
+                        <div class="recipe-row">
+                            <span class="ingredient">Extraction</span>
+                            <span class="value">25–30s <em>firm press</em></span>
+                        </div>
+                        <div class="recipe-row">
+                            <span class="ingredient">Fine Sea Salt</span>
+                            <span class="value">0.15g <em>small pinch</em></span>
+                        </div>
+                        <div class="recipe-row">
+                            <span class="ingredient">Ice</span>
+                            <span class="value">150g <em>large cubes</em></span>
+                        </div>
+                        <div class="recipe-row">
+                            <span class="ingredient">Cold Water</span>
+                            <span class="value">60ml <em>to finish</em></span>
+                        </div>
+
+                        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
+                            <p style="font-size: 0.85rem; line-height: 1.8; color: var(--text-muted); margin: 0;">
+                                <strong style="color: var(--text);">Method:</strong> Add salt to hot espresso immediately after extraction. Stir 10 seconds. Pour over ice. Add cold water. Serve with a straw to preserve the crema layer.
+                            </p>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 32px;">
+                            <button class="cover-cta" onclick="location.reload()" style="padding: 12px 28px; font-size: 0.75rem;">
+                                Brew Again ↻
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-arrows">
+                    <button class="nav-arrow" onclick="prevPage()">←</button>
+                    <button class="nav-arrow" onclick="goToPage(1)">↻</button>
+                </div>
+            </div>
         </div>
 
     </div>
+</div>
+
+<script>
+    let currentPage = 1;
+    const totalPages = 8;
+
+    function updatePages() {
+        document.querySelectorAll('.card').forEach(card => {
+            const pageNum = parseInt(card.dataset.page);
+            card.classList.remove('active', 'prev', 'next');
+            if (pageNum === currentPage) card.classList.add('active');
+            else if (pageNum < currentPage) card.classList.add('prev');
+            else card.classList.add('next');
+        });
+
+        // Update dots in all sidebars
+        document.querySelectorAll('.card').forEach(card => {
+            const dots = card.querySelectorAll('.nav-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i + 1 === currentPage);
+            });
+        });
+    }
+
+    function nextPage() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            updatePages();
+        }
+    }
+
+    function prevPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            updatePages();
+        }
+    }
+
+    function goToPage(num) {
+        currentPage = num;
+        updatePages();
+    }
+
+    // Salt selection
+    function selectSalt(element, type) {
+        document.querySelectorAll('.salt-btn').forEach(b => b.classList.remove('active'));
+        element.classList.add('active');
+
+        const data = {
+            tiny: {
+                amount: '~0.05g / 1/32 tsp (2-3 grains)',
+                best: 'Light roasts, salt-sensitive palates',
+                method: 'Add to hot espresso, stir vigorously',
+                advice: 'Perfect for first-time experimenters. The effect is subtle — you may not notice it immediately, but the coffee will taste "smoother" than usual. Ideal for delicate light roasts where you want to preserve origin character.'
+            },
+            small: {
+                amount: '~0.15g / 1/16 tsp',
+                best: 'Medium-dark roasts, daily drinking',
+                method: 'Add to hot espresso, stir 10s',
+                advice: 'The sweet spot for most palates. For the OneTwoCups double shot, sprinkle the salt directly into the hot espresso immediately after brewing, then stir for 10 seconds before pouring over ice. This ensures complete dissolution and even distribution.'
+            },
+            standard: {
+                amount: '~0.3g / 1/8 tsp',
+                best: 'Dark roasts, robusta blends, bitter coffee',
+                method: 'Dissolve in hot espresso before ice',
+                advice: 'This is the Alton Brown recommendation. Best for dark French or Italian roasts where bitterness is pronounced. The salt will noticeably smooth the edges without tasting salty. Stir until completely dissolved.'
+            },
+            bold: {
+                amount: '~0.5g / generous pinch',
+                best: 'Very dark roasts, over-extracted shots only',
+                method: 'Pre-dissolve in a few drops of water',
+                advice: 'Maximum dosage before saltiness becomes perceptible. Only recommended for over-extracted or burnt-tasting shots. Pre-dissolve in a few drops of hot water to ensure even distribution, then add to espresso.'
+            }
+        };
+
+        const d = data[type];
+        document.getElementById('saltAmount').textContent = d.amount;
+        document.getElementById('saltBest').textContent = d.best;
+        document.getElementById('saltMethod').textContent = d.method;
+        document.getElementById('saltAdvice').textContent = d.advice;
+    }
+
+    // Slider
+    let sliderValue = 200;
+    let isDragging = false;
+
+    function updateSlider(val) {
+        sliderValue = Math.max(150, Math.min(500, val));
+        const pct = (sliderValue - 150) / (500 - 150) * 100;
+        document.getElementById('sliderFill').style.width = pct + '%';
+        document.getElementById('sliderThumb').style.left = pct + '%';
+        document.getElementById('sliderValue').textContent = Math.round(sliderValue) + ' ml';
+
+        const salt = (sliderValue * 0.075).toFixed(2);
+        let desc = '';
+        if (salt < 0.1) desc = 'micro pinch (2-3 grains)';
+        else if (salt < 0.2) desc = 'small pinch';
+        else if (salt < 0.4) desc = 'standard pinch';
+        else desc = 'generous pinch';
+
+        document.getElementById('sliderSub').textContent = `Salt needed: ~${salt}g (${desc})`;
+    }
+
+    function handleSliderClick(e) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const pct = x / rect.width;
+        updateSlider(150 + pct * 350);
+    }
+
+    // Drag support
+    const track = document.getElementById('sliderTrack');
+    const thumb = document.getElementById('sliderThumb');
+
+    thumb.addEventListener('mousedown', () => isDragging = true);
+    document.addEventListener('mouseup', () => isDragging = false);
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const rect = track.getBoundingClientRect();
+        const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
+        updateSlider(150 + (x / rect.width) * 350);
+    });
+
+    // Touch support
+    thumb.addEventListener('touchstart', () => isDragging = true);
+    document.addEventListener('touchend', () => isDragging = false);
+    document.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const touch = e.touches[0];
+        const rect = track.getBoundingClientRect();
+        const x = Math.max(0, Math.min(rect.width, touch.clientX - rect.left));
+        updateSlider(150 + (x / rect.width) * 350);
+    });
+
+    // Method cards
+    function showMethod(method) {
+        document.querySelectorAll('.method-detail').forEach(d => d.classList.remove('show'));
+        document.getElementById('method' + method.toUpperCase()).classList.add('show');
+    }
+
+    // Keyboard
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') nextPage();
+        if (e.key === 'ArrowLeft') prevPage();
+    });
+
+    // Touch swipe
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
+    document.addEventListener('touchend', e => {
+        const diff = e.changedTouches[0].screenX - touchStartX;
+        if (diff < -50) nextPage();
+        if (diff > 50) prevPage();
+    });
+
+    // Initialize
+    updatePages();
+</script>
+
 </body>
 </html>
