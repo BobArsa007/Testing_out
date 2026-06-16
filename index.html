@@ -1,1212 +1,1261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Solitude — A Flipbook</title>
-<style>
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { -webkit-font-smoothing:antialiased; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anthony Bourdain's BBQ Quest - A Cook's Tour</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --kc-red: #B71C1C;
+            --texas-orange: #E65100;
+            --nc-green: #1B5E20;
+            --smoke-gray: #2d2d2d;
+            --warm-white: #faf8f5;
+            --charcoal: #1a1a1a;
+            --ember: #ff6b35;
+            --gold: #d4a853;
+        }
 
-body {
-  background: #1a1410;
-  background-image:
-    radial-gradient(ellipse at 30% 20%, rgba(201,169,110,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 80%, rgba(0,0,0,0.4) 0%, transparent 50%),
-    linear-gradient(180deg, #1e1812 0%, #16120e 100%);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: Georgia, "Times New Roman", serif;
-  overflow: hidden;
-  color: #2c241b;
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-.book-stage {
-  position: relative;
-  width: 1000px;
-  height: 680px;
-  max-width: 95vw;
-  perspective: 2000px;
-  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.6));
-}
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--charcoal);
+            color: var(--warm-white);
+            overflow-x: hidden;
+        }
 
-.book {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-}
+        /* Smoke particles */
+        .smoke-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
 
-.spread {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  opacity: 0;
-  pointer-events: none;
-  transform-style: preserve-3d;
-  transition: opacity 0.1s;
-}
-.spread.active {
-  opacity: 1;
-  pointer-events: all;
-}
-.spread.exiting {
-  animation: spreadOut 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-.spread.entering {
-  animation: spreadIn 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-@keyframes spreadOut {
-  from { transform: translateX(0) scale(1); opacity: 1; }
-  to   { transform: translateX(-40px) scale(0.98); opacity: 0; }
-}
-@keyframes spreadIn {
-  from { transform: translateX(40px) scale(0.98); opacity: 0; }
-  to   { transform: translateX(0) scale(1); opacity: 1; }
-}
+        .smoke-particle {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float-up linear infinite;
+        }
 
-.page {
-  width: 50%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  padding: 40px 36px 52px 44px;
-  display: flex;
-  flex-direction: column;
-}
+        @keyframes float-up {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.3; }
+            100% { transform: translateY(-20vh) scale(2); opacity: 0; }
+        }
 
-.page-left {
-  background:
-    linear-gradient(to right, rgba(0,0,0,0.06) 0%, transparent 8%, transparent 92%, rgba(0,0,0,0.02) 100%),
-    linear-gradient(to bottom, rgba(0,0,0,0.03) 0%, transparent 6%),
-    #f5f2eb;
-  border-radius: 3px 0 0 3px;
-  padding-right: 40px;
-  padding-left: 48px;
-}
+        /* Hero */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+            z-index: 1;
+            background: linear-gradient(180deg, rgba(26,26,26,0.3) 0%, var(--charcoal) 100%);
+        }
 
-.page-right {
-  background:
-    linear-gradient(to left, rgba(0,0,0,0.06) 0%, transparent 8%, transparent 92%, rgba(0,0,0,0.02) 100%),
-    linear-gradient(to bottom, rgba(0,0,0,0.03) 0%, transparent 6%),
-    #f5f2eb;
-  border-radius: 0 3px 3px 0;
-  padding-left: 40px;
-  padding-right: 48px;
-}
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(212, 168, 83, 0.15);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.5rem 1.2rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            animation: fadeInDown 1s ease-out;
+        }
 
-.page::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity: 0.5;
-  pointer-events: none;
-  mix-blend-mode: multiply;
-}
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
 
-.page-left::after {
-  content: '';
-  position: absolute;
-  top: 0; right: 0;
-  width: 24px; height: 100%;
-  background: linear-gradient(to left, rgba(0,0,0,0.12) 0%, transparent 100%);
-  pointer-events: none;
-}
-.page-right::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 24px; height: 100%;
-  background: linear-gradient(to right, rgba(0,0,0,0.10) 0%, transparent 100%);
-  pointer-events: none;
-}
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--ember) 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-.page-num {
-  position: absolute;
-  bottom: 18px;
-  font-family: -apple-system, sans-serif;
-  font-size: 10px;
-  color: #a09890;
-  letter-spacing: 1px;
-}
-.page-left .page-num { left: 48px; }
-.page-right .page-num { right: 48px; }
+        .hero-subtitle {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            color: rgba(255,255,255,0.6);
+            max-width: 600px;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
 
-/* Typography */
-.paper-title {
-  font-family: Georgia, serif;
-  font-size: 2.4rem;
-  font-weight: 400;
-  color: #1a1410;
-  line-height: 1.1;
-  letter-spacing: -1px;
-  margin-bottom: 6px;
-}
-.paper-sub {
-  font-family: -apple-system, sans-serif;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: #8a8078;
-  margin-bottom: 28px;
-}
-.paper-eyebrow {
-  font-family: -apple-system, sans-serif;
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: #8a2b2b;
-  margin-bottom: 14px;
-  font-weight: 700;
-}
-.paper-h2 {
-  font-family: Georgia, serif;
-  font-size: 1.4rem;
-  font-weight: 400;
-  color: #1a1410;
-  line-height: 1.2;
-  margin-bottom: 16px;
-  letter-spacing: -0.5px;
-}
-.paper-h3 {
-  font-family: -apple-system, sans-serif;
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 2.5px;
-  color: #6b5a3e;
-  margin-top: 22px;
-  margin-bottom: 10px;
-  font-weight: 700;
-}
-.paper-p {
-  font-size: 12.5px;
-  line-height: 1.7;
-  color: #3a3228;
-  margin-bottom: 10px;
-  text-align: justify;
-  hyphens: auto;
-}
-.paper-p em { font-style: italic; color: #1a1410; }
-.paper-p strong { font-weight: 600; color: #1a1410; }
-.paper-lead {
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: #4a4238;
-  font-style: italic;
-  margin-bottom: 16px;
-  border-left: 2px solid #c9a96e;
-  padding-left: 14px;
-}
-.paper-quote {
-  margin: 18px 0;
-  padding: 12px 0;
-  border-top: 1px solid #d8d4cc;
-  border-bottom: 1px solid #d8d4cc;
-}
-.paper-quote p {
-  font-style: italic;
-  font-size: 13px;
-  line-height: 1.55;
-  color: #2c241b;
-  margin: 0;
-}
-.paper-quote cite {
-  display: block;
-  margin-top: 8px;
-  font-family: -apple-system, sans-serif;
-  font-size: 10px;
-  color: #8a8078;
-  font-style: normal;
-  letter-spacing: 0.5px;
-}
-.paper-quote cite::before {
-  content: '';
-  display: inline-block;
-  width: 14px;
-  height: 1px;
-  background: #c9a96e;
-  margin-right: 6px;
-  vertical-align: middle;
-}
-.paper-insight {
-  background: rgba(201,169,110,0.07);
-  border-left: 2px solid #c9a96e;
-  padding: 10px 12px;
-  margin: 14px 0;
-  border-radius: 0 4px 4px 0;
-}
-.paper-insight h4 {
-  font-family: -apple-system, sans-serif;
-  font-size: 8px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #6b5a3e;
-  margin-bottom: 5px;
-  font-weight: 700;
-}
-.paper-insight p {
-  font-size: 11.5px;
-  line-height: 1.55;
-  color: #4a4238;
-  margin: 0;
-}
-.paper-practical {
-  background: #faf8f4;
-  border: 1px solid #e5e0d6;
-  border-radius: 4px;
-  padding: 10px 12px;
-  margin: 12px 0;
-}
-.paper-practical h4 {
-  font-family: -apple-system, sans-serif;
-  font-size: 8px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #1a1410;
-  margin-bottom: 6px;
-  font-weight: 700;
-}
-.paper-practical ol, .paper-practical ul {
-  padding-left: 16px;
-  margin: 0;
-}
-.paper-practical li {
-  font-size: 11.5px;
-  line-height: 1.5;
-  color: #3a3228;
-  margin-bottom: 4px;
-}
-.paper-practical li::marker { color: #c9a96e; }
-.paper-toc-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 6px 0;
-  border-bottom: 1px dotted #d8d4cc;
-  font-size: 12px;
-  color: #3a3228;
-}
-.paper-toc-item span:last-child {
-  font-family: -apple-system, sans-serif;
-  font-size: 10px;
-  color: #a09890;
-}
-.paper-toc-h {
-  font-family: -apple-system, sans-serif;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: #1a1410;
-  margin-bottom: 16px;
-  font-weight: 700;
-}
-.paper-endmark {
-  text-align: center;
-  margin-top: auto;
-  padding-bottom: 16px;
-}
-.paper-endmark span {
-  font-size: 16px;
-  color: #c9a96e;
-  letter-spacing: 8px;
-}
-.paper-rule {
-  width: 40px;
-  height: 1px;
-  background: #c9a96e;
-  margin: 16px 0;
-}
-.paper-wisdom-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.paper-wisdom-list li {
-  font-size: 12px;
-  line-height: 1.6;
-  color: #3a3228;
-  padding: 8px 0;
-  border-bottom: 1px dotted #d8d4cc;
-}
-.paper-wisdom-list li:last-child { border-bottom: none; }
-.paper-wisdom-list li::before {
-  content: '—';
-  color: #c9a96e;
-  margin-right: 8px;
-  font-weight: 700;
-}
+        .hero-quote {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--gold);
+            max-width: 500px;
+            line-height: 1.6;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
 
-/* Cover */
-.cover-right {
-  background:
-    linear-gradient(135deg, rgba(201,169,110,0.1) 0%, transparent 50%),
-    linear-gradient(to bottom, #f5f2eb 0%, #ebe7de 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-.cover-right .paper-title {
-  font-size: 3rem;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-.cover-right .ornament {
-  width: 60px;
-  height: 2px;
-  background: #c9a96e;
-  margin: 16px 0;
-}
-.cover-right .paper-sub {
-  font-size: 10px;
-  letter-spacing: 3px;
-  max-width: 200px;
-  line-height: 1.5;
-}
-.cover-left {
-  background: #2a1b15;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.cover-left .endpaper-pattern {
-  width: 80%;
-  height: 80%;
-  border: 1px solid rgba(201,169,110,0.15);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.cover-left .endpaper-pattern span {
-  color: rgba(201,169,110,0.2);
-  font-size: 48px;
-}
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            opacity: 0.5;
+        }
 
-.back-right {
-  background: #2a1b15;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: rgba(245,242,235,0.6);
-  text-align: center;
-}
-.back-right p {
-  font-size: 12px;
-  line-height: 1.8;
-  max-width: 70%;
-}
-.back-right .the-end {
-  font-family: Georgia, serif;
-  font-size: 2rem;
-  color: #c9a96e;
-  margin-bottom: 16px;
-  letter-spacing: 6px;
-  text-transform: uppercase;
-}
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
 
-/* Turn shadow */
-.turn-shadow {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(to left, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 50%);
-  pointer-events: none;
-  opacity: 0;
-  z-index: 20;
-}
-.turn-shadow.sweep {
-  animation: shadowSweep 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-@keyframes shadowSweep {
-  0%   { transform: translateX(0); opacity: 0; }
-  15%  { opacity: 1; }
-  100% { transform: translateX(-100%); opacity: 0; }
-}
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-/* Controls */
-.book-controls {
-  margin-top: 20px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  font-family: -apple-system, sans-serif;
-  z-index: 100;
-}
-.book-controls button {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid rgba(201,169,110,0.3);
-  background: rgba(26,20,16,0.6);
-  color: #c9a96e;
-  font-size: 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-  backdrop-filter: blur(8px);
-}
-.book-controls button:hover {
-  background: rgba(201,169,110,0.15);
-  transform: scale(1.1);
-}
-.book-controls button:active { transform: scale(0.95); }
-.book-controls button:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-.page-indicator {
-  font-size: 12px;
-  color: rgba(245,242,235,0.5);
-  letter-spacing: 2px;
-  min-width: 80px;
-  text-align: center;
-}
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-.click-zone {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 30%;
-  cursor: pointer;
-  z-index: 10;
-}
-.click-zone.prev-zone { left: 0; }
-.click-zone.next-zone { right: 0; }
+        /* Navigation */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(26,26,26,0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 0 2rem;
+        }
 
-.mobile-hint {
-  display: none;
-  position: fixed;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: -apple-system, sans-serif;
-  font-size: 11px;
-  color: rgba(245,242,235,0.3);
-  text-align: center;
-}
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
 
-@media (max-width: 1050px) {
-  .book-stage { transform: scale(0.85); transform-origin: center center; }
-}
-@media (max-width: 850px) {
-  .book-stage { transform: scale(0.7); }
-}
-@media (max-width: 680px) {
-  .book-stage { transform: scale(0.55); }
-  .mobile-hint { display: block; }
-}
-@media (max-width: 520px) {
-  .book-stage { transform: scale(0.45); }
-  .book-controls { transform: scale(1.3); margin-top: 40px; }
-}
-</style>
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-family: inherit;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .nav-link.kc:hover, .nav-link.kc.active { color: #ff8a80; }
+        .nav-link.tx:hover, .nav-link.tx.active { color: #ffcc80; }
+        .nav-link.nc:hover, .nav-link.nc.active { color: #a5d6a7; }
+
+        /* Main content */
+        .content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Region Cards */
+        .region-section {
+            padding: 6rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .region-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .region-header { grid-template-columns: 1fr; gap: 2rem; }
+        }
+
+        .region-identity {
+            position: relative;
+        }
+
+        .region-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 0.2em;
+            margin-bottom: 1rem;
+        }
+
+        .region-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .region-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .region-tagline {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.5);
+            font-style: italic;
+            margin-bottom: 1.5rem;
+        }
+
+        .region-specialty {
+            background: rgba(255,255,255,0.03);
+            border-left: 3px solid;
+            padding: 1.2rem 1.5rem;
+            border-radius: 0 12px 12px 0;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .region-philosophy {
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .region-philosophy::before {
+            content: '"';
+            font-family: 'Playfair Display', serif;
+            font-size: 6rem;
+            color: rgba(255,255,255,0.05);
+            position: absolute;
+            top: -1rem;
+            left: 1rem;
+            line-height: 1;
+        }
+
+        .philosophy-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-style: italic;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .philosophy-author {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.4);
+        }
+
+        /* Spot Cards */
+        .spots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .spot-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spot-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--card-color), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .spot-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255,255,255,0.12);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .spot-card:hover::before {
+            opacity: 1;
+        }
+
+        .spot-type {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--card-color);
+            margin-bottom: 0.8rem;
+        }
+
+        .spot-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .spot-highlight {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .spot-signature {
+            background: rgba(255,255,255,0.03);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .spot-signature-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 0.3rem;
+        }
+
+        .spot-signature-text {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .spot-quote {
+            font-style: italic;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+            border-left: 2px solid rgba(255,255,255,0.1);
+            padding-left: 1rem;
+        }
+
+        /* Techniques */
+        .techniques-section {
+            background: rgba(255,255,255,0.01);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .techniques-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 1.5rem;
+        }
+
+        .techniques-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .technique-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+
+        .technique-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .technique-bullet {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 0.4rem;
+        }
+
+        .technique-text {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Backyard Section */
+        .backyard-section {
+            padding: 6rem 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .backyard-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .backyard-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .backyard-desc {
+            color: rgba(255,255,255,0.5);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+        }
+
+        .backyard-card {
+            background: linear-gradient(135deg, rgba(212,168,83,0.05) 0%, rgba(255,107,53,0.05) 100%);
+            border: 1px solid rgba(212,168,83,0.15);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .backyard-card::before {
+            content: '🍺';
+            font-size: 3rem;
+            position: absolute;
+            top: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--charcoal);
+            padding: 0 1rem;
+        }
+
+        .backyard-quote {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .backyard-details {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .backyard-detail {
+            background: rgba(255,255,255,0.03);
+            padding: 0.6rem 1.2rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Quotes Wall */
+        .quotes-section {
+            padding: 6rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .quotes-title {
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            color: rgba(255,255,255,0.3);
+            margin-bottom: 3rem;
+        }
+
+        .quotes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .quote-card {
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            transition: all 0.4s;
+            cursor: default;
+        }
+
+        .quote-card:hover {
+            background: rgba(255,255,255,0.04);
+            transform: scale(1.02);
+        }
+
+        .quote-card::before {
+            content: '"';
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: rgba(255,255,255,0.06);
+            position: absolute;
+            top: 0.5rem;
+            left: 1rem;
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Timeline */
+        .timeline-section {
+            padding: 6rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .timeline-title {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 3rem;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--kc-red), var(--texas-orange), var(--nc-green));
+            opacity: 0.3;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+            align-items: center;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            grid-column: 2;
+        }
+
+        .timeline-item:nth-child(even) .timeline-dot-wrapper {
+            grid-column: 1;
+            grid-row: 1;
+            justify-self: end;
+            text-align: right;
+        }
+
+        @media (max-width: 600px) {
+            .timeline::before { left: 20px; }
+            .timeline-item { grid-template-columns: 1fr; gap: 1rem; padding-left: 50px; }
+            .timeline-item:nth-child(even) .timeline-content { grid-column: 1; }
+            .timeline-item:nth-child(even) .timeline-dot-wrapper { grid-column: 1; justify-self: start; text-align: left; }
+        }
+
+        .timeline-dot-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .timeline-dot {
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            border: 3px solid var(--charcoal);
+            box-shadow: 0 0 0 2px var(--dot-color);
+            flex-shrink: 0;
+        }
+
+        .timeline-content h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .timeline-content p {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.5;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .footer-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-style: italic;
+            color: var(--gold);
+            margin-bottom: 1rem;
+        }
+
+        .footer-sub {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.85rem;
+        }
+
+        /* Interactive elements */
+        .region-section {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .region-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .spot-card {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .region-section.visible .spot-card {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .region-section.visible .spot-card:nth-child(1) { transition-delay: 0.1s; }
+        .region-section.visible .spot-card:nth-child(2) { transition-delay: 0.2s; }
+
+        .quote-card {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .quotes-section.visible .quote-card {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .quotes-section.visible .quote-card:nth-child(1) { transition-delay: 0.05s; }
+        .quotes-section.visible .quote-card:nth-child(2) { transition-delay: 0.1s; }
+        .quotes-section.visible .quote-card:nth-child(3) { transition-delay: 0.15s; }
+        .quotes-section.visible .quote-card:nth-child(4) { transition-delay: 0.2s; }
+        .quotes-section.visible .quote-card:nth-child(5) { transition-delay: 0.25s; }
+
+        /* KC specific */
+        .kc-color { color: #ff8a80; }
+        .kc-bg { background: linear-gradient(135deg, #B71C1C, #D32F2F); }
+        .kc-border { border-color: #B71C1C; }
+
+        /* Texas specific */
+        .tx-color { color: #ffcc80; }
+        .tx-bg { background: linear-gradient(135deg, #E65100, #F57C00); }
+        .tx-border { border-color: #E65100; }
+
+        /* NC specific */
+        .nc-color { color: #a5d6a7; }
+        .nc-bg { background: linear-gradient(135deg, #1B5E20, #2E7D32); }
+        .nc-border { border-color: #1B5E20; }
+
+        /* Tab system for spots */
+        .spot-expanded {
+            display: none;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            animation: expandIn 0.3s ease-out;
+        }
+
+        .spot-expanded.active {
+            display: block;
+        }
+
+        @keyframes expandIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .expand-btn {
+            background: none;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.5);
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            margin-top: 0.5rem;
+        }
+
+        .expand-btn:hover {
+            border-color: rgba(255,255,255,0.3);
+            color: white;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--charcoal); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+    </style>
 <base target="_blank">
 </head>
 <body>
+    <!-- Smoke particles -->
+    <div class="smoke-container" id="smoke"></div>
 
-<div class="book-stage">
-  <div class="book" id="book">
-    <div class="turn-shadow" id="turnShadow"></div>
-
-    <!-- ==================== SPREAD 0: COVER ==================== -->
-    <div class="spread active" data-index="0">
-      <div class="page page-left cover-left">
-        <div class="endpaper-pattern"><span>❦</span></div>
-        <span class="page-num">i</span>
-      </div>
-      <div class="page page-right cover-right">
-        <div class="paper-eyebrow" style="color:#6b5a3e; margin-bottom:20px;">A Field Manual</div>
-        <div class="paper-title" style="font-size:3.2rem;">Solitude</div>
-        <div class="ornament"></div>
-        <div class="paper-sub" style="font-size:10px; letter-spacing:3px; max-width:220px;">
-          Practicals, Wisdom & Quotes on the Art of Being Alone
+    <!-- Hero -->
+    <section class="hero" id="hero">
+        <div class="hero-badge">
+            <span>🔥</span> A Cook's Tour — BBQ Episode
         </div>
-        <span class="page-num">1</span>
-      </div>
+        <h1>
+            Anthony Bourdain's<br>
+            <span class="highlight">Barbecue Quest</span>
+        </h1>
+        <p class="hero-subtitle">
+            Three regions. One obsession. The ultimate investigation into America's most controversial cuisine.
+        </p>
+        <p class="hero-quote">
+            "Barbecue is not a cuisine, it's an obsession. Barbecuers are free-thinking individualists."
+        </p>
+        <div class="scroll-indicator" onclick="document.getElementById('nav').scrollIntoView({behavior:'smooth'})">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Navigation -->
+    <nav class="nav-bar" id="nav">
+        <div class="nav-inner">
+            <div class="nav-logo">BBQ Quest</div>
+            <div class="nav-links">
+                <button class="nav-link kc" onclick="scrollToSection('kc')">Kansas City</button>
+                <button class="nav-link tx" onclick="scrollToSection('tx')">Texas</button>
+                <button class="nav-link nc" onclick="scrollToSection('nc')">N. Carolina</button>
+                <button class="nav-link" onclick="scrollToSection('backyard')">Backyard</button>
+                <button class="nav-link" onclick="scrollToSection('quotes')">Wisdom</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="content">
+
+        <!-- Kansas City -->
+        <section class="region-section" id="kc" data-color="#B71C1C">
+            <div class="region-header">
+                <div class="region-identity">
+                    <div class="region-number">01 — THE BARBECUE CAPITAL</div>
+                    <span class="region-icon">🔥</span>
+                    <h2 class="region-name kc-color">Kansas City</h2>
+                    <p class="region-tagline">"If it moves, barbecue it."</p>
+                    <div class="region-specialty kc-border" style="border-color: #B71C1C;">
+                        Kansas City is a microcosm of the barbecue world. While other regions specialize in specific meats, in KC they'll cook anything, anyhow. This is where burnt ends — once discarded — became menu royalty.
+                    </div>
+                </div>
+                <div class="region-philosophy">
+                    <p class="philosophy-text kc-color">
+                        "Good barbecue is not always pretty. It's the absolute antithesis of fast food."
+                    </p>
+                    <p class="philosophy-author">— Anthony Bourdain</p>
+                </div>
+            </div>
+
+            <div class="spots-grid">
+                <div class="spot-card" style="--card-color: #ff8a80;" onclick="toggleSpot(this)">
+                    <div class="spot-type">Gas Station Institution</div>
+                    <h3 class="spot-name">Oklahoma Joe's</h3>
+                    <p class="spot-highlight">
+                        Located inside a functioning gas station, liquor store, and convenience store. Some of the finest barbecue in the country, hiding in plain sight.
+                    </p>
+                    <div class="spot-signature">
+                        <div class="spot-signature-label">Signature Dishes</div>
+                        <div class="spot-signature-text">Carolina Pork Sandwich (pulled pork with slaw + Bubba sauce), Burnt Ends, Ribs</div>
+                    </div>
+                    <p class="spot-quote">"If you want to get to the bottom of something, you start at the top."</p>
+                    <button class="expand-btn">Show Details ▾</button>
+                    <div class="spot-expanded">
+                        <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-top:0.5rem;">
+                            Carolyn Wells (KC Barbecue Society) recommends the Carolina Pork Sandwich and notes that burnt ends are collected all week to be offered one night. The ribs are always great. Bourdain describes the flavor as "up the ying-yang."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="spot-card" style="--card-color: #ff8a80;" onclick="toggleSpot(this)">
+                    <div class="spot-type">Grand Master / Trainer</div>
+                    <h3 class="spot-name">Paul Kirk — Baron of Barbecue</h3>
+                    <p class="spot-highlight">
+                        World-recognized authority on Kansas City barbecue. A competition prize fighter turned manager who now trains rookies in the sacred arts of the pit.
+                    </p>
+                    <div class="spot-signature">
+                        <div class="spot-signature-label">Signature Method</div>
+                        <div class="spot-signature-text">14-hour brisket, custom rubs (seasoning/celery/onion/garlic salt + signature spices), $8,000 custom Klose pit</div>
+                    </div>
+                    <p class="spot-quote">"I'm searching for that ultimate barbecue. I've never found it."</p>
+                    <button class="expand-btn">Show Details ▾</button>
+                    <div class="spot-expanded">
+                        <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-top:0.5rem;">
+                            Bourdain gets a hands-on lesson trimming brisket (rookie status confirmed). The basic rub is built on four salts, then customized with signature spices like coriander, oregano, cumin, or allspice. The 14-hour cook time produces a beautiful smoke ring and moist, juicy meat.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="techniques-section">
+                <div class="techniques-title">KC Techniques & Secrets</div>
+                <div class="techniques-list">
+                    <div class="technique-item">
+                        <div class="technique-bullet kc-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">Burnt ends — the charred brisket pieces once thrown away, now the most prized menu item</div>
+                    </div>
+                    <div class="technique-item">
+                        <div class="technique-bullet kc-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">Basic rub foundation: seasoning salt, celery salt, onion salt, garlic salt</div>
+                    </div>
+                    <div class="technique-item">
+                        <div class="technique-bullet kc-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">14+ hour cook time for certified Angus brisket — low and slow is the only way</div>
+                    </div>
+                    <div class="technique-item">
+                        <div class="technique-bullet kc-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">Custom pits by Klose Pits in Texas — $8,000+ of pure craftsmanship</div>
+                    </div>
+                    <div class="technique-item">
+                        <div class="technique-bullet kc-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">Complete with "barbecue nerds" — plastic pocket protectors and meat thermometers included</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Texas -->
+        <section class="region-section" id="tx" data-color="#E65100">
+            <div class="region-header">
+                <div class="region-identity">
+                    <div class="region-number">02 — THE PIT BUILDERS</div>
+                    <span class="region-icon">🤠</span>
+                    <h2 class="region-name tx-color">Texas</h2>
+                    <p class="region-tagline">"Nothing beats Texas-style barbecue."</p>
+                    <div class="region-specialty tx-border" style="border-color: #E65100;">
+                        Texans don't just make barbecue — they engineer it. From bullet-proof glass pits to 14-foot beer bottle smokers, the pit is as important as the meat. Post oak is the secret fuel that makes it all happen.
+                    </div>
+                </div>
+                <div class="region-philosophy">
+                    <p class="philosophy-text tx-color">
+                        "It's not just food, it's not just a lifestyle, it's a calling... it's an illness."
+                    </p>
+                    <p class="philosophy-author">— Dave Klose</p>
+                </div>
+            </div>
+
+            <div class="spots-grid">
+                <div class="spot-card" style="--card-color: #ffcc80;" onclick="toggleSpot(this)">
+                    <div class="spot-type">Pit Engineer / Mad Scientist</div>
+                    <h3 class="spot-name">Dave Klose — Klose Pits</h3>
+                    <p class="spot-highlight">
+                        Houston's legendary pit builder. Custom designs for every need — from NASA administrators to hungry cosmonauts. If you can dream it, Dave can weld it.
+                    </p>
+                    <div class="spot-signature">
+                        <div class="spot-signature-label">Signature Creations</div>
+                        <div class="spot-signature-text">Bullet-proof Sarajevo phone booth pits, 14-foot beer bottle smokers with pony keg taps, car pits, .357 Magnum-tested steel</div>
+                    </div>
+                    <p class="spot-quote">"I won't stop until I've made something out of everything on planet Earth."</p>
+                    <button class="expand-btn">Show Details ▾</button>
+                    <div class="spot-expanded">
+                        <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-top:0.5rem;">
+                            Dave worked at NASA and once asked the administrator for a pit on the moon — "so when the Russians land, they'll see the world's first Klose interplanetary grill." His signature dish: 8-10 count tiger shrimp stuffed with stone crab, wrapped in maple-smoked bacon, soaked in Cabernet Sauvignon overnight. "If you do it bad, it's incredible. If you do it right, it'll take the top of your head off."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="spot-card" style="--card-color: #ffcc80;" onclick="toggleSpot(this)">
+                    <div class="spot-type">30-Year Institution</div>
+                    <h3 class="spot-name">Roy Burns BBQ</h3>
+                    <p class="spot-highlight">
+                        An unassuming Houston joint where limos and Cadillacs line up alongside pickup trucks. The building looks like a decent sneeze would level it — but the barbecue is bulletproof.
+                    </p>
+                    <div class="spot-signature">
+                        <div class="spot-signature-label">Signature</div>
+                        <div class="spot-signature-text">Ribs and brisket with secret sauce, post oak fuel, mustard-based potato salad with pickles</div>
+                    </div>
+                    <p class="spot-quote">"Post oak, that's the secret doing the slow."</p>
+                    <button class="expand-btn">Show Details ▾</button>
+                    <div class="spot-expanded">
+                        <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-top:0.5rem;">
+                            Roy's secret is slow-burning post oak. The ribs cook for 5-6 more hours after Bourdain's visit. The sauce is so secret Roy wouldn't give it up "if you put a gun to his head." His philosophy: "I tell my customers to come back and tell me if it's bad or good. Then I start looking for ways to change." The asymmetric flavors of mustard potato salad with pickles perfectly complement the meat.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="techniques-section">
+                <div class="techniques-title">Texas Techniques & Secrets</div>
+                <div class="techniques-list">
+                    <div class="technique-item">
+                        <div class="technique-bullet tx-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">Post oak as the secret fuel — slow burning, consistent heat, unmistakable flavor</div>
+                    </div>
+                    <div class="technique-item">
+                        <div class="technique-bullet tx-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">Pit engineering as an art form — custom designed for individual needs</div>
+                    </div>
+                    <div class="technique-item">
+                        <div class="technique-bullet tx-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">Direct heat methods — cooking right on top of the flame</div>
+                    </div>
+                    <div class="technique-item">
+                        <div class="technique-bullet tx-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">12-14 hour cook times — patience is the ultimate ingredient</div>
+                    </div>
+                    <div class="technique-item">
+                        <div class="technique-bullet tx-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">Sausage-stuffed, bacon-wrapped quail — because everything is bigger (and wrapped in bacon) in Texas</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- North Carolina -->
+        <section class="region-section" id="nc" data-color="#1B5E20">
+            <div class="region-header">
+                <div class="region-identity">
+                    <div class="region-number">03 — THE CRADLE OF BARBECUE</div>
+                    <span class="region-icon">🐷</span>
+                    <h2 class="region-name nc-color">North Carolina</h2>
+                    <p class="region-tagline">"Where most people will tell you it all began."</p>
+                    <div class="region-specialty nc-border" style="border-color: #1B5E20;">
+                        It's all about pig. Whole hog. Nose to tail. Everything but the squeak. And within NC, a civil war rages — Eastern (vinegar, whole hog) vs. Western/Piedmont (tomato, shoulder only).
+                    </div>
+                </div>
+                <div class="region-philosophy">
+                    <p class="philosophy-text nc-color">
+                        "If you're gonna kill a pig, you should eat every part of it. If the pig ever hunts me down and kills me, I hope that he uses every part."
+                    </p>
+                    <p class="philosophy-author">— Ed Mitchell</p>
+                </div>
+            </div>
+
+            <div class="spots-grid">
+                <div class="spot-card" style="--card-color: #a5d6a7;" onclick="toggleSpot(this)">
+                    <div class="spot-type">Eastern NC — Whole Hog</div>
+                    <h3 class="spot-name">Mitchell's — Ed Mitchell</h3>
+                    <p class="spot-highlight">
+                        The temple of whole hog barbecue. Ed Mitchell takes you from live pig to pig bar, with every part honored — trotters, tails, ears, chitlins, and the legendary crispy skin cracklins.
+                    </p>
+                    <div class="spot-signature">
+                        <div class="spot-signature-label">Signature</div>
+                        <div class="spot-signature-text">Whole hog 8-10 hours, hand-chopped, vinegar-pepper sauce, crispy cracklins, the famous "pig bar"</div>
+                    </div>
+                    <p class="spot-quote">"This is good eating. Now she's ready to go on. Spank it."</p>
+                    <button class="expand-btn">Show Details ▾</button>
+                    <div class="spot-expanded">
+                        <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-top:0.5rem;">
+                            Bourdain helps trim the pig (feet, fat glands) before it hits the pit for 8-10 hours. The pit crew debones, pulls ribs, and hand-chops everything. The sauce is pure Eastern NC: red & black pepper, sugar, salt, and vinegar — no tomato. Ed taste-tests for tenderness before signing off. The pig bar features trotters, tails, ears, and chitlins. "Best pig foot I've ever had. And I've had a fair amount of them."
+                        </p>
+                    </div>
+                </div>
+
+                <div class="spot-card" style="--card-color: #a5d6a7;" onclick="toggleSpot(this)">
+                    <div class="spot-type">Western NC — Piedmont/Lexington Style</div>
+                    <h3 class="spot-name">Bill Leeson & Jim Tabb</h3>
+                    <p class="spot-highlight">
+                        Generals in the NC barbecue civil war. Jim is an ex-pilot, Bill is an explosives expert. Together they defend the western style: pork shoulder, direct heat, and yes — tomatoes in the sauce.
+                    </p>
+                    <div class="spot-signature">
+                        <div class="spot-signature-label">Signature</div>
+                        <div class="spot-signature-text">Pulled shoulder, direct heat (cooked right on the flame), 12-14 hours, tomato-tinged sauce, red slaw, hush puppies</div>
+                    </div>
+                    <p class="spot-quote">"We were barbecuing when those people in Texas were chasing cows."</p>
+                    <button class="expand-btn">Show Details ▾</button>
+                    <div class="spot-expanded">
+                        <p style="font-size:0.85rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-top:0.5rem;">
+                            Western NC uses shoulder only (juicier, more fat than ham) cooked with direct heat right on top of the flame. The sauce includes tomato — "traditionally, people east of Carolina thought tomatoes were poisonous. As they came west, they began to add tomatoes." The pulled pork comes off the bone with no knife needed. Served with red slaw and hush puppies. Bill is "furious if we need a knife."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="techniques-section">
+                <div class="techniques-title">NC Techniques & Secrets</div>
+                <div class="techniques-list">
+                    <div class="technique-item">
+                        <div class="technique-bullet nc-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">Eastern NC: Whole hog, vinegar & pepper sauce — absolutely no tomato</div>
+                    </div>
+                    <div class="technique-item">
+                        <div class="technique-bullet nc-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">Western NC: Pork shoulder only, direct heat, tomato-acceptable sauce</div>
+                    </div>
+                    <div class="technique-item">
+                        <div class="technique-bullet nc-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">Sauce formula: red & black pepper + lots of sugar + even more salt + real lot of vinegar</div>
+                    </div>
+                    <div class="technique-item">
+                        <div class="technique-bullet nc-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">Crispy skin cracklins sprinkled on top — "all the things I like about food, all in one dish"</div>
+                    </div>
+                    <div class="technique-item">
+                        <div class="technique-bullet nc-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">The pig bar: trotters, tails, ears, chitlins — "if there's a buffet in heaven, it looks pretty much like that"</div>
+                    </div>
+                    <div class="technique-item">
+                        <div class="technique-bullet nc-bg" style="width:8px;height:8px;border-radius:50%;"></div>
+                        <div class="technique-text">8-14 hour cook times depending on style — whole hog needs less time than shoulder</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Backyard -->
+        <section class="backyard-section" id="backyard">
+            <div class="backyard-icon">🏡</div>
+            <h2 class="backyard-title">The Backyard Experience</h2>
+            <p class="backyard-desc">
+                Most of America doesn't get their barbecue from award-winning pit masters or famous joints. They get it from their own backyard. This is where the real magic happens.
+            </p>
+            <div class="backyard-card">
+                <p class="backyard-quote">
+                    "This is the essence of barbecue. Sitting in the backyard, waiting for the ribs to cook, drinking beer. This is the barbecue story encapsulated."
+                </p>
+                <p style="color:rgba(255,255,255,0.4);font-size:0.9rem;">— John Lonergan's Backyard</p>
+                <div class="backyard-details">
+                    <span class="backyard-detail">🍖 Mustard & spice rub</span>
+                    <span class="backyard-detail">⏱️ 4 hours slow cook</span>
+                    <span class="backyard-detail">🥤 Coca-Cola & brown sugar slurry</span>
+                    <span class="backyard-detail">🍺 Essential beer companion</span>
+                    <span class="backyard-detail">🥗 Salad (forgotten vegetable)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quotes -->
+        <section class="quotes-section" id="quotes">
+            <div class="quotes-title">Words of Wisdom from the Pit</div>
+            <div class="quotes-grid">
+                <div class="quote-card">
+                    <p class="quote-text">"Barbecue is not a cuisine, it's an obsession."</p>
+                </div>
+                <div class="quote-card">
+                    <p class="quote-text">"Barbecuers are free-thinking individualists."</p>
+                </div>
+                <div class="quote-card">
+                    <p class="quote-text">"It's the absolute antithesis of fast food."</p>
+                </div>
+                <div class="quote-card">
+                    <p class="quote-text">"If it moves, barbecue it."</p>
+                </div>
+                <div class="quote-card">
+                    <p class="quote-text">"I'll try anything, I'll risk everything, I have nothing to lose."</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline -->
+        <section class="timeline-section">
+            <h3 class="timeline-title">The BBQ Triangle Journey</h3>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot-wrapper">
+                        <div class="timeline-dot" style="--dot-color: #B71C1C;"></div>
+                        <div class="timeline-content">
+                            <h4 class="kc-color">Kansas City</h4>
+                            <p>The melting pot — burnt ends, anything goes, competition culture</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot-wrapper">
+                        <div class="timeline-dot" style="--dot-color: #E65100;"></div>
+                        <div class="timeline-content">
+                            <h4 class="tx-color">Texas</h4>
+                            <p>The engineers — post oak, custom pits, meat as religion</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot-wrapper">
+                        <div class="timeline-dot" style="--dot-color: #1B5E20;"></div>
+                        <div class="timeline-content">
+                            <h4 class="nc-color">North Carolina</h4>
+                            <p>The origin — whole hog, vinegar wars, nose-to-tail philosophy</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot-wrapper">
+                        <div class="timeline-dot" style="--dot-color: #d4a853;"></div>
+                        <div class="timeline-content">
+                            <h4 style="color:#d4a853;">The Verdict</h4>
+                            <p>There is no winner. Barbecue is an endless learning process.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </div>
 
-    <!-- ==================== SPREAD 1: TOC ==================== -->
-    <div class="spread" data-index="1">
-      <div class="page page-left">
-        <div class="paper-toc-h">Contents</div>
-        <div class="paper-toc-item"><span>Practicals I — The Social Muscle</span><span>3</span></div>
-        <div class="paper-toc-item"><span>Practicals II — The Wilderness Test</span><span>7</span></div>
-        <div class="paper-toc-item"><span>Practicals III — The Monk's Toolkit</span><span>11</span></div>
-        <div class="paper-toc-item"><span>Practicals IV — The Strategic Silence</span><span>15</span></div>
-        <div class="paper-toc-item"><span>Wisdom I — On Being Alone</span><span>19</span></div>
-        <div class="paper-toc-item"><span>Wisdom II — On Power & Truth</span><span>21</span></div>
-        <div class="paper-toc-item"><span>Quotes — The Codex</span><span>23</span></div>
-        <span class="page-num">2</span>
-      </div>
-      <div class="page page-right">
-        <div class="paper-eyebrow">How to Use This Book</div>
-        <div class="paper-h2">Read. Do. Reflect.</div>
-        <p class="paper-p">This book contains no narrative. No stories. No characters. Only what you can use: step-by-step practicals, distilled wisdom, and quotes that have survived centuries.</p>
-        <p class="paper-p">The practicals are exercises. Do them. The wisdom is compressed insight. Sit with it. The quotes are ammunition. Carry them.</p>
-        <div class="paper-insight">
-          <h4>Core Principle</h4>
-          <p>Solitude is not the absence of others. It is the presence of yourself.</p>
-        </div>
-        <div class="paper-quote">
-          <p>Loneliness is the poverty of self; solitude is the richness of self.</p>
-          <cite>May Sarton</cite>
-        </div>
-        <span class="page-num">3</span>
-      </div>
-    </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">"Show the world what you're made of, America. Light up those barbecues from sea to shining sea."</p>
+        <p class="footer-sub">Anthony Bourdain — A Cook's Tour: BBQ Episode</p>
+    </footer>
 
-    <!-- ==================== SPREAD 2: PRACTICALS I ==================== -->
-    <div class="spread" data-index="2">
-      <div class="page page-left">
-        <div class="paper-eyebrow">Practicals I</div>
-        <div class="paper-h2">The Social Muscle</div>
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 1: The Solo Meal</h4>
-          <ol>
-            <li>Pick a restaurant you actually want to try.</li>
-            <li>Go alone. No phone, no book for the first ten minutes.</li>
-            <li>Order something that takes time to eat.</li>
-            <li>Observe the room. Listen. Taste slowly.</li>
-            <li>Notice: the shame is in your head, not in the room.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 2: The Opposite Momentum</h4>
-          <ol>
-            <li>Identify one social event you are avoiding this week.</li>
-            <li>Attend for exactly thirty minutes. Set a timer.</li>
-            <li>Speak to one person you do not know.</li>
-            <li>Leave early if you must, but do not skip it.</li>
-            <li>Repeat weekly until the dread fades.</li>
-          </ol>
-        </div>
-        <span class="page-num">4</span>
-      </div>
-      <div class="page page-right">
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 3: Spirit Companions</h4>
-          <ol>
-            <li>Choose one book, film, or album that moves you deeply.</li>
-            <li>Experience it entirely alone. No multitasking.</li>
-            <li>Afterward, write one paragraph on what it taught you.</li>
-            <li>Keep a running list of these "spirit companions."</li>
-            <li>Return to the list when loneliness strikes.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 4: The Digital Sabbath</h4>
-          <ol>
-            <li>Pick one evening per week.</li>
-            <li>Turn off all screens from 6 PM to sleep.</li>
-            <li>Replace the time with paper, pen, and silence.</li>
-            <li>Notice what surfaces when distraction is removed.</li>
-          </ol>
-        </div>
-        <div class="paper-quote">
-          <p>If you are excited in your spirit, then you are not really alone.</p>
-        </div>
-        <span class="page-num">5</span>
-      </div>
-    </div>
+    <script>
+        // Generate smoke particles
+        function createSmoke() {
+            const container = document.getElementById('smoke');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'smoke-particle';
+                const size = Math.random() * 150 + 80;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 15 + 20) + 's';
+                particle.style.animationDelay = (Math.random() * 20) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createSmoke();
 
-    <!-- ==================== SPREAD 3: PRACTICALS I CONT ==================== -->
-    <div class="spread" data-index="3">
-      <div class="page page-left">
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 5: The Bathtub Ritual</h4>
-          <ol>
-            <li>Run a bath. Hot, deep, with salts if you have them.</li>
-            <li>Bring one book. Nothing electronic.</li>
-            <li>Stay until the water cools. No timer, no rush.</li>
-            <li>This is not hygiene. This is training in pleasure without company.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 6: The Momentum Journal</h4>
-          <ol>
-            <li>Each morning, rate your social anxiety 1–10.</li>
-            <li>Log one social action taken that day, however small.</li>
-            <li>Review weekly. Watch the numbers drift downward.</li>
-            <li>The data is your proof that the muscle grows.</li>
-          </ol>
-        </div>
-        <div class="paper-insight">
-          <h4>The Momentum Principle</h4>
-          <p>Isolation breeds timidity; timidity breeds more isolation. The only way out is to reverse the cycle deliberately, one small social step at a time, until the momentum shifts in your favor.</p>
-        </div>
-        <span class="page-num">6</span>
-      </div>
-      <div class="page page-right">
-        <div class="paper-eyebrow">Practicals II</div>
-        <div class="paper-h2">The Wilderness Test</div>
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 7: The Solo Weekend</h4>
-          <ol>
-            <li>Book one night in a place you have never been.</li>
-            <li>Go alone. No itinerary, no plans.</li>
-            <li>Walk for two hours without a destination.</li>
-            <li>Eat alone at a local restaurant. Sleep alone.</li>
-            <li>Document what you noticed that you would have missed with company.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 8: The Cold Shower</h4>
-          <ol>
-            <li>End every shower with 60 seconds of cold water.</li>
-            <li>No negotiation. No gradual cooling. Full cold.</li>
-            <li>Breathe through the discomfort. Do not exit early.</li>
-            <li>This is type two fun in miniature. Train the tolerance.</li>
-          </ol>
-        </div>
-        <span class="page-num">7</span>
-      </div>
-    </div>
+        // Scroll to section
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                const offset = 80;
+                const top = el.getBoundingClientRect().top + window.pageYOffset - offset;
+                window.scrollTo({ top, behavior: 'smooth' });
+            }
+        }
 
-    <!-- ==================== SPREAD 4: PRACTICALS II CONT ==================== -->
-    <div class="spread" data-index="4">
-      <div class="page page-left">
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 9: The Comfort Fast</h4>
-          <ol>
-            <li>Identify your most comfortable routine.</li>
-            <li>Disrupt it for one week. Sleep on the floor. Walk instead of drive. Cook instead of order.</li>
-            <li>Notice what you complain about. That is your fishbowl.</li>
-            <li>Document the discomfort. Revisit in one month.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 10: The Enforced Wait</h4>
-          <ol>
-            <li>Choose a line you would normally avoid: the post office, the DMV, a crowded clinic.</li>
-            <li>Do not bring a phone or a book.</li>
-            <li>Stand in silence for the full duration.</li>
-            <li>Observe your mind's rebellion. This is the edge of your tolerance.</li>
-          </ol>
-        </div>
-        <div class="paper-insight">
-          <h4>The Fishbowl</h4>
-          <p>Comfort becomes confinement when it prevents growth. The same walls that protect us from danger also block us from discovery. Every fishbowl, no matter how pleasant, is still a bowl.</p>
-        </div>
-        <span class="page-num">8</span>
-      </div>
-      <div class="page page-right">
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 11: The Elastic Band</h4>
-          <ol>
-            <li>Write down who you were one year ago.</li>
-            <li>Write down who you are now.</li>
-            <li>Identify the moment that stretched you. The discomfort. The alone.</li>
-            <li>You cannot shrink back. The band has been stretched. You are larger now.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 12: The Type 2 Log</h4>
-          <ol>
-            <li>Once a month, do something that is not fun in the moment.</li>
-            <li>Record the experience while it is happening. Be honest about the misery.</li>
-            <li>Re-read the log after one month. Note the transformation.</li>
-            <li>This is the alchemy of hindsight. Train yourself to seek it.</li>
-          </ol>
-        </div>
-        <div class="paper-quote">
-          <p>Do difficult things now and then, and do them alone sometimes, even if they are type two fun.</p>
-        </div>
-        <span class="page-num">9</span>
-      </div>
-    </div>
+        // Toggle spot details
+        function toggleSpot(card) {
+            const expanded = card.querySelector('.spot-expanded');
+            const btn = card.querySelector('.expand-btn');
+            if (expanded.classList.contains('active')) {
+                expanded.classList.remove('active');
+                btn.textContent = 'Show Details ▾';
+            } else {
+                expanded.classList.add('active');
+                btn.textContent = 'Hide Details ▴';
+            }
+        }
 
-    <!-- ==================== SPREAD 5: PRACTICALS III ==================== -->
-    <div class="spread" data-index="5">
-      <div class="page page-left">
-        <div class="paper-eyebrow">Practicals III</div>
-        <div class="paper-h2">The Monk's Toolkit</div>
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 13: Metta Meditation</h4>
-          <ol>
-            <li>Sit alone in a quiet room. Close your eyes.</li>
-            <li>Begin with yourself: "May I be happy. May I be well."</li>
-            <li>Move to a loved one, then a neutral person, then an enemy.</li>
-            <li>Finally, expand to all beings everywhere.</li>
-            <li>Practice for ten minutes each morning.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 14: The Digital Declutter</h4>
-          <ol>
-            <li>Deactivate non-essential social media for one week.</li>
-            <li>Move your phone to another room after 8 PM.</li>
-            <li>Replace scrolling with reading, writing, or walking.</li>
-            <li>Notice the anxiety. Sit with it. It will pass.</li>
-          </ol>
-        </div>
-        <span class="page-num">10</span>
-      </div>
-      <div class="page page-right">
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 15: The Morning Pages</h4>
-          <ol>
-            <li>Upon waking, write three pages longhand.</li>
-            <li>Do not edit, censor, or re-read.</li>
-            <li>Dump every thought, fear, and plan onto the page.</li>
-            <li>Do this for thirty days. Review on day thirty.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 16: The Artist's Schedule</h4>
-          <ol>
-            <li>Block four hours each morning for deep work.</li>
-            <li>No meetings, no messages, no interruptions.</li>
-            <li>Guard this block as you would a meeting with a king.</li>
-            <li>Track output. You will be astonished.</li>
-          </ol>
-        </div>
-        <div class="paper-quote">
-          <p>Without great solitude, no serious work is possible.</p>
-          <cite>Pablo Picasso</cite>
-        </div>
-        <span class="page-num">11</span>
-      </div>
-    </div>
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-    <!-- ==================== SPREAD 6: PRACTICALS III CONT ==================== -->
-    <div class="spread" data-index="6">
-      <div class="page page-left">
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 17: The Red Flag Audit</h4>
-          <ol>
-            <li>List every person you spend time with regularly.</li>
-            <li>Mark each with a green, yellow, or red flag.</li>
-            <li>Green: they expand you. Yellow: they drain you slowly. Red: they wound you.</li>
-            <li>Reduce red to zero. Reduce yellow by half. Increase green.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 18: The Reflection Hour</h4>
-          <ol>
-            <li>Every Sunday evening, sit alone for one hour.</li>
-            <li>No input. No output. Just thinking.</li>
-            <li>Ask: What direction am I moving? What doors should close? What doors should open?</li>
-            <li>Write one sentence of decision. Execute it Monday.</li>
-          </ol>
-        </div>
-        <div class="paper-insight">
-          <h4>Historical Truth</h4>
-          <p>From Egyptian deserts to Himalayan mountains, the greatest spiritual traditions have always reserved a special place for solitude. The suspicion modern society casts on loners says more about our collective anxiety than about the loners themselves.</p>
-        </div>
-        <span class="page-num">12</span>
-      </div>
-      <div class="page page-right">
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 19: The Silence Fast</h4>
-          <ol>
-            <li>Choose one day per month.</li>
-            <li>Speak to no one. Write nothing. Text nothing.</li>
-            <li>Communicate only through gesture if absolutely necessary.</li>
-            <li>Observe what your mind does with the surplus energy.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 20: The Creator's Retreat</h4>
-          <ol>
-            <li>Once per quarter, take 48 hours alone.</li>
-            <li>No internet. No television. No music with lyrics.</li>
-            <li>Bring only materials for one project.</li>
-            <li>Work until exhaustion. Sleep. Repeat.</li>
-          </ol>
-        </div>
-        <div class="paper-quote">
-          <p>Happiness comes from within and does not require the presence of other people.</p>
-        </div>
-        <span class="page-num">13</span>
-      </div>
-    </div>
+        document.querySelectorAll('.region-section, .quotes-section').forEach(el => {
+            observer.observe(el);
+        });
 
-    <!-- ==================== SPREAD 7: PRACTICALS IV ==================== -->
-    <div class="spread" data-index="7">
-      <div class="page page-left">
-        <div class="paper-eyebrow">Practicals IV</div>
-        <div class="paper-h2">The Strategic Silence</div>
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 21: The Information Diet</h4>
-          <ol>
-            <li>Unfollow every account that does not teach you something.</li>
-            <li>Unsubscribe from every newsletter you skim.</li>
-            <li>Remove every news app from your phone.</li>
-            <li>Replace the void with one deep source. Read it slowly.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 22: The Approval Fast</h4>
-          <ol>
-            <li>For one week, make no decision based on what others will think.</li>
-            <li>Choose clothes, meals, and activities based solely on your own criteria.</li>
-            <li>Document the anxiety. It is the withdrawal from a drug.</li>
-            <li>By day seven, the craving will have weakened.</li>
-          </ol>
-        </div>
-        <span class="page-num">14</span>
-      </div>
-      <div class="page page-right">
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 23: The Time Audit</h4>
-          <ol>
-            <li>Track every hour for one week. Be brutal.</li>
-            <li>Categorize: reactive (responding to others) vs. sovereign (your own agenda).</li>
-            <li>Calculate the ratio. Most people are 80% reactive.</li>
-            <li>Shift 10% per month toward sovereign until you cross 50%.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 24: The Disappearance</h4>
-          <ol>
-            <li>Once per year, vanish for one week. Tell almost no one.</li>
-            <li>No social media. No check-ins. No photographs.</li>
-            <li>Use the time to plan the next twelve months.</li>
-            <li>Return with a single document: your strategy.</li>
-          </ol>
-        </div>
-        <div class="paper-quote">
-          <p>The quietest room produces the sharpest mind.</p>
-        </div>
-        <span class="page-num">15</span>
-      </div>
-    </div>
+        // Active nav link on scroll
+        const sections = ['kc', 'tx', 'nc', 'backyard', 'quotes'];
+        const navLinks = document.querySelectorAll('.nav-link');
 
-    <!-- ==================== SPREAD 8: PRACTICALS IV CONT ==================== -->
-    <div class="spread" data-index="8">
-      <div class="page page-left">
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 25: The Truth Room</h4>
-          <ol>
-            <li>Find a room with no decoration, no screen, no sound.</li>
-            <li>Sit in it for thirty minutes. No agenda.</li>
-            <li>When your mind offers a distraction, name it aloud: "Fear." "Vanity." "Laziness."</li>
-            <li>Do this until you can sit without naming anything.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 26: The Leverage List</h4>
-          <ol>
-            <li>Write down every person who has leverage over you.</li>
-            <li>Next to each, write what they control: time, emotion, money, status.</li>
-            <li>For each, design one action that removes their leverage.</li>
-            <li>Execute one per month until the list is empty.</li>
-          </ol>
-        </div>
-        <div class="paper-insight">
-          <h4>The Ultimate Test</h4>
-          <p>If you cannot sit in a room alone without losing your mind, you have no power. Because power requires sovereignty over yourself first. And that sovereignty is only tested when no one is watching, no one is clapping, and no one is helping.</p>
-        </div>
-        <span class="page-num">16</span>
-      </div>
-      <div class="page page-right">
-        <div class="paper-practical" style="margin-top:4px;">
-          <h4>Exercise 27: The Cold Calculation</h4>
-          <ol>
-            <li>Pick one emotional decision you made this month.</li>
-            <li>Reconstruct it as a spreadsheet: pros, cons, probabilities, expected values.</li>
-            <li>Compare the calculated choice to the emotional one.</li>
-            <li>Notice the gap. That gap is the cost of noise.</li>
-          </ol>
-        </div>
-        <div class="paper-practical">
-          <h4>Exercise 28: The Social Distance</h4>
-          <ol>
-            <li>Identify the three people you spend the most time with.</li>
-            <li>Rate each on a scale of 1–10 for: ambition, honesty, clarity, discipline.</li>
-            <li>Your average is your invisible ceiling.</li>
-            <li>Increase distance from the lowest scores. Increase proximity to the highest.</li>
-          </ol>
-        </div>
-        <div class="paper-quote">
-          <p>Power doesn't come when you feel good. It comes when you're stripped of everything unnecessary.</p>
-        </div>
-        <span class="page-num">17</span>
-      </div>
-    </div>
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top <= 100) current = id;
+                }
+            });
 
-    <!-- ==================== SPREAD 9: WISDOM I ==================== -->
-    <div class="spread" data-index="9">
-      <div class="page page-left">
-        <div class="paper-eyebrow">Wisdom I</div>
-        <div class="paper-h2">On Being Alone</div>
-        <div class="paper-wisdom-list" style="margin-top:4px;">
-          <li>Shame in solitude is learned, not natural.</li>
-          <li>It is better to be alone than to be in bad company.</li>
-          <li>If you are excited in your spirit, then you are not really alone.</li>
-          <li>Isolation breeds timidity; timidity breeds more isolation.</li>
-          <li>You are not alone in your lonely. It is very human.</li>
-          <li>The social muscle atrophies when unused, but it never fully disappears.</li>
-          <li>Find pleasure in being alone, and loneliness loses its staining.</li>
-          <li>Comfort becomes confinement when it prevents growth.</li>
-          <li>Every fishbowl, no matter how pleasant, is still a bowl.</li>
-          <li>Like an elastic band stretched to its limit, you can never resume your former shape.</li>
-          <li>Voluntary solitude strengthens; enforced isolation wounds.</li>
-          <li>The difference is not the amount of silence, but the presence of choice.</li>
-        </div>
-        <span class="page-num">18</span>
-      </div>
-      <div class="page page-right">
-        <div class="paper-wisdom-list" style="margin-top:4px;">
-          <li>Type two fun is the forge of character.</li>
-          <li>Stress testing makes you thicker-skinned.</li>
-          <li>The greatest spiritual traditions have always reserved a place for solitude.</li>
-          <li>Society's suspicion of loners says more about collective anxiety than about loners.</li>
-          <li>Without great solitude, no serious work is possible.</li>
-          <li>Happiness comes from within and requires no audience.</li>
-          <li>When you are content being by yourself, it is easy to walk away from bad company.</li>
-          <li>In solitude, you see the big picture and cultivate love for all beings.</li>
-          <li>The crowd weakens your mind. You pick up their habits, their fears, their limits.</li>
-          <li>When you separate yourself, you hear your own mind clearly for the first time.</li>
-          <li>People talk too much because they think too little.</li>
-          <li>They fear silence because silence reveals truth.</li>
-        </div>
-        <span class="page-num">19</span>
-      </div>
-    </div>
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('onclick')?.includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
 
-    <!-- ==================== SPREAD 10: WISDOM II ==================== -->
-    <div class="spread" data-index="10">
-      <div class="page page-left">
-        <div class="paper-eyebrow">Wisdom II</div>
-        <div class="paper-h2">On Power & Truth</div>
-        <div class="paper-wisdom-list" style="margin-top:4px;">
-          <li>There is a version of you the world has never met. You will only meet him in silence.</li>
-          <li>Power comes when you are stripped of everything unnecessary.</li>
-          <li>Most people walk through life blind because they are never alone long enough to see clearly.</li>
-          <li>The person who isolates himself sees what most people never will: the truth.</li>
-          <li>Solitude is not just a luxury. It is a weapon.</li>
-          <li>The truth you uncover in silence gives you an unfair advantage.</li>
-          <li>Once you face reality without illusion, you gain leverage.</li>
-          <li>While others chase pleasure, you are positioning.</li>
-          <li>While others play the role they were told to play, you are writing the script.</li>
-          <li>Time, when weaponized, becomes the greatest advantage in war, business, and life.</li>
-          <li>You cannot lead anything until you command your time.</li>
-          <li>You cannot command your time while you are surrounded.</li>
-        </div>
-        <span class="page-num">20</span>
-      </div>
-      <div class="page page-right">
-        <div class="paper-wisdom-list" style="margin-top:4px;">
-          <li>When you are constantly around people, you live in response mode.</li>
-          <li>Solitude is not just peace. It is tactical advantage.</li>
-          <li>It allows you to escape the emotional contagion of the masses.</li>
-          <li>Your brain adjusts to whatever environment it is in. Cut the noise, and it confronts itself.</li>
-          <li>When you are alone, there is no one left to blame. No distractions to numb you.</li>
-          <li>The truth is brutal. It exposes your laziness. It confronts your excuses.</li>
-          <li>If you endure that process without running back to comfort, you develop clarity.</li>
-          <li>You become the kind of person who does not need—he chooses.</li>
-          <li>That makes you unstoppable.</li>
-          <li>Solitude strips away the flattering noise. It leaves you face to face with your false identity.</li>
-          <li>You no longer need to be right. You just want to see clearly.</li>
-          <li>Truth, unfiltered, brutal truth, is only found in solitude.</li>
-        </div>
-        <span class="page-num">21</span>
-      </div>
-    </div>
-
-    <!-- ==================== SPREAD 11: QUOTES ==================== -->
-    <div class="spread" data-index="11">
-      <div class="page page-left">
-        <div class="paper-eyebrow">Quotes</div>
-        <div class="paper-h2">The Codex</div>
-        <div class="paper-quote" style="margin-top:4px;">
-          <p>Loneliness is the poverty of self; solitude is the richness of self.</p>
-          <cite>May Sarton</cite>
-        </div>
-        <div class="paper-quote">
-          <p>It is better to be alone than to be in bad company.</p>
-          <cite>Italian Proverb</cite>
-        </div>
-        <div class="paper-quote">
-          <p>Without great solitude, no serious work is possible.</p>
-          <cite>Pablo Picasso</cite>
-        </div>
-        <div class="paper-quote">
-          <p>It is much safer to be feared than loved.</p>
-          <cite>Niccolò Machiavelli</cite>
-        </div>
-        <span class="page-num">22</span>
-      </div>
-      <div class="page page-right">
-        <div class="paper-quote" style="margin-top:4px;">
-          <p>The one who depends on others to stand will fall when they walk away.</p>
-          <cite>Machiavelli</cite>
-        </div>
-        <div class="paper-quote">
-          <p>Power doesn't come when you feel good. It comes when you're stripped of everything unnecessary.</p>
-        </div>
-        <div class="paper-quote">
-          <p>The quietest room produces the sharpest mind.</p>
-        </div>
-        <div class="paper-quote">
-          <p>You cannot sharpen a blade in a storm.</p>
-        </div>
-        <div class="paper-quote">
-          <p>Do difficult things now and then, and do them alone sometimes, even if they are type two fun.</p>
-        </div>
-        <span class="page-num">23</span>
-      </div>
-    </div>
-
-    <!-- ==================== SPREAD 12: QUOTES CONT ==================== -->
-    <div class="spread" data-index="12">
-      <div class="page page-left">
-        <div class="paper-quote" style="margin-top:4px;">
-          <p>If you are excited in your spirit, then you are not really alone.</p>
-        </div>
-        <div class="paper-quote">
-          <p>Comfort becomes confinement when it prevents growth.</p>
-        </div>
-        <div class="paper-quote">
-          <p>Every fishbowl, no matter how pleasant, is still a bowl.</p>
-        </div>
-        <div class="paper-quote">
-          <p>Voluntary solitude strengthens; enforced isolation wounds.</p>
-        </div>
-        <div class="paper-quote">
-          <p>Happiness comes from within and does not require the presence of other people.</p>
-        </div>
-        <div class="paper-quote">
-          <p>The crowd weakens your mind. You pick up their habits, their opinions, their fears.</p>
-        </div>
-        <span class="page-num">24</span>
-      </div>
-      <div class="page page-right">
-        <div class="paper-quote" style="margin-top:4px;">
-          <p>People talk too much because they think too little.</p>
-        </div>
-        <div class="paper-quote">
-          <p>They fear silence because silence reveals truth.</p>
-        </div>
-        <div class="paper-quote">
-          <p>Power doesn't live in comfort. It lives in clarity.</p>
-        </div>
-        <div class="paper-quote">
-          <p>Clarity only comes in solitude.</p>
-        </div>
-        <div class="paper-quote">
-          <p>The man who can master solitude can master anything.</p>
-        </div>
-        <div class="paper-quote">
-          <p>Go silent. Disappear. Cut the noise and give yourself space to build what no one sees coming.</p>
-        </div>
-        <span class="page-num">25</span>
-      </div>
-    </div>
-
-    <!-- ==================== SPREAD 13: THE END ==================== -->
-    <div class="spread" data-index="13">
-      <div class="page page-left" style="background:#f5f2eb;">
-        <div style="margin-top:auto; margin-bottom:auto; text-align:center; width:100%;">
-          <div style="font-family:Georgia,serif; font-size:1.1rem; color:#8a8078; font-style:italic; line-height:1.6;">
-            "Close the tab.<br>Sit in silence for five minutes.<br>The book will wait. The silence will not."
-          </div>
-          <div style="margin-top:24px; color:#c9a96e; font-size:14px; letter-spacing:6px;">❦ ❦ ❦</div>
-        </div>
-        <span class="page-num">26</span>
-      </div>
-      <div class="page page-right back-right">
-        <div class="the-end">The End</div>
-        <p>A Field Manual<br>28 Exercises. 48 Wisdoms. 21 Quotes.</p>
-        <div style="margin-top:32px; color:rgba(245,242,235,0.2); font-size:24px;">❦</div>
-        <span class="page-num">27</span>
-      </div>
-    </div>
-
-  </div><!-- /book -->
-</div><!-- /book-stage -->
-
-<div class="click-zone prev-zone" onclick="prevSpread()"></div>
-<div class="click-zone next-zone" onclick="nextSpread()"></div>
-
-<div class="book-controls">
-  <button onclick="prevSpread()" id="btnPrev">←</button>
-  <span class="page-indicator" id="indicator">1 / 14</span>
-  <button onclick="nextSpread()" id="btnNext">→</button>
-</div>
-
-<div class="mobile-hint">Tap edges or use arrows to turn pages</div>
-
-<script>
-const spreads = document.querySelectorAll('.spread');
-const turnShadow = document.getElementById('turnShadow');
-const indicator = document.getElementById('indicator');
-const btnPrev = document.getElementById('btnPrev');
-const btnNext = document.getElementById('btnNext');
-let current = 0;
-const total = spreads.length;
-
-function updateControls() {
-  indicator.textContent = (current + 1) + ' / ' + total;
-  btnPrev.disabled = current === 0;
-  btnNext.disabled = current === total - 1;
-}
-
-function nextSpread() {
-  if (current >= total - 1) return;
-  const outgoing = spreads[current];
-  const incoming = spreads[current + 1];
-  turnShadow.classList.add('sweep');
-  outgoing.classList.add('exiting');
-  incoming.classList.add('entering');
-  setTimeout(() => {
-    outgoing.classList.remove('active', 'exiting');
-    incoming.classList.remove('entering');
-    incoming.classList.add('active');
-    turnShadow.classList.remove('sweep');
-    current++;
-    updateControls();
-  }, 550);
-}
-
-function prevSpread() {
-  if (current <= 0) return;
-  const outgoing = spreads[current];
-  const incoming = spreads[current - 1];
-  turnShadow.style.transform = 'translateX(-100%)';
-  turnShadow.style.background = 'linear-gradient(to right, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 50%)';
-  turnShadow.classList.add('sweep');
-  outgoing.classList.add('exiting');
-  incoming.classList.add('entering');
-  setTimeout(() => {
-    outgoing.classList.remove('active', 'exiting');
-    incoming.classList.remove('entering');
-    incoming.classList.add('active');
-    turnShadow.classList.remove('sweep');
-    turnShadow.style.transform = '';
-    turnShadow.style.background = '';
-    current--;
-    updateControls();
-  }, 550);
-}
-
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowRight' || e.key === ' ') nextSpread();
-  if (e.key === 'ArrowLeft') prevSpread();
-});
-
-let touchStartX = 0;
-document.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
-document.addEventListener('touchend', e => {
-  const diff = touchStartX - e.changedTouches[0].screenX;
-  if (Math.abs(diff) > 50) {
-    diff > 0 ? nextSpread() : prevSpread();
-  }
-});
-
-updateControls();
-</script>
+        // Parallax effect for hero
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero && scrolled < window.innerHeight) {
+                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+            }
+        });
+    </script>
 </body>
 </html>
