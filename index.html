@@ -1,1732 +1,396 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ONE TWO CUPS — The Iced Black Ritual</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --bg: #0a0a0a;
-            --bg-elevated: #111111;
-            --surface: rgba(255,255,255,0.03);
-            --surface-hover: rgba(255,255,255,0.06);
-            --border: rgba(255,255,255,0.08);
-            --border-hover: rgba(255,255,255,0.15);
-            --text: #f0ece4;
-            --text-muted: rgba(240,236,228,0.5);
-            --text-faint: rgba(240,236,228,0.25);
-            --accent: #c8a97e;
-            --accent-dim: rgba(200,169,126,0.15);
-            --accent-glow: rgba(200,169,126,0.4);
-            --ice: #a8c8d8;
-            --ice-glow: rgba(168,200,216,0.2);
-            --danger: #c44;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: var(--bg);
-            font-family: 'DM Sans', sans-serif;
-            color: var(--text);
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Ambient Background */
-        .ambient {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 0;
-            overflow: hidden;
-        }
-        .ambient::before {
-            content: '';
-            position: absolute;
-            top: -30%;
-            left: -20%;
-            width: 70%;
-            height: 70%;
-            background: radial-gradient(ellipse, rgba(200,169,126,0.08) 0%, transparent 60%);
-            animation: drift 20s ease-in-out infinite;
-        }
-        .ambient::after {
-            content: '';
-            position: absolute;
-            bottom: -20%;
-            right: -10%;
-            width: 60%;
-            height: 60%;
-            background: radial-gradient(ellipse, rgba(168,200,216,0.06) 0%, transparent 60%);
-            animation: drift 25s ease-in-out infinite reverse;
-        }
-        @keyframes drift {
-            0%, 100% { transform: translate(0,0) scale(1); }
-            33% { transform: translate(30px,-20px) scale(1.1); }
-            66% { transform: translate(-20px,30px) scale(0.95); }
-        }
-
-        /* Grain Texture */
-        .grain {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            background-size: 200px;
-        }
-
-        /* Main Container */
-        .app {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Stage */
-        .stage {
-            width: 100%;
-            max-width: 1100px;
-            height: 85vh;
-            max-height: 700px;
-            position: relative;
-            perspective: 1200px;
-            padding: 0 40px;
-        }
-
-        /* Card */
-        .card {
-            position: absolute;
-            inset: 0;
-            background: var(--bg-elevated);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateX(60px) rotateY(-8deg) scale(0.95);
-            transform-origin: center left;
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            pointer-events: none;
-            display: flex;
-        }
-
-        .card.active {
-            opacity: 1;
-            transform: translateX(0) rotateY(0) scale(1);
-            pointer-events: all;
-            z-index: 10;
-        }
-
-        .card.prev {
-            opacity: 0;
-            transform: translateX(-60px) rotateY(8deg) scale(0.95);
-            z-index: 5;
-        }
-
-        .card.next {
-            opacity: 0;
-            transform: translateX(60px) rotateY(-8deg) scale(0.95);
-            z-index: 5;
-        }
-
-        /* Glass Edge Effect */
-        .card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 24px;
-            padding: 1px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0) 100%);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            z-index: 20;
-        }
-
-        /* Card Inner Layout */
-        .card-inner {
-            display: flex;
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            border-right: 1px solid var(--border);
-            padding: 40px 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
-        }
-
-        .sidebar-top .kicker {
-            font-size: 0.65rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        .sidebar-top .title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.4rem;
-            font-weight: 300;
-            line-height: 1.1;
-            color: var(--text);
-            letter-spacing: -0.5px;
-        }
-
-        .sidebar-top .title em {
-            font-style: italic;
-            font-weight: 400;
-            color: var(--accent);
-        }
-
-        .sidebar-bottom {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .nav-dots {
-            display: flex;
-            gap: 8px;
-        }
-
-        .nav-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--border-hover);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            cursor: pointer;
-        }
-
-        .nav-dot:hover { background: var(--text-muted); }
-        .nav-dot.active {
-            width: 24px;
-            border-radius: 3px;
-            background: var(--accent);
-        }
-
-        .page-num {
-            font-size: 0.75rem;
-            color: var(--text-faint);
-            font-variant-numeric: tabular-nums;
-            letter-spacing: 1px;
-        }
-
-        /* Content Area */
-        .content {
-            flex: 1;
-            padding: 40px 50px;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .content::-webkit-scrollbar { width: 4px; }
-        .content::-webkit-scrollbar-track { background: transparent; }
-        .content::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
-
-        /* Typography */
-        h2 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2.8rem;
-            font-weight: 300;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -0.5px;
-        }
-
-        h2 em { font-style: italic; font-weight: 400; color: var(--accent); }
-
-        h3 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            font-weight: 400;
-            color: var(--text);
-            margin: 32px 0 16px;
-        }
-
-        p {
-            font-size: 0.95rem;
-            line-height: 1.7;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-            font-weight: 300;
-        }
-
-        p strong { color: var(--text); font-weight: 500; }
-
-        .lead {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            font-style: italic;
-            color: var(--text-muted);
-            line-height: 1.6;
-            border-left: 2px solid var(--accent);
-            padding-left: 24px;
-            margin: 24px 0;
-        }
-
-        /* Cover Page */
-        .cover-layout {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-        }
-
-        .cover-center {
-            position: relative;
-            z-index: 2;
-        }
-
-        .cover-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 20px;
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            font-size: 0.7rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 40px;
-            background: var(--surface);
-            backdrop-filter: blur(10px);
-        }
-
-        .cover-badge .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent);
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.5; transform: scale(0.8); }
-        }
-
-        .cover-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(3rem, 6vw, 5.5rem);
-            font-weight: 300;
-            line-height: 0.95;
-            letter-spacing: -2px;
-            margin-bottom: 16px;
-        }
-
-        .cover-title span {
-            display: block;
-            font-style: italic;
-            font-weight: 400;
-            color: var(--accent);
-        }
-
-        .cover-sub {
-            font-size: 0.85rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--text-faint);
-            margin-bottom: 40px;
-        }
-
-        .cover-desc {
-            max-width: 420px;
-            margin: 0 auto 50px;
-            font-size: 1rem;
-            line-height: 1.8;
-            color: var(--text-muted);
-        }
-
-        .cover-cta {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 32px;
-            background: var(--accent);
-            color: var(--bg);
-            border: none;
-            border-radius: 100px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.4s;
-        }
-
-        .cover-cta:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 40px var(--accent-glow);
-        }
-
-        .cover-cta .arrow {
-            transition: transform 0.3s;
-        }
-        .cover-cta:hover .arrow {
-            transform: translateX(4px);
-        }
-
-        /* Decorative Elements */
-        .deco-ring {
-            position: absolute;
-            border: 1px solid var(--border);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        .deco-ring.r1 {
-            width: 500px; height: 500px;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0.3;
-            animation: spin 60s linear infinite;
-        }
-        .deco-ring.r2 {
-            width: 700px; height: 700px;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0.15;
-            animation: spin 80s linear infinite reverse;
-        }
-        @keyframes spin {
-            from { transform: translate(-50%, -50%) rotate(0deg); }
-            to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        /* Grid Cards */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin: 24px 0;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin: 24px 0;
-        }
-
-        .info-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            transition: all 0.4s;
-            cursor: pointer;
-        }
-
-        .info-card:hover {
-            background: var(--surface-hover);
-            border-color: var(--border-hover);
-            transform: translateY(-2px);
-        }
-
-        .info-card .icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: var(--accent-dim);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            margin-bottom: 16px;
-            transition: all 0.3s;
-        }
-
-        .info-card:hover .icon {
-            background: var(--accent);
-            transform: scale(1.1);
-        }
-
-        .info-card h4 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-
-        .info-card p {
-            font-size: 0.85rem;
-            line-height: 1.6;
-            margin: 0;
-            color: var(--text-muted);
-        }
-
-        /* Step Timeline */
-        .timeline {
-            position: relative;
-            margin: 32px 0;
-            padding-left: 32px;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 11px;
-            top: 0;
-            bottom: 0;
-            width: 1px;
-            background: linear-gradient(180deg, var(--accent) 0%, var(--border) 100%);
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 28px;
-            padding-left: 28px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .timeline-item:hover {
-            transform: translateX(4px);
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -27px;
-            top: 4px;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            border: 2px solid var(--border);
-            background: var(--bg-elevated);
-            transition: all 0.3s;
-        }
-
-        .timeline-item:hover::before {
-            border-color: var(--accent);
-            background: var(--accent);
-            box-shadow: 0 0 12px var(--accent-glow);
-        }
-
-        .timeline-item .step-label {
-            font-size: 0.65rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 4px;
-            font-weight: 500;
-        }
-
-        .timeline-item .step-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            font-weight: 400;
-            color: var(--text);
-            margin-bottom: 6px;
-        }
-
-        .timeline-item .step-desc {
-            font-size: 0.9rem;
-            line-height: 1.6;
-            color: var(--text-muted);
-        }
-
-        /* Salt Interactive */
-        .salt-stage {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 32px;
-            margin: 24px 0;
-        }
-
-        .salt-options {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .salt-btn {
-            flex: 1;
-            padding: 16px;
-            background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .salt-btn:hover {
-            border-color: var(--border-hover);
-            color: var(--text);
-        }
-
-        .salt-btn.active {
-            border-color: var(--accent);
-            background: var(--accent-dim);
-            color: var(--accent);
-        }
-
-        .salt-btn .amount {
-            display: block;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.5rem;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .salt-btn .label {
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .salt-display {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            display: none;
-            animation: reveal 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .salt-display.show {
-            display: block;
-        }
-
-        @keyframes reveal {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .salt-display .metric {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .salt-display .metric:last-child {
-            border-bottom: none;
-        }
-
-        .salt-display .metric-label {
-            font-size: 0.8rem;
-            color: var(--text-faint);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .salt-display .metric-value {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.2rem;
-            color: var(--text);
-        }
-
-        .salt-display .advice {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border);
-            font-size: 0.9rem;
-            line-height: 1.7;
-            color: var(--text-muted);
-            font-style: italic;
-        }
-
-        /* Slider */
-        .slider-wrap {
-            margin: 24px 0;
-        }
-
-        .slider-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .slider-label span {
-            font-size: 0.75rem;
-            color: var(--text-faint);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .slider-track {
-            position: relative;
-            height: 4px;
-            background: var(--border);
-            border-radius: 2px;
-            margin-bottom: 8px;
-        }
-
-        .slider-fill {
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            background: var(--accent);
-            border-radius: 2px;
-            transition: width 0.3s;
-        }
-
-        .slider-thumb {
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
-            background: var(--accent);
-            border-radius: 50%;
-            box-shadow: 0 0 20px var(--accent-glow);
-            cursor: grab;
-            transition: transform 0.2s;
-        }
-
-        .slider-thumb:hover {
-            transform: translate(-50%, -50%) scale(1.2);
-        }
-
-        .slider-thumb:active {
-            cursor: grabbing;
-            transform: translate(-50%, -50%) scale(1.1);
-        }
-
-        .slider-value {
-            text-align: center;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.8rem;
-            color: var(--accent);
-            margin-top: 8px;
-        }
-
-        .slider-sub {
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--text-faint);
-            margin-top: 4px;
-        }
-
-        /* Recipe Final */
-        .recipe-final {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .recipe-final .recipe-header {
-            text-align: center;
-            margin-bottom: 32px;
-            padding-bottom: 24px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .recipe-final .recipe-header h3 {
-            font-size: 1.8rem;
-            margin: 0;
-        }
-
-        .recipe-final .recipe-header .sub {
-            font-size: 0.8rem;
-            color: var(--text-faint);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-top: 8px;
-        }
-
-        .recipe-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .recipe-row:last-child {
-            border-bottom: none;
-        }
-
-        .recipe-row .ingredient {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .recipe-row .value {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
-            color: var(--text);
-            font-weight: 500;
-        }
-
-        .recipe-row .value em {
-            font-style: italic;
-            color: var(--accent);
-        }
-
-        /* Tip */
-        .tip {
-            background: linear-gradient(135deg, rgba(200,169,126,0.08) 0%, rgba(200,169,126,0.02) 100%);
-            border: 1px solid rgba(200,169,126,0.15);
-            border-radius: 16px;
-            padding: 24px;
-            margin: 24px 0;
-            position: relative;
-        }
-
-        .tip::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: 24px;
-            width: 40px;
-            height: 2px;
-            background: var(--accent);
-        }
-
-        .tip h4 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.2rem;
-            font-weight: 500;
-            margin-bottom: 12px;
-            color: var(--accent);
-        }
-
-        .tip p {
-            font-size: 0.9rem;
-            line-height: 1.7;
-            margin: 0;
-            color: var(--text-muted);
-        }
-
-        /* Navigation */
-        .nav-arrows {
-            position: absolute;
-            bottom: 40px;
-            right: 50px;
-            display: flex;
-            gap: 12px;
-            z-index: 30;
-        }
-
-        .nav-arrow {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            border: 1px solid var(--border);
-            background: var(--surface);
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 1.2rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-arrow:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            transform: scale(1.1);
-            box-shadow: 0 0 20px var(--accent-dim);
-        }
-
-        .nav-arrow:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        /* Responsive */
-        @media (max-width: 900px) {
-            .card-inner { flex-direction: column; }
-            .sidebar {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid var(--border);
-                padding: 24px;
-                flex-direction: row;
-                align-items: center;
-            }
-            .sidebar-top .title { font-size: 1.6rem; }
-            .sidebar-bottom { flex-direction: row; align-items: center; }
-            .content { padding: 24px; }
-            .grid-2, .grid-3 { grid-template-columns: 1fr; }
-            .salt-options { flex-direction: column; }
-            .stage { height: 95vh; padding: 0 16px; }
-            .nav-arrows { bottom: 20px; right: 24px; }
-        }
-
-        /* Animations */
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .float { animation: float 4s ease-in-out infinite; }
-
-        /* Utility */
-        .accent-text { color: var(--accent); }
-        .muted { color: var(--text-muted); }
-        .faint { color: var(--text-faint); }
-
-        /* Comparison Cards */
-        .compare {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin: 24px 0;
-        }
-
-        .compare-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 24px;
-            transition: all 0.3s;
-        }
-
-        .compare-card:hover {
-            border-color: var(--border-hover);
-        }
-
-        .compare-card .check {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            margin-bottom: 12px;
-            font-size: 0.85rem;
-        }
-
-        .compare-card.good .check {
-            background: rgba(74, 155, 74, 0.15);
-            color: #4a9b4a;
-        }
-
-        .compare-card.bad .check {
-            background: rgba(204, 68, 68, 0.15);
-            color: #c44;
-        }
-
-        .compare-card h4 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-        }
-
-        .compare-card ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .compare-card li {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            padding: 6px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .compare-card li:last-child {
-            border-bottom: none;
-        }
-
-        /* Method Cards */
-        .method-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin: 24px 0;
-        }
-
-        .method-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-        }
-
-        .method-card:hover {
-            border-color: var(--accent);
-            background: var(--accent-dim);
-        }
-
-        .method-card .method-letter {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 2rem;
-            font-weight: 300;
-            color: var(--accent);
-            margin-bottom: 8px;
-        }
-
-        .method-card .method-name {
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--text);
-            margin-bottom: 4px;
-        }
-
-        .method-card .method-desc {
-            font-size: 0.75rem;
-            color: var(--text-faint);
-            line-height: 1.5;
-        }
-
-        .method-detail {
-            display: none;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 12px;
-            animation: reveal 0.4s ease;
-        }
-
-        .method-detail.show {
-            display: block;
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 World Cup Predictor — Jakarta Time</title>
+<style>
+:root{
+  --bg:#0b0f19;--card:#111827;--card2:#1a2236;--accent:#00d4aa;--accent2:#ff6b35;
+  --text:#e5e7eb;--muted:#9ca3af;--border:#1f2937;--live:#ef4444;--done:#10b981;--upcoming:#3b82f6;
+  --input:#0f172a;--input-border:#334155;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+header{background:linear-gradient(135deg,#0f172a,#1e293b);padding:20px 16px;text-align:center;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+header h1{font-size:1.5rem;font-weight:800;letter-spacing:-0.5px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+header p{color:var(--muted);font-size:0.8rem;margin-top:4px}
+.clock-bar{background:var(--card2);padding:8px 16px;text-align:center;font-size:0.85rem;color:var(--accent);border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums}
+.tabs{display:flex;gap:4px;padding:10px 16px;overflow-x:auto;background:var(--bg);border-bottom:1px solid var(--border);scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{flex:0 0 auto;padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:0.75rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s}
+.tab-btn:hover{background:var(--card2);color:var(--text)}
+.tab-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
+.container{max-width:1100px;margin:0 auto;padding:14px}
+.section{display:none}
+.section.active{display:block}
+
+.match-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;transition:transform .15s,border-color .15s}
+.match-card:hover{border-color:#334155;transform:translateY(-1px)}
+.match-card.done{border-left:3px solid var(--done)}
+.match-card.upcoming{border-left:3px solid var(--upcoming)}
+.match-time{min-width:72px;text-align:center}
+.match-time .day{font-size:0.65rem;color:var(--muted);text-transform:uppercase}
+.match-time .time{font-size:1rem;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
+.match-time .wib{font-size:0.6rem;color:var(--accent)}
+.match-teams{flex:1;min-width:0}
+.team-row{display:flex;align-items:center;justify-content:space-between;padding:2px 0;gap:8px}
+.team-name{font-size:0.9rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.score-input{width:40px;height:32px;background:var(--input);border:1px solid var(--input-border);border-radius:6px;color:var(--text);font-size:1rem;font-weight:700;text-align:center;outline:none;transition:border-color .2s}
+.score-input:focus{border-color:var(--accent)}
+.score-display{font-size:1.1rem;font-weight:800;min-width:28px;text-align:center;font-variant-numeric:tabular-nums}
+.vs-divider{text-align:center;font-size:0.6rem;color:var(--muted);padding:1px 0;letter-spacing:2px}
+.match-meta{min-width:100px;text-align:right;font-size:0.65rem;color:var(--muted)}
+.match-meta .group-tag{display:inline-block;background:var(--card2);padding:2px 6px;border-radius:4px;font-size:0.6rem;font-weight:700;color:var(--accent);margin-bottom:3px}
+.match-meta .venue{font-size:0.6rem}
+.status-badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:0.55rem;font-weight:700;text-transform:uppercase;margin-top:3px}
+.status-done{background:rgba(16,185,129,0.15);color:var(--done)}
+.status-upcoming{background:rgba(59,130,246,0.15);color:var(--upcoming)}
+
+.group-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.group-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.group-header{background:var(--card2);padding:10px 12px;font-weight:700;font-size:0.85rem;display:flex;justify-content:space-between;align-items:center}
+.group-header span{color:var(--accent);font-size:0.7rem}
+.standings-table{width:100%;border-collapse:collapse;font-size:0.75rem}
+.standings-table th{background:var(--bg);color:var(--muted);padding:5px 3px;font-weight:600;font-size:0.65rem;text-align:center}
+.standings-table td{padding:6px 3px;border-top:1px solid var(--border);text-align:center}
+.standings-table td:first-child{text-align:left;padding-left:10px;font-weight:600;font-size:0.8rem}
+.standings-table tr:nth-child(1) td:first-child{border-left:3px solid var(--done)}
+.standings-table tr:nth-child(2) td:first-child{border-left:3px solid var(--done)}
+.standings-table tr:nth-child(3) td:first-child{border-left:3px solid var(--upcoming)}
+.standings-table tr:nth-child(4) td:first-child{border-left:3px solid transparent}
+.standings-table .pts{font-weight:800;color:var(--accent)}
+
+.knockout-bracket{display:flex;flex-direction:column;gap:8px}
+.knockout-round{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px}
+.knockout-round h3{font-size:0.8rem;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.knockout-match{display:flex;align-items:center;gap:10px;padding:8px;background:var(--card2);border-radius:8px;margin-bottom:6px;font-size:0.8rem}
+.knockout-match:last-child{margin-bottom:0}
+.knockout-match .k-time{min-width:60px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;font-size:0.75rem}
+.knockout-match .k-teams{flex:1;font-weight:600;min-width:0}
+.knockout-match .k-teams .k-team{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.knockout-match .k-venue{color:var(--muted);font-size:0.6rem;min-width:120px;text-align:right}
+
+.btn{display:inline-block;padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:none;font-weight:700}
+.btn-primary:hover{opacity:0.9}
+.actions-bar{display:flex;gap:8px;justify-content:center;margin:12px 0;flex-wrap:wrap}
+.save-status{text-align:center;font-size:0.75rem;color:var(--accent);min-height:20px;margin-top:4px}
+
+@media(max-width:600px){
+  header h1{font-size:1.1rem}
+  .match-card{flex-wrap:wrap}
+  .match-meta{width:100%;text-align:left;margin-top:4px}
+  .group-grid{grid-template-columns:1fr}
+  .knockout-match{flex-wrap:wrap}
+  .knockout-match .k-venue{width:100%;text-align:left;margin-top:4px}
+}
+</style>
 <base target="_blank">
 </head>
 <body>
-
-<div class="ambient"></div>
-<div class="grain"></div>
-
-<div class="app">
-    <div class="stage" id="stage">
-
-        <!-- PAGE 1: COVER -->
-        <div class="card active" data-page="1">
-            <div class="cover-layout">
-                <div class="deco-ring r1"></div>
-                <div class="deco-ring r2"></div>
-                <div class="cover-center">
-                    <div class="cover-badge">
-                        <span class="dot"></span>
-                        OneTwoCups 20-Bar Edition
-                    </div>
-                    <h1 class="cover-title">
-                        The Iced<br>
-                        <span>Black Ritual</span>
-                    </h1>
-                    <div class="cover-sub">A Complete Brewing Guide</div>
-                    <p class="cover-desc">
-                        Master the art of bold, refreshing iced black coffee with your portable 20-bar hand press — and discover the precise science of salt integration.
-                    </p>
-                    <button class="cover-cta" onclick="nextPage()">
-                        Begin the Ritual
-                        <span class="arrow">→</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE 2: INTRO -->
-        <div class="card next" data-page="2">
-            <div class="card-inner">
-                <div class="sidebar">
-                    <div class="sidebar-top">
-                        <div class="kicker">Chapter 01</div>
-                        <div class="title">Why Iced<br><em>Black?</em></div>
-                    </div>
-                    <div class="sidebar-bottom">
-                        <div class="nav-dots">
-                            <div class="nav-dot active" onclick="goToPage(1)"></div>
-                            <div class="nav-dot active" onclick="goToPage(2)"></div>
-                            <div class="nav-dot" onclick="goToPage(3)"></div>
-                            <div class="nav-dot" onclick="goToPage(4)"></div>
-                            <div class="nav-dot" onclick="goToPage(5)"></div>
-                            <div class="nav-dot" onclick="goToPage(6)"></div>
-                            <div class="nav-dot" onclick="goToPage(7)"></div>
-                            <div class="nav-dot" onclick="goToPage(8)"></div>
-                        </div>
-                        <div class="page-num">02 / 08</div>
-                    </div>
-                </div>
-                <div class="content">
-                    <div class="lead">
-                        "Black coffee is the purest expression of the bean. Ice transforms it into something else entirely — a drink that reveals hidden notes you never knew existed."
-                    </div>
-                    <p>Your <strong>OneTwoCups Hand Press Mini Espresso</strong> is a 20-bar portable powerhouse. Unlike drip coffee, it produces <strong>espresso concentrate</strong> — thick, rich, and full of oils. When poured over ice, this creates an <strong>Iced Long Black</strong>: a layered, visually stunning drink with a velvety crema top.</p>
-
-                    <div class="grid-3">
-                        <div class="info-card">
-                            <div class="icon">🌡️</div>
-                            <h4>Instant Chill</h4>
-                            <p>Brewing hot directly over ice locks in aromatics while flash-cooling the concentrate.</p>
-                        </div>
-                        <div class="info-card">
-                            <div class="icon">💧</div>
-                            <h4>Dilution Control</h4>
-                            <p>You control the final strength by adjusting the ice-to-water ratio precisely.</p>
-                        </div>
-                        <div class="info-card">
-                            <div class="icon">✨</div>
-                            <h4>Crema Magic</h4>
-                            <p>The 20-bar pressure creates a golden foam that floats beautifully atop the ice.</p>
-                        </div>
-                    </div>
-
-                    <div class="tip">
-                        <h4>The "Freddo" Method</h4>
-                        <p>Greek baristas discovered that shaking hot espresso with ice creates a thick, creamy foam. Your OneTwoCups produces the perfect base for this technique — try it on page 4.</p>
-                    </div>
-                </div>
-                <div class="nav-arrows">
-                    <button class="nav-arrow" onclick="prevPage()">←</button>
-                    <button class="nav-arrow" onclick="nextPage()">→</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE 3: SETUP -->
-        <div class="card next" data-page="3">
-            <div class="card-inner">
-                <div class="sidebar">
-                    <div class="sidebar-top">
-                        <div class="kicker">Chapter 02</div>
-                        <div class="title">Your<br><em>Setup</em></div>
-                    </div>
-                    <div class="sidebar-bottom">
-                        <div class="nav-dots">
-                            <div class="nav-dot" onclick="goToPage(1)"></div>
-                            <div class="nav-dot" onclick="goToPage(2)"></div>
-                            <div class="nav-dot active" onclick="goToPage(3)"></div>
-                            <div class="nav-dot" onclick="goToPage(4)"></div>
-                            <div class="nav-dot" onclick="goToPage(5)"></div>
-                            <div class="nav-dot" onclick="goToPage(6)"></div>
-                            <div class="nav-dot" onclick="goToPage(7)"></div>
-                            <div class="nav-dot" onclick="goToPage(8)"></div>
-                        </div>
-                        <div class="page-num">03 / 08</div>
-                    </div>
-                </div>
-                <div class="content">
-                    <h2>Equipment & <em>Parameters</em></h2>
-                    <p>Before brewing, gather these essentials. The OneTwoCups is 3-in-1 compatible — we'll use the <strong>ground coffee filter</strong> for maximum flavor control.</p>
-
-                    <div class="grid-2">
-                        <div class="info-card">
-                            <div class="icon">🔧</div>
-                            <h4>Equipment</h4>
-                            <p>OneTwoCups Hand Press (20 bar)<br>Ground coffee filter basket<br>Measuring scoop (included)<br>Tall glass (300-400ml)<br>Ice cube tray or bagged ice<br>Filtered water<br>Small spoon for salt</p>
-                        </div>
-                        <div class="info-card">
-                            <div class="icon">☕</div>
-                            <h4>Coffee Specs</h4>
-                            <p><strong>Grind:</strong> Medium-fine<br><strong>Dose:</strong> 18-20g (2 scoops)<br><strong>Roast:</strong> Medium to dark<br><strong>Water:</strong> 60-80ml @ 92°C<br><strong>Ice:</strong> 150-200g large cubes</p>
-                        </div>
-                    </div>
-
-                    <div class="tip">
-                        <h4>Water Quality Matters</h4>
-                        <p>Tap water can be hard and alter flavor. Use bottled or filtered water at 90-95°C (just off boil). Let boiled water sit 30 seconds before using. The grind should feel like "fine sand" — too fine and pressure stalls; too coarse and the shot is weak.</p>
-                    </div>
-                </div>
-                <div class="nav-arrows">
-                    <button class="nav-arrow" onclick="prevPage()">←</button>
-                    <button class="nav-arrow" onclick="nextPage()">→</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE 4: BREWING -->
-        <div class="card next" data-page="4">
-            <div class="card-inner">
-                <div class="sidebar">
-                    <div class="sidebar-top">
-                        <div class="kicker">Chapter 03</div>
-                        <div class="title">The Brewing<br><em>Ritual</em></div>
-                    </div>
-                    <div class="sidebar-bottom">
-                        <div class="nav-dots">
-                            <div class="nav-dot" onclick="goToPage(1)"></div>
-                            <div class="nav-dot" onclick="goToPage(2)"></div>
-                            <div class="nav-dot" onclick="goToPage(3)"></div>
-                            <div class="nav-dot active" onclick="goToPage(4)"></div>
-                            <div class="nav-dot" onclick="goToPage(5)"></div>
-                            <div class="nav-dot" onclick="goToPage(6)"></div>
-                            <div class="nav-dot" onclick="goToPage(7)"></div>
-                            <div class="nav-dot" onclick="goToPage(8)"></div>
-                        </div>
-                        <div class="page-num">04 / 08</div>
-                    </div>
-                </div>
-                <div class="content">
-                    <h2>Five Steps to <em>Perfection</em></h2>
-                    <p>Follow these steps precisely. The OneTwoCups requires firm, steady pressure to reach its 20-bar potential.</p>
-
-                    <div class="timeline">
-                        <div class="timeline-item">
-                            <div class="step-label">Step 01</div>
-                            <div class="step-title">Prep the Filter</div>
-                            <div class="step-desc">Insert the ground coffee filter. Add 18-20g of medium-fine coffee. Level the bed with your finger — don't tamp hard, just settle evenly.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="step-label">Step 02</div>
-                            <div class="step-title">Heat & Add Water</div>
-                            <div class="step-desc">Pour 60-80ml of hot water (90-95°C) into the reservoir. This is a "ristretto" style short shot — concentrated and bold. Screw the top on firmly.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="step-label">Step 03</div>
-                            <div class="step-title">Press with Power</div>
-                            <div class="step-desc">Hold over your cup. Press down firmly with both thumbs. Feel strong resistance — that's 20 bars building. Extract for 20-30 seconds until the stream blondes.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="step-label">Step 04</div>
-                            <div class="step-title">Ice Preparation</div>
-                            <div class="step-desc">Fill a tall glass with 150g of large ice cubes. Big cubes melt slower. Pro move: make coffee ice cubes from yesterday's brew.</div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="step-label">Step 05</div>
-                            <div class="step-title">The Pour & Layer</div>
-                            <div class="step-desc">Pour hot espresso directly over ice. Watch the crema separate and float. Add 60-80ml cold water to complete the "long black" style.</div>
-                        </div>
-                    </div>
-
-                    <div class="tip">
-                        <h4>The "Freddo" Variation</h4>
-                        <p>For extra creaminess: Pour hot espresso into a cocktail shaker with 2 ice cubes. Shake vigorously for 10 seconds. Strain over fresh ice. This creates a thick, velvety foam layer that transforms the drink entirely.</p>
-                    </div>
-                </div>
-                <div class="nav-arrows">
-                    <button class="nav-arrow" onclick="prevPage()">←</button>
-                    <button class="nav-arrow" onclick="nextPage()">→</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE 5: SCIENCE -->
-        <div class="card next" data-page="5">
-            <div class="card-inner">
-                <div class="sidebar">
-                    <div class="sidebar-top">
-                        <div class="kicker">Chapter 04</div>
-                        <div class="title">The Salt<br><em>Science</em></div>
-                    </div>
-                    <div class="sidebar-bottom">
-                        <div class="nav-dots">
-                            <div class="nav-dot" onclick="goToPage(1)"></div>
-                            <div class="nav-dot" onclick="goToPage(2)"></div>
-                            <div class="nav-dot" onclick="goToPage(3)"></div>
-                            <div class="nav-dot" onclick="goToPage(4)"></div>
-                            <div class="nav-dot active" onclick="goToPage(5)"></div>
-                            <div class="nav-dot" onclick="goToPage(6)"></div>
-                            <div class="nav-dot" onclick="goToPage(7)"></div>
-                            <div class="nav-dot" onclick="goToPage(8)"></div>
-                        </div>
-                        <div class="page-num">05 / 08</div>
-                    </div>
-                </div>
-                <div class="content">
-                    <h2>Why Salt in <em>Coffee?</em></h2>
-                    <div class="lead">
-                        "Salt doesn't just mask bitterness — it blocks it at the receptor level, allowing hidden sweetness and complexity to emerge."
-                    </div>
-
-                    <p>Adding salt to coffee is not a gimmick. Sodium ions (Na+) bind to bitter taste receptors on your tongue, physically preventing bitter compounds from activating them. This is called <strong>cross-modal perception</strong>.</p>
-
-                    <div class="grid-3">
-                        <div class="info-card">
-                            <div class="icon">🔬</div>
-                            <h4>Bitter Blocker</h4>
-                            <p>Sodium ions occupy bitter receptors, reducing harshness from chlorogenic acids and phenylindanes in dark roasts.</p>
-                        </div>
-                        <div class="info-card">
-                            <div class="icon">🍯</div>
-                            <h4>Sweetness Amplifier</h4>
-                            <p>By suppressing bitterness, your palate perceives the coffee's natural sugars more vividly and completely.</p>
-                        </div>
-                        <div class="info-card">
-                            <div class="icon">⚡</div>
-                            <h4>Electrolyte Balance</h4>
-                            <p>Caffeine causes mild sodium loss. A pinch replaces this, preventing the "wired but tired" afternoon crash.</p>
-                        </div>
-                    </div>
-
-                    <p>The darker the roast, the more bitter compounds (phenylindanes) are present. This makes salted iced black coffee particularly effective — the cold temperature already reduces perceived bitterness, and salt completes the smoothing effect.</p>
-
-                    <div class="tip">
-                        <h4>Historical Context</h4>
-                        <p>Scandinavian sailors brewed coffee with seawater when fresh water was scarce. Nordic countries still serve salt alongside sugar at coffee houses. In Turkey, brides-to-be traditionally serve salted coffee as a premarital ceremony — a test of character.</p>
-                    </div>
-                </div>
-                <div class="nav-arrows">
-                    <button class="nav-arrow" onclick="prevPage()">←</button>
-                    <button class="nav-arrow" onclick="nextPage()">→</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE 6: SALT DOSAGE -->
-        <div class="card next" data-page="6">
-            <div class="card-inner">
-                <div class="sidebar">
-                    <div class="sidebar-top">
-                        <div class="kicker">Chapter 05</div>
-                        <div class="title">Salt<br><em>Dosage</em></div>
-                    </div>
-                    <div class="sidebar-bottom">
-                        <div class="nav-dots">
-                            <div class="nav-dot" onclick="goToPage(1)"></div>
-                            <div class="nav-dot" onclick="goToPage(2)"></div>
-                            <div class="nav-dot" onclick="goToPage(3)"></div>
-                            <div class="nav-dot" onclick="goToPage(4)"></div>
-                            <div class="nav-dot" onclick="goToPage(5)"></div>
-                            <div class="nav-dot active" onclick="goToPage(6)"></div>
-                            <div class="nav-dot" onclick="goToPage(7)"></div>
-                            <div class="nav-dot" onclick="goToPage(8)"></div>
-                        </div>
-                        <div class="page-num">06 / 08</div>
-                    </div>
-                </div>
-                <div class="content">
-                    <h2>How Much <em>Salt?</em></h2>
-                    <p>The golden rule: <strong>if you taste salt, you've added too much.</strong> It should be imperceptible as a flavor, only noticeable as a smoothing effect.</p>
-
-                    <div class="salt-stage">
-                        <p style="font-size: 0.8rem; color: var(--text-faint); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 16px;">Select your roast level</p>
-                        <div class="salt-options">
-                            <div class="salt-btn" onclick="selectSalt(this, 'tiny')">
-                                <span class="amount">·</span>
-                                <span class="label">Micro Pinch</span>
-                            </div>
-                            <div class="salt-btn active" onclick="selectSalt(this, 'small')">
-                                <span class="amount">··</span>
-                                <span class="label">Small Pinch</span>
-                            </div>
-                            <div class="salt-btn" onclick="selectSalt(this, 'standard')">
-                                <span class="amount">···</span>
-                                <span class="label">Standard</span>
-                            </div>
-                            <div class="salt-btn" onclick="selectSalt(this, 'bold')">
-                                <span class="amount">∴</span>
-                                <span class="label">Bold</span>
-                            </div>
-                        </div>
-
-                        <div class="salt-display show" id="saltResult">
-                            <div class="metric">
-                                <span class="metric-label">Amount</span>
-                                <span class="metric-value" id="saltAmount">~0.15g / 1/16 tsp</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-label">Best For</span>
-                                <span class="metric-value" id="saltBest">Medium-dark roasts, daily drinking</span>
-                            </div>
-                            <div class="metric">
-                                <span class="metric-label">Method</span>
-                                <span class="metric-value" id="saltMethod">Add to hot espresso, stir 10s</span>
-                            </div>
-                            <div class="advice" id="saltAdvice">
-                                For the OneTwoCups double shot, sprinkle the salt directly into the hot espresso immediately after brewing, then stir for 10 seconds before pouring over ice. This ensures complete dissolution and even distribution.
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="slider-wrap">
-                        <div class="slider-label">
-                            <span>Glass Size</span>
-                            <span>Auto-calculated salt</span>
-                        </div>
-                        <div class="slider-track" id="sliderTrack" onclick="handleSliderClick(event)">
-                            <div class="slider-fill" id="sliderFill" style="width: 20%"></div>
-                            <div class="slider-thumb" id="sliderThumb" style="left: 20%"></div>
-                        </div>
-                        <div class="slider-value" id="sliderValue">200 ml</div>
-                        <div class="slider-sub" id="sliderSub">Salt needed: ~0.15g (small pinch)</div>
-                    </div>
-
-                    <div class="method-grid">
-                        <div class="method-card" onclick="showMethod('a')">
-                            <div class="method-letter">A</div>
-                            <div class="method-name">Post-Brew</div>
-                            <div class="method-desc">Add to hot espresso, stir, then ice</div>
-                        </div>
-                        <div class="method-card" onclick="showMethod('b')">
-                            <div class="method-letter">B</div>
-                            <div class="method-name">Pre-Ground</div>
-                            <div class="method-desc">Mix into dry grounds before brewing</div>
-                        </div>
-                        <div class="method-card" onclick="showMethod('c')">
-                            <div class="method-letter">C</div>
-                            <div class="method-name">Solution</div>
-                            <div class="method-desc">20% salt water, 2-3 drops precisely</div>
-                        </div>
-                    </div>
-
-                    <div class="method-detail" id="methodA">
-                        <strong>Method A (Recommended):</strong> Add salt to hot espresso immediately after extraction. Stir 10 seconds to dissolve completely. Then pour over ice. Best control and most even distribution.
-                    </div>
-                    <div class="method-detail" id="methodB">
-                        <strong>Method B:</strong> Mix salt into dry grounds before brewing. Even distribution throughout extraction, but harder to adjust per cup. Good for consistent daily brewing.
-                    </div>
-                    <div class="method-detail" id="methodC">
-                        <strong>Method C (Barista Precision):</strong> Create a 20% salt solution (2g salt in 10ml water). Add 2-3 drops to brewed coffee. Maximum precision, used by professionals for dialing in.
-                    </div>
-                </div>
-                <div class="nav-arrows">
-                    <button class="nav-arrow" onclick="prevPage()">←</button>
-                    <button class="nav-arrow" onclick="nextPage()">→</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE 7: SALT TYPES -->
-        <div class="card next" data-page="7">
-            <div class="card-inner">
-                <div class="sidebar">
-                    <div class="sidebar-top">
-                        <div class="kicker">Chapter 06</div>
-                        <div class="title">Salt<br><em>Selection</em></div>
-                    </div>
-                    <div class="sidebar-bottom">
-                        <div class="nav-dots">
-                            <div class="nav-dot" onclick="goToPage(1)"></div>
-                            <div class="nav-dot" onclick="goToPage(2)"></div>
-                            <div class="nav-dot" onclick="goToPage(3)"></div>
-                            <div class="nav-dot" onclick="goToPage(4)"></div>
-                            <div class="nav-dot" onclick="goToPage(5)"></div>
-                            <div class="nav-dot" onclick="goToPage(6)"></div>
-                            <div class="nav-dot active" onclick="goToPage(7)"></div>
-                            <div class="nav-dot" onclick="goToPage(8)"></div>
-                        </div>
-                        <div class="page-num">07 / 08</div>
-                    </div>
-                </div>
-                <div class="content">
-                    <h2>Which Salt to <em>Use?</em></h2>
-                    <p>Not all salts are equal. Mineral content affects flavor integration and mouthfeel.</p>
-
-                    <div class="grid-2">
-                        <div class="info-card" style="border-top: 2px solid var(--accent);">
-                            <div class="icon" style="background: var(--accent-dim);">🏆</div>
-                            <h4>Fine Sea Salt</h4>
-                            <p>Clean, neutral flavor. Dissolves instantly in hot coffee. No additives or anti-caking agents. Trace minerals enhance complexity. <strong>The best choice.</strong></p>
-                        </div>
-                        <div class="info-card" style="border-top: 2px solid #c8a0a0;">
-                            <div class="icon" style="background: rgba(200,160,160,0.15);">🌸</div>
-                            <h4>Pink Himalayan</h4>
-                            <p>84 trace minerals. Slightly earthy undertone. Beautiful with Indonesian/Sumatra beans. Use sparingly — stronger flavor profile.</p>
-                        </div>
-                        <div class="info-card" style="border-top: 2px solid #a0c8a0;">
-                            <div class="icon" style="background: rgba(160,200,160,0.15);">🧂</div>
-                            <h4>Kosher Salt</h4>
-                            <p>Large flakes — crush first. Pure sodium chloride. Good for pre-ground mixing. Harder to dissolve in cold liquid.</p>
-                        </div>
-                        <div class="info-card" style="border-top: 2px solid var(--danger); opacity: 0.7;">
-                            <div class="icon" style="background: rgba(204,68,68,0.15);">❌</div>
-                            <h4>Iodized Table Salt</h4>
-                            <p>Iodine adds metallic taste. Anti-caking agents affect mouthfeel. Can clash with coffee aromatics. Creates chemical aftertaste. <strong>Avoid.</strong></p>
-                        </div>
-                    </div>
-
-                    <h3>When to Salt, When to Skip</h3>
-                    <div class="compare">
-                        <div class="compare-card good">
-                            <div class="check">✓</div>
-                            <h4>Do Salt</h4>
-                            <ul>
-                                <li>Dark roasts</li>
-                                <li>Robusta blends</li>
-                                <li>Over-extracted shots</li>
-                                <li>Office / diner coffee</li>
-                                <li>Hard water areas</li>
-                                <li>Fasting mornings</li>
-                            </ul>
-                        </div>
-                        <div class="compare-card bad">
-                            <div class="check">✗</div>
-                            <h4>Skip Salt</h4>
-                            <ul>
-                                <li>Light single-origins</li>
-                                <li>Yemen / Gesha / Panama</li>
-                                <li>Fruity naturals</li>
-                                <li>Floral coffees</li>
-                                <li>Delicate acidity stars</li>
-                                <li>First cup of the day</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="tip">
-                        <h4>The "Scott Rao" Standard</h4>
-                        <p>Coffee roasting expert Scott Rao found that <strong>0.15g of salt per 100g of brewed coffee</strong> yielded the best results. For your OneTwoCups double shot (60ml ≈ 60g), that's roughly 0.09g — barely a dusting on the fingertip.</p>
-                    </div>
-                </div>
-                <div class="nav-arrows">
-                    <button class="nav-arrow" onclick="prevPage()">←</button>
-                    <button class="nav-arrow" onclick="nextPage()">→</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- PAGE 8: FINAL RECIPE -->
-        <div class="card next" data-page="8">
-            <div class="card-inner">
-                <div class="sidebar">
-                    <div class="sidebar-top">
-                        <div class="kicker">Final</div>
-                        <div class="title">Your<br><em>Recipe</em></div>
-                    </div>
-                    <div class="sidebar-bottom">
-                        <div class="nav-dots">
-                            <div class="nav-dot" onclick="goToPage(1)"></div>
-                            <div class="nav-dot" onclick="goToPage(2)"></div>
-                            <div class="nav-dot" onclick="goToPage(3)"></div>
-                            <div class="nav-dot" onclick="goToPage(4)"></div>
-                            <div class="nav-dot" onclick="goToPage(5)"></div>
-                            <div class="nav-dot" onclick="goToPage(6)"></div>
-                            <div class="nav-dot" onclick="goToPage(7)"></div>
-                            <div class="nav-dot active" onclick="goToPage(8)"></div>
-                        </div>
-                        <div class="page-num">08 / 08</div>
-                    </div>
-                </div>
-                <div class="content" style="display: flex; align-items: center; justify-content: center;">
-                    <div class="recipe-final">
-                        <div class="recipe-header">
-                            <h3>The Salted Iced Long Black</h3>
-                            <div class="sub">OneTwoCups Edition</div>
-                        </div>
-
-                        <div class="recipe-row">
-                            <span class="ingredient">Coffee Dose</span>
-                            <span class="value">18–20g <em>medium-fine</em></span>
-                        </div>
-                        <div class="recipe-row">
-                            <span class="ingredient">Hot Water</span>
-                            <span class="value">70ml <em>@ 92°C</em></span>
-                        </div>
-                        <div class="recipe-row">
-                            <span class="ingredient">Extraction</span>
-                            <span class="value">25–30s <em>firm press</em></span>
-                        </div>
-                        <div class="recipe-row">
-                            <span class="ingredient">Fine Sea Salt</span>
-                            <span class="value">0.15g <em>small pinch</em></span>
-                        </div>
-                        <div class="recipe-row">
-                            <span class="ingredient">Ice</span>
-                            <span class="value">150g <em>large cubes</em></span>
-                        </div>
-                        <div class="recipe-row">
-                            <span class="ingredient">Cold Water</span>
-                            <span class="value">60ml <em>to finish</em></span>
-                        </div>
-
-                        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border);">
-                            <p style="font-size: 0.85rem; line-height: 1.8; color: var(--text-muted); margin: 0;">
-                                <strong style="color: var(--text);">Method:</strong> Add salt to hot espresso immediately after extraction. Stir 10 seconds. Pour over ice. Add cold water. Serve with a straw to preserve the crema layer.
-                            </p>
-                        </div>
-
-                        <div style="text-align: center; margin-top: 32px;">
-                            <button class="cover-cta" onclick="location.reload()" style="padding: 12px 28px; font-size: 0.75rem;">
-                                Brew Again ↻
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="nav-arrows">
-                    <button class="nav-arrow" onclick="prevPage()">←</button>
-                    <button class="nav-arrow" onclick="goToPage(1)">↻</button>
-                </div>
-            </div>
-        </div>
-
-    </div>
+<header><h1>🏆 2026 World Cup Predictor</h1><p>Enter scores manually → Standings auto-update → Knockout bracket fills automatically</p></header>
+<div class="clock-bar">🕐 Jakarta Time: <span id="jakartaClock">--:--:--</span> WIB</div>
+<div class="tabs" id="tabs">
+<button class="tab-btn active" data-tab="schedule">📅 Schedule</button>
+<button class="tab-btn" data-tab="standings">📊 Standings</button>
+<button class="tab-btn" data-tab="groups">🔢 Groups</button>
+<button class="tab-btn" data-tab="knockout">⚔️ Knockout</button>
 </div>
-
+<div class="container">
+<div class="section active" id="schedule">
+<div class="actions-bar">
+<button class="btn btn-primary" id="saveBtn">💾 Save Scores</button>
+<button class="btn" id="clearBtn">🗑️ Clear All</button>
+<button class="btn" id="autoBtn">🎲 Auto-Fill</button>
+</div>
+<div class="save-status" id="saveStatus"></div>
+<div id="scheduleList"></div>
+</div>
+<div class="section" id="standings"><div class="group-grid" id="standingsGrid"></div></div>
+<div class="section" id="groups"><div class="group-grid" id="groupsGrid"></div></div>
+<div class="section" id="knockout"><div class="knockout-bracket" id="knockoutBracket"></div></div>
+</div>
 <script>
-    let currentPage = 1;
-    const totalPages = 8;
+const groups = {"A": ["Mexico", "South Africa", "South Korea", "Czechia"], "B": ["Canada", "Bosnia and Herzegovina", "Qatar", "Switzerland"], "C": ["Brazil", "Morocco", "Haiti", "Scotland"], "D": ["United States", "Paraguay", "Australia", "T\u00fcrkiye"], "E": ["Germany", "Cura\u00e7ao", "Ivory Coast", "Ecuador"], "F": ["Netherlands", "Japan", "Sweden", "Tunisia"], "G": ["Belgium", "Egypt", "Iran", "New Zealand"], "H": ["Spain", "Cape Verde", "Saudi Arabia", "Uruguay"], "I": ["France", "Senegal", "Iraq", "Norway"], "J": ["Argentina", "Algeria", "Austria", "Jordan"], "K": ["Portugal", "DR Congo", "Uzbekistan", "Colombia"], "L": ["England", "Croatia", "Ghana", "Panama"]};
+const matchday1Results = [{"date": "2026-06-11", "t1": "Mexico", "s1": 2, "s2": 0, "t2": "South Africa", "venue": "Estadio Azteca, Mexico City", "et": "15:00"}, {"date": "2026-06-11", "t1": "South Korea", "s1": 2, "s2": 1, "t2": "Czechia", "venue": "Estadio Akron, Zapopan", "et": "21:00"}, {"date": "2026-06-12", "t1": "Canada", "s1": 1, "s2": 1, "t2": "Bosnia and Herzegovina", "venue": "BMO Field, Toronto", "et": "15:00"}, {"date": "2026-06-12", "t1": "United States", "s1": 4, "s2": 1, "t2": "Paraguay", "venue": "SoFi Stadium, Inglewood", "et": "19:00"}, {"date": "2026-06-13", "t1": "Qatar", "s1": 1, "s2": 1, "t2": "Switzerland", "venue": "Levi's Stadium, Santa Clara", "et": "16:00"}, {"date": "2026-06-13", "t1": "Brazil", "s1": 1, "s2": 1, "t2": "Morocco", "venue": "MetLife Stadium, East Rutherford", "et": "19:00"}, {"date": "2026-06-13", "t1": "Scotland", "s1": 1, "s2": 0, "t2": "Haiti", "venue": "Gillette Stadium, Foxborough", "et": "19:00"}, {"date": "2026-06-13", "t1": "Australia", "s1": 2, "s2": 0, "t2": "T\u00fcrkiye", "venue": "BC Place, Vancouver", "et": "19:00"}, {"date": "2026-06-14", "t1": "Germany", "s1": 7, "s2": 1, "t2": "Cura\u00e7ao", "venue": "NRG Stadium, Houston", "et": "16:00"}, {"date": "2026-06-14", "t1": "Netherlands", "s1": 2, "s2": 2, "t2": "Japan", "venue": "AT&T Stadium, Arlington", "et": "19:00"}, {"date": "2026-06-14", "t1": "Ivory Coast", "s1": 1, "s2": 0, "t2": "Ecuador", "venue": "Lincoln Financial Field, Philadelphia", "et": "19:00"}, {"date": "2026-06-14", "t1": "Sweden", "s1": 5, "s2": 1, "t2": "Tunisia", "venue": "Estadio BBVA, Monterrey", "et": "21:00"}, {"date": "2026-06-15", "t1": "Spain", "s1": 0, "s2": 0, "t2": "Cape Verde", "venue": "Mercedes-Benz Stadium, Atlanta", "et": "12:00"}, {"date": "2026-06-15", "t1": "Belgium", "s1": 1, "s2": 1, "t2": "Egypt", "venue": "Lumen Field, Seattle", "et": "15:00"}, {"date": "2026-06-15", "t1": "Saudi Arabia", "s1": 1, "s2": 1, "t2": "Uruguay", "venue": "Hard Rock Stadium, Miami Gardens", "et": "18:00"}, {"date": "2026-06-15", "t1": "Iran", "s1": 2, "s2": 2, "t2": "New Zealand", "venue": "SoFi Stadium, Inglewood", "et": "21:00"}];
+const matchday2Fixtures = [{"date": "2026-06-16", "t1": "France", "t2": "Senegal", "venue": "MetLife Stadium, East Rutherford", "et": "15:00"}, {"date": "2026-06-16", "t1": "Iraq", "t2": "Norway", "venue": "Gillette Stadium, Foxborough", "et": "18:00"}, {"date": "2026-06-16", "t1": "Argentina", "t2": "Algeria", "venue": "Arrowhead Stadium, Kansas City", "et": "21:00"}, {"date": "2026-06-17", "t1": "Austria", "t2": "Jordan", "venue": "Levi's Stadium, Santa Clara", "et": "00:00"}, {"date": "2026-06-17", "t1": "Portugal", "t2": "DR Congo", "venue": "NRG Stadium, Houston", "et": "13:00"}, {"date": "2026-06-17", "t1": "England", "t2": "Croatia", "venue": "AT&T Stadium, Arlington", "et": "16:00"}, {"date": "2026-06-17", "t1": "Ghana", "t2": "Panama", "venue": "BMO Field, Toronto", "et": "19:00"}, {"date": "2026-06-17", "t1": "Uzbekistan", "t2": "Colombia", "venue": "Estadio Azteca, Mexico City", "et": "22:00"}, {"date": "2026-06-18", "t1": "Czechia", "t2": "South Africa", "venue": "Mercedes-Benz Stadium, Atlanta", "et": "12:00"}, {"date": "2026-06-18", "t1": "Switzerland", "t2": "Bosnia and Herzegovina", "venue": "SoFi Stadium, Inglewood", "et": "15:00"}, {"date": "2026-06-18", "t1": "Canada", "t2": "Qatar", "venue": "BC Place, Vancouver", "et": "18:00"}, {"date": "2026-06-18", "t1": "Mexico", "t2": "South Korea", "venue": "Estadio Akron, Zapopan", "et": "21:00"}, {"date": "2026-06-19", "t1": "United States", "t2": "Australia", "venue": "Lumen Field, Seattle", "et": "15:00"}, {"date": "2026-06-19", "t1": "Scotland", "t2": "Morocco", "venue": "Gillette Stadium, Foxborough", "et": "18:00"}, {"date": "2026-06-19", "t1": "Brazil", "t2": "Haiti", "venue": "Lincoln Financial Field, Philadelphia", "et": "20:30"}, {"date": "2026-06-20", "t1": "T\u00fcrkiye", "t2": "Paraguay", "venue": "Levi's Stadium, Santa Clara", "et": "00:00"}, {"date": "2026-06-20", "t1": "Netherlands", "t2": "Sweden", "venue": "NRG Stadium, Houston", "et": "13:00"}, {"date": "2026-06-20", "t1": "Germany", "t2": "Ivory Coast", "venue": "BMO Field, Toronto", "et": "16:00"}, {"date": "2026-06-20", "t1": "Ecuador", "t2": "Cura\u00e7ao", "venue": "Arrowhead Stadium, Kansas City", "et": "20:00"}, {"date": "2026-06-21", "t1": "Tunisia", "t2": "Japan", "venue": "Estadio BBVA, Monterrey", "et": "00:00"}];
+const matchday3Fixtures = [{"date": "2026-06-21", "t1": "Spain", "t2": "Saudi Arabia", "venue": "Mercedes-Benz Stadium, Atlanta", "et": "12:00"}, {"date": "2026-06-21", "t1": "Belgium", "t2": "Iran", "venue": "SoFi Stadium, Inglewood", "et": "15:00"}, {"date": "2026-06-21", "t1": "Uruguay", "t2": "Cape Verde", "venue": "Hard Rock Stadium, Miami Gardens", "et": "18:00"}, {"date": "2026-06-21", "t1": "New Zealand", "t2": "Egypt", "venue": "BC Place, Vancouver", "et": "21:00"}, {"date": "2026-06-22", "t1": "Argentina", "t2": "Austria", "venue": "AT&T Stadium, Arlington", "et": "13:00"}, {"date": "2026-06-22", "t1": "France", "t2": "Iraq", "venue": "Lincoln Financial Field, Philadelphia", "et": "17:00"}, {"date": "2026-06-22", "t1": "Norway", "t2": "Senegal", "venue": "MetLife Stadium, East Rutherford", "et": "20:00"}, {"date": "2026-06-22", "t1": "Jordan", "t2": "Algeria", "venue": "Levi's Stadium, Santa Clara", "et": "23:00"}, {"date": "2026-06-23", "t1": "Portugal", "t2": "Uzbekistan", "venue": "NRG Stadium, Houston", "et": "13:00"}, {"date": "2026-06-23", "t1": "England", "t2": "Ghana", "venue": "Gillette Stadium, Foxborough", "et": "16:00"}, {"date": "2026-06-23", "t1": "Panama", "t2": "Croatia", "venue": "BMO Field, Toronto", "et": "19:00"}, {"date": "2026-06-23", "t1": "Colombia", "t2": "DR Congo", "venue": "Estadio Akron, Zapopan", "et": "22:00"}, {"date": "2026-06-24", "t1": "Switzerland", "t2": "Canada", "venue": "BC Place, Vancouver", "et": "15:00"}, {"date": "2026-06-24", "t1": "Bosnia and Herzegovina", "t2": "Qatar", "venue": "Lumen Field, Seattle", "et": "15:00"}, {"date": "2026-06-24", "t1": "Scotland", "t2": "Brazil", "venue": "Hard Rock Stadium, Miami Gardens", "et": "18:00"}, {"date": "2026-06-24", "t1": "Morocco", "t2": "Haiti", "venue": "Mercedes-Benz Stadium, Atlanta", "et": "18:00"}, {"date": "2026-06-24", "t1": "Czechia", "t2": "Mexico", "venue": "Estadio Azteca, Mexico City", "et": "21:00"}, {"date": "2026-06-24", "t1": "South Africa", "t2": "South Korea", "venue": "Estadio BBVA, Monterrey", "et": "21:00"}, {"date": "2026-06-25", "t1": "Cura\u00e7ao", "t2": "Ivory Coast", "venue": "Lincoln Financial Field, Philadelphia", "et": "16:00"}, {"date": "2026-06-25", "t1": "Ecuador", "t2": "Germany", "venue": "MetLife Stadium, East Rutherford", "et": "16:00"}, {"date": "2026-06-25", "t1": "Japan", "t2": "Sweden", "venue": "AT&T Stadium, Arlington", "et": "19:00"}, {"date": "2026-06-25", "t1": "Tunisia", "t2": "Netherlands", "venue": "Arrowhead Stadium, Kansas City", "et": "19:00"}, {"date": "2026-06-25", "t1": "T\u00fcrkiye", "t2": "United States", "venue": "SoFi Stadium, Inglewood", "et": "22:00"}, {"date": "2026-06-25", "t1": "Paraguay", "t2": "Australia", "venue": "Levi's Stadium, Santa Clara", "et": "22:00"}, {"date": "2026-06-26", "t1": "Norway", "t2": "France", "venue": "Gillette Stadium, Foxborough", "et": "15:00"}, {"date": "2026-06-26", "t1": "Senegal", "t2": "Iraq", "venue": "BMO Field, Toronto", "et": "15:00"}, {"date": "2026-06-26", "t1": "Uruguay", "t2": "Spain", "venue": "Estadio Akron, Zapopan", "et": "20:00"}, {"date": "2026-06-26", "t1": "Cape Verde", "t2": "Saudi Arabia", "venue": "NRG Stadium, Houston", "et": "20:00"}, {"date": "2026-06-26", "t1": "Egypt", "t2": "Iran", "venue": "Lumen Field, Seattle", "et": "23:00"}, {"date": "2026-06-26", "t1": "New Zealand", "t2": "Belgium", "venue": "BC Place, Vancouver", "et": "23:00"}, {"date": "2026-06-27", "t1": "Panama", "t2": "England", "venue": "MetLife Stadium, East Rutherford", "et": "17:00"}, {"date": "2026-06-27", "t1": "Croatia", "t2": "Ghana", "venue": "Lincoln Financial Field, Philadelphia", "et": "17:00"}, {"date": "2026-06-27", "t1": "Colombia", "t2": "Portugal", "venue": "Hard Rock Stadium, Miami Gardens", "et": "19:30"}, {"date": "2026-06-27", "t1": "DR Congo", "t2": "Uzbekistan", "venue": "Mercedes-Benz Stadium, Atlanta", "et": "19:30"}, {"date": "2026-06-27", "t1": "Algeria", "t2": "Austria", "venue": "Arrowhead Stadium, Kansas City", "et": "22:00"}, {"date": "2026-06-27", "t1": "Jordan", "t2": "Argentina", "venue": "AT&T Stadium, Arlington", "et": "22:00"}];
+const knockoutStructure = {"r32": [{"date": "2026-06-28", "et": "15:00", "venue": "SoFi Stadium, Inglewood", "slot": "2A vs 2B", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-06-29", "et": "13:00", "venue": "NRG Stadium, Houston", "slot": "1C vs 2F", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-06-29", "et": "16:30", "venue": "Gillette Stadium, Foxborough", "slot": "1E vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-06-29", "et": "21:00", "venue": "Estadio BBVA, Monterrey", "slot": "1F vs 2C", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-06-30", "et": "13:00", "venue": "AT&T Stadium, Arlington", "slot": "2E vs 2I", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-06-30", "et": "17:00", "venue": "MetLife Stadium, East Rutherford", "slot": "1I vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-06-30", "et": "21:00", "venue": "Estadio Azteca, Mexico City", "slot": "1A vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-01", "et": "12:00", "venue": "Mercedes-Benz Stadium, Atlanta", "slot": "1L vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-01", "et": "16:00", "venue": "Lumen Field, Seattle", "slot": "1G vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-01", "et": "20:00", "venue": "Levi's Stadium, Santa Clara", "slot": "1D vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-02", "et": "15:00", "venue": "SoFi Stadium, Inglewood", "slot": "1H vs 2J", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-02", "et": "19:00", "venue": "BMO Field, Toronto", "slot": "2K vs 2L", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-02", "et": "23:00", "venue": "BC Place, Vancouver", "slot": "1B vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-03", "et": "14:00", "venue": "AT&T Stadium, Arlington", "slot": "2D vs 2G", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-03", "et": "18:00", "venue": "Hard Rock Stadium, Miami Gardens", "slot": "1J vs 2H", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-03", "et": "21:30", "venue": "Arrowhead Stadium, Kansas City", "slot": "1K vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}], "r16": [{"date": "2026-07-04", "et": "13:00", "venue": "NRG Stadium, Houston", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-04", "et": "17:00", "venue": "Lincoln Financial Field, Philadelphia", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-05", "et": "16:00", "venue": "MetLife Stadium, East Rutherford", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-05", "et": "20:00", "venue": "Estadio Azteca, Mexico City", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-06", "et": "15:00", "venue": "AT&T Stadium, Arlington", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-06", "et": "20:00", "venue": "Lumen Field, Seattle", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-07", "et": "12:00", "venue": "Mercedes-Benz Stadium, Atlanta", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-07", "et": "16:00", "venue": "BC Place, Vancouver", "t1": null, "t2": null, "s1": null, "s2": null}], "qf": [{"date": "2026-07-09", "et": "16:00", "venue": "Gillette Stadium, Foxborough", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-10", "et": "15:00", "venue": "SoFi Stadium, Inglewood", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-11", "et": "17:00", "venue": "Hard Rock Stadium, Miami Gardens", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-11", "et": "21:00", "venue": "Arrowhead Stadium, Kansas City", "t1": null, "t2": null, "s1": null, "s2": null}], "sf": [{"date": "2026-07-14", "et": "15:00", "venue": "AT&T Stadium, Arlington", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-15", "et": "15:00", "venue": "Mercedes-Benz Stadium, Atlanta", "t1": null, "t2": null, "s1": null, "s2": null}], "3rd": [{"date": "2026-07-18", "et": "17:00", "venue": "Hard Rock Stadium, Miami Gardens", "t1": null, "t2": null, "s1": null, "s2": null}], "final": [{"date": "2026-07-19", "et": "15:00", "venue": "MetLife Stadium, East Rutherford", "t1": null, "t2": null, "s1": null, "s2": null}]};
 
-    function updatePages() {
-        document.querySelectorAll('.card').forEach(card => {
-            const pageNum = parseInt(card.dataset.page);
-            card.classList.remove('active', 'prev', 'next');
-            if (pageNum === currentPage) card.classList.add('active');
-            else if (pageNum < currentPage) card.classList.add('prev');
-            else card.classList.add('next');
-        });
+let userScores = {};
+let knockoutTeams = {};
 
-        // Update dots in all sidebars
-        document.querySelectorAll('.card').forEach(card => {
-            const dots = card.querySelectorAll('.nav-dot');
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i + 1 === currentPage);
-            });
-        });
+function etToWIB(etTime){
+  const[h,m]=etTime.split(':').map(Number);
+  let w=h+11;if(w>=24)w-=24;
+  return String(w).padStart(2,'0')+':'+String(m).padStart(2,'0');
+}
+function getDayName(dateStr){
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  return days[new Date(dateStr+'T00:00:00').getDay()];
+}
+function getGroupOf(team){
+  for(const[g,teams]of Object.entries(groups))if(teams.includes(team))return g;
+  return '';
+}
+function formatDate(dateStr){
+  return new Date(dateStr+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+function matchKey(date,t1,t2){return date+'|'+t1+'|'+t2;}
+
+function buildStandings(){
+  const st={};
+  for(const[g,teams]of Object.entries(groups)){
+    st[g]={};
+    for(const t of teams)st[g][t]={P:0,W:0,D:0,L:0,GF:0,GA:0,GD:0,Pts:0};
+  }
+  // MD1 (locked results)
+  for(const m of matchday1Results){
+    const g=getGroupOf(m.t1);if(!g)continue;
+    st[g][m.t1].P++;st[g][m.t2].P++;
+    st[g][m.t1].GF+=m.s1;st[g][m.t1].GA+=m.s2;
+    st[g][m.t2].GF+=m.s2;st[g][m.t2].GA+=m.s1;
+    st[g][m.t1].GD=st[g][m.t1].GF-st[g][m.t1].GA;
+    st[g][m.t2].GD=st[g][m.t2].GF-st[g][m.t2].GA;
+    if(m.s1>m.s2){st[g][m.t1].W++;st[g][m.t1].Pts+=3;st[g][m.t2].L++;}
+    else if(m.s1<m.s2){st[g][m.t2].W++;st[g][m.t2].Pts+=3;st[g][m.t1].L++;}
+    else{st[g][m.t1].D++;st[g][m.t1].Pts++;st[g][m.t2].D++;st[g][m.t2].Pts++;}
+  }
+  // User-entered scores (MD2 & MD3)
+  for(const[key,sc]of Object.entries(userScores)){
+    if(sc.s1===''||sc.s2==='')continue;
+    const s1=parseInt(sc.s1),s2=parseInt(sc.s2);
+    const allFixtures=[...matchday2Fixtures,...matchday3Fixtures];
+    const m=allFixtures.find(x=>matchKey(x.date,x.t1,x.t2)===key);
+    if(!m)continue;
+    const g=getGroupOf(m.t1);if(!g)continue;
+    st[g][m.t1].P++;st[g][m.t2].P++;
+    st[g][m.t1].GF+=s1;st[g][m.t1].GA+=s2;
+    st[g][m.t2].GF+=s2;st[g][m.t2].GA+=s1;
+    st[g][m.t1].GD=st[g][m.t1].GF-st[g][m.t1].GA;
+    st[g][m.t2].GD=st[g][m.t2].GF-st[g][m.t2].GA;
+    if(s1>s2){st[g][m.t1].W++;st[g][m.t1].Pts+=3;st[g][m.t2].L++;}
+    else if(s1<s2){st[g][m.t2].W++;st[g][m.t2].Pts+=3;st[g][m.t1].L++;}
+    else{st[g][m.t1].D++;st[g][m.t1].Pts++;st[g][m.t2].D++;st[g][m.t2].Pts++;}
+  }
+  for(const g in st)st[g]=Object.fromEntries(Object.entries(st[g]).sort((a,b)=>{
+    if(b[1].Pts!==a[1].Pts)return b[1].Pts-a[1].Pts;
+    if(b[1].GD!==a[1].GD)return b[1].GD-a[1].GD;
+    return b[1].GF-a[1].GF;
+  }));
+  return st;
+}
+
+function getThirdPlaceTeams(standings){
+  const thirds=[];
+  for(const[g,teams]of Object.entries(standings)){
+    const entries=Object.entries(teams);
+    if(entries.length>=3){const[name,stats]=entries[2];thirds.push({group:g,team:name,...stats});}
+  }
+  return thirds.sort((a,b)=>{
+    if(b.Pts!==a.Pts)return b.Pts-a.Pts;
+    if(b.GD!==a.GD)return b.GD-a.GD;
+    return b.GF-a.GF;
+  });
+}
+
+function fillKnockoutTeams(){
+  const st=buildStandings();
+  const thirds=getThirdPlaceTeams(st);
+  const best3=thirds.slice(0,8);
+  const get=(g,pos)=>{const e=Object.entries(st[g]);return e[pos]?e[pos][0]:'TBD';};
+  knockoutTeams={
+    '1A':get('A',0),'2A':get('A',1),'3A':get('A',2),
+    '1B':get('B',0),'2B':get('B',1),'3B':get('B',2),
+    '1C':get('C',0),'2C':get('C',1),'3C':get('C',2),
+    '1D':get('D',0),'2D':get('D',1),'3D':get('D',2),
+    '1E':get('E',0),'2E':get('E',1),'3E':get('E',2),
+    '1F':get('F',0),'2F':get('F',1),'3F':get('F',2),
+    '1G':get('G',0),'2G':get('G',1),'3G':get('G',2),
+    '1H':get('H',0),'2H':get('H',1),'3H':get('H',2),
+    '1I':get('I',0),'2I':get('I',1),'3I':get('I',2),
+    '1J':get('J',0),'2J':get('J',1),'3J':get('J',2),
+    '1K':get('K',0),'2K':get('K',1),'3K':get('K',2),
+    '1L':get('L',0),'2L':get('L',1),'3L':get('L',2),
+    '3rd1':best3[0]?.team||'TBD','3rd2':best3[1]?.team||'TBD',
+    '3rd3':best3[2]?.team||'TBD','3rd4':best3[3]?.team||'TBD',
+    '3rd5':best3[4]?.team||'TBD','3rd6':best3[5]?.team||'TBD',
+    '3rd7':best3[6]?.team||'TBD','3rd8':best3[7]?.team||'TBD',
+  };
+}
+
+function renderSchedule(){
+  const list=document.getElementById('scheduleList');list.innerHTML='';
+  const allMatches=[];
+  for(const m of matchday1Results)allMatches.push({...m,status:'done',matchday:1,locked:true});
+  for(const m of matchday2Fixtures){
+    const key=matchKey(m.date,m.t1,m.t2);
+    const sc=userScores[key]||{s1:'',s2:''};
+    const hasScore=sc.s1!==''&&sc.s2!=='';
+    allMatches.push({...m,status:hasScore?'done':'upcoming',matchday:2,locked:false,s1:hasScore?parseInt(sc.s1):undefined,s2:hasScore?parseInt(sc.s2):undefined,key});
+  }
+  for(const m of matchday3Fixtures){
+    const key=matchKey(m.date,m.t1,m.t2);
+    const sc=userScores[key]||{s1:'',s2:''};
+    const hasScore=sc.s1!==''&&sc.s2!=='';
+    allMatches.push({...m,status:hasScore?'done':'upcoming',matchday:3,locked:false,s1:hasScore?parseInt(sc.s1):undefined,s2:hasScore?parseInt(sc.s2):undefined,key});
+  }
+  allMatches.sort((a,b)=>{const da=a.date+'T'+a.et,db=b.date+'T'+b.et;return da.localeCompare(db);});
+  let lastDate='';
+  for(const m of allMatches){
+    if(m.date!==lastDate){
+      const h2=document.createElement('h2');
+      h2.style.cssText='font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;padding-left:4px;';
+      h2.textContent=getDayName(m.date)+', '+formatDate(m.date)+' 2026';
+      list.appendChild(h2);lastDate=m.date;
     }
-
-    function nextPage() {
-        if (currentPage < totalPages) {
-            currentPage++;
-            updatePages();
-        }
+    const card=document.createElement('div');card.className='match-card '+m.status;
+    const wib=etToWIB(m.et);
+    const group='Group '+getGroupOf(m.t1);
+    let teamsHtml='';
+    if(m.locked){
+      teamsHtml=`<div class="team-row"><span class="team-name">${m.t1}</span><span class="score-display">${m.s1}</span></div><div class="vs-divider">VS</div><div class="team-row"><span class="team-name">${m.t2}</span><span class="score-display">${m.s2}</span></div>`;
+    }else{
+      const sc=userScores[m.key]||{s1:'',s2:''};
+      teamsHtml=`<div class="team-row"><span class="team-name">${m.t1}</span><input type="number" min="0" class="score-input" data-key="${m.key}" data-side="1" value="${sc.s1}" placeholder="-"></div><div class="vs-divider">VS</div><div class="team-row"><span class="team-name">${m.t2}</span><input type="number" min="0" class="score-input" data-key="${m.key}" data-side="2" value="${sc.s2}" placeholder="-"></div>`;
     }
-
-    function prevPage() {
-        if (currentPage > 1) {
-            currentPage--;
-            updatePages();
-        }
-    }
-
-    function goToPage(num) {
-        currentPage = num;
-        updatePages();
-    }
-
-    // Salt selection
-    function selectSalt(element, type) {
-        document.querySelectorAll('.salt-btn').forEach(b => b.classList.remove('active'));
-        element.classList.add('active');
-
-        const data = {
-            tiny: {
-                amount: '~0.05g / 1/32 tsp (2-3 grains)',
-                best: 'Light roasts, salt-sensitive palates',
-                method: 'Add to hot espresso, stir vigorously',
-                advice: 'Perfect for first-time experimenters. The effect is subtle — you may not notice it immediately, but the coffee will taste "smoother" than usual. Ideal for delicate light roasts where you want to preserve origin character.'
-            },
-            small: {
-                amount: '~0.15g / 1/16 tsp',
-                best: 'Medium-dark roasts, daily drinking',
-                method: 'Add to hot espresso, stir 10s',
-                advice: 'The sweet spot for most palates. For the OneTwoCups double shot, sprinkle the salt directly into the hot espresso immediately after brewing, then stir for 10 seconds before pouring over ice. This ensures complete dissolution and even distribution.'
-            },
-            standard: {
-                amount: '~0.3g / 1/8 tsp',
-                best: 'Dark roasts, robusta blends, bitter coffee',
-                method: 'Dissolve in hot espresso before ice',
-                advice: 'This is the Alton Brown recommendation. Best for dark French or Italian roasts where bitterness is pronounced. The salt will noticeably smooth the edges without tasting salty. Stir until completely dissolved.'
-            },
-            bold: {
-                amount: '~0.5g / generous pinch',
-                best: 'Very dark roasts, over-extracted shots only',
-                method: 'Pre-dissolve in a few drops of water',
-                advice: 'Maximum dosage before saltiness becomes perceptible. Only recommended for over-extracted or burnt-tasting shots. Pre-dissolve in a few drops of hot water to ensure even distribution, then add to espresso.'
-            }
-        };
-
-        const d = data[type];
-        document.getElementById('saltAmount').textContent = d.amount;
-        document.getElementById('saltBest').textContent = d.best;
-        document.getElementById('saltMethod').textContent = d.method;
-        document.getElementById('saltAdvice').textContent = d.advice;
-    }
-
-    // Slider
-    let sliderValue = 200;
-    let isDragging = false;
-
-    function updateSlider(val) {
-        sliderValue = Math.max(150, Math.min(500, val));
-        const pct = (sliderValue - 150) / (500 - 150) * 100;
-        document.getElementById('sliderFill').style.width = pct + '%';
-        document.getElementById('sliderThumb').style.left = pct + '%';
-        document.getElementById('sliderValue').textContent = Math.round(sliderValue) + ' ml';
-
-        const salt = (sliderValue * 0.075).toFixed(2);
-        let desc = '';
-        if (salt < 0.1) desc = 'micro pinch (2-3 grains)';
-        else if (salt < 0.2) desc = 'small pinch';
-        else if (salt < 0.4) desc = 'standard pinch';
-        else desc = 'generous pinch';
-
-        document.getElementById('sliderSub').textContent = `Salt needed: ~${salt}g (${desc})`;
-    }
-
-    function handleSliderClick(e) {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const pct = x / rect.width;
-        updateSlider(150 + pct * 350);
-    }
-
-    // Drag support
-    const track = document.getElementById('sliderTrack');
-    const thumb = document.getElementById('sliderThumb');
-
-    thumb.addEventListener('mousedown', () => isDragging = true);
-    document.addEventListener('mouseup', () => isDragging = false);
-    document.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        const rect = track.getBoundingClientRect();
-        const x = Math.max(0, Math.min(rect.width, e.clientX - rect.left));
-        updateSlider(150 + (x / rect.width) * 350);
+    const statusText=m.status==='done'?'FT':'UPCOMING';
+    card.innerHTML=`<div class="match-time"><div class="day">${getDayName(m.date)}</div><div class="time">${wib}</div><div class="wib">WIB</div></div><div class="match-teams">${teamsHtml}</div><div class="match-meta"><div class="group-tag">${group}</div><div class="venue">${m.venue}</div><div class="status-badge status-${m.status}">${statusText}</div></div>`;
+    list.appendChild(card);
+  }
+  document.querySelectorAll('.score-input').forEach(inp=>{
+    inp.addEventListener('change',e=>{
+      const key=e.target.dataset.key;
+      const side=e.target.dataset.side;
+      const val=e.target.value;
+      if(!userScores[key])userScores[key]={s1:'',s2:''};
+      if(side==='1')userScores[key].s1=val;else userScores[key].s2=val;
+      renderSchedule();renderStandings();renderKnockout();
+      document.getElementById('saveStatus').textContent='';
     });
+  });
+}
 
-    // Touch support
-    thumb.addEventListener('touchstart', () => isDragging = true);
-    document.addEventListener('touchend', () => isDragging = false);
-    document.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        const touch = e.touches[0];
-        const rect = track.getBoundingClientRect();
-        const x = Math.max(0, Math.min(rect.width, touch.clientX - rect.left));
-        updateSlider(150 + (x / rect.width) * 350);
-    });
-
-    // Method cards
-    function showMethod(method) {
-        document.querySelectorAll('.method-detail').forEach(d => d.classList.remove('show'));
-        document.getElementById('method' + method.toUpperCase()).classList.add('show');
+function renderStandings(){
+  const st=buildStandings();
+  const grid=document.getElementById('standingsGrid');grid.innerHTML='';
+  for(const[g,teams]of Object.entries(st)){
+    const card=document.createElement('div');card.className='group-card';
+    let rows='';let rank=1;
+    for(const[name,s]of Object.entries(teams)){
+      rows+=`<tr><td>${rank}. ${name}</td><td>${s.P}</td><td>${s.W}</td><td>${s.D}</td><td>${s.L}</td><td>${s.GF}</td><td>${s.GA}</td><td>${s.GD}</td><td class="pts">${s.Pts}</td></tr>`;rank++;
     }
+    card.innerHTML=`<div class="group-header">Group ${g} <span>Top 2 + Best 3rd</span></div><table class="standings-table"><thead><tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody>${rows}</tbody></table>`;
+    grid.appendChild(card);
+  }
+}
 
-    // Keyboard
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight') nextPage();
-        if (e.key === 'ArrowLeft') prevPage();
-    });
+function renderGroups(){
+  const grid=document.getElementById('groupsGrid');grid.innerHTML='';
+  for(const[g,teams]of Object.entries(groups)){
+    const card=document.createElement('div');card.className='group-card';
+    let list='';
+    for(const t of teams)list+=`<div style="padding:10px 12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;"><span style="font-size:1.1rem;">🏳️</span><span style="font-weight:600;font-size:0.85rem;">${t}</span></div>`;
+    card.innerHTML=`<div class="group-header">Group ${g}</div>${list}`;
+    grid.appendChild(card);
+  }
+}
 
-    // Touch swipe
-    let touchStartX = 0;
-    document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX);
-    document.addEventListener('touchend', e => {
-        const diff = e.changedTouches[0].screenX - touchStartX;
-        if (diff < -50) nextPage();
-        if (diff > 50) prevPage();
-    });
+function renderKnockout(){
+  fillKnockoutTeams();
+  const bracket=document.getElementById('knockoutBracket');bracket.innerHTML='';
+  const koData={};
+  for(const[stage,matches]of Object.entries(knockoutStructure)){
+    koData[stage]=matches.map(m=>({...m}));
+  }
+  const r32Slots=[
+    {t1:'2A',t2:'2B'},{t1:'1C',t2:'2F'},{t1:'1E',t2:'3rd1'},{t1:'1F',t2:'2C'},
+    {t1:'2E',t2:'2I'},{t1:'1I',t2:'3rd2'},{t1:'1A',t2:'3rd3'},{t1:'1L',t2:'3rd4'},
+    {t1:'1G',t2:'3rd5'},{t1:'1D',t2:'3rd6'},{t1:'1H',t2:'2J'},{t1:'2K',t2:'2L'},
+    {t1:'1B',t2:'3rd7'},{t1:'2D',t2:'2G'},{t1:'1J',t2:'2H'},{t1:'1K',t2:'3rd8'},
+  ];
+  for(let i=0;i<16;i++){
+    const def=r32Slots[i];
+    koData.r32[i].t1=knockoutTeams[def.t1]||'TBD';
+    koData.r32[i].t2=knockoutTeams[def.t2]||'TBD';
+  }
+  const stageNames={r32:'Round of 32',r16:'Round of 16',qf:'Quarterfinals',sf:'Semifinals','3rd':'Third Place',final:'Final'};
+  const stageOrder=['r32','r16','qf','sf','3rd','final'];
+  for(const stage of stageOrder){
+    const div=document.createElement('div');div.className='knockout-round';
+    let matchesHtml='';
+    for(const m of koData[stage]){
+      const wib=etToWIB(m.et);
+      const t1=m.t1||'TBD';const t2=m.t2||'TBD';
+      const score=(m.s1!==null&&m.s2!==null&&m.s1!==undefined)?`${m.s1} - ${m.s2}`:'TBD';
+      matchesHtml+=`<div class="knockout-match"><div class="k-time">${formatDate(m.date)}<br>${wib}</div><div class="k-teams"><div class="k-team">${t1}</div><div style="color:var(--muted);font-size:0.7rem;margin:2px 0;">vs</div><div class="k-team">${t2}</div></div><div class="k-venue">${m.venue}<br><span style="color:var(--accent);font-weight:700;">${score}</span></div></div>`;
+    }
+    div.innerHTML=`<h3>${stageNames[stage]}</h3>${matchesHtml}`;
+    bracket.appendChild(div);
+  }
+}
 
-    // Initialize
-    updatePages();
+function saveScores(){
+  localStorage.setItem('wc2026_scores',JSON.stringify(userScores));
+  document.getElementById('saveStatus').textContent='✅ Scores saved to browser!';
+  setTimeout(()=>document.getElementById('saveStatus').textContent='',3000);
+}
+function loadScores(){
+  const data=localStorage.getItem('wc2026_scores');
+  if(data)userScores=JSON.parse(data);
+}
+function clearScores(){
+  if(confirm('Clear all entered scores?')){
+    userScores={};localStorage.removeItem('wc2026_scores');
+    renderSchedule();renderStandings();renderKnockout();
+    document.getElementById('saveStatus').textContent='🗑️ All scores cleared';
+    setTimeout(()=>document.getElementById('saveStatus').textContent='',3000);
+  }
+}
+function autoFill(){
+  function rand(){
+    const r=Math.random();
+    if(r<0.25)return 0;if(r<0.55)return 1;if(r<0.78)return 2;if(r<0.90)return 3;if(r<0.96)return 4;return 5;
+  }
+  const strong=["Argentina","Brazil","France","Germany","Spain","Portugal","England","Netherlands","Belgium"];
+  for(const m of matchday2Fixtures){
+    const key=matchKey(m.date,m.t1,m.t2);
+    if(!userScores[key]||userScores[key].s1===''){
+      let s1=rand(),s2=rand();
+      if(strong.includes(m.t1)&&Math.random()<0.3)s1++;
+      if(strong.includes(m.t2)&&Math.random()<0.3)s2++;
+      userScores[key]={s1:String(s1),s2:String(s2)};
+    }
+  }
+  for(const m of matchday3Fixtures){
+    const key=matchKey(m.date,m.t1,m.t2);
+    if(!userScores[key]||userScores[key].s1===''){
+      let s1=rand(),s2=rand();
+      if(strong.includes(m.t1)&&Math.random()<0.3)s1++;
+      if(strong.includes(m.t2)&&Math.random()<0.3)s2++;
+      userScores[key]={s1:String(s1),s2:String(s2)};
+    }
+  }
+  renderSchedule();renderStandings();renderKnockout();
+  document.getElementById('saveStatus').textContent='🎲 Auto-filled remaining matches!';
+  setTimeout(()=>document.getElementById('saveStatus').textContent='',3000);
+}
+function switchTab(id){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+  document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));
+}
+document.getElementById('tabs').addEventListener('click',e=>{if(e.target.classList.contains('tab-btn'))switchTab(e.target.dataset.tab);});
+document.getElementById('saveBtn').addEventListener('click',saveScores);
+document.getElementById('clearBtn').addEventListener('click',clearScores);
+document.getElementById('autoBtn').addEventListener('click',autoFill);
+function updateClock(){
+  document.getElementById('jakartaClock').textContent=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Jakarta',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})+' WIB';
+}
+setInterval(updateClock,1000);updateClock();
+loadScores();
+renderSchedule();renderStandings();renderGroups();renderKnockout();
 </script>
-
 </body>
 </html>
