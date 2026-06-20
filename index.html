@@ -3,394 +3,1171 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2026 World Cup Predictor — Jakarta Time</title>
+<title>If You Can't Beat Them, Join Them — Dr. Khatib Basri</title>
 <style>
-:root{
-  --bg:#0b0f19;--card:#111827;--card2:#1a2236;--accent:#00d4aa;--accent2:#ff6b35;
-  --text:#e5e7eb;--muted:#9ca3af;--border:#1f2937;--live:#ef4444;--done:#10b981;--upcoming:#3b82f6;
-  --input:#0f172a;--input-border:#334155;
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --navy: #0a1628;
+    --navy-light: #1a2b47;
+    --slate: #2d3e5f;
+    --accent: #c9302c;
+    --gold: #c9a227;
+    --cream: #faf8f3;
+    --paper: #fffef8;
+    --text: #1a1a1a;
+    --text-light: #5a5a5a;
+    --text-faint: #999;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-header{background:linear-gradient(135deg,#0f172a,#1e293b);padding:20px 16px;text-align:center;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
-header h1{font-size:1.5rem;font-weight:800;letter-spacing:-0.5px;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-header p{color:var(--muted);font-size:0.8rem;margin-top:4px}
-.clock-bar{background:var(--card2);padding:8px 16px;text-align:center;font-size:0.85rem;color:var(--accent);border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums}
-.tabs{display:flex;gap:4px;padding:10px 16px;overflow-x:auto;background:var(--bg);border-bottom:1px solid var(--border);scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab-btn{flex:0 0 auto;padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--muted);font-size:0.75rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s}
-.tab-btn:hover{background:var(--card2);color:var(--text)}
-.tab-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
-.container{max-width:1100px;margin:0 auto;padding:14px}
-.section{display:none}
-.section.active{display:block}
 
-.match-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;transition:transform .15s,border-color .15s}
-.match-card:hover{border-color:#334155;transform:translateY(-1px)}
-.match-card.done{border-left:3px solid var(--done)}
-.match-card.upcoming{border-left:3px solid var(--upcoming)}
-.match-time{min-width:72px;text-align:center}
-.match-time .day{font-size:0.65rem;color:var(--muted);text-transform:uppercase}
-.match-time .time{font-size:1rem;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
-.match-time .wib{font-size:0.6rem;color:var(--accent)}
-.match-teams{flex:1;min-width:0}
-.team-row{display:flex;align-items:center;justify-content:space-between;padding:2px 0;gap:8px}
-.team-name{font-size:0.9rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.score-input{width:40px;height:32px;background:var(--input);border:1px solid var(--input-border);border-radius:6px;color:var(--text);font-size:1rem;font-weight:700;text-align:center;outline:none;transition:border-color .2s}
-.score-input:focus{border-color:var(--accent)}
-.score-display{font-size:1.1rem;font-weight:800;min-width:28px;text-align:center;font-variant-numeric:tabular-nums}
-.vs-divider{text-align:center;font-size:0.6rem;color:var(--muted);padding:1px 0;letter-spacing:2px}
-.match-meta{min-width:100px;text-align:right;font-size:0.65rem;color:var(--muted)}
-.match-meta .group-tag{display:inline-block;background:var(--card2);padding:2px 6px;border-radius:4px;font-size:0.6rem;font-weight:700;color:var(--accent);margin-bottom:3px}
-.match-meta .venue{font-size:0.6rem}
-.status-badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:0.55rem;font-weight:700;text-transform:uppercase;margin-top:3px}
-.status-done{background:rgba(16,185,129,0.15);color:var(--done)}
-.status-upcoming{background:rgba(59,130,246,0.15);color:var(--upcoming)}
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    background: linear-gradient(145deg, #0a1628 0%, #1a2b47 40%, #0d1b2a 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    overflow-x: hidden;
+}
 
-.group-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
-.group-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.group-header{background:var(--card2);padding:10px 12px;font-weight:700;font-size:0.85rem;display:flex;justify-content:space-between;align-items:center}
-.group-header span{color:var(--accent);font-size:0.7rem}
-.standings-table{width:100%;border-collapse:collapse;font-size:0.75rem}
-.standings-table th{background:var(--bg);color:var(--muted);padding:5px 3px;font-weight:600;font-size:0.65rem;text-align:center}
-.standings-table td{padding:6px 3px;border-top:1px solid var(--border);text-align:center}
-.standings-table td:first-child{text-align:left;padding-left:10px;font-weight:600;font-size:0.8rem}
-.standings-table tr:nth-child(1) td:first-child{border-left:3px solid var(--done)}
-.standings-table tr:nth-child(2) td:first-child{border-left:3px solid var(--done)}
-.standings-table tr:nth-child(3) td:first-child{border-left:3px solid var(--upcoming)}
-.standings-table tr:nth-child(4) td:first-child{border-left:3px solid transparent}
-.standings-table .pts{font-weight:800;color:var(--accent)}
+.book-scene {
+    perspective: 2200px;
+    width: 100%;
+    max-width: 960px;
+    height: 680px;
+    position: relative;
+}
 
-.knockout-bracket{display:flex;flex-direction:column;gap:8px}
-.knockout-round{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px}
-.knockout-round h3{font-size:0.8rem;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
-.knockout-match{display:flex;align-items:center;gap:10px;padding:8px;background:var(--card2);border-radius:8px;margin-bottom:6px;font-size:0.8rem}
-.knockout-match:last-child{margin-bottom:0}
-.knockout-match .k-time{min-width:60px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;font-size:0.75rem}
-.knockout-match .k-teams{flex:1;font-weight:600;min-width:0}
-.knockout-match .k-teams .k-team{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.knockout-match .k-venue{color:var(--muted);font-size:0.6rem;min-width:120px;text-align:right}
+.book {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+}
 
-.btn{display:inline-block;padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all .2s}
-.btn:hover{background:var(--accent);color:#000;border-color:var(--accent)}
-.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;border:none;font-weight:700}
-.btn-primary:hover{opacity:0.9}
-.actions-bar{display:flex;gap:8px;justify-content:center;margin:12px 0;flex-wrap:wrap}
-.save-status{text-align:center;font-size:0.75rem;color:var(--accent);min-height:20px;margin-top:4px}
+.page {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    transition: transform 0.85s cubic-bezier(0.645, 0.045, 0.355, 1);
+    will-change: transform;
+}
 
-@media(max-width:600px){
-  header h1{font-size:1.1rem}
-  .match-card{flex-wrap:wrap}
-  .match-meta{width:100%;text-align:left;margin-top:4px}
-  .group-grid{grid-template-columns:1fr}
-  .knockout-match{flex-wrap:wrap}
-  .knockout-match .k-venue{width:100%;text-align:left;margin-top:4px}
+.page.flipped {
+    transform: rotateY(-180deg);
+}
+
+.page-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    overflow: hidden;
+    background: var(--paper);
+}
+
+.page-front {
+    border-radius: 0 6px 6px 0;
+    box-shadow: inset -4px 0 12px rgba(0,0,0,0.06), 3px 6px 20px rgba(0,0,0,0.12);
+}
+
+.page-back {
+    transform: rotateY(180deg);
+    border-radius: 6px 0 0 6px;
+    box-shadow: inset 4px 0 12px rgba(0,0,0,0.06), -3px 6px 20px rgba(0,0,0,0.12);
+}
+
+/* Paper texture overlay */
+.page-face::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Spine shadow on pages */
+.page-front::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 100%;
+    background: linear-gradient(to right, rgba(0,0,0,0.12), transparent);
+    pointer-events: none;
+    z-index: 2;
+}
+
+.page-back::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 18px;
+    height: 100%;
+    background: linear-gradient(to left, rgba(0,0,0,0.12), transparent);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ===== COVER ===== */
+.cover-front {
+    background: linear-gradient(160deg, #0a1628 0%, #1a2b47 50%, #0d2137 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 50px;
+    position: relative;
+}
+
+.cover-front::before {
+    content: "";
+    position: absolute;
+    inset: 20px;
+    border: 1px solid rgba(201, 162, 39, 0.25);
+    border-radius: 4px;
+    pointer-events: none;
+}
+
+.cover-emoji {
+    font-size: 3.5rem;
+    margin-bottom: 25px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.cover-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 18px;
+    color: #fff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.cover-subtitle {
+    font-size: 1.05rem;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+}
+
+.cover-divider {
+    width: 70px;
+    height: 3px;
+    background: var(--accent);
+    margin: 0 auto 25px;
+    border-radius: 2px;
+}
+
+.cover-author {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.6;
+}
+
+.cover-author strong {
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.cover-footer {
+    position: absolute;
+    bottom: 35px;
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Cover back / TOC */
+.cover-back {
+    background: linear-gradient(160deg, #0d2137 0%, #1a2b47 50%, #0a1628 100%);
+    color: #fff;
+    padding: 45px;
+    display: flex;
+    flex-direction: column;
+}
+
+.toc-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    margin-bottom: 25px;
+    color: var(--gold);
+    border-bottom: 1px solid rgba(201,162,39,0.3);
+    padding-bottom: 12px;
+}
+
+.toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.88rem;
+}
+
+.toc-item:last-child { border-bottom: none; }
+
+.toc-text { color: rgba(255,255,255,0.85); }
+.toc-num { 
+    color: var(--gold); 
+    font-weight: 600; 
+    font-size: 0.8rem;
+    min-width: 24px;
+    text-align: right;
+}
+
+/* ===== CONTENT PAGES ===== */
+.content-face {
+    padding: 38px 36px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    z-index: 3;
+}
+
+.page-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2.5px solid var(--gold);
+    line-height: 1.25;
+}
+
+.page-body {
+    font-size: 0.86rem;
+    line-height: 1.65;
+    color: var(--text);
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.page-body p {
+    margin-bottom: 10px;
+    text-align: justify;
+}
+
+.page-body strong {
+    color: var(--navy-light);
+    font-weight: 700;
+}
+
+.page-body em {
+    color: var(--slate);
+    font-style: italic;
+}
+
+/* Pull quote */
+.pull-quote {
+    margin: 14px 0;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, rgba(201,162,39,0.08), rgba(201,162,39,0.03));
+    border-left: 3px solid var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--navy);
+    line-height: 1.5;
+    border-radius: 0 6px 6px 0;
+}
+
+.pull-quote cite {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.78rem;
+    color: var(--text-faint);
+    font-style: normal;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+/* Highlight box */
+.highlight-box {
+    margin: 12px 0;
+    padding: 12px 14px;
+    background: rgba(10, 22, 40, 0.04);
+    border-radius: 6px;
+    border: 1px solid rgba(10, 22, 40, 0.08);
+}
+
+.highlight-box strong {
+    color: var(--accent);
+}
+
+/* Lists */
+.page-body ul {
+    margin: 8px 0 10px 18px;
+}
+
+.page-body li {
+    margin-bottom: 5px;
+}
+
+/* Numbered pillars */
+.pillar-row {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    gap: 12px;
+}
+
+.pillar-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.pillar-num.n1 { background: var(--accent); }
+.pillar-num.n2 { background: var(--slate); }
+.pillar-num.n3 { background: var(--gold); color: var(--navy); }
+
+.pillar-text strong {
+    font-size: 0.92rem;
+}
+
+.pillar-text span {
+    font-size: 0.82rem;
+    color: var(--text-light);
+}
+
+/* Rapid fire items */
+.rf-item {
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    font-size: 0.84rem;
+    line-height: 1.5;
+}
+
+.rf-item:last-child { border-bottom: none; }
+
+.rf-bullet {
+    color: var(--accent);
+    font-weight: 700;
+    margin-right: 6px;
+}
+
+.rf-label {
+    font-weight: 700;
+    color: var(--navy);
+}
+
+.rf-answer {
+    color: var(--text);
+}
+
+.rf-highlight {
+    color: var(--accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Warning box */
+.warn-box {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: rgba(201, 48, 44, 0.06);
+    border: 1px solid rgba(201, 48, 44, 0.15);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Page numbers */
+.page-num {
+    position: absolute;
+    bottom: 14px;
+    font-size: 0.75rem;
+    color: var(--text-faint);
+    font-weight: 600;
+    z-index: 4;
+}
+
+.page-front .page-num { right: 22px; }
+.page-back .page-num { left: 22px; }
+
+/* Closing page */
+.closing-front {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+    height: 100%;
+}
+
+.closing-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.35;
+    margin-bottom: 20px;
+}
+
+.closing-divider {
+    width: 50px;
+    height: 3px;
+    background: var(--accent);
+    margin-bottom: 15px;
+}
+
+.closing-author {
+    font-size: 1rem;
+    color: var(--text-light);
+    margin-bottom: 8px;
+}
+
+.closing-role {
+    font-size: 0.8rem;
+    color: var(--text-faint);
+    margin-bottom: 30px;
+}
+
+.closing-signoff {
+    font-size: 0.82rem;
+    color: var(--text-faint);
+    line-height: 1.6;
+}
+
+.closing-back {
+    background: linear-gradient(160deg, #0a1628 0%, #1a2b47 50%, #0d2137 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+    height: 100%;
+}
+
+.closing-back h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.closing-back .emoji {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.closing-back p {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Scrollbar */
+.page-body::-webkit-scrollbar { width: 4px; }
+.page-body::-webkit-scrollbar-track { background: transparent; }
+.page-body::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+/* Book spine */
+.book::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -2px;
+    width: 3px;
+    height: calc(100% + 4px);
+    background: linear-gradient(to bottom, #0a1628, #1a2b47, #0a1628);
+    transform: translateX(-50%);
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    border-radius: 2px;
+}
+
+/* Shadow */
+.book-shadow {
+    position: absolute;
+    bottom: -30px;
+    left: 8%;
+    width: 84%;
+    height: 30px;
+    background: radial-gradient(ellipse, rgba(0,0,0,0.3) 0%, transparent 70%);
+    filter: blur(10px);
+    z-index: -1;
+}
+
+/* Controls */
+.controls {
+    position: fixed;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 14px;
+    z-index: 2000;
+}
+
+.ctrl-btn {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    padding: 10px 26px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: all 0.25s;
+    backdrop-filter: blur(12px);
+    letter-spacing: 0.5px;
+}
+
+.ctrl-btn:hover {
+    background: rgba(255,255,255,0.22);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.ctrl-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Page indicator */
+.page-indicator {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    backdrop-filter: blur(12px);
+    z-index: 2000;
+    letter-spacing: 1px;
+}
+
+/* Click zones */
+.click-zone {
+    position: fixed;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    z-index: 500;
+    cursor: pointer;
+}
+.click-zone-left { left: 0; }
+.click-zone-right { right: 0; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .book-scene { height: 560px; }
+    .cover-title { font-size: 1.7rem; }
+    .content-face { padding: 24px 20px; }
+    .page-header { font-size: 1.15rem; }
+    .page-body { font-size: 0.8rem; line-height: 1.55; }
+    .pull-quote { font-size: 0.85rem; padding: 10px 12px; }
+    .toc-item { font-size: 0.8rem; }
+    .closing-quote { font-size: 1.3rem; }
+    .ctrl-btn { padding: 8px 18px; font-size: 0.8rem; }
+}
+
+@media (max-width: 480px) {
+    .book-scene { height: 520px; }
+    .cover-title { font-size: 1.4rem; }
+    .content-face { padding: 18px 14px; }
+    .page-header { font-size: 1.05rem; }
+    .page-body { font-size: 0.76rem; }
+    .pillar-num { width: 24px; height: 24px; font-size: 0.7rem; }
 }
 </style>
 <base target="_blank">
 </head>
 <body>
-<header><h1>🏆 2026 World Cup Predictor</h1><p>Enter scores manually → Standings auto-update → Knockout bracket fills automatically</p></header>
-<div class="clock-bar">🕐 Jakarta Time: <span id="jakartaClock">--:--:--</span> WIB</div>
-<div class="tabs" id="tabs">
-<button class="tab-btn active" data-tab="schedule">📅 Schedule</button>
-<button class="tab-btn" data-tab="standings">📊 Standings</button>
-<button class="tab-btn" data-tab="groups">🔢 Groups</button>
-<button class="tab-btn" data-tab="knockout">⚔️ Knockout</button>
+
+<div class="page-indicator" id="pageIndicator">1 / 11</div>
+
+<div class="book-scene">
+    <div class="book" id="book">
+
+        <!-- PAGE 0: Cover -->
+        <div class="page" id="page0">
+            <div class="page-face page-front cover-front">
+                <div class="cover-emoji">⚽</div>
+                <div class="cover-title">If You Can't Beat Them,<br>Join Them</div>
+                <div class="cover-subtitle">Economics, Football & National Strategy</div>
+                <div class="cover-divider"></div>
+                <div class="cover-author">
+                    A Conversation with<br>
+                    <strong>Dr. Khatib Basri</strong><br>
+                    <span style="font-size:0.85rem;opacity:0.7;">Former Minister of Finance, Republic of Indonesia (2013–2014)</span>
+                </div>
+                <div class="cover-footer">Interactive Booklet</div>
+            </div>
+            <div class="page-face page-back cover-back">
+                <div class="toc-title">Contents</div>
+                <div class="toc-item"><span class="toc-text">The World Cup Analogy</span><span class="toc-num">2</span></div>
+                <div class="toc-item"><span class="toc-text">A Love Affair with Football</span><span class="toc-num">3</span></div>
+                <div class="toc-item"><span class="toc-text">The Envelope from Wijoyo</span><span class="toc-num">4</span></div>
+                <div class="toc-item"><span class="toc-text">Agility & The Dinosaur</span><span class="toc-num">5</span></div>
+                <div class="toc-item"><span class="toc-text">Indonesia as Catenaccio</span><span class="toc-num">6</span></div>
+                <div class="toc-item"><span class="toc-text">The Resource Curse</span><span class="toc-num">7</span></div>
+                <div class="toc-item"><span class="toc-text">Talent vs. System</span><span class="toc-num">8</span></div>
+                <div class="toc-item"><span class="toc-text">Human Capital in the AI Era</span><span class="toc-num">9</span></div>
+                <div class="toc-item"><span class="toc-text">Quick Wins — China Plus One</span><span class="toc-num">10</span></div>
+                <div class="toc-item"><span class="toc-text">The Amazon Inspiration</span><span class="toc-num">11</span></div>
+                <div class="toc-item"><span class="toc-text">Three Pillars for 2045</span><span class="toc-num">12</span></div>
+                <div class="toc-item"><span class="toc-text">The Aging Population Bomb</span><span class="toc-num">13</span></div>
+                <div class="toc-item"><span class="toc-text">Message to the Youth</span><span class="toc-num">14</span></div>
+                <div class="toc-item"><span class="toc-text">Competition & The Home Champion</span><span class="toc-num">15</span></div>
+                <div class="toc-item"><span class="toc-text">Message to Business</span><span class="toc-num">16</span></div>
+                <div class="toc-item"><span class="toc-text">Rapid Fire — Part I</span><span class="toc-num">17</span></div>
+                <div class="toc-item"><span class="toc-text">Rapid Fire — Part II</span><span class="toc-num">18</span></div>
+                <div class="toc-item"><span class="toc-text">Closing</span><span class="toc-num">19</span></div>
+            </div>
+        </div>
+
+        <!-- PAGE 1: World Cup Analogy / Football Journey -->
+        <div class="page" id="page1">
+            <div class="page-face page-front">
+                <div class="content-face">
+                    <div class="page-header">The World Cup Analogy</div>
+                    <div class="page-body">
+                        <p>Every four years, the world watches the FIFA World Cup. Our eyes are drawn to the pitch — the star players, the spectacular goals, the trophy lift. Yet beneath every victory lies a deeper architecture: <strong>strategy, team building, governance, and years of disciplined process.</strong></p>
+                        <p>Business and economics ask the very same questions. What can be won? What strategy wins the match? Football is not merely art and passion; it is <em>system, discipline, and relentless competition.</em></p>
+                        <p>In this exclusive conversation, Dr. <strong>Khatib Basri</strong> — former Minister of Finance of Indonesia (2013–2014) and widely regarded as the nation's finest economic storyteller — draws a sweeping parallel between the beautiful game and the hard economics of national development.</p>
+                        <div class="pull-quote">
+                            "What happens on the field is only the final act. The real drama is in the decades of preparation, the systems built, and the talent cultivated long before the whistle blows."
+                        </div>
+                        <p>The interview explores why Indonesia, despite vast potential, remains trapped in a defensive posture — and what it must learn from Vietnam, Germany, Argentina, and the relentless logic of global competition.</p>
+                    </div>
+                    <div class="page-num">2</div>
+                </div>
+            </div>
+            <div class="page-face page-back">
+                <div class="content-face">
+                    <div class="page-header">A Love Affair with Football</div>
+                    <div class="page-body">
+                        <p>Dr. Basri grew up in the <strong>1970s</strong>, an era without television, satellite dishes, or the internet. To learn the result of a Netherlands vs. Germany match, he had to wait for the morning newspaper — <em>Kompas</em> — which arrived the next day, even though the match had been played the night before.</p>
+                        <p>Live broadcasts were therefore <strong>extraordinary events.</strong> He still remembers the rare privilege of bringing a television to school to watch morning matches with his classmates.</p>
+                        <p>It was the era of <strong>Total Football</strong> — Rinus Michels, Johan Cruyff, Wim van Hanegem, Johnny Rep. Germany had Franz Beckenbauer. But the 1978 World Cup changed everything: Basri fell in love with <strong>Mario Kempes</strong>, Osvaldo Ardiles, and the Argentine spirit. He has supported Argentina ever since — through the Maradona era of 1986 to the Messi era of today. He wears the jersey still.</p>
+                        <p>As a boy, he played for <strong>MBFA</strong> (Merdeka Boys Football Association) at Lapangan Banteng. Football boots had <em>nails</em> on the soles, not plastic studs, bought at Senen market from a shop called Shong Fu. The coolest position was goalkeeper — <em>anak gawang</em>. He played striker, then gradually dropped to defender and midfielder as his stamina faded.</p>
+                        <p>For the 2026 World Cup, he follows Argentina closely — Emiliano Martínez, Messi, Cristian Romero. His <em>heart</em> says Argentina; his <em>head</em> says Spain. And yes, he heard about Messi's hattrick this morning.</p>
+                    </div>
+                    <div class="page-num">3</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 2: Wijoyo / Agility -->
+        <div class="page" id="page2">
+            <div class="page-face page-front">
+                <div class="content-face">
+                    <div class="page-header">The Envelope from Wijoyo</div>
+                    <div class="page-body">
+                        <p>Around <strong>2002–2006</strong>, Dr. Basri received a brown envelope addressed to "The Honorable Khatib Basri." The sender was <strong>Wijoyo Nitiastro</strong> — a legendary economic figure. Basri assumed it was serious official correspondence.</p>
+                        <p>He opened it. Inside was a <strong>football match schedule</strong> — complete with Wijoyo's typed team analysis. The message read: <em>"Don't work too hard. Enjoy football."</em></p>
+                        <p>But one phrase struck Basri permanently: <strong>"If you can't beat them, join them."</strong> Wijoyo was writing about naturalized French players on the national team. His strategic point: when you cannot dominate an opponent through brute force, you adapt — you integrate their strengths into your own system.</p>
+                        <p>Wijoyo was not merely talking about football. He was talking about <strong>agility</strong> — the capacity to read the field, recognize superior force, and adjust your formation. In business and economics, this is not surrender; it is <em>strategic realism.</em></p>
+                        <div class="highlight-box">
+                            <strong>The core insight:</strong> The greatest threat to a nation or a firm is not a stronger competitor. It is the <em>inability to adjust</em> when the terrain shifts.
+                        </div>
+                        <p>This single envelope, sent by a senior statesman who understood that economics and football share the same grammar, became a lens through which Basri has viewed Indonesian development ever since.</p>
+                    </div>
+                    <div class="page-num">4</div>
+                </div>
+            </div>
+            <div class="page-face page-back">
+                <div class="content-face">
+                    <div class="page-header">Agility & The Dinosaur</div>
+                    <div class="page-body">
+                        <p>Dr. Basri often returns to a scene from <strong>Jurassic Park</strong>. The dinosaurs were the largest, most powerful creatures to ever walk the earth. They ruled for millennia. And then they were gone.</p>
+                        <p>The lesson is brutal and clear: <strong>survival is not about being the strongest or the smartest. It is about being the most capable of adjustment.</strong> In an agile world, agility is the master key. Without it, obsolescence is not a risk — it is a certainty.</p>
+                        <div class="pull-quote">
+                            "The dinosaur was a massive animal, but it went extinct. What determines survival is not who is strongest or smartest, but who can adjust the fastest."
+                        </div>
+                        <p>Indonesia's central problem in business and economics is precisely this: <strong>an inability to adjust quickly.</strong> The decision-making apparatus lacks discipline, transparency, and public interaction. Regulations appear without public awareness, pushed through at lightning speed. Bureaucratic uncertainty is so extreme that, as Basri puts it, <em>"you can do nothing but pray."</em></p>
+                        <p>Business does not need sermons. It does not need to be taught. It needs <strong>certainty</strong> — predictable rules, consistent enforcement, and a state that does not change the goalposts overnight. The first duty of government toward the private sector is to create a field where the players can look up and pass, rather than watching their feet for stones.</p>
+                    </div>
+                    <div class="page-num">5</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 3: Catenaccio / Resource Curse -->
+        <div class="page" id="page3">
+            <div class="page-face page-front">
+                <div class="content-face">
+                    <div class="page-header">Indonesia as Catenaccio</div>
+                    <div class="page-body">
+                        <p>Asked which football team Indonesia's economy most resembles, Dr. Basri does not hesitate: <strong>Italy's Catenaccio.</strong> A system built on defense. A team that holds, waits, absorbs pressure, and only throws the ball forward once — hoping for a single lethal counterattack.</p>
+                        <p>Indonesia is <em>inward-looking.</em> It is busy being a <strong>firefighter</strong> — solving domestic problems, managing internal contradictions, celebrating the size of its domestic market. It is not offensive. It does not play a significant global role. It defends.</p>
+                        <p>Consider <strong>Vietnam.</strong> A smaller nation, historically devastated, yet now a <em>production-based economy.</em> LG and Samsung manufacture in Vietnam not for the domestic market but for the <strong>entire world.</strong> Vietnam's market is global. Even under Trump's tariffs, it grew at <strong>8%.</strong></p>
+                        <p>Consider <strong>Singapore.</strong> A city-state with no hinterland, yet it became a financial hub, a digital hub, and now an AI hub. It had no choice but to be proactive. Indonesia, by contrast, arrives late to every strategic opportunity — complacent in its archipelagic vastness.</p>
+                        <div class="warn-box">
+                            ⚠️ Indonesia must abandon the Catenaccio mindset. The domestic market is a starting point, not a destination.
+                        </div>
+                    </div>
+                    <div class="page-num">6</div>
+                </div>
+            </div>
+            <div class="page-face page-back">
+                <div class="content-face">
+                    <div class="page-header">The Resource Curse</div>
+                    <div class="page-body">
+                        <p>Why is Indonesia defensive? Dr. Basri points to <strong>Jeffrey Sachs's "Resource Curse."</strong> Nations endowed with abundant natural resources — oil, gas, minerals, fertile land — often fail to develop advanced economies. Of all resource-rich nations, only <strong>Canada and Australia</strong> have truly advanced. Across Africa, oil wealth has produced stagnation, not prosperity.</p>
+                        <p>In economics, this is also called <strong>Dutch Disease</strong> — a syndrome where resource wealth kills creativity, hollows out manufacturing, and traps a nation in commodity dependence. The resource is <em>"enough."</em> It breeds complacency. Why evolve when the ground beneath your feet already pays the bills?</p>
+                        <p><strong>Japan</strong> provides the counterfactual. It possesses almost no natural resources. It thrives on creativity, complexity, and relentless incremental innovation. Japan had no choice but to become brilliant.</p>
+                        <p>Indonesia's tragedy is that its resources are <em>just sufficient</em> to prevent the urgency that drove Japan, South Korea, or Singapore. The nation never developed the <strong>economic complexity</strong> — the gradual evolution from simple to sophisticated capabilities — that transforms poor countries into rich ones.</p>
+                        <div class="pull-quote">
+                            "We are trapped because our resources are enough. We never had to become advanced."
+                        </div>
+                    </div>
+                    <div class="page-num">7</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 4: Economic Complexity / Talent vs System -->
+        <div class="page" id="page4">
+            <div class="page-face page-front">
+                <div class="content-face">
+                    <div class="page-header">Economic Complexity</div>
+                    <div class="page-body">
+                        <p>Dr. Basri recounts a conversation with <strong>Ricardo Hausmann</strong> of Harvard University. The debate: should Indonesia prioritize manufacturing or services? Hausmann's answer reframed the question entirely.</p>
+                        <p>He pointed to <strong>Toyota</strong> — originally a textile machinery company that evolved into the world's largest automaker. He pointed to <strong>Nokia</strong> — born from Norwegian wood-cutting operations that gradually built electronic capabilities until they produced mobile phones. This is <em>economic complexity</em> in action: starting with simple capabilities and compounding them over decades into entirely new industries.</p>
+                        <p>This process <strong>has not happened in Indonesia.</strong> There is no indigenous trajectory from palm oil to precision engineering, from coal to semiconductors, from textiles to advanced materials. Each sector remains siloed, extracting and exporting raw commodities rather than climbing the value chain.</p>
+                        <p>The reason, Basri argues, is the <strong>Resource Curse</strong> combined with <strong>low productivity.</strong> When a nation can survive by digging, it does not learn to build. When a nation can profit by exporting raw nickel, it does not learn to manufacture batteries. The comfort of the present becomes the trap of the future.</p>
+                        <div class="highlight-box">
+                            <strong>Hausmann's insight:</strong> Wealth is not about what you have. It is about what you <em>can do</em> — and how many different things you can do that are hard to replicate.
+                        </div>
+                    </div>
+                    <div class="page-num">8</div>
+                </div>
+            </div>
+            <div class="page-face page-back">
+                <div class="content-face">
+                    <div class="page-header">Talent vs. System</div>
+                    <div class="page-body">
+                        <p>World Cup winners follow two distinct models. <strong>Latin America</strong> produces individual brilliance — the <em>Jogo Bonito</em> of Pelé, the divine madness of Maradona, the genius of Messi. It is beautiful, emotional, and <strong>unsustainable.</strong> Argentina was lucky: after Maradona, they found Messi. But what comes after Messi?</p>
+                        <p><strong>Germany</strong> offers the opposite model. No single German team dominates the global imagination like Brazil 1970 or Argentina 1986. Yet Germany is <em>always</em> in contention. Their 1974 squad — Müller, Beckenbauer, Netzer — was not glamorous, but it was <strong>machine-like.</strong> Every corner kick, every free kick, every defensive transition was rehearsed, systematic, a <em>set piece.</em></p>
+                        <p>Indonesia's crisis is that it is <strong>neither Germany nor Latin America.</strong> The system is weak. Individual talents are scarce. As Basri's friend <strong>Yanwar Nugroho</strong> wrote in <em>Kompas</em>: the nation should worry about the <em>weakening of technocracy.</em></p>
+                        <p>Indonesia has a long tradition of technocratic excellence in economic policy. But <strong>meritocracy is blocked.</strong> Clientelism, political patronage, and inward-looking networks prevent the best from rising. The talent is there — but the system will not let it breathe.</p>
+                    </div>
+                    <div class="page-num">9</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 5: Human Capital / Quick Wins -->
+        <div class="page" id="page5">
+            <div class="page-face page-front">
+                <div class="content-face">
+                    <div class="page-header">Human Capital in the AI Era</div>
+                    <div class="page-body">
+                        <p>Dr. Basri is tired of clichés. He is tired of saying Indonesia has potential. The truth is simpler and harder: <strong>Indonesians are already smart.</strong> Astra scholars at Oxford perform brilliantly. Indonesian researchers in Japan publish world-class work. Badminton dominance proves the raw capability is real.</p>
+                        <p>The problem is the <strong>system prevents talent from flourishing.</strong> Meritocracy does not function. The best engineers, scientists, and managers are filtered out by networks rather than nurtured by institutions.</p>
+                        <p>Now comes the <strong>AI era.</strong> Basri offers a crucial correction to the popular narrative: <em>jobs will not disappear.</em> Jobs will be <strong>dominated by those who possess the skills to operate intelligent machines.</strong> This is not unemployment. It is <em>skill-biased technological substitution.</em></p>
+                        <div class="pull-quote">
+                            "Nurses and doctors will still exist. But which nurses? The ones who can operate robots and AI. Which doctors? The ones who can command diagnostic machines. Surgery may no longer use hands — it will use interfaces."
+                        </div>
+                        <p>Without a radical upgrade in <strong>human capital quality</strong> and without a functioning <strong>meritocracy</strong>, Indonesia will lose this competition before it even understands the rules. The nation must build German-like systems <em>and</em> let Latin American-style individual brilliance shine.</p>
+                    </div>
+                    <div class="page-num">10</div>
+                </div>
+            </div>
+            <div class="page-face page-back">
+                <div class="content-face">
+                    <div class="page-header">Quick Wins — China Plus One</div>
+                    <div class="page-body">
+                        <p>The United States and China are locked in strategic rivalry. One consequence: Chinese companies increasingly cannot access the American market from mainland China. They must relocate. This is the <strong>"China Plus One"</strong> phenomenon — and it represents a historic window.</p>
+                        <p>Who is capturing this window? <strong>Vietnam. Singapore.</strong> Indonesia is capturing remarkably little. The reason is not geography. It is not wages. It is <strong>bureaucratic complexity and uncertainty.</strong></p>
+                        <div class="pull-quote">
+                            "When people deal with Indonesian bureaucracy, they can do nothing but pray — because the uncertainty is that extreme. People become religious out of desperation."
+                        </div>
+                        <p>The solution requires <strong>zero fiscal stimulus.</strong> It is pure <strong>deregulation.</strong> Make processes easy. Make licensing transparent and fast. One reform already moving in the right direction: <strong>PP 28</strong> from BKPM, which states that if a technical ministry fails to respond within a set period, the license is <em>automatically approved.</em> This creates <strong>positive administrative silence</strong> — a powerful tool for certainty.</p>
+                        <p>Basri's core message to government: <strong>"Business does not need to be taught. Just don't disturb it."</strong> The state's job is to build the field, paint the lines, and enforce the rules — then get off the pitch.</p>
+                    </div>
+                    <div class="page-num">11</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 6: Amazon / Three Pillars -->
+        <div class="page" id="page6">
+            <div class="page-face page-front">
+                <div class="content-face">
+                    <div class="page-header">The Amazon Inspiration</div>
+                    <div class="page-body">
+                        <p>During his time at <strong>BKPM</strong> (Indonesia's investment coordinating board), Dr. Basri faced a constant complaint: investors had no idea where their permit applications sat. A document could disappear into a ministry for weeks, and the applicant had no visibility, no recourse, no certainty.</p>
+                        <p>Basri found inspiration in an unexpected place: <strong>Amazon package tracking.</strong> He asked his team: "Can we build an intranet for permits where the applicant knows exactly which desk their document is sitting on?"</p>
+                        <p>The psychological effect is profound. Even if the problem is unsolved, knowing <em>"it has been two days at this desk"</em> creates a sense of control. Basri even published his own email address for complaints. He appeared impossibly busy, but in reality he was simply forwarding messages to the relevant deputy with one question: <em>"How many days has this been on your desk?"</em></p>
+                        <div class="highlight-box">
+                            <strong>Certainty is the cheapest stimulus government can provide.</strong> It costs no fiscal outlay. It requires only political will and administrative redesign.
+                        </div>
+                        <p>The next stage is <strong>human capital development.</strong> In the 1980s, most of Indonesia's top bankers were graduates of <strong>Citibank's</strong> training programs — not government academies. Government education often uses outdated tools (Basri jokes: WordStar, Lotus 1-2-3, floppy disks). Companies, by contrast, use live technology.</p>
+                        <p>The policy lever: <strong>double tax deductions</strong> for companies that conduct serious employee training. Want better journalists? Let <em>Kompas</em> train them, subsidized by tax policy. Want better engineers? Let industry build the academies.</p>
+                    </div>
+                    <div class="page-num">12</div>
+                </div>
+            </div>
+            <div class="page-face page-back">
+                <div class="content-face">
+                    <div class="page-header">Three Pillars for 2045</div>
+                    <div class="page-body">
+                        <p>Dr. Basri uses a football analogy from <strong>PSSI</strong> (the Indonesian Football Association). A coach observed that Indonesian players look down at the ball, never seeing their teammates. The reason? <strong>The field is full of stones and holes.</strong> They must watch their feet to survive. Bad infrastructure creates bad habits.</p>
+                        <p>If the field were safe, players would look up. They would pass. They would see the game. The same is true of national development. Indonesia needs <strong>three pillars</strong> to reach its 2045 "Golden Indonesia" vision:</p>
+
+                        <div class="pillar-row">
+                            <div class="pillar-num n1">1</div>
+                            <div class="pillar-text">
+                                <strong>Infrastructure (Hardware)</strong><br>
+                                <span>Roads, ports, digital backbone, reliable electricity. The physical field on which the economy plays.</span>
+                            </div>
+                        </div>
+
+                        <div class="pillar-row">
+                            <div class="pillar-num n2">2</div>
+                            <div class="pillar-text">
+                                <strong>Human Capital</strong><br>
+                                <span>Training, meritocratic competition, and relentless upskilling. The players on the field.</span>
+                            </div>
+                        </div>
+
+                        <div class="pillar-row">
+                            <div class="pillar-num n3">3</div>
+                            <div class="pillar-text">
+                                <strong>Governance (Software)</strong><br>
+                                <span>Disciplined process, predictable rules, and systematic execution. The playbook and the referee.</span>
+                            </div>
+                        </div>
+
+                        <p style="margin-top: 12px;">Germany's system is sometimes boring. People dislike its rigidity. But <em>governance</em> is what allows a nation to execute set pieces with machine precision — in football and in fiscal policy.</p>
+                    </div>
+                    <div class="page-num">13</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 7: Aging / Youth -->
+        <div class="page" id="page7">
+            <div class="page-face page-front">
+                <div class="content-face">
+                    <div class="page-header">The Aging Population Bomb</div>
+                    <div class="page-body">
+                        <p>Without acceleration on all three pillars, Indonesia faces a demographic time bomb. By <strong>2050</strong>, the nation will enter an <strong>aging population</strong> phase. The dependency ratio will shift. The dividend of youth will expire.</p>
+                        <p>The risk is not a financial crisis. The risk is subtler and more permanent: <strong>growing old before growing rich.</strong> Basri phrases it in stark Indonesian: <em>"Tua sebelum kaya."</em></p>
+                        <p>A nation that does not build productivity, infrastructure, and governance during its demographic window will find itself with an elderly population and no accumulated wealth to support them. This is the <strong>middle-income trap</strong> — not a dramatic collapse, but a slow, grinding stagnation.</p>
+                        <div class="warn-box">
+                            ⚠️ The long-term economic World Cup requires all three pillars. Missing even one risks elimination before the knockout stage.
+                        </div>
+                        <p>The trajectory is not predestined. But it is <em>constrained.</em> Every year of delay in reform, every year of bureaucratic inertia, every year of inward-looking policy narrows the window further. The match is already in progress.</p>
+                    </div>
+                    <div class="page-num">14</div>
+                </div>
+            </div>
+            <div class="page-face page-back">
+                <div class="content-face">
+                    <div class="page-header">Message to the Youth</div>
+                    <div class="page-body">
+                        <p>If he were manager of the Indonesian national team — or the Indonesian economy — Dr. Basri's first message would be to the youth. <strong>Enthusiasm is fuel.</strong> Ambition is not a dirty word. In Indonesia, Basri notes, dreaming big is sometimes viewed with suspicion, as if realism were the only virtue.</p>
+                        <div class="pull-quote">
+                            "Dream as high as possible. If you fall, you still land relatively high."<br>
+                            <cite>— Nelson Mandela: "If your plan does not scare you, it is not ambitious enough."</cite>
+                        </div>
+                        <p>At Harvard, Basri observes students who dismiss their own chances before even applying. <em>"I could never get in there."</em> His response: <strong>try anyway.</strong> There is no cost to attempting liberation.</p>
+                        <p>The unique advantage of youth is <strong>cognitive audacity.</strong> Older generations are "too realistic." They have learned what is "impossible." Young people have not yet absorbed these constraints. They attempt the impossible — and that is precisely how civilization advances.</p>
+                        <div class="highlight-box">
+                            <strong>"Civilization is built by unreasonable people."</strong> The reasonable adapt to the world. The unreasonable adapt the world to themselves.
+                        </div>
+                        <p>The national team needs <em>fire</em> — the burning desire of young talent. It needs systematic discipline. And it needs <strong>meritocracy</strong> to identify and elevate the best, regardless of origin or connection.</p>
+                    </div>
+                    <div class="page-num">15</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 8: Competition / Business -->
+        <div class="page" id="page8">
+            <div class="page-face page-front">
+                <div class="content-face">
+                    <div class="page-header">Competition & The Home Champion</div>
+                    <div class="page-body">
+                        <p>Indonesia suffers from a cultural tendency Basri calls <strong>"jago kandang"</strong> — the home champion. We dominate our own courtyard. We avoid genuine external competition. We build local empires and mistake them for global strength.</p>
+                        <p>This is fatal. <strong>Football is competition.</strong> Economics is competition. You cannot become a world-class player by practicing only against your cousins. You must face stronger opponents, lose, adapt, and return. The German national team does not train against village clubs. They seek the hardest possible opposition.</p>
+                        <p>Indonesia must embrace <strong>relentless external competition</strong> — in trade, in investment attraction, in education, in sports. The comfort of domestic monopoly produces brittle champions who collapse on the international stage.</p>
+                        <div class="pull-quote">
+                            "You cannot become a great player without facing competition from outside. Football is about competition. So is economics."
+                        </div>
+                        <p>The prescription is systematic: compete often, at every level, against the best. Let meritocracy — not patronage — determine who wears the national jersey. And build the infrastructure, human capital, and governance that allow the team to look up and pass, rather than staring at their own feet.</p>
+                    </div>
+                    <div class="page-num">16</div>
+                </div>
+            </div>
+            <div class="page-face page-back">
+                <div class="content-face">
+                    <div class="page-header">Message to Business</div>
+                    <div class="page-body">
+                        <p>The single greatest issue facing Indonesian business is <strong>uncertainty.</strong> Not taxes. Not labor costs. Not infrastructure gaps. <em>Uncertainty.</em></p>
+                        <p>Business can solve problems. Business can price in costs. What business cannot tolerate is <strong>unpredictability.</strong> A problem that is known and measurable can be managed. A problem that shifts shape every month destroys planning, investment, and confidence.</p>
+                        <p>Basri offers a simple analogy. You are at the airport. Your flight is delayed <strong>two hours.</strong> You are annoyed, but you can manage. You buy coffee, make calls, adjust your schedule. Now imagine the airline says: <em>"We don't know when this plane will leave. Maybe two hours. Maybe six. Maybe tomorrow."</em> The uncertainty is paralyzing. You cannot plan. You cannot relax. You can only wait in suspended anxiety.</p>
+                        <div class="highlight-box">
+                            <strong>This is Indonesian bureaucracy.</strong> The investor does not know which desk holds their permit, how long it will sit there, or what new regulation will appear next week.
+                        </div>
+                        <p>The government's role is to <strong>create certainty.</strong> Consistent regulations. Simple licensing. Predictable enforcement. When uncertainty becomes intolerable, business gives up. And when business gives up, jobs, taxes, and futures disappear.</p>
+                    </div>
+                    <div class="page-num">17</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 9: Rapid Fire I / II -->
+        <div class="page" id="page9">
+            <div class="page-face page-front">
+                <div class="content-face">
+                    <div class="page-header">Rapid Fire — Part I</div>
+                    <div class="page-body">
+                        <div class="rf-item">
+                            <span class="rf-bullet">▸</span>
+                            <span class="rf-label">Most admired economy:</span>
+                            <span class="rf-answer"> <span class="rf-highlight">Vietnam</span>. In 1975, Vietnam had just emerged from war while Indonesia was already developing. Today, Vietnam's acceleration is extraordinary — reminiscent of China in the late 1970s. It is a frontier market likely to become emerging. If that happens, Asian stock capital will migrate. A direct threat to Indonesia.</span>
+                        </div>
+                        <div class="rf-item">
+                            <span class="rf-bullet">▸</span>
+                            <span class="rf-label">Most urgent reform:</span>
+                            <span class="rf-answer"> <span class="rf-highlight">Deregulation</span>. Zero fiscal cost. Give certainty to business. "Don't teach business. Don't disturb business."</span>
+                        </div>
+                        <div class="rf-item">
+                            <span class="rf-bullet">▸</span>
+                            <span class="rf-label">Most promising sector (10 years):</span>
+                            <span class="rf-answer"> <span class="rf-highlight">Semiconductors & nickel batteries</span>. AI and digitalization require portable power. Indonesia controls nickel. But it must join the <em>global supply chain</em>. If Indonesia merely bans exports without integrating, the world will innovate around nickel entirely.</span>
+                        </div>
+                        <div class="rf-item">
+                            <span class="rf-bullet">▸</span>
+                            <span class="rf-label">Talent or natural resources:</span>
+                            <span class="rf-answer"> <span class="rf-highlight">TALENT</span>. Without question.</span>
+                        </div>
+                        <div class="rf-item">
+                            <span class="rf-bullet">▸</span>
+                            <span class="rf-label">Growth or equity:</span>
+                            <span class="rf-answer"> <span class="rf-highlight">GROWTH</span>. (With hesitation, but growth must come first.)</span>
+                        </div>
+                        <div class="rf-item">
+                            <span class="rf-bullet">▸</span>
+                            <span class="rf-label">Quality most needing strengthening:</span>
+                            <span class="rf-answer"> <span class="rf-highlight">Human Capital</span>.</span>
+                        </div>
+                    </div>
+                    <div class="page-num">18</div>
+                </div>
+            </div>
+            <div class="page-face page-back">
+                <div class="content-face">
+                    <div class="page-header">Rapid Fire — Part II</div>
+                    <div class="page-body">
+                        <div class="rf-item">
+                            <span class="rf-bullet">▸</span>
+                            <span class="rf-label">One word for Indonesia's economy in 2030:</span>
+                            <span class="rf-answer"> <span class="rf-highlight">"DISAPPOINT"</span>. It disappoints optimists (expectations too high) and pessimists (it doesn't collapse either). Hopefully this prediction is wrong.</span>
+                        </div>
+                        <div class="rf-item">
+                            <span class="rf-bullet">▸</span>
+                            <span class="rf-label">Indonesia in 2045:</span>
+                            <span class="rf-answer"> Hopefully <span class="rf-highlight">"pass the group stage"</span> — meaning, graduate from middle-income status. Even this is doubtful if current trajectory continues. The target is high. The real risk is the <strong>middle-income trap</strong>, not crisis.</span>
+                        </div>
+                        <div class="rf-item">
+                            <span class="rf-bullet">▸</span>
+                            <span class="rf-label">Star to shine in World Cup 2026:</span>
+                            <span class="rf-answer"> <span class="rf-highlight">Lionel Messi</span>. His sixth World Cup. Probably too old. But the heart wants what it wants.</span>
+                        </div>
+                        <div class="rf-item">
+                            <span class="rf-bullet">▸</span>
+                            <span class="rf-label">World Cup 2026 champion:</span>
+                            <span class="rf-answer"> <em>Hope:</em> <span class="rf-highlight">Argentina</span>. <em>Rational guess:</em> <span class="rf-highlight">Spain</span>.</span>
+                        </div>
+
+                        <div style="margin-top: 20px; padding: 14px; background: linear-gradient(135deg, rgba(10,22,40,0.04), rgba(10,22,40,0.02)); border-radius: 8px; border: 1px solid rgba(10,22,40,0.08);">
+                            <p style="margin-bottom: 8px; font-weight: 700; color: var(--navy);">Final Word</p>
+                            <p style="font-style: italic; color: var(--text-light);">"Business does not need to be taught. Just don't disturb it."</p>
+                            <p style="text-align: right; font-size: 0.8rem; color: var(--text-faint); margin-top: 6px;">— Dr. Khatib Basri</p>
+                        </div>
+                    </div>
+                    <div class="page-num">19</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 10: Closing -->
+        <div class="page" id="page10">
+            <div class="page-face page-front">
+                <div class="closing-front">
+                    <div class="closing-quote">
+                        "Business does not need<br>to be taught.<br>Just don't disturb it."
+                    </div>
+                    <div class="closing-divider"></div>
+                    <div class="closing-author">Dr. Khatib Basri</div>
+                    <div class="closing-role">Former Minister of Finance<br>Republic of Indonesia (2013–2014)</div>
+                    <div class="closing-signoff">
+                        Thank you, Sobat Kompas.<br>
+                        See you in the next round. ⚽
+                    </div>
+                </div>
+                <div class="page-num">20</div>
+            </div>
+            <div class="page-face page-back closing-back">
+                <div class="emoji">⚽</div>
+                <h2>The End</h2>
+                <p style="margin-top: 10px;">
+                    Dr. Khatib Basri<br>
+                    <span style="font-size: 0.85rem; opacity: 0.7;">Economics & Football</span>
+                </p>
+                <p style="margin-top: 25px; font-size: 0.8rem; opacity: 0.5;">
+                    Click left side to return<br>
+                    through the booklet
+                </p>
+            </div>
+        </div>
+
+    </div>
+    <div class="book-shadow"></div>
 </div>
-<div class="container">
-<div class="section active" id="schedule">
-<div class="actions-bar">
-<button class="btn btn-primary" id="saveBtn">💾 Save Scores</button>
-<button class="btn" id="clearBtn">🗑️ Clear All</button>
-<button class="btn" id="autoBtn">🎲 Auto-Fill</button>
+
+<div class="controls">
+    <button class="ctrl-btn" id="prevBtn" onclick="prevPage()">← Previous</button>
+    <button class="ctrl-btn" id="nextBtn" onclick="nextPage()">Next →</button>
 </div>
-<div class="save-status" id="saveStatus"></div>
-<div id="scheduleList"></div>
-</div>
-<div class="section" id="standings"><div class="group-grid" id="standingsGrid"></div></div>
-<div class="section" id="groups"><div class="group-grid" id="groupsGrid"></div></div>
-<div class="section" id="knockout"><div class="knockout-bracket" id="knockoutBracket"></div></div>
-</div>
+
+<div class="click-zone click-zone-left" onclick="prevPage()"></div>
+<div class="click-zone click-zone-right" onclick="nextPage()"></div>
+
 <script>
-const groups = {"A": ["Mexico", "South Africa", "South Korea", "Czechia"], "B": ["Canada", "Bosnia and Herzegovina", "Qatar", "Switzerland"], "C": ["Brazil", "Morocco", "Haiti", "Scotland"], "D": ["United States", "Paraguay", "Australia", "T\u00fcrkiye"], "E": ["Germany", "Cura\u00e7ao", "Ivory Coast", "Ecuador"], "F": ["Netherlands", "Japan", "Sweden", "Tunisia"], "G": ["Belgium", "Egypt", "Iran", "New Zealand"], "H": ["Spain", "Cape Verde", "Saudi Arabia", "Uruguay"], "I": ["France", "Senegal", "Iraq", "Norway"], "J": ["Argentina", "Algeria", "Austria", "Jordan"], "K": ["Portugal", "DR Congo", "Uzbekistan", "Colombia"], "L": ["England", "Croatia", "Ghana", "Panama"]};
-const matchday1Results = [{"date": "2026-06-11", "t1": "Mexico", "s1": 2, "s2": 0, "t2": "South Africa", "venue": "Estadio Azteca, Mexico City", "et": "15:00"}, {"date": "2026-06-11", "t1": "South Korea", "s1": 2, "s2": 1, "t2": "Czechia", "venue": "Estadio Akron, Zapopan", "et": "21:00"}, {"date": "2026-06-12", "t1": "Canada", "s1": 1, "s2": 1, "t2": "Bosnia and Herzegovina", "venue": "BMO Field, Toronto", "et": "15:00"}, {"date": "2026-06-12", "t1": "United States", "s1": 4, "s2": 1, "t2": "Paraguay", "venue": "SoFi Stadium, Inglewood", "et": "19:00"}, {"date": "2026-06-13", "t1": "Qatar", "s1": 1, "s2": 1, "t2": "Switzerland", "venue": "Levi's Stadium, Santa Clara", "et": "16:00"}, {"date": "2026-06-13", "t1": "Brazil", "s1": 1, "s2": 1, "t2": "Morocco", "venue": "MetLife Stadium, East Rutherford", "et": "19:00"}, {"date": "2026-06-13", "t1": "Scotland", "s1": 1, "s2": 0, "t2": "Haiti", "venue": "Gillette Stadium, Foxborough", "et": "19:00"}, {"date": "2026-06-13", "t1": "Australia", "s1": 2, "s2": 0, "t2": "T\u00fcrkiye", "venue": "BC Place, Vancouver", "et": "19:00"}, {"date": "2026-06-14", "t1": "Germany", "s1": 7, "s2": 1, "t2": "Cura\u00e7ao", "venue": "NRG Stadium, Houston", "et": "16:00"}, {"date": "2026-06-14", "t1": "Netherlands", "s1": 2, "s2": 2, "t2": "Japan", "venue": "AT&T Stadium, Arlington", "et": "19:00"}, {"date": "2026-06-14", "t1": "Ivory Coast", "s1": 1, "s2": 0, "t2": "Ecuador", "venue": "Lincoln Financial Field, Philadelphia", "et": "19:00"}, {"date": "2026-06-14", "t1": "Sweden", "s1": 5, "s2": 1, "t2": "Tunisia", "venue": "Estadio BBVA, Monterrey", "et": "21:00"}, {"date": "2026-06-15", "t1": "Spain", "s1": 0, "s2": 0, "t2": "Cape Verde", "venue": "Mercedes-Benz Stadium, Atlanta", "et": "12:00"}, {"date": "2026-06-15", "t1": "Belgium", "s1": 1, "s2": 1, "t2": "Egypt", "venue": "Lumen Field, Seattle", "et": "15:00"}, {"date": "2026-06-15", "t1": "Saudi Arabia", "s1": 1, "s2": 1, "t2": "Uruguay", "venue": "Hard Rock Stadium, Miami Gardens", "et": "18:00"}, {"date": "2026-06-15", "t1": "Iran", "s1": 2, "s2": 2, "t2": "New Zealand", "venue": "SoFi Stadium, Inglewood", "et": "21:00"}];
-const matchday2Fixtures = [{"date": "2026-06-16", "t1": "France", "t2": "Senegal", "venue": "MetLife Stadium, East Rutherford", "et": "15:00"}, {"date": "2026-06-16", "t1": "Iraq", "t2": "Norway", "venue": "Gillette Stadium, Foxborough", "et": "18:00"}, {"date": "2026-06-16", "t1": "Argentina", "t2": "Algeria", "venue": "Arrowhead Stadium, Kansas City", "et": "21:00"}, {"date": "2026-06-17", "t1": "Austria", "t2": "Jordan", "venue": "Levi's Stadium, Santa Clara", "et": "00:00"}, {"date": "2026-06-17", "t1": "Portugal", "t2": "DR Congo", "venue": "NRG Stadium, Houston", "et": "13:00"}, {"date": "2026-06-17", "t1": "England", "t2": "Croatia", "venue": "AT&T Stadium, Arlington", "et": "16:00"}, {"date": "2026-06-17", "t1": "Ghana", "t2": "Panama", "venue": "BMO Field, Toronto", "et": "19:00"}, {"date": "2026-06-17", "t1": "Uzbekistan", "t2": "Colombia", "venue": "Estadio Azteca, Mexico City", "et": "22:00"}, {"date": "2026-06-18", "t1": "Czechia", "t2": "South Africa", "venue": "Mercedes-Benz Stadium, Atlanta", "et": "12:00"}, {"date": "2026-06-18", "t1": "Switzerland", "t2": "Bosnia and Herzegovina", "venue": "SoFi Stadium, Inglewood", "et": "15:00"}, {"date": "2026-06-18", "t1": "Canada", "t2": "Qatar", "venue": "BC Place, Vancouver", "et": "18:00"}, {"date": "2026-06-18", "t1": "Mexico", "t2": "South Korea", "venue": "Estadio Akron, Zapopan", "et": "21:00"}, {"date": "2026-06-19", "t1": "United States", "t2": "Australia", "venue": "Lumen Field, Seattle", "et": "15:00"}, {"date": "2026-06-19", "t1": "Scotland", "t2": "Morocco", "venue": "Gillette Stadium, Foxborough", "et": "18:00"}, {"date": "2026-06-19", "t1": "Brazil", "t2": "Haiti", "venue": "Lincoln Financial Field, Philadelphia", "et": "20:30"}, {"date": "2026-06-20", "t1": "T\u00fcrkiye", "t2": "Paraguay", "venue": "Levi's Stadium, Santa Clara", "et": "00:00"}, {"date": "2026-06-20", "t1": "Netherlands", "t2": "Sweden", "venue": "NRG Stadium, Houston", "et": "13:00"}, {"date": "2026-06-20", "t1": "Germany", "t2": "Ivory Coast", "venue": "BMO Field, Toronto", "et": "16:00"}, {"date": "2026-06-20", "t1": "Ecuador", "t2": "Cura\u00e7ao", "venue": "Arrowhead Stadium, Kansas City", "et": "20:00"}, {"date": "2026-06-21", "t1": "Tunisia", "t2": "Japan", "venue": "Estadio BBVA, Monterrey", "et": "00:00"}];
-const matchday3Fixtures = [{"date": "2026-06-21", "t1": "Spain", "t2": "Saudi Arabia", "venue": "Mercedes-Benz Stadium, Atlanta", "et": "12:00"}, {"date": "2026-06-21", "t1": "Belgium", "t2": "Iran", "venue": "SoFi Stadium, Inglewood", "et": "15:00"}, {"date": "2026-06-21", "t1": "Uruguay", "t2": "Cape Verde", "venue": "Hard Rock Stadium, Miami Gardens", "et": "18:00"}, {"date": "2026-06-21", "t1": "New Zealand", "t2": "Egypt", "venue": "BC Place, Vancouver", "et": "21:00"}, {"date": "2026-06-22", "t1": "Argentina", "t2": "Austria", "venue": "AT&T Stadium, Arlington", "et": "13:00"}, {"date": "2026-06-22", "t1": "France", "t2": "Iraq", "venue": "Lincoln Financial Field, Philadelphia", "et": "17:00"}, {"date": "2026-06-22", "t1": "Norway", "t2": "Senegal", "venue": "MetLife Stadium, East Rutherford", "et": "20:00"}, {"date": "2026-06-22", "t1": "Jordan", "t2": "Algeria", "venue": "Levi's Stadium, Santa Clara", "et": "23:00"}, {"date": "2026-06-23", "t1": "Portugal", "t2": "Uzbekistan", "venue": "NRG Stadium, Houston", "et": "13:00"}, {"date": "2026-06-23", "t1": "England", "t2": "Ghana", "venue": "Gillette Stadium, Foxborough", "et": "16:00"}, {"date": "2026-06-23", "t1": "Panama", "t2": "Croatia", "venue": "BMO Field, Toronto", "et": "19:00"}, {"date": "2026-06-23", "t1": "Colombia", "t2": "DR Congo", "venue": "Estadio Akron, Zapopan", "et": "22:00"}, {"date": "2026-06-24", "t1": "Switzerland", "t2": "Canada", "venue": "BC Place, Vancouver", "et": "15:00"}, {"date": "2026-06-24", "t1": "Bosnia and Herzegovina", "t2": "Qatar", "venue": "Lumen Field, Seattle", "et": "15:00"}, {"date": "2026-06-24", "t1": "Scotland", "t2": "Brazil", "venue": "Hard Rock Stadium, Miami Gardens", "et": "18:00"}, {"date": "2026-06-24", "t1": "Morocco", "t2": "Haiti", "venue": "Mercedes-Benz Stadium, Atlanta", "et": "18:00"}, {"date": "2026-06-24", "t1": "Czechia", "t2": "Mexico", "venue": "Estadio Azteca, Mexico City", "et": "21:00"}, {"date": "2026-06-24", "t1": "South Africa", "t2": "South Korea", "venue": "Estadio BBVA, Monterrey", "et": "21:00"}, {"date": "2026-06-25", "t1": "Cura\u00e7ao", "t2": "Ivory Coast", "venue": "Lincoln Financial Field, Philadelphia", "et": "16:00"}, {"date": "2026-06-25", "t1": "Ecuador", "t2": "Germany", "venue": "MetLife Stadium, East Rutherford", "et": "16:00"}, {"date": "2026-06-25", "t1": "Japan", "t2": "Sweden", "venue": "AT&T Stadium, Arlington", "et": "19:00"}, {"date": "2026-06-25", "t1": "Tunisia", "t2": "Netherlands", "venue": "Arrowhead Stadium, Kansas City", "et": "19:00"}, {"date": "2026-06-25", "t1": "T\u00fcrkiye", "t2": "United States", "venue": "SoFi Stadium, Inglewood", "et": "22:00"}, {"date": "2026-06-25", "t1": "Paraguay", "t2": "Australia", "venue": "Levi's Stadium, Santa Clara", "et": "22:00"}, {"date": "2026-06-26", "t1": "Norway", "t2": "France", "venue": "Gillette Stadium, Foxborough", "et": "15:00"}, {"date": "2026-06-26", "t1": "Senegal", "t2": "Iraq", "venue": "BMO Field, Toronto", "et": "15:00"}, {"date": "2026-06-26", "t1": "Uruguay", "t2": "Spain", "venue": "Estadio Akron, Zapopan", "et": "20:00"}, {"date": "2026-06-26", "t1": "Cape Verde", "t2": "Saudi Arabia", "venue": "NRG Stadium, Houston", "et": "20:00"}, {"date": "2026-06-26", "t1": "Egypt", "t2": "Iran", "venue": "Lumen Field, Seattle", "et": "23:00"}, {"date": "2026-06-26", "t1": "New Zealand", "t2": "Belgium", "venue": "BC Place, Vancouver", "et": "23:00"}, {"date": "2026-06-27", "t1": "Panama", "t2": "England", "venue": "MetLife Stadium, East Rutherford", "et": "17:00"}, {"date": "2026-06-27", "t1": "Croatia", "t2": "Ghana", "venue": "Lincoln Financial Field, Philadelphia", "et": "17:00"}, {"date": "2026-06-27", "t1": "Colombia", "t2": "Portugal", "venue": "Hard Rock Stadium, Miami Gardens", "et": "19:30"}, {"date": "2026-06-27", "t1": "DR Congo", "t2": "Uzbekistan", "venue": "Mercedes-Benz Stadium, Atlanta", "et": "19:30"}, {"date": "2026-06-27", "t1": "Algeria", "t2": "Austria", "venue": "Arrowhead Stadium, Kansas City", "et": "22:00"}, {"date": "2026-06-27", "t1": "Jordan", "t2": "Argentina", "venue": "AT&T Stadium, Arlington", "et": "22:00"}];
-const knockoutStructure = {"r32": [{"date": "2026-06-28", "et": "15:00", "venue": "SoFi Stadium, Inglewood", "slot": "2A vs 2B", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-06-29", "et": "13:00", "venue": "NRG Stadium, Houston", "slot": "1C vs 2F", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-06-29", "et": "16:30", "venue": "Gillette Stadium, Foxborough", "slot": "1E vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-06-29", "et": "21:00", "venue": "Estadio BBVA, Monterrey", "slot": "1F vs 2C", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-06-30", "et": "13:00", "venue": "AT&T Stadium, Arlington", "slot": "2E vs 2I", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-06-30", "et": "17:00", "venue": "MetLife Stadium, East Rutherford", "slot": "1I vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-06-30", "et": "21:00", "venue": "Estadio Azteca, Mexico City", "slot": "1A vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-01", "et": "12:00", "venue": "Mercedes-Benz Stadium, Atlanta", "slot": "1L vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-01", "et": "16:00", "venue": "Lumen Field, Seattle", "slot": "1G vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-01", "et": "20:00", "venue": "Levi's Stadium, Santa Clara", "slot": "1D vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-02", "et": "15:00", "venue": "SoFi Stadium, Inglewood", "slot": "1H vs 2J", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-02", "et": "19:00", "venue": "BMO Field, Toronto", "slot": "2K vs 2L", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-02", "et": "23:00", "venue": "BC Place, Vancouver", "slot": "1B vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-03", "et": "14:00", "venue": "AT&T Stadium, Arlington", "slot": "2D vs 2G", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-03", "et": "18:00", "venue": "Hard Rock Stadium, Miami Gardens", "slot": "1J vs 2H", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-03", "et": "21:30", "venue": "Arrowhead Stadium, Kansas City", "slot": "1K vs 3rd", "t1": null, "t2": null, "s1": null, "s2": null}], "r16": [{"date": "2026-07-04", "et": "13:00", "venue": "NRG Stadium, Houston", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-04", "et": "17:00", "venue": "Lincoln Financial Field, Philadelphia", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-05", "et": "16:00", "venue": "MetLife Stadium, East Rutherford", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-05", "et": "20:00", "venue": "Estadio Azteca, Mexico City", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-06", "et": "15:00", "venue": "AT&T Stadium, Arlington", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-06", "et": "20:00", "venue": "Lumen Field, Seattle", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-07", "et": "12:00", "venue": "Mercedes-Benz Stadium, Atlanta", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-07", "et": "16:00", "venue": "BC Place, Vancouver", "t1": null, "t2": null, "s1": null, "s2": null}], "qf": [{"date": "2026-07-09", "et": "16:00", "venue": "Gillette Stadium, Foxborough", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-10", "et": "15:00", "venue": "SoFi Stadium, Inglewood", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-11", "et": "17:00", "venue": "Hard Rock Stadium, Miami Gardens", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-11", "et": "21:00", "venue": "Arrowhead Stadium, Kansas City", "t1": null, "t2": null, "s1": null, "s2": null}], "sf": [{"date": "2026-07-14", "et": "15:00", "venue": "AT&T Stadium, Arlington", "t1": null, "t2": null, "s1": null, "s2": null}, {"date": "2026-07-15", "et": "15:00", "venue": "Mercedes-Benz Stadium, Atlanta", "t1": null, "t2": null, "s1": null, "s2": null}], "3rd": [{"date": "2026-07-18", "et": "17:00", "venue": "Hard Rock Stadium, Miami Gardens", "t1": null, "t2": null, "s1": null, "s2": null}], "final": [{"date": "2026-07-19", "et": "15:00", "venue": "MetLife Stadium, East Rutherford", "t1": null, "t2": null, "s1": null, "s2": null}]};
+const totalPages = 11; // page0 through page10
+let currentPage = 0;   // 0 = no pages flipped (showing cover)
+const pages = [];
 
-let userScores = {};
-let knockoutTeams = {};
-
-function etToWIB(etTime){
-  const[h,m]=etTime.split(':').map(Number);
-  let w=h+11;if(w>=24)w-=24;
-  return String(w).padStart(2,'0')+':'+String(m).padStart(2,'0');
-}
-function getDayName(dateStr){
-  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  return days[new Date(dateStr+'T00:00:00').getDay()];
-}
-function getGroupOf(team){
-  for(const[g,teams]of Object.entries(groups))if(teams.includes(team))return g;
-  return '';
-}
-function formatDate(dateStr){
-  return new Date(dateStr+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
-}
-function matchKey(date,t1,t2){return date+'|'+t1+'|'+t2;}
-
-function buildStandings(){
-  const st={};
-  for(const[g,teams]of Object.entries(groups)){
-    st[g]={};
-    for(const t of teams)st[g][t]={P:0,W:0,D:0,L:0,GF:0,GA:0,GD:0,Pts:0};
-  }
-  // MD1 (locked results)
-  for(const m of matchday1Results){
-    const g=getGroupOf(m.t1);if(!g)continue;
-    st[g][m.t1].P++;st[g][m.t2].P++;
-    st[g][m.t1].GF+=m.s1;st[g][m.t1].GA+=m.s2;
-    st[g][m.t2].GF+=m.s2;st[g][m.t2].GA+=m.s1;
-    st[g][m.t1].GD=st[g][m.t1].GF-st[g][m.t1].GA;
-    st[g][m.t2].GD=st[g][m.t2].GF-st[g][m.t2].GA;
-    if(m.s1>m.s2){st[g][m.t1].W++;st[g][m.t1].Pts+=3;st[g][m.t2].L++;}
-    else if(m.s1<m.s2){st[g][m.t2].W++;st[g][m.t2].Pts+=3;st[g][m.t1].L++;}
-    else{st[g][m.t1].D++;st[g][m.t1].Pts++;st[g][m.t2].D++;st[g][m.t2].Pts++;}
-  }
-  // User-entered scores (MD2 & MD3)
-  for(const[key,sc]of Object.entries(userScores)){
-    if(sc.s1===''||sc.s2==='')continue;
-    const s1=parseInt(sc.s1),s2=parseInt(sc.s2);
-    const allFixtures=[...matchday2Fixtures,...matchday3Fixtures];
-    const m=allFixtures.find(x=>matchKey(x.date,x.t1,x.t2)===key);
-    if(!m)continue;
-    const g=getGroupOf(m.t1);if(!g)continue;
-    st[g][m.t1].P++;st[g][m.t2].P++;
-    st[g][m.t1].GF+=s1;st[g][m.t1].GA+=s2;
-    st[g][m.t2].GF+=s2;st[g][m.t2].GA+=s1;
-    st[g][m.t1].GD=st[g][m.t1].GF-st[g][m.t1].GA;
-    st[g][m.t2].GD=st[g][m.t2].GF-st[g][m.t2].GA;
-    if(s1>s2){st[g][m.t1].W++;st[g][m.t1].Pts+=3;st[g][m.t2].L++;}
-    else if(s1<s2){st[g][m.t2].W++;st[g][m.t2].Pts+=3;st[g][m.t1].L++;}
-    else{st[g][m.t1].D++;st[g][m.t1].Pts++;st[g][m.t2].D++;st[g][m.t2].Pts++;}
-  }
-  for(const g in st)st[g]=Object.fromEntries(Object.entries(st[g]).sort((a,b)=>{
-    if(b[1].Pts!==a[1].Pts)return b[1].Pts-a[1].Pts;
-    if(b[1].GD!==a[1].GD)return b[1].GD-a[1].GD;
-    return b[1].GF-a[1].GF;
-  }));
-  return st;
+for (let i = 0; i < totalPages; i++) {
+    pages.push(document.getElementById('page' + i));
 }
 
-function getThirdPlaceTeams(standings){
-  const thirds=[];
-  for(const[g,teams]of Object.entries(standings)){
-    const entries=Object.entries(teams);
-    if(entries.length>=3){const[name,stats]=entries[2];thirds.push({group:g,team:name,...stats});}
-  }
-  return thirds.sort((a,b)=>{
-    if(b.Pts!==a.Pts)return b.Pts-a.Pts;
-    if(b.GD!==a.GD)return b.GD-a.GD;
-    return b.GF-a.GF;
-  });
-}
-
-function fillKnockoutTeams(){
-  const st=buildStandings();
-  const thirds=getThirdPlaceTeams(st);
-  const best3=thirds.slice(0,8);
-  const get=(g,pos)=>{const e=Object.entries(st[g]);return e[pos]?e[pos][0]:'TBD';};
-  knockoutTeams={
-    '1A':get('A',0),'2A':get('A',1),'3A':get('A',2),
-    '1B':get('B',0),'2B':get('B',1),'3B':get('B',2),
-    '1C':get('C',0),'2C':get('C',1),'3C':get('C',2),
-    '1D':get('D',0),'2D':get('D',1),'3D':get('D',2),
-    '1E':get('E',0),'2E':get('E',1),'3E':get('E',2),
-    '1F':get('F',0),'2F':get('F',1),'3F':get('F',2),
-    '1G':get('G',0),'2G':get('G',1),'3G':get('G',2),
-    '1H':get('H',0),'2H':get('H',1),'3H':get('H',2),
-    '1I':get('I',0),'2I':get('I',1),'3I':get('I',2),
-    '1J':get('J',0),'2J':get('J',1),'3J':get('J',2),
-    '1K':get('K',0),'2K':get('K',1),'3K':get('K',2),
-    '1L':get('L',0),'2L':get('L',1),'3L':get('L',2),
-    '3rd1':best3[0]?.team||'TBD','3rd2':best3[1]?.team||'TBD',
-    '3rd3':best3[2]?.team||'TBD','3rd4':best3[3]?.team||'TBD',
-    '3rd5':best3[4]?.team||'TBD','3rd6':best3[5]?.team||'TBD',
-    '3rd7':best3[6]?.team||'TBD','3rd8':best3[7]?.team||'TBD',
-  };
-}
-
-function renderSchedule(){
-  const list=document.getElementById('scheduleList');list.innerHTML='';
-  const allMatches=[];
-  for(const m of matchday1Results)allMatches.push({...m,status:'done',matchday:1,locked:true});
-  for(const m of matchday2Fixtures){
-    const key=matchKey(m.date,m.t1,m.t2);
-    const sc=userScores[key]||{s1:'',s2:''};
-    const hasScore=sc.s1!==''&&sc.s2!=='';
-    allMatches.push({...m,status:hasScore?'done':'upcoming',matchday:2,locked:false,s1:hasScore?parseInt(sc.s1):undefined,s2:hasScore?parseInt(sc.s2):undefined,key});
-  }
-  for(const m of matchday3Fixtures){
-    const key=matchKey(m.date,m.t1,m.t2);
-    const sc=userScores[key]||{s1:'',s2:''};
-    const hasScore=sc.s1!==''&&sc.s2!=='';
-    allMatches.push({...m,status:hasScore?'done':'upcoming',matchday:3,locked:false,s1:hasScore?parseInt(sc.s1):undefined,s2:hasScore?parseInt(sc.s2):undefined,key});
-  }
-  allMatches.sort((a,b)=>{const da=a.date+'T'+a.et,db=b.date+'T'+b.et;return da.localeCompare(db);});
-  let lastDate='';
-  for(const m of allMatches){
-    if(m.date!==lastDate){
-      const h2=document.createElement('h2');
-      h2.style.cssText='font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;padding-left:4px;';
-      h2.textContent=getDayName(m.date)+', '+formatDate(m.date)+' 2026';
-      list.appendChild(h2);lastDate=m.date;
+function setZIndex() {
+    for (let i = 0; i < totalPages; i++) {
+        if (i < currentPage) {
+            // Already flipped: stack from bottom (low z-index)
+            pages[i].style.zIndex = i + 1;
+        } else {
+            // Not yet flipped: stack from top (high z-index)
+            pages[i].style.zIndex = totalPages - i + 5;
+        }
     }
-    const card=document.createElement('div');card.className='match-card '+m.status;
-    const wib=etToWIB(m.et);
-    const group='Group '+getGroupOf(m.t1);
-    let teamsHtml='';
-    if(m.locked){
-      teamsHtml=`<div class="team-row"><span class="team-name">${m.t1}</span><span class="score-display">${m.s1}</span></div><div class="vs-divider">VS</div><div class="team-row"><span class="team-name">${m.t2}</span><span class="score-display">${m.s2}</span></div>`;
-    }else{
-      const sc=userScores[m.key]||{s1:'',s2:''};
-      teamsHtml=`<div class="team-row"><span class="team-name">${m.t1}</span><input type="number" min="0" class="score-input" data-key="${m.key}" data-side="1" value="${sc.s1}" placeholder="-"></div><div class="vs-divider">VS</div><div class="team-row"><span class="team-name">${m.t2}</span><input type="number" min="0" class="score-input" data-key="${m.key}" data-side="2" value="${sc.s2}" placeholder="-"></div>`;
-    }
-    const statusText=m.status==='done'?'FT':'UPCOMING';
-    card.innerHTML=`<div class="match-time"><div class="day">${getDayName(m.date)}</div><div class="time">${wib}</div><div class="wib">WIB</div></div><div class="match-teams">${teamsHtml}</div><div class="match-meta"><div class="group-tag">${group}</div><div class="venue">${m.venue}</div><div class="status-badge status-${m.status}">${statusText}</div></div>`;
-    list.appendChild(card);
-  }
-  document.querySelectorAll('.score-input').forEach(inp=>{
-    inp.addEventListener('change',e=>{
-      const key=e.target.dataset.key;
-      const side=e.target.dataset.side;
-      const val=e.target.value;
-      if(!userScores[key])userScores[key]={s1:'',s2:''};
-      if(side==='1')userScores[key].s1=val;else userScores[key].s2=val;
-      renderSchedule();renderStandings();renderKnockout();
-      document.getElementById('saveStatus').textContent='';
-    });
-  });
 }
 
-function renderStandings(){
-  const st=buildStandings();
-  const grid=document.getElementById('standingsGrid');grid.innerHTML='';
-  for(const[g,teams]of Object.entries(st)){
-    const card=document.createElement('div');card.className='group-card';
-    let rows='';let rank=1;
-    for(const[name,s]of Object.entries(teams)){
-      rows+=`<tr><td>${rank}. ${name}</td><td>${s.P}</td><td>${s.W}</td><td>${s.D}</td><td>${s.L}</td><td>${s.GF}</td><td>${s.GA}</td><td>${s.GD}</td><td class="pts">${s.Pts}</td></tr>`;rank++;
-    }
-    card.innerHTML=`<div class="group-header">Group ${g} <span>Top 2 + Best 3rd</span></div><table class="standings-table"><thead><tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody>${rows}</tbody></table>`;
-    grid.appendChild(card);
-  }
+function updateIndicator() {
+    document.getElementById('pageIndicator').textContent = (currentPage + 1) + ' / ' + totalPages;
 }
 
-function renderGroups(){
-  const grid=document.getElementById('groupsGrid');grid.innerHTML='';
-  for(const[g,teams]of Object.entries(groups)){
-    const card=document.createElement('div');card.className='group-card';
-    let list='';
-    for(const t of teams)list+=`<div style="padding:10px 12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;"><span style="font-size:1.1rem;">🏳️</span><span style="font-weight:600;font-size:0.85rem;">${t}</span></div>`;
-    card.innerHTML=`<div class="group-header">Group ${g}</div>${list}`;
-    grid.appendChild(card);
-  }
+function updateControls() {
+    document.getElementById('prevBtn').disabled = currentPage === 0;
+    document.getElementById('nextBtn').disabled = currentPage === totalPages - 1;
 }
 
-function renderKnockout(){
-  fillKnockoutTeams();
-  const bracket=document.getElementById('knockoutBracket');bracket.innerHTML='';
-  const koData={};
-  for(const[stage,matches]of Object.entries(knockoutStructure)){
-    koData[stage]=matches.map(m=>({...m}));
-  }
-  const r32Slots=[
-    {t1:'2A',t2:'2B'},{t1:'1C',t2:'2F'},{t1:'1E',t2:'3rd1'},{t1:'1F',t2:'2C'},
-    {t1:'2E',t2:'2I'},{t1:'1I',t2:'3rd2'},{t1:'1A',t2:'3rd3'},{t1:'1L',t2:'3rd4'},
-    {t1:'1G',t2:'3rd5'},{t1:'1D',t2:'3rd6'},{t1:'1H',t2:'2J'},{t1:'2K',t2:'2L'},
-    {t1:'1B',t2:'3rd7'},{t1:'2D',t2:'2G'},{t1:'1J',t2:'2H'},{t1:'1K',t2:'3rd8'},
-  ];
-  for(let i=0;i<16;i++){
-    const def=r32Slots[i];
-    koData.r32[i].t1=knockoutTeams[def.t1]||'TBD';
-    koData.r32[i].t2=knockoutTeams[def.t2]||'TBD';
-  }
-  const stageNames={r32:'Round of 32',r16:'Round of 16',qf:'Quarterfinals',sf:'Semifinals','3rd':'Third Place',final:'Final'};
-  const stageOrder=['r32','r16','qf','sf','3rd','final'];
-  for(const stage of stageOrder){
-    const div=document.createElement('div');div.className='knockout-round';
-    let matchesHtml='';
-    for(const m of koData[stage]){
-      const wib=etToWIB(m.et);
-      const t1=m.t1||'TBD';const t2=m.t2||'TBD';
-      const score=(m.s1!==null&&m.s2!==null&&m.s1!==undefined)?`${m.s1} - ${m.s2}`:'TBD';
-      matchesHtml+=`<div class="knockout-match"><div class="k-time">${formatDate(m.date)}<br>${wib}</div><div class="k-teams"><div class="k-team">${t1}</div><div style="color:var(--muted);font-size:0.7rem;margin:2px 0;">vs</div><div class="k-team">${t2}</div></div><div class="k-venue">${m.venue}<br><span style="color:var(--accent);font-weight:700;">${score}</span></div></div>`;
-    }
-    div.innerHTML=`<h3>${stageNames[stage]}</h3>${matchesHtml}`;
-    bracket.appendChild(div);
-  }
+function nextPage() {
+    if (currentPage >= totalPages - 1) return;
+
+    const page = pages[currentPage];
+    // Boost z-index so this page animates ON TOP of all others
+    page.style.zIndex = 9999;
+    page.classList.add('flipped');
+
+    currentPage++;
+
+    // Halfway through animation, reset z-index to proper stack
+    setTimeout(() => {
+        setZIndex();
+    }, 420);
+
+    updateIndicator();
+    updateControls();
 }
 
-function saveScores(){
-  localStorage.setItem('wc2026_scores',JSON.stringify(userScores));
-  document.getElementById('saveStatus').textContent='✅ Scores saved to browser!';
-  setTimeout(()=>document.getElementById('saveStatus').textContent='',3000);
+function prevPage() {
+    if (currentPage <= 0) return;
+
+    currentPage--;
+    const page = pages[currentPage];
+    // Boost z-index so this page animates ON TOP as it returns
+    page.style.zIndex = 9999;
+    page.classList.remove('flipped');
+
+    setTimeout(() => {
+        setZIndex();
+    }, 420);
+
+    updateIndicator();
+    updateControls();
 }
-function loadScores(){
-  const data=localStorage.getItem('wc2026_scores');
-  if(data)userScores=JSON.parse(data);
-}
-function clearScores(){
-  if(confirm('Clear all entered scores?')){
-    userScores={};localStorage.removeItem('wc2026_scores');
-    renderSchedule();renderStandings();renderKnockout();
-    document.getElementById('saveStatus').textContent='🗑️ All scores cleared';
-    setTimeout(()=>document.getElementById('saveStatus').textContent='',3000);
-  }
-}
-function autoFill(){
-  function rand(){
-    const r=Math.random();
-    if(r<0.25)return 0;if(r<0.55)return 1;if(r<0.78)return 2;if(r<0.90)return 3;if(r<0.96)return 4;return 5;
-  }
-  const strong=["Argentina","Brazil","France","Germany","Spain","Portugal","England","Netherlands","Belgium"];
-  for(const m of matchday2Fixtures){
-    const key=matchKey(m.date,m.t1,m.t2);
-    if(!userScores[key]||userScores[key].s1===''){
-      let s1=rand(),s2=rand();
-      if(strong.includes(m.t1)&&Math.random()<0.3)s1++;
-      if(strong.includes(m.t2)&&Math.random()<0.3)s2++;
-      userScores[key]={s1:String(s1),s2:String(s2)};
+
+// Keyboard
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        nextPage();
+    } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevPage();
     }
-  }
-  for(const m of matchday3Fixtures){
-    const key=matchKey(m.date,m.t1,m.t2);
-    if(!userScores[key]||userScores[key].s1===''){
-      let s1=rand(),s2=rand();
-      if(strong.includes(m.t1)&&Math.random()<0.3)s1++;
-      if(strong.includes(m.t2)&&Math.random()<0.3)s2++;
-      userScores[key]={s1:String(s1),s2:String(s2)};
+});
+
+// Touch swipe
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener('touchstart', function(e) {
+    touchStartX = e.changedTouches[0].screenX;
+}, {passive: true});
+
+document.addEventListener('touchend', function(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 50) {
+        diff > 0 ? nextPage() : prevPage();
     }
-  }
-  renderSchedule();renderStandings();renderKnockout();
-  document.getElementById('saveStatus').textContent='🎲 Auto-filled remaining matches!';
-  setTimeout(()=>document.getElementById('saveStatus').textContent='',3000);
-}
-function switchTab(id){
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
-  document.querySelectorAll('.section').forEach(s=>s.classList.toggle('active',s.id===id));
-}
-document.getElementById('tabs').addEventListener('click',e=>{if(e.target.classList.contains('tab-btn'))switchTab(e.target.dataset.tab);});
-document.getElementById('saveBtn').addEventListener('click',saveScores);
-document.getElementById('clearBtn').addEventListener('click',clearScores);
-document.getElementById('autoBtn').addEventListener('click',autoFill);
-function updateClock(){
-  document.getElementById('jakartaClock').textContent=new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Jakarta',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false})+' WIB';
-}
-setInterval(updateClock,1000);updateClock();
-loadScores();
-renderSchedule();renderStandings();renderGroups();renderKnockout();
+}, {passive: true});
+
+// Initialize
+setZIndex();
+updateIndicator();
+updateControls();
 </script>
+
 </body>
 </html>
